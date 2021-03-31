@@ -40,7 +40,7 @@ class MainMenu(linpg.SystemObject):
         #加载创意工坊选择页面的文字
         self.main_menu_txt["menu_workshop_choice"]["map_creator"] = linpg.get_lang("General","map_creator")
         self.main_menu_txt["menu_workshop_choice"]["dialog_creator"] = linpg.get_lang("General","dialog_creator")
-        self.main_menu_txt["menu_workshop_choice"]["back"] = linpg.get_lang("General","back")
+        self.main_menu_txt["menu_workshop_choice"]["back"] = linpg.get_lang("Global","back")
         txt_y = (window_y-len(self.main_menu_txt["menu_workshop_choice"])*font_size)/2
         for key,txt in self.main_menu_txt["menu_workshop_choice"].items():
             self.main_menu_txt["menu_workshop_choice"][key] = linpg.fontRenderPro(txt,"enable",(txt_location,txt_y),linpg.get_standard_font_size("medium"))
@@ -72,11 +72,15 @@ class MainMenu(linpg.SystemObject):
         if createMode:
             self.workshop_files.append(self.main_menu_txt["other"]["new_collection"])
         for path in glob.glob("Data/workshop/*"):
-            data = linpg.loadConfig(path+"/info.yaml")
+            try:
+                data = linpg.loadConfig(os.path.join(path,"info.yaml"))
+            except:
+                data = linpg.loadConfig("Data/info_example.yaml")
+                linpg.saveConfig(os.path.join(path,"info.yaml"),data)
             filePath,fileName = os.path.split(path)
             self.workshop_files_text.append(fileName)
             self.workshop_files.append(data["title"][linpg.get_setting("Language")])
-        self.workshop_files.append(linpg.get_lang("General","back"))
+        self.workshop_files.append(linpg.get_lang("Global","back"))
         txt_location = int(screen_size[0]*2/3)
         txt_y = (screen_size[1]-len(self.workshop_files)*linpg.get_standard_font_size("medium")*2)/2
         for i in range(len(self.workshop_files)):
@@ -105,16 +109,15 @@ class MainMenu(linpg.SystemObject):
                     titleName = linpg.loadConfig(guessDialogFilePath,"title")
                 else:
                     titleName = ""
-            if chapterId < 11:
-                if chapterId > 0 or linpg.console.get_events("dev"):
-                    if len(titleName) > 0:
-                        self.chapter_select.append(chapterTitle.format(linpg.get_num_in_local_text(chapterId))+": "+titleName)
-                    else:
-                        self.chapter_select.append(chapterTitle.format(linpg.get_num_in_local_text(chapterId)))
+            if 0 < chapterId < 11:
+                if len(titleName) > 0:
+                    self.chapter_select.append(chapterTitle.format(linpg.get_num_in_local_text(chapterId))+": "+titleName)
+                else:
+                    self.chapter_select.append(chapterTitle.format(linpg.get_num_in_local_text(chapterId)))
             else:
                 self.chapter_select.append(chapterTitle.format(chapterId)+": "+titleName)
         #将返回按钮放到菜单列表中
-        self.chapter_select.append(linpg.get_lang("General","back"))
+        self.chapter_select.append(linpg.get_lang("Global","back"))
         txt_y = (screen_size[1]-len(self.chapter_select)*linpg.get_standard_font_size("medium")*2)/2
         txt_x = int(screen_size[0]*2/3)
         #将菜单列表中的文字转换成文字surface
@@ -178,15 +181,8 @@ class MainMenu(linpg.SystemObject):
             avoidDuplicateId += 1
         #创建文件夹
         os.makedirs("Data/workshop/{}".format(fileName))
-        #生成要储存的数据
-        example_info_data = {
-            "title":{"SimplifiedChinese": "演示版本","English": "Example Chapter"},
-            "author": "Put your name here",
-            "link": "https://whateve you want, maybe your github link",
-            "version": "0.0 (this will be loaded as string, just a reference)"
-        }
         #储存数据
-        linpg.saveConfig("Data/workshop/{}/info.yaml".format(fileName),example_info_data)
+        linpg.saveConfig("Data/workshop/{}/info.yaml".format(fileName),linpg.loadConfig("Data/info_example.yaml"))
     #创建新的对话文件
     def __create_new_dialog(self):
         chapterId = len(glob.glob("Data/workshop/{0}/*_dialogs_{1}.yaml".format(self.current_selected_workshop_collection,linpg.get_setting("Language"))))+1
@@ -319,10 +315,7 @@ class MainMenu(linpg.SystemObject):
                         for i in range(len(self.chapter_select)-1):
                             #章节选择
                             if linpg.is_hover(self.chapter_select[i]):
-                                if linpg.console.get_events("dev"):
-                                    self.__load_scene("main_chapter",i,screen)
-                                else:
-                                    self.__load_scene("main_chapter",i+1,screen)
+                                self.__load_scene("main_chapter",i+1,screen)
                                 break
                 #选择创意工坊选项
                 elif self.menu_type == 2:

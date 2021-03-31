@@ -7,7 +7,6 @@ Battle_UI:
   numRound: 第{}回合
   yourRound: 你的回合
 General:
-  back: 返回
   dialog_creator: 对话编辑器
   game_title: 少女前线-遗愿
   map_creator: 地图编辑器

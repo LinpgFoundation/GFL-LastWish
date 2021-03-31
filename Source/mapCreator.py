@@ -102,13 +102,13 @@ class MapCreator(linpg.AbstractBattleSystem):
         UI_height = int(self.MAP.block_width*0.3)
         self.UIButton["save"] = linpg.ButtonWithFadeInOut(
             "Assets/image/UI/menu.png",
-            linpg.get_lang("General","save"),
+            linpg.get_lang("Global","save"),
             "black",100,UI_x,UI_y,UI_height
             )
         UI_x += self.UIButton["save"].get_width()+UI_height
         self.UIButton["back"] = linpg.ButtonWithFadeInOut(
             "Assets/image/UI/menu.png",
-            linpg.get_lang("General","back"),
+            linpg.get_lang("Global","back"),
             "black",100,UI_x,UI_y,UI_height
             )
         UI_x += self.UIButton["back"].get_width()+UI_height

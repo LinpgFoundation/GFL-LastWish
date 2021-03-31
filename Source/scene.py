@@ -50,7 +50,7 @@ def dialogCreator(chapterType,chapterId,screen,part,collection_name=None):
 def battle(chapterType,chapterId,screen,collection_name=None):
     #卸载音乐
     linpg.unloadBackgroundMusic()
-    BATTLE = TurnBased_BattleSystem(chapterType,chapterId,collection_name)
+    BATTLE = TurnBasedBattleSystem(chapterType,chapterId,collection_name)
     if chapterType != None:
         BATTLE.initialize(screen)
     else:

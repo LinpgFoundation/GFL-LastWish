@@ -7,11 +7,9 @@ Battle_UI:
   numRound: Round {}
   yourRound: Your Round
 General:
-  back: Back
   dialog_creator: Dialog Creator
   game_title: Girls' Frontline - Last Wish
   map_creator: Map Creator
-  save: Save
 LoadingTxt:
   now_loading: Loading...
   now_loading_characters: Loading characters' data...
