@@ -1,0 +1,53 @@
+battle_info:
+- line 1
+- line 2
+- put some information here
+- such as date, time, weather...
+- 5 lines are the maximum
+description: The description of the chapter, will be displayed during the loading
+  screen
+dialog_during_battle: null
+dialogs:
+  dialog_after_battle:
+    head:
+      background_img: null
+      background_music: null
+      characters_img: null
+      content:
+      - Put Content Here
+      last_dialog_id: null
+      narrator: Name
+      next_dialog_id:
+        target: 1
+        type: default
+    1:
+      background_img: null
+      background_music: null
+      characters_img: null
+      content:
+      - Put Content Here
+      last_dialog_id: head
+      narrator: Name
+      next_dialog_id: null
+  dialog_before_battle:
+    head:
+      background_img: null
+      background_music: null
+      characters_img: null
+      content:
+      - Put Content Here
+      last_dialog_id: null
+      narrator: Name
+      next_dialog_id:
+        target: 1
+        type: default
+    1:
+      background_img: null
+      background_music: null
+      characters_img: null
+      content:
+      - Put Content Here
+      last_dialog_id: head
+      narrator: Name
+      next_dialog_id: null
+title: The title of this chapter

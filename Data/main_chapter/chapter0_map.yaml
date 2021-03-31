@@ -1,0 +1,246 @@
+backgroundImage: snowfield.jpg
+background_music: BGM_Danger_1.ogg
+character:
+  2b14_0:
+    action_point: 20
+    attack_range: 3
+    bullets_carried: 20
+    current_bullets: 1
+    current_hp: 250
+    detection: null
+    effective_range:
+      far:
+      - 8
+      - 9
+      middle:
+      - 5
+      - 7
+      near:
+      - 1
+      - 4
+    kind: HOC
+    magazine_capacity: 1
+    max_damage: 300
+    max_hp: 250
+    min_damage: 200
+    skill_cover_range: null
+    skill_effective_range: null
+    type: 2b14
+    x: 3
+    y: 8
+  gsh-18:
+    action_point: 100
+    attack_range: 1
+    bullets_carried: 200
+    current_bullets: 18
+    current_hp: 35
+    detection: null
+    effective_range:
+      far:
+      - 4
+      - 4
+      middle:
+      - 3
+      - 3
+      near:
+      - 1
+      - 2
+    kind: HG
+    magazine_capacity: 18
+    max_damage: 1500
+    max_hp: 3500
+    min_damage: 1000
+    skill_cover_range: 1
+    skill_effective_range:
+      near:
+      - 1
+      - 6
+    type: gsh-18
+    x: 4
+    y: 4
+darkMode: true
+dialogs:
+  initial: null
+facility:
+  campfire:
+    campfire1:
+      range: 3
+      x: 3
+      y: 3
+  chest:
+    chest1:
+      item:
+        bullet: 20
+        hp: 10
+      x: 3
+      y: 4
+  decoration:
+    stone1:
+      image: Forest_big_stone_01
+      x: 7
+      y: 7
+  obstacle:
+    stone1:
+      image: Forest_big_stone_01
+      x: 2
+      y: 6
+  tree:
+    t1:
+      image: Forest_big_tree_needle_03
+      x: 3
+      y: 5
+    t3:
+      image: Forest_big_tree_needle_03
+      x: 4
+      y: 7
+local_x: 0
+local_y: 0
+map:
+- - TileSnow01ToStone01
+  - TileSnow02
+  - TileSnow01
+  - TileSnow01
+  - TileSnow02ToStone02
+  - TileSnow02
+  - TileSnow01ToStone01
+  - TileSnow02ToStone01
+  - TileSnow02
+  - TileSnow01ToStone02
+- - TileSnow01ToStone01
+  - TileSnow01
+  - TileSnow02ToStone01
+  - TileSnow02ToStone02
+  - TileSnow01ToStone01
+  - TileSnow01
+  - TileSnow01ToStone01
+  - TileSnow01
+  - TileSnow01ToStone02
+  - TileSnow02
+- - TileSnow01
+  - TileSnow02ToStone01
+  - TileSnow01ToStone01
+  - TileSnow01
+  - TileSnow02ToStone02
+  - TileSnow01ToStone01
+  - TileSnow02
+  - TileSnow02
+  - TileSnow02ToStone01
+  - TileSnow02
+- - TileSnow02
+  - TileSnow01
+  - TileSnow01ToStone02
+  - TileSnow01ToStone02
+  - TileSnow02
+  - TileSnow01
+  - TileSnow02
+  - TileSnow01ToStone02
+  - TileSnow02ToStone02
+  - TileSnow01
+- - TileSnow01ToStone01
+  - TileSnow01ToStone01
+  - TileSnow01ToStone02
+  - TileSnow02ToStone01
+  - TileSnow02
+  - TileSnow02
+  - TileSnow02ToStone02
+  - TileSnow02ToStone02
+  - TileSnow01
+  - TileSnow02ToStone02
+- - TileSnow01ToStone01
+  - TileSnow01
+  - TileSnow02ToStone01
+  - TileSnow02
+  - TileSnow01ToStone02
+  - TileSnow02
+  - TileSnow01
+  - TileSnow01ToStone02
+  - TileSnow01ToStone01
+  - TileSnow02ToStone02
+- - TileSnow02
+  - TileSnow02ToStone01
+  - TileSnow01ToStone01
+  - TileSnow02ToStone02
+  - TileSnow01ToStone01
+  - TileSnow02ToStone02
+  - TileSnow01ToStone01
+  - TileSnow02
+  - TileSnow02ToStone01
+  - TileSnow01ToStone01
+- - TileSnow01ToStone02
+  - TileSnow02
+  - TileSnow02
+  - TileSnow01ToStone01
+  - TileSnow01ToStone01
+  - TileSnow02ToStone01
+  - TileSnow02
+  - TileSnow02
+  - TileSnow02ToStone02
+  - TileSnow01ToStone02
+- - TileSnow02
+  - TileSnow02ToStone01
+  - TileSnow02ToStone02
+  - TileSnow01ToStone01
+  - TileSnow01ToStone01
+  - TileSnow02ToStone02
+  - TileSnow01
+  - TileSnow01ToStone02
+  - TileSnow02ToStone02
+  - TileSnow01
+- - TileSnow02ToStone02
+  - TileSnow01ToStone01
+  - TileSnow01ToStone02
+  - TileSnow02ToStone01
+  - TileSnow01
+  - TileSnow01ToStone01
+  - TileSnow02ToStone01
+  - TileSnow02ToStone02
+  - TileSnow01ToStone02
+  - TileSnow01ToStone02
+sangvisFerri:
+  guard:
+    action_point: 20
+    attack_range: 1
+    current_bullets: 20
+    current_hp: 1000
+    effective_range:
+      middle:
+      - 3
+      - 4
+      near:
+      - 1
+      - 2
+    kind: HG
+    magazine_capacity: 20
+    max_damage: 100
+    max_hp: 1000
+    min_damage: 50
+    patrol_path: []
+    type: guard
+    x: 5
+    y: 5
+  jupiter:
+    action_point: 15
+    attack_range: 1
+    current_bullets: 20
+    current_hp: 400
+    effective_range:
+      far:
+      - 8
+      - 9
+      middle:
+      - 5
+      - 7
+      near:
+      - 1
+      - 4
+    kind: HOC
+    magazine_capacity: 20
+    max_damage: 400
+    max_hp: 400
+    min_damage: 300
+    patrol_path: []
+    type: jupiter
+    x: 9
+    y: 7
+weather: snow
+zoomIn: 1

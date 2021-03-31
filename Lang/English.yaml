@@ -1,0 +1,79 @@
+Battle_UI:
+  endRound: Round Ends
+  enemyRound: Enemy Round
+  getBullets: Get Bullets
+  getHealth: Gain Health
+  numChapter: Chapter {}
+  numRound: Round {}
+  yourRound: Your Round
+General:
+  back: Back
+  dialog_creator: Dialog Creator
+  game_title: Girls' Frontline - Last Wish
+  map_creator: Map Creator
+  save: Save
+LoadingTxt:
+  now_loading: Loading...
+  now_loading_characters: Loading characters' data...
+  now_loading_level: Loading level data...
+  now_loading_map: Loading map data...
+MainMenu:
+  menu_main:
+    0_continue: Continue
+    1_chooseChapter: Select Chapter
+    2_dlc: DLC
+    3_workshop: Workshop
+    4_collection: Collection
+    5_setting: Setting
+    6_developer_team: Development Team
+    7_exit: Exit
+  menu_workshop_choice:
+    0_play: Play
+  other:
+    confirm: 'Yes'
+    deny: 'No'
+    exit_confirm: Are you sure you want to quit the game?
+    new_chapter: Create New Chapter
+    new_collection: Create New Collection
+    tip: Tip
+MapCreator:
+  delete: Delete
+  reload: Reload
+ResultBoard:
+  characters_down: Friendly character down
+  pressKeyContinue: Press Space to continue
+  pressKeyRestart: Press Space to restart, or press Backspace go back to main menu
+  rank: Rank
+  total_kills: Total elimination
+  total_rounds: Rounds
+  total_time: Time
+SaveGame: Save Game
+SelectMenu:
+  attack: Attack
+  interact: Interact
+  move: Move
+  reload: Reload
+  rescue: Rescue
+  skill: Skill
+SettingUI:
+  background_music: Background Music
+  cancel: Cancel
+  confirm: Confirm
+  currentLang: English
+  language: Language
+  setting: Setting
+  sound_effects: Sound Effects
+  sound_environment: Environmental Sounds
+Warnings:
+  magazine_is_empty: Current character has an empty magazine, please reload.
+  magazine_is_full: Current character has a full magazine, no need to reload.
+  no_bullets_left: Current character has no bullet left.
+  no_enough_ap_to_attack: You don't have enough action points for attacking.
+  no_enough_ap_to_interact: You don't have enough action points for interacting.
+  no_enough_ap_to_move: You don't have enough action points for moving.
+  no_enough_ap_to_reload: You don't have enough action points for reloading.
+  no_enough_ap_to_rescue: You don't have enough action points for rescuing.
+  no_enough_ap_to_use_skill: You don't have enough action points for using skill.
+title1: 'Warning: All content is still in development and does not represent final
+  results'
+title2: Presents by Tigeia-Workshop

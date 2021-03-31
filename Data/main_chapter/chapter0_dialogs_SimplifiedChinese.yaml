@@ -1,0 +1,179 @@
+battle_info:
+- 日期：206X年7月3日
+- 当地时间：16:52
+- 气温：-12°C
+- 能见度：0.78公里
+- 地点：临时据点以东约50公里
+description: 测试人员专用
+dialog_after_battle:
+  head:
+    background_img: duel.jpg
+    background_music: Room_1.mp3
+    characters_img: null
+    content:
+    - 会议室内
+    last_dialog_id: null
+    narrator: null
+    next_dialog_id:
+      target: 1
+      type: default
+  1:
+    background_img: duel.jpg
+    background_music: Room_1.mp3
+    characters_img:
+    - helianthus_1.png
+    - kryuger.png
+    content:
+    - 你来了，指挥官，请坐吧
+    last_dialog_id: head
+    narrator: 克鲁格
+    next_dialog_id:
+      target: 2
+      type: default
+dialog_before_battle:
+  head:
+    background_img: research.jpg
+    background_music: Room_1.mp3
+    characters_img: null
+    content:
+    - 撤离前一星期，临时据点内
+    last_dialog_id: null
+    narrator: null
+    next_dialog_id:
+      target:
+      - id: 1
+        txt: choice1
+      - id: 2
+        txt: choice2
+      - id: 3
+        txt: choice3
+      type: option
+  1:
+    background_img: research.jpg
+    background_music: Room_1.mp3
+    characters_img:
+    - kalina_5.png&dark
+    content:
+    - 格林娜，撤离情况怎么样了？
+    last_dialog_id: head
+    narrator: 我
+    next_dialog_id:
+      target: 2
+      type: default
+  2:
+    background_img: duel.jpg
+    background_music: Room_1.mp3
+    characters_img:
+    - kalina_5.png
+    content:
+    - 已经准备就绪了，只要她们一到就可以立马开始撤离了
+    last_dialog_id: 1
+    narrator: 格林娜
+    next_dialog_id:
+      target: 3
+      type: default
+  3:
+    background_img: research.jpg
+    background_music: Room_1.mp3
+    characters_img:
+    - kalina_5.png
+    content:
+    - 还是没有一点关于她们的消息吗
+    - 后勤第十小队...
+    last_dialog_id: 2
+    narrator: 我
+    next_dialog_id: null
+dialog_during_battle:
+  initial_dialog:
+  - move:
+      2b14_0:
+        x: 12
+        y: 9
+      gsh-18:
+        x: 14
+        y: 7
+  - dialoguebox_down:
+      content:
+      - 另一头，以sv-98为队长的第十后勤小
+      - 队正在拼命赶往撤离点。
+      speaker: null
+      speaker_icon: null
+    dialoguebox_up: null
+  - dialoguebox_down:
+      content:
+      - 终于逃出来了
+      - 大家没事吧
+      speaker: sv-98
+      speaker_icon: sv-98
+    dialoguebox_up: null
+  - dialoguebox_down:
+      content:
+      - 终于逃出来了
+      - 大家没事吧
+      speaker: sv-98
+      speaker_icon: sv-98
+    dialoguebox_up:
+      content:
+      - 没事
+      speaker: 众人
+      speaker_icon: null
+  - dialoguebox_down:
+      content:
+      - asval, 这里离撤离点还有多远？
+      speaker: sv-98
+      speaker_icon: sv-98
+    dialoguebox_up: null
+  - dialoguebox_down:
+      content:
+      - asval, 这里离撤离点还有多远？
+      speaker: sv-98
+      speaker_icon: sv-98
+    dialoguebox_up:
+      content:
+      - 还有约50公里。
+      speaker: asval
+      speaker_icon: asval
+  - move:
+      sv-98:
+        x: 11
+        y: 9
+  - direction:
+      sv-98: true
+  - idle: 1
+  - direction:
+      sv-98: false
+  - idle: 1
+  - dialoguebox_down:
+      content:
+      - 还有好长的路要走啊...
+      speaker: gsh-18
+      speaker_icon: gsh-18
+    dialoguebox_up: null
+  - dialoguebox_down:
+      content:
+      - 大家小心，前方200米有敌人活动的痕迹
+      speaker: pp1901
+      speaker_icon: pp1901
+    dialoguebox_up: null
+  - actionLoopStop:
+    - sv-98
+  - dialoguebox_down:
+      content:
+      - 该死...子弹上膛，准备战斗！
+      speaker: sv-98
+      speaker_icon: sv-98
+    dialoguebox_up: null
+  tutorial1:
+  - dialoguebox_down:
+      content:
+      - 这是一个测试
+      speaker: sv-98
+      speaker_icon: sv-98
+    dialoguebox_up: null
+  - dialoguebox_down:
+      content:
+      - 看起来你获得了一些道具
+      speaker: sv-98
+      speaker_icon: sv-98
+    dialoguebox_up: null
+title: 测试关卡

@@ -1,0 +1,46 @@
+backgroundImage: snowfield.jpg
+background_music: Combat_02_RemnantFantasyPackage_Synari.ogg
+character:
+  sv-98:
+    bullets_carried: 0
+    type: sv-98
+    x: 5
+    y: 7
+darkMode: false
+decoration:
+  campfire:
+    campfire1:
+      range: 3
+      x: 12
+      y: 10
+  chest:
+    chest1:
+      items:
+        bullet: 100
+      x: 15
+      y: 10
+  decoration:
+    Desert_small_Agave_Cactus_03_0:
+      image: Desert_small_Agave_Cactus_03
+      x: 5
+      y: 5
+  obstacle:
+    Forest_big_stone_01_0:
+      image: Forest_big_stone_01
+      x: 10
+      y: 12
+dialogs: {}
+local_x: 0
+local_y: 0
+map: null
+mission_objectives:
+  allow_any_one_die: false
+  round_limitation: 10
+  target: null
+  type: annihilation
+sangvisFerri:
+  guard:
+    type: guard
+    x: 19
+    y: 19
+weather: snow

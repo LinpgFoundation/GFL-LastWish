@@ -1,0 +1,439 @@
+blocks:
+  LowTileDirt01:
+    canPassThrough: true
+  LowTileDirtToStoneTransition01:
+    canPassThrough: true
+  LowTileDirtToStoneTransition02:
+    canPassThrough: true
+  LowTileRiverbed01:
+    canPassThrough: true
+  LowTileRiverbed02:
+    canPassThrough: true
+  LowTileRiverbed03:
+    canPassThrough: true
+  LowTileRiverbed04:
+    canPassThrough: true
+  LowTileSand01:
+    canPassThrough: true
+  LowTileSand02:
+    canPassThrough: true
+  LowTileSand03:
+    canPassThrough: true
+  LowTileStone01:
+    canPassThrough: true
+  LowTileStone02:
+    canPassThrough: true
+  LowTileStone03:
+    canPassThrough: true
+  OverlayCracks01:
+    canPassThrough: true
+  OverlayCracks02:
+    canPassThrough: true
+  OverlayGlow01:
+    canPassThrough: true
+  OverlayGlow02:
+    canPassThrough: true
+  OverlayGrass01:
+    canPassThrough: true
+  OverlayGrassHalfH01:
+    canPassThrough: true
+  OverlayGrassHalfH02:
+    canPassThrough: true
+  OverlayGrassHalfV01:
+    canPassThrough: true
+  OverlayGrassHalfV02Kopie:
+    canPassThrough: true
+  OverlayGrassPatch01:
+    canPassThrough: true
+  OverlayGrassPatch02:
+    canPassThrough: true
+  OverlayGrassPatch02H01:
+    canPassThrough: true
+  OverlayGrassPatch02H02:
+    canPassThrough: true
+  OverlayGrassPatch02V01:
+    canPassThrough: true
+  OverlayGrassPatch02V02:
+    canPassThrough: true
+  OverlayGrassPatch03:
+    canPassThrough: true
+  OverlayGrassPatch03H01:
+    canPassThrough: true
+  OverlayGrassPatch03H02:
+    canPassThrough: true
+  OverlayGrassPatch03V01:
+    canPassThrough: true
+  OverlayGrassPatch03V02:
+    canPassThrough: true
+  OverlayGrassPatchH01:
+    canPassThrough: true
+  OverlayGrassPatchH02:
+    canPassThrough: true
+  OverlayGrassPatchV01:
+    canPassThrough: true
+  OverlayGrassPatchV02:
+    canPassThrough: true
+  OverlayPathCross:
+    canPassThrough: true
+  OverlayPathCross301:
+    canPassThrough: true
+  OverlayPathCross302:
+    canPassThrough: true
+  OverlayPathCross303:
+    canPassThrough: true
+  OverlayPathCross304:
+    canPassThrough: true
+  OverlayPathCurve01:
+    canPassThrough: true
+  OverlayPathCurve02:
+    canPassThrough: true
+  OverlayPathCurve03:
+    canPassThrough: true
+  OverlayPathCurve04:
+    canPassThrough: true
+  OverlayPathEnd01:
+    canPassThrough: true
+  OverlayPathEnd02:
+    canPassThrough: true
+  OverlayPathEnd03:
+    canPassThrough: true
+  OverlayPathEnd04:
+    canPassThrough: true
+  OverlayPathSingle:
+    canPassThrough: true
+  OverlayPathStraight01:
+    canPassThrough: true
+  OverlayPathStraight02:
+    canPassThrough: true
+  OverlayRoofHay01:
+    canPassThrough: true
+  OverlayRoofHay02:
+    canPassThrough: true
+  OverlayRoofHay03:
+    canPassThrough: true
+  OverlayRoofHay04:
+    canPassThrough: true
+  OverlayRoofHay05:
+    canPassThrough: true
+  OverlayRoofHay06:
+    canPassThrough: true
+  OverlayRoofHay07:
+    canPassThrough: true
+  OverlayRoofHay08:
+    canPassThrough: true
+  OverlayRoofHay09:
+    canPassThrough: true
+  OverlayRoofHay10:
+    canPassThrough: true
+  OverlayRoofHay11:
+    canPassThrough: true
+  OverlayRoofHay12:
+    canPassThrough: true
+  OverlayRoofHay13:
+    canPassThrough: true
+  OverlayShoreCornerD:
+    canPassThrough: true
+  OverlayShoreCornerL:
+    canPassThrough: true
+  OverlayShoreCornerR:
+    canPassThrough: true
+  OverlayShoreCornerRU:
+    canPassThrough: true
+  OverlayShoreCornerU:
+    canPassThrough: true
+  OverlayShoreStraightLD:
+    canPassThrough: true
+  OverlayShoreStraightLU:
+    canPassThrough: true
+  OverlayShoreStraightRD:
+    canPassThrough: true
+  OverlayShoreStraightRU:
+    canPassThrough: true
+  OverlayStonePieces01:
+    canPassThrough: true
+  OverlayStonePieces01HalfH01:
+    canPassThrough: true
+  OverlayStonePieces01HalfH02:
+    canPassThrough: true
+  OverlayStonePieces01HalfV01:
+    canPassThrough: true
+  OverlayStonePieces01HalfV02:
+    canPassThrough: true
+  OverlayStonePieces02:
+    canPassThrough: true
+  OverlayStonePieces02HalfH01:
+    canPassThrough: true
+  OverlayStonePieces02HalfH02:
+    canPassThrough: true
+  OverlayStonePieces02HalfV01:
+    canPassThrough: true
+  OverlayStonePieces02HalfV02:
+    canPassThrough: true
+  OverlayWater01:
+    canPassThrough: true
+  OverlayWater02:
+    canPassThrough: true
+  PropStairStone01:
+    canPassThrough: true
+  PropStairStone02:
+    canPassThrough: true
+  PropStairStone03:
+    canPassThrough: true
+  PropStairStone04:
+    canPassThrough: true
+  PropStairStone05:
+    canPassThrough: true
+  PropStairStone06:
+    canPassThrough: true
+  PropStairStone07:
+    canPassThrough: true
+  PropStairStone08:
+    canPassThrough: true
+  PropStairStone09:
+    canPassThrough: true
+  PropStairStone10:
+    canPassThrough: true
+  PropStairStone11:
+    canPassThrough: true
+  PropStairStone12:
+    canPassThrough: true
+  TileBrickBrick01:
+    canPassThrough: true
+  TileBrickBrick02:
+    canPassThrough: true
+  TileBrickBrick03:
+    canPassThrough: true
+  TileBrickBrick04:
+    canPassThrough: true
+  TileBrickSandStone01:
+    canPassThrough: true
+  TileBrickSnow01:
+    canPassThrough: true
+  TileBrickStone01:
+    canPassThrough: true
+  TileBrickStone0102:
+    canPassThrough: true
+  TileBrickStone0103:
+    canPassThrough: true
+  TileBrickStone0104:
+    canPassThrough: true
+  TileBrickStone0105:
+    canPassThrough: true
+  TileBrickStone0201:
+    canPassThrough: true
+  TileDirt01:
+    canPassThrough: true
+  TileDirt01Grass01:
+    canPassThrough: true
+  TileDirt01GrassPatch01:
+    canPassThrough: true
+  TileDirt01GrassPatch02:
+    canPassThrough: true
+  TileDirt01GrassPatch03:
+    canPassThrough: true
+  TileDirt01GrassPath3Cross01:
+    canPassThrough: true
+  TileDirt01GrassPath3Cross02:
+    canPassThrough: true
+  TileDirt01GrassPath3Cross03:
+    canPassThrough: true
+  TileDirt01GrassPath3Cross04:
+    canPassThrough: true
+  TileDirt01GrassPath4Cross:
+    canPassThrough: true
+  TileDirt01GrassPathCurve01:
+    canPassThrough: true
+  TileDirt01GrassPathCurve02:
+    canPassThrough: true
+  TileDirt01GrassPathCurve03:
+    canPassThrough: true
+  TileDirt01GrassPathCurve04:
+    canPassThrough: true
+  TileDirt01GrassPathEnd01:
+    canPassThrough: true
+  TileDirt01GrassPathEnd02:
+    canPassThrough: true
+  TileDirt01GrassPathEnd03:
+    canPassThrough: true
+  TileDirt01GrassPathEnd04:
+    canPassThrough: true
+  TileDirt01GrassPathSingle:
+    canPassThrough: true
+  TileDirt01GrassPathStraight01:
+    canPassThrough: true
+  TileDirt01GrassPathStraight02:
+    canPassThrough: true
+  TileDirt01ToSnow01:
+    canPassThrough: true
+  TileDirt01ToSnow02:
+    canPassThrough: true
+  TileDirt01ToStone01:
+    canPassThrough: true
+  TileDirt01ToStone02:
+    canPassThrough: true
+  TileDirt02:
+    canPassThrough: true
+  TileDirt02ToStone01:
+    canPassThrough: true
+  TileDirt02ToStone02:
+    canPassThrough: true
+  TileLava01:
+    canPassThrough: true
+  TileLava02:
+    canPassThrough: true
+  TileLavaCracks01:
+    canPassThrough: true
+  TileLavaStone01:
+    canPassThrough: true
+  TileRiverbed01:
+    canPassThrough: true
+  TileRiverbed02:
+    canPassThrough: true
+  TileRiverbed03:
+    canPassThrough: true
+  TileRiverbed04:
+    canPassThrough: true
+  TileSand01:
+    canPassThrough: true
+  TileSand01ToStone01:
+    canPassThrough: true
+  TileSand01ToStone02:
+    canPassThrough: true
+  TileSand02:
+    canPassThrough: true
+  TileSand02ToStone01:
+    canPassThrough: true
+  TileSand02ToStone02:
+    canPassThrough: true
+  TileSand03:
+    canPassThrough: true
+  TileSand03ToStone01:
+    canPassThrough: true
+  TileSand03ToStone02:
+    canPassThrough: true
+  TileSand04:
+    canPassThrough: true
+  TileSnow01:
+    canPassThrough: true
+  TileSnow01ToStone01:
+    canPassThrough: true
+  TileSnow01ToStone02:
+    canPassThrough: true
+  TileSnow02:
+    canPassThrough: true
+  TileSnow02ToStone01:
+    canPassThrough: true
+  TileSnow02ToStone02:
+    canPassThrough: true
+  TileStone01:
+    canPassThrough: true
+  TileStone02:
+    canPassThrough: true
+  TileStone03:
+    canPassThrough: true
+  TileTemplate01:
+    canPassThrough: true
+  TileWater01:
+    canPassThrough: true
+  TileWaterBlock:
+    canPassThrough: true
+  TileWaterShore1C01:
+    canPassThrough: true
+  TileWaterShore1C02:
+    canPassThrough: true
+  TileWaterShore1C03:
+    canPassThrough: true
+  TileWaterShore1C04:
+    canPassThrough: true
+  TileWaterShore1S01:
+    canPassThrough: true
+  TileWaterShore1S02:
+    canPassThrough: true
+  TileWaterShore1S03:
+    canPassThrough: true
+  TileWaterShore1S04:
+    canPassThrough: true
+  TileWaterShore1S1C01:
+    canPassThrough: true
+  TileWaterShore1S1C02:
+    canPassThrough: true
+  TileWaterShore1S1C03:
+    canPassThrough: true
+  TileWaterShore1S1C04:
+    canPassThrough: true
+  TileWaterShore1S1C05:
+    canPassThrough: true
+  TileWaterShore1S1C06:
+    canPassThrough: true
+  TileWaterShore1S1C07:
+    canPassThrough: true
+  TileWaterShore1S1C08:
+    canPassThrough: true
+  TileWaterShore1S2C01:
+    canPassThrough: true
+  TileWaterShore1S2C02:
+    canPassThrough: true
+  TileWaterShore1S2C03:
+    canPassThrough: true
+  TileWaterShore1S2C04:
+    canPassThrough: true
+  TileWaterShore2C01:
+    canPassThrough: true
+  TileWaterShore2C02:
+    canPassThrough: true
+  TileWaterShore2C03:
+    canPassThrough: true
+  TileWaterShore2C04:
+    canPassThrough: true
+  TileWaterShore2C05:
+    canPassThrough: true
+  TileWaterShore2C06:
+    canPassThrough: true
+  TileWaterShore2S01:
+    canPassThrough: true
+  TileWaterShore2S02:
+    canPassThrough: true
+  TileWaterShore2S03:
+    canPassThrough: true
+  TileWaterShore2S04:
+    canPassThrough: true
+  TileWaterShore2S05:
+    canPassThrough: true
+  TileWaterShore2S06:
+    canPassThrough: true
+  TileWaterShore2S1C01:
+    canPassThrough: true
+  TileWaterShore2S1C02:
+    canPassThrough: true
+  TileWaterShore2S1C03:
+    canPassThrough: true
+  TileWaterShore2S1C04:
+    canPassThrough: true
+  TileWaterShore3C01:
+    canPassThrough: true
+  TileWaterShore3C02:
+    canPassThrough: true
+  TileWaterShore3C03:
+    canPassThrough: true
+  TileWaterShore3C04:
+    canPassThrough: true
+  TileWaterShore3S01:
+    canPassThrough: true
+  TileWaterShore3S02:
+    canPassThrough: true
+  TileWaterShore3S03:
+    canPassThrough: true
+  TileWaterShore3S04:
+    canPassThrough: true
+  TileWaterShore4C01:
+    canPassThrough: true
+  TileWaterShore4S04:
+    canPassThrough: true
+  TileWood01:
+    canPassThrough: true
+  TileWood02:
+    canPassThrough: true
+  TileWood03:
+    canPassThrough: true
+  TileWood04:
+    canPassThrough: true

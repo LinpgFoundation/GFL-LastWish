@@ -1,0 +1,296 @@
+battle_info:
+- 'Date: July 3rd, 206X'
+- 'Local time: 16:52'
+- 'Temperature: -12°C/10.4°F'
+- 'Visibility: 0.78km/853yd'
+- 'Location: approximately 50 km east of the temporary base'
+default_lang: SimplifiedChinese
+description: Above the snowy plains, the bitter cold wind whipped my cheeks. But at
+  least, you are with me.
+dialog_during_battle:
+  initial_dialog:
+  - changePos:
+      x: 0
+      y: 0
+  - move:
+      gsh-18:
+        x: 8
+        y: 4
+      pp1901:
+        x: 8
+        y: 3
+  - dialoguebox_down:
+      content:
+      - At last, we're free of SangvisFerri's
+      - pursuers. Is everyone okay?
+      speaker: sv-98
+      speaker_icon: sv-98
+    dialoguebox_up: null
+  - dialoguebox_down:
+      content:
+      - At last, we're free of SangvisFerri's
+      - pursuers. Is everyone okay?
+      speaker: sv-98
+      speaker_icon: sv-98
+    dialoguebox_up:
+      content:
+      - Fine
+      speaker: Everyone
+      speaker_icon: null
+  - direction:
+      asval: true
+  - idle: 1
+  - direction:
+      asval: false
+  - idle: 1
+  - dialoguebox_down:
+      content:
+      - Sv-98, we have signs of SangvisFerri
+      - activity ahead.
+      speaker: asval
+      speaker_icon: asval
+    dialoguebox_up: null
+  - changePos:
+      x: 30
+      y: 30
+  - idle: 1
+  - changePos:
+      x: 0
+      y: 0
+  - dialoguebox_down:
+      content:
+      - Oh no! I'm out of ammo...
+      speaker: sv-98
+      speaker_icon: sv-98
+    dialoguebox_up: null
+  - dialoguebox_down:
+      content:
+      - The SangvisFerri in the front...
+      - Seems to be guarding something.
+      speaker: pp1901
+      speaker_icon: pp1901
+    dialoguebox_up: null
+  - move:
+      sv-98:
+        x: 5
+        y: 12
+  - dialoguebox_down:
+      content:
+      - From a distance, it looks like a supply
+      - crate.
+      speaker: gsh-18
+      speaker_icon: gsh-18
+    dialoguebox_up: null
+  - dialoguebox_down:
+      content:
+      - Sv-98, go for it. We'll cover you.
+      speaker: asval
+      speaker_icon: asval
+    dialoguebox_up: null
+  - dialoguebox_down:
+      content:
+      - It seems like I have no choice...
+      - Girls, load your guns and prepare to
+      - fight!
+      speaker: sv-98
+      speaker_icon: sv-98
+    dialoguebox_up: null
+  - dialoguebox_down:
+      content:
+      - sv-98 has no bullets at this moment
+      - and cannot attack
+      speaker: Tip
+      speaker_icon: null
+    dialoguebox_up: null
+  tutorial1:
+  - dialoguebox_down:
+      content:
+      - Guys, I got the supplies!
+      speaker: sv-98
+      speaker_icon: sv-98
+    dialoguebox_up: null
+  - dialoguebox_down:
+      content:
+      - Please note the ammunition change.
+      speaker: Tip
+      speaker_icon: null
+    dialoguebox_up: null
+dialogs:
+  dialog_after_battle:
+    head:
+      content:
+      - Ding......
+    1:
+      content:
+      - Commander, according to the plan, this is not our time to communicate.
+    2:
+      content:
+      - I think you know better than I do what's really going on right now. My echelon
+        has crumbled.
+      - So I'd like to know when that rescue you were talking about will arrive.
+      narrator: Me
+    3:
+      content:
+      - As I'm sure you're aware, the help I'm talking about has been right there
+        with you all along.
+      - But if I don't have the stuff, I won't let them go.
+    4:
+      content:
+      - Then I'd like to know why there was no mention of SangvisFerri in the documents
+        which
+      - were provided in the first place.
+      narrator: Me
+    5:
+      content:
+      - By all rights, SangvisFerri should not know about this. But as things stood,
+      - someone on the inside must have leaked this information.
+    6:
+      content:
+      - If we don't have support, our echelon will soon be unable to hold up, so how
+        will we ever
+      - find what you're asking for?
+      narrator: Me
+    7:
+      content:
+      - That's okay. Since the girls under your command can only do so much to support
+      - you, then just keep going. I'll figure out the rest
+    8:
+      content:
+      - End of communication.
+    9:
+      content:
+      - Damn it, I should have never accepted this commission in the first place.
+      narrator: Me
+    10:
+      content:
+      - It's not your fault either...
+      narrator: Kalina
+    11:
+      content:
+      - Now, let's just hope that sv-98 and the others will be back in time, and we'll
+        think about
+      - other things after that!
+      narrator: Me
+    12:
+      content:
+      - And what if they don't make it back?
+      narrator: Kalina
+    13:
+      content:
+      - Then... There's no other way...
+      narrator: Me
+    14:
+      content:
+      - Thanks for trying out Girls' Frontline - Last Wish, more content is still
+        in development,
+      - so stay tuned!
+  dialog_before_battle:
+    head:
+      content:
+      - In my subconscious, I used to worry about accidents.
+    1:
+      content:
+      - But I didn't expect, that the accident will come such soon.
+    2:
+      content:
+      - Commander, SangvisFerri's attack is getting fiercer. If this continues, the
+        remaining
+      - echelon will soon be routed! It's time to order a standard evacuation procedure.
+      narrator: Kalina
+    3:
+      content:
+      - Any good news about them? The tenth logistic unit...
+      narrator: Me
+    4:
+      content:
+      - I haven't been able to get ahold of them, so i have no idea what's going on...
+      - That's worrisome. If we keep this up, it's only a matter of time before SangvisFerri
+      - surrounds the place.
+      narrator: Kalina
+      next_dialog_id:
+        target:
+        - id: 5
+          txt: What were the coordinates of the last call for help?
+        type: option
+    5:
+      content:
+      - It's on a plain about 50 kilometers east of here.
+      - It fell under SangvisFerri's control 13 hours ago.
+      narrator: Kalina
+    6:
+      content:
+      - Can we send someone out to search the area?
+      narrator: Me
+    7:
+      content:
+      - All operational echelons are currently spread out on the first line of defense.
+        Not to mention
+      - breaking through, it's already fortunate to be able to barely block SangvisFerri's
+        attack! If we
+      - pull out any more force at this point, the defense may soon be routed.
+      narrator: Kalina
+    8:
+      content:
+      - Damn it, where's that backup we were talking about? And this is just an island
+        with no
+      - resources whatsoever! Why the National Security Bureau is so concerned?
+      narrator: Me
+    9:
+      content:
+      - I don't really know. The commission only mentions that it's related to information
+      - intercepted by the National Security Bureau. Other than that, no more information
+        was
+      - revealed.
+      narrator: Kalina
+    10:
+      content:
+      - Kalina...
+      narrator: Me
+    11:
+      content:
+      - Yes!?
+      narrator: Kalina
+    12:
+      content:
+      - Start the evacuation procedure. Then get me K. I need to talk to him.
+      narrator: Me
+    13:
+      content:
+      - Okay, I'm on it.
+      narrator: Kalina
+    14:
+      content:
+      - At the moment, I was very uneasy, whether sv-98 and the others could make
+        it back before
+      - the evacuation is one thing, but I have a feeling there's a mystery on this
+        island that
+      - Griffin and even the National Security Bureau themselves don't know about
+        yet.
+    15:
+      content:
+      - 24 hours ago.
+    16:
+      content:
+      - Asval, how's everything going so far?
+      narrator: Sv-98
+    17:
+      content:
+      - The commander has already sent a helicopter to pick us up.
+      - We just need to clear the area in case there's an accident when the helicopter
+        lands.
+    18:
+      content:
+      - Let's hurry up! As long as we take out as much of the current SangvisFerri
+        forces
+      - in the area before the helicopters arrive, then we'll be able to evacuate
+        safely.
+      narrator: Sv-98
+    19:
+      content:
+      - Great!
+      narrator: Other dolls
+    20:
+      content:
+      - Keep your voice down! It's not like SangvisFerri didn't have ears.
+      narrator: Sv-98
+title: A Wish Likes Snow

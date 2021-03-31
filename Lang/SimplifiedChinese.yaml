@@ -1,0 +1,83 @@
+Battle_UI:
+  endRound: 回合结束
+  enemyRound: 敌方回合
+  getBullets: 获得备弹
+  getHealth: 获得血量
+  numChapter: 第{}章
+  numRound: 第{}回合
+  yourRound: 你的回合
+General:
+  back: 返回
+  dialog_creator: 对话编辑器
+  game_title: 少女前线-遗愿
+  map_creator: 地图编辑器
+  save: 保存
+HealthyGamingAdvice:
+- 抵制不良游戏，拒绝盗版游戏。
+- 注意自我保护，谨防受骗上当。
+- 适度游戏益脑，沉迷游戏伤身。
+- 合理安排时间，享受健康生活。
+LoadingTxt:
+  now_loading: 正在加载
+  now_loading_characters: 正在加载角色信息...
+  now_loading_level: 正在加载关卡设定...
+  now_loading_map: 正在加载地图...
+MainMenu:
+  menu_main:
+    0_continue: 继续游戏
+    1_chooseChapter: 选择章节
+    2_dlc: 可下载内容
+    3_workshop: 创意工坊
+    4_collection: 收集物
+    5_setting: 设置
+    6_developer_team: 制作组
+    7_exit: 退出
+  menu_workshop_choice:
+    0_play: 游玩
+  other:
+    confirm: 是
+    deny: 否
+    exit_confirm: 你确认要退出游戏吗？
+    new_chapter: 新建章节
+    new_collection: 新建合集
+    tip: 提示
+MapCreator:
+  delete: 删除
+  reload: 重新加载
+ResultBoard:
+  characters_down: 友方角色被击倒
+  pressKeyContinue: 按空格继续
+  pressKeyRestart: 按空格重新开始，按Backspace返回主菜单
+  rank: 评价
+  total_kills: 总消灭
+  total_rounds: 回合数
+  total_time: 通关时间
+SaveGame: 保存游戏
+SelectMenu:
+  attack: 攻击
+  interact: 互动
+  move: 移动
+  reload: 换弹
+  rescue: 救助
+  skill: 技能
+SettingUI:
+  background_music: 背景音乐
+  cancel: 取消
+  confirm: 应用
+  currentLang: 简体中文
+  language: 语言
+  setting: 设置
+  sound_effects: 音效
+  sound_environment: 环境声效
+Warnings:
+  magazine_is_empty: 当前角色已经没有子弹，请及时换弹
+  magazine_is_full: 当前弹夹已满，无需换弹
+  no_bullets_left: 当前角色已经没有备弹
+  no_enough_ap_to_attack: 当前角色没有足够的行动值进行攻击
+  no_enough_ap_to_interact: 当前角色没有足够的行动值进行互动
+  no_enough_ap_to_move: 当前角色没有足够的行动值用于移动
+  no_enough_ap_to_reload: 当前角色没有足够的行动值用于换弹
+  no_enough_ap_to_rescue: 当前角色没有足够的行动值进行救助
+  no_enough_ap_to_use_skill: 当前角色没有足够的行动值使用技能
+title1: 缇吉娅工坊 呈现
+title2: 警告：所有内容仍处于研发阶段，不代表最终效果
