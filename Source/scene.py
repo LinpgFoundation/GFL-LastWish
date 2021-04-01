@@ -8,8 +8,8 @@ def dialog(chapterType,chapterId,screen,part,collection_name=None):
     LoadingImgBelow = linpg.loadImg("Assets/image/UI/LoadingImgBelow.png",(screen.get_width()+8,screen.get_height()/2.05))
     #开始加载-闸门关闭的效果
     for i in range(101):
-        linpg.drawImg(LoadingImgAbove,(-4,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()),screen)
-        linpg.drawImg(LoadingImgBelow,(-4,screen.get_height()-LoadingImgBelow.get_height()/100*i),screen)
+        screen.blit(LoadingImgAbove,(-4,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()))
+        screen.blit(LoadingImgBelow,(-4,screen.get_height()-LoadingImgBelow.get_height()/100*i))
         linpg.display.flip(True)
     #卸载音乐
     linpg.unloadBackgroundMusic()
@@ -22,8 +22,8 @@ def dialog(chapterType,chapterId,screen,part,collection_name=None):
     #加载完成-闸门开启的效果
     for i in range(100,-1,-1):
         DIALOG.display_background_image(screen)
-        linpg.drawImg(LoadingImgAbove,(-4,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()),screen)
-        linpg.drawImg(LoadingImgBelow,(-4,screen.get_height()-LoadingImgBelow.get_height()/100*i),screen)
+        screen.blit(LoadingImgAbove,(-4,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()))
+        screen.blit(LoadingImgBelow,(-4,screen.get_height()-LoadingImgBelow.get_height()/100*i))
         linpg.display.flip(True)
     #DIALOG.auto_save = True
     #主循环
@@ -89,10 +89,9 @@ def dispaly_loading_screen(screen,start,end,value):
     for i in range(start,end,value):
         screen.fill(linpg.findColorRGBA("black"))
         text1.set_alpha(i)
-        linpg.drawImg(text1,(window_x/64,window_y*0.9),screen)
         text2.set_alpha(i)
-        linpg.drawImg(text2,(window_x/64,window_y*0.9-window_x/32),screen)
+        screen.blits(((text1,(window_x/64,window_y*0.9)),(text2,(window_x/64,window_y*0.9-window_x/32))))
         for a in range(len(HealthyGamingAdvice)):
             HealthyGamingAdvice[a].set_alpha(i)
-            linpg.drawImg(HealthyGamingAdvice[a],(window_x-window_x/32-HealthyGamingAdvice[a].get_width(),window_y*0.9-window_x/64*a*1.5),screen)
+            screen.blit(HealthyGamingAdvice[a],(window_x-window_x/32-HealthyGamingAdvice[a].get_width(),window_y*0.9-window_x/64*a*1.5))
         linpg.display.flip(True)

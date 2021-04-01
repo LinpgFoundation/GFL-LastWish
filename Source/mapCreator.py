@@ -267,10 +267,10 @@ class MapCreator(linpg.AbstractBattleSystem):
         if block_get_click != None and not linpg.is_hover(self.UIContainerRight) and not linpg.is_hover(self.UIContainer):
             if self.deleteMode == True:
                 xTemp,yTemp = self.MAP.calPosInMap(block_get_click["x"],block_get_click["y"])
-                linpg.drawImg(self.redBlock,(xTemp+self.MAP.block_width*0.1,yTemp),screen)
+                screen.blit(self.redBlock,(xTemp+self.MAP.block_width*0.1,yTemp))
             elif self.object_to_put_down != None:
                 xTemp,yTemp = self.MAP.calPosInMap(block_get_click["x"],block_get_click["y"])
-                linpg.drawImg(self.greenBlock,(xTemp+self.MAP.block_width*0.1,yTemp),screen)
+                screen.blit(self.greenBlock,(xTemp+self.MAP.block_width*0.1,yTemp))
 
         #角色动画
         for key in self.alliances_data:
@@ -300,7 +300,7 @@ class MapCreator(linpg.AbstractBattleSystem):
         for key in self.charactersImgDict:
             tempX = self.UIContainer.x+self.MAP.block_width*i*0.6+self.UI_local_x
             if 0 <= tempX <= self.UIContainer.get_width()*0.9:
-                linpg.drawImg(self.charactersImgDict[key],(tempX,tempY),screen)
+                screen.blit(self.charactersImgDict[key],(tempX,tempY))
                 if pygame.mouse.get_pressed()[0] and linpg.is_hover(self.charactersImgDict[key],(tempX,tempY)):
                     self.object_to_put_down = {"type":"character","id":key}
             elif tempX > self.UIContainer.get_width()*0.9:
@@ -312,7 +312,7 @@ class MapCreator(linpg.AbstractBattleSystem):
         for key in self.sangvisFerrisImgDict:
             tempX = self.UIContainer.x+self.MAP.block_width*i*0.6+self.UI_local_x
             if 0 <= tempX <= self.UIContainer.get_width()*0.9:
-                linpg.drawImg(self.sangvisFerrisImgDict[key],(tempX,tempY),screen)
+                screen.blit(self.sangvisFerrisImgDict[key],(tempX,tempY))
                 if pygame.mouse.get_pressed()[0] and linpg.is_hover(self.sangvisFerrisImgDict[key],(tempX,tempY)):
                     self.object_to_put_down = {"type":"sangvisFerri","id":key}
             elif tempX > self.UIContainer.get_width()*0.9:
@@ -325,7 +325,7 @@ class MapCreator(linpg.AbstractBattleSystem):
             posY = self.UIContainerRight.y+self.MAP.block_width*int(i/4)+self.UI_local_y
             if screen.get_height()*0.05<posY<screen.get_height()*0.9:
                 posX = self.UIContainerRight.x+self.MAP.block_width/6+self.MAP.block_width/2.3*(i%4)
-                linpg.drawImg(self.envImgDict[img_name],(posX,posY),screen)
+                screen.blit(self.envImgDict[img_name],(posX,posY))
                 if pygame.mouse.get_pressed()[0] and linpg.is_hover(self.envImgDict[img_name],(posX,posY)):
                     self.object_to_put_down = {"type":"block","id":img_name}
             i+=1
@@ -333,33 +333,34 @@ class MapCreator(linpg.AbstractBattleSystem):
             posY = self.UIContainerRight.y+self.MAP.block_width*int(i/4)+self.UI_local_y
             if screen.get_height()*0.05<posY<screen.get_height()*0.9:
                 posX = self.UIContainerRight.x+self.MAP.block_width/6+self.MAP.block_width/2.3*(i%4)
-                linpg.drawImg(self.decorationsImgDict[img_name],(posX,posY),screen)
+                screen.blit(self.decorationsImgDict[img_name],(posX,posY))
                 if pygame.mouse.get_pressed()[0] and linpg.is_hover(self.decorationsImgDict[img_name],(posX,posY)):
                     self.object_to_put_down = {"type":"decoration","id":img_name}
             i+=1
-        
         #跟随鼠标显示即将被放下的物品
         if self.object_to_put_down != None:
             if self.object_to_put_down["type"] == "block":
-                linpg.drawImg(self.envImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y),screen)
+                screen.blit(self.envImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y))
             elif self.object_to_put_down["type"] == "decoration":
-                linpg.drawImg(self.decorationsImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y),screen)
+                screen.blit(self.decorationsImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y))
             elif self.object_to_put_down["type"] == "character":
-                linpg.drawImg(self.charactersImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y),screen)
+                screen.blit(self.charactersImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y))
             elif self.object_to_put_down["type"] == "sangvisFerri":
-                linpg.drawImg(self.sangvisFerrisImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y),screen)
+                screen.blit(self.sangvisFerrisImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y))
         
         #显示即将被编辑的数据
         if self.data_to_edit != None:
-            linpg.drawImg(linpg.fontRender("action points: "+str(self.data_to_edit.max_action_point),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8),screen)
-            linpg.drawImg(linpg.fontRender("attack range: "+str(self.data_to_edit.attack_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20),screen)
-            linpg.drawImg(linpg.fontRender("current bullets: "+str(self.data_to_edit.current_bullets),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*2),screen)
-            linpg.drawImg(linpg.fontRender("magazine capacity: "+str(self.data_to_edit.magazine_capacity),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*3),screen)
-            linpg.drawImg(linpg.fontRender("max hp: "+str(self.data_to_edit.max_hp),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*4),screen)
-            linpg.drawImg(linpg.fontRender("effective range: "+str(self.data_to_edit.effective_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*5),screen)
-            linpg.drawImg(linpg.fontRender("max damage: "+str(self.data_to_edit.max_damage),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*6),screen)
-            linpg.drawImg(linpg.fontRender("min damage: "+str(self.data_to_edit.min_damage),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*7),screen)
-            linpg.drawImg(linpg.fontRender("x: "+str(self.data_to_edit.x),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*8),screen)
-            linpg.drawImg(linpg.fontRender("y: "+str(self.data_to_edit.y),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*9),screen)
+            screen.blits((
+                (linpg.fontRender("action points: "+str(self.data_to_edit.max_action_point),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8)),
+                (linpg.fontRender("attack range: "+str(self.data_to_edit.attack_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20)),
+                (linpg.fontRender("current bullets: "+str(self.data_to_edit.current_bullets),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*2)),
+                (linpg.fontRender("magazine capacity: "+str(self.data_to_edit.magazine_capacity),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*3)),
+                (linpg.fontRender("max hp: "+str(self.data_to_edit.max_hp),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*4)),
+                (linpg.fontRender("effective range: "+str(self.data_to_edit.effective_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*5)),
+                (linpg.fontRender("max damage: "+str(self.data_to_edit.max_damage),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*6)),
+                (linpg.fontRender("min damage: "+str(self.data_to_edit.min_damage),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*7)),
+                (linpg.fontRender("x: "+str(self.data_to_edit.x),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*8)),
+                (linpg.fontRender("y: "+str(self.data_to_edit.y),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*9)),
+            ))
 
         linpg.display.flip()

@@ -4,7 +4,6 @@ battle_info:
 - 'Temperature: -12°C/10.4°F'
 - 'Visibility: 0.78km/853yd'
 - 'Location: approximately 50 km east of the temporary base'
-default_lang: SimplifiedChinese
 description: Above the snowy plains, the bitter cold wind whipped my cheeks. But at
   least, you are with me.
 dialog_during_battle:

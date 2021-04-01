@@ -7,7 +7,7 @@ import pygame
 try:
     import linpgdev as linpg
 except:
-    import linpgdev as linpg
+    import linpg
 
 #加载版本信息
 version_info = linpg.loadConfig("Data/version.yaml")

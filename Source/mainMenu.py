@@ -73,13 +73,14 @@ class MainMenu(linpg.SystemObject):
             self.workshop_files.append(self.main_menu_txt["other"]["new_collection"])
         for path in glob.glob("Data/workshop/*"):
             try:
-                data = linpg.loadConfig(os.path.join(path,"info.yaml"))
+                info_data = linpg.loadConfig(os.path.join(path,"info.yaml"))
             except:
-                data = linpg.loadConfig("Data/info_example.yaml")
-                linpg.saveConfig(os.path.join(path,"info.yaml"),data)
+                info_data = linpg.loadConfig("Data/info_example.yaml")
+                info_data["default_lang"] = linpg.get_setting("Language")
+                linpg.saveConfig(os.path.join(path,"info.yaml"),info_data)
             filePath,fileName = os.path.split(path)
             self.workshop_files_text.append(fileName)
-            self.workshop_files.append(data["title"][linpg.get_setting("Language")])
+            self.workshop_files.append(info_data["title"][linpg.get_setting("Language")])
         self.workshop_files.append(linpg.get_lang("Global","back"))
         txt_location = int(screen_size[0]*2/3)
         txt_y = (screen_size[1]-len(self.workshop_files)*linpg.get_standard_font_size("medium")*2)/2
@@ -182,7 +183,9 @@ class MainMenu(linpg.SystemObject):
         #创建文件夹
         os.makedirs("Data/workshop/{}".format(fileName))
         #储存数据
-        linpg.saveConfig("Data/workshop/{}/info.yaml".format(fileName),linpg.loadConfig("Data/info_example.yaml"))
+        info_data:dict = linpg.loadConfig("Data/info_example.yaml")
+        info_data["default_lang"] = linpg.get_setting("Language")
+        linpg.saveConfig("Data/workshop/{}/info.yaml".format(fileName),info_data)
     #创建新的对话文件
     def __create_new_dialog(self):
         chapterId = len(glob.glob("Data/workshop/{0}/*_dialogs_{1}.yaml".format(self.current_selected_workshop_collection,linpg.get_setting("Language"))))+1
@@ -265,7 +268,7 @@ class MainMenu(linpg.SystemObject):
             #如果图片的透明度大于10则展示图片
             if self.cover_alpha > 10:
                 self.cover_img.set_alpha(self.cover_alpha)
-                linpg.drawImg(self.cover_img, (0,0),screen)
+                screen.blit(self.cover_img,(0,0))
             #菜单选项
             self.__draw_buttons(screen)
             #展示设置UI

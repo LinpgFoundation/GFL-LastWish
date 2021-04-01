@@ -1,6 +1,7 @@
 author: Put your name here
-link: https://whateve you want, maybe your github link
+default_lang: null
+link: https://whateve-you-want/maybe-your-github-link
 title:
   English: Example Chapter
   SimplifiedChinese: 演示版本
-version: 0.0 (this will be loaded as string, just a reference)
+version: 0.0

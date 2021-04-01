@@ -93,16 +93,16 @@ class RoundSwitch:
         if self.x < 0:
             self.x += screen.get_width()/35
         #展示UI
-        linpg.drawImg(self.baseImg,(0,self.y),screen)
-        linpg.drawImg(self.now_total_rounds_surface,(screen.get_width()/2-self.now_total_rounds_surface.get_width(),self.y+screen.get_width()/36),screen)
+        screen.blit(self.baseImg,(0,self.y))
+        screen.blit(self.now_total_rounds_surface,(screen.get_width()/2-self.now_total_rounds_surface.get_width(),self.y+screen.get_width()/36))
         if whose_round == "playerToSangvisFerris":
-            linpg.drawImg(self.lineRedUp,(abs(self.x),self.y),screen)
-            linpg.drawImg(self.lineRedDown,(self.x,self.y2),screen)
-            linpg.drawImg(self.enemy_round_txt_surface,(screen.get_width()/2,self.y+screen.get_width()/18),screen)
+            screen.blit(self.lineRedUp,(abs(self.x),self.y))
+            screen.blit(self.lineRedDown,(self.x,self.y2))
+            screen.blit(self.enemy_round_txt_surface,(screen.get_width()/2,self.y+screen.get_width()/18))
         elif whose_round == "sangvisFerrisToPlayer":
-            linpg.drawImg(self.lineGreenUp,(abs(self.x),self.y),screen)
-            linpg.drawImg(self.lineGreenDown,(self.x,self.y2),screen)
-            linpg.drawImg(self.your_round_txt_surface,(screen.get_width()/2,self.y+screen.get_width()/18),screen)
+            screen.blit(self.lineGreenUp,(abs(self.x),self.y))
+            screen.blit(self.lineGreenDown,(self.x,self.y2))
+            screen.blit(self.your_round_txt_surface,(screen.get_width()/2,self.y+screen.get_width()/18))
         #如果UI展示还未完成，返回False
         return False
 

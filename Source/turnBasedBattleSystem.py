@@ -211,7 +211,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         #开始加载地图场景
         self.infoToDisplayDuringLoading.draw(screen)
         now_loading = self.FONT.render(loading_info["now_loading_map"],linpg.get_fontMode(),(255,255,255))
-        linpg.drawImg(now_loading,(self.window_x*0.75,self.window_y*0.9),screen)
+        screen.blit(now_loading,(self.window_x*0.75,self.window_y*0.9))
         nowLoadingIcon.draw(screen)
         linpg.display.flip(True)
         #读取并初始化章节信息
@@ -244,7 +244,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         while self._is_characters_loader_alive():
             self.infoToDisplayDuringLoading.draw(screen)
             now_loading = self.FONT.render(loading_info["now_loading_characters"]+"({}/{})".format(self.characters_loaded,self.characters_total),linpg.get_fontMode(),(255,255,255))
-            linpg.drawImg(now_loading,(self.window_x*0.75,self.window_y*0.9),screen)
+            screen.blit(now_loading,(self.window_x*0.75,self.window_y*0.9))
             nowLoadingIcon.draw(screen)
             linpg.display.flip(True)
         #计算光亮区域 并初始化地图
@@ -252,7 +252,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         #开始加载关卡设定
         self.infoToDisplayDuringLoading.draw(screen)
         now_loading = self.FONT.render(loading_info["now_loading_level"],linpg.get_fontMode(),linpg.findColorRGBA("white"))
-        linpg.drawImg(now_loading,(self.window_x*0.75,self.window_y*0.9),screen)
+        screen.blit(now_loading,(self.window_x*0.75,self.window_y*0.9))
         nowLoadingIcon.draw(screen)
         linpg.display.flip(True)
         #加载UI:
@@ -303,11 +303,11 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             self.infoToDisplayDuringLoading.draw(screen)
             for i in range(len(self.battleMode_info)):
                 self.battleMode_info[i].set_alpha(a)
-                linpg.drawImg(self.battleMode_info[i],(self.window_x/20,self.window_y*0.75+self.battleMode_info[i].get_height()*1.2*i),screen)
+                screen.blit(self.battleMode_info[i],(self.window_x/20,self.window_y*0.75+self.battleMode_info[i].get_height()*1.2*i))
                 if i == 1:
                     temp_secode = self.FONT.render(time.strftime(":%S", time.localtime()),linpg.get_fontMode(),(255,255,255))
                     temp_secode.set_alpha(a)
-                    linpg.drawImg(temp_secode,(self.window_x/20+self.battleMode_info[i].get_width(),self.window_y*0.75+self.battleMode_info[i].get_height()*1.2),screen)
+                    screen.blit(temp_secode,(self.window_x/20+self.battleMode_info[i].get_width(),self.window_y*0.75+self.battleMode_info[i].get_height()*1.2))
             linpg.display.flip(True)
     #更新音量
     def __update_sound_volume(self):
@@ -346,11 +346,11 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             self.infoToDisplayDuringLoading.draw(screen,self.txt_alpha)
             for i in range(len(self.battleMode_info)):
                 self.battleMode_info[i].set_alpha(self.txt_alpha)
-                linpg.drawImg(self.battleMode_info[i],(self.window_x/20,self.window_y*0.75+self.battleMode_info[i].get_height()*1.2*i),screen)
+                screen.blit(self.battleMode_info[i],(self.window_x/20,self.window_y*0.75+self.battleMode_info[i].get_height()*1.2*i))
                 if i == 1:
                     temp_secode = self.FONT.render(time.strftime(":%S", time.localtime()),linpg.get_fontMode(),(255,255,255))
                     temp_secode.set_alpha(self.txt_alpha)
-                    linpg.drawImg(temp_secode,(self.window_x/20+self.battleMode_info[i].get_width(),self.window_y*0.75+self.battleMode_info[i].get_height()*1.2),screen)
+                    screen.blit(temp_secode,(self.window_x/20+self.battleMode_info[i].get_width(),self.window_y*0.75+self.battleMode_info[i].get_height()*1.2))
             self.txt_alpha -= 5
         #刷新画面
         self.__update_scene(screen)
