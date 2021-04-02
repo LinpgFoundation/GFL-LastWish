@@ -3,7 +3,7 @@ from .survivalBattleSystem import *
 
 #回合制游戏战斗系统
 class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
-    def __init__(self,chapterType=None,chapterId=None,collection_name=None):
+    def __init__(self, chapterType:str=None, chapterId:int=None, collection_name:str=None):
         linpg.AbstractBattleSystem.__init__(self,chapterType,chapterId,collection_name)
         #被选中的角色
         self.characterGetClick = None
@@ -65,91 +65,22 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         #每次需要更新的物品
         self.__itemsToBlit = []
         self.__maxItemWeight = 0
-    #新增需要在屏幕上画出的物品
-    def __add_on_screen_object(self,image,weight=-1,pos=None,offSet=None) -> None:
-        if weight < 0:
-            self.__maxItemWeight += 1
-            weight = self.__maxItemWeight
-        elif weight > self.__maxItemWeight:
-            self.__maxItemWeight = weight
-        self.__itemsToBlit.append(linpg.ItemNeedBlit(image,weight,pos,offSet))
-    #更新屏幕
-    def __update_scene(self,screen):
-        self.__itemsToBlit.sort()
-        for item in self.__itemsToBlit:
-            item.blit(screen)
-        self.__itemsToBlit.clear()
-        self.__maxItemWeight = 0
-        #刷新画面
-        linpg.display.flip()
+    """Quick Reference"""
     #格里芬角色
     @property
-    def griffinCharactersData(self): return self.alliances_data
+    def griffinCharactersData(self) -> dict: return self.alliances_data
     #铁血角色
     @property
-    def sangvisFerrisData(self): return self.enemies_data
+    def sangvisFerrisData(self) -> dict: return self.enemies_data
     #正在控制的角色
     @property
-    def characterInControl(self) -> linpg.FriendlyCharacter: return self.alliances_data[self.characterGetClick]
+    def characterInControl(self) -> object: return self.alliances_data[self.characterGetClick]
     #正在控制的铁血角色
     @property
-    def enemy_in_control(self) -> str: return self.sangvisFerris_name_list[self.enemies_in_control_id]
-    #胜利失败判定
-    def _check_whether_player_win_or_lost(self):
-        #常规
-        """检测失败条件"""
-        #如果有回合限制
-        if "round_limitation" in self.mission_objectives and self.mission_objectives["round_limitation"] != None and\
-            self.mission_objectives["round_limitation"] > 0 and self.resultInfo["total_rounds"] > self.mission_objectives["round_limitation"]:
-            self.whose_round = "result_fail"
-        #如果不允许失去任何一位同伴
-        if "allow_any_one_die" not in self.mission_objectives or not self.mission_objectives["allow_any_one_die"]:
-            for character in self.alliances_data:
-                if not isinstance(self.alliances_data[character].dying,bool) and self.alliances_data[character].dying == 0:
-                    self.whose_round = "result_fail"
-                    break
-        """检测胜利条件"""
-        #歼灭模式
-        if self.mission_objectives["type"] == "annihilation":
-            #检测是否所有敌人都已经被消灭
-            if "target" not in self.mission_objectives or self.mission_objectives["target"] == None:
-                if len(self.sangvisFerrisData) == 0:
-                    self.characterGetClick = None
-                    self.NotDrawRangeBlocks = False
-                    self.whose_round = "result_win"
-                else:
-                    pass
-            #检测是否特定敌人已经被消灭
-            elif isinstance(self.mission_objectives["target"],str) and self.mission_objectives["target"] not in self.enemies_data:
-                self.whose_round = "result_win"
-            #检测是否所有给定的目标都已经被歼灭
-            elif isinstance(self.mission_objectives["target"],(list,tuple)):
-                find_one = False
-                for key in self.alliances_data:
-                    if key in self.mission_objectives["target"]:
-                        find_one = True
-                        break
-                if not find_one: self.whose_round = "result_win"
-    #储存章节信息
-    def save_process(self):
-        save_thread = linpg.SaveDataThread("Save/save.yaml", {
-            "type": "battle",
-            "chapterType": self.chapterType,
-            "chapterId": self.chapterId,
-            "collection_name": self.collection_name,
-            "griffin": self.griffinCharactersData,
-            "sangvisFerri": self.sangvisFerrisData,
-            "MAP": self.MAP,
-            "dialogKey": self.dialogKey,
-            "dialogData": self.dialogData,
-            "resultInfo": self.resultInfo,
-            "timeStamp": time.strftime(":%S", time.localtime())
-        })
-        save_thread.start()
-        save_thread.join()
-        del save_thread
+    def enemyInControl(self) -> object: return self.enemies_data[self.sangvisFerris_name_list[self.enemies_in_control_id]]
+    """加载与储存"""
     #从存档中加载游戏进程
-    def load(self,screen):
+    def load(self, screen:pygame.Surface) -> None:
         DataTmp = linpg.loadConfig("Save/save.yaml")
         if DataTmp["type"] == "battle":
             self.chapterType = DataTmp["chapterType"]
@@ -167,7 +98,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         self.loadFromSave = True
         self.initialize(screen)
     #加载游戏进程
-    def initialize(self,screen):
+    def initialize(self, screen:pygame.Surface) -> None:
         self.window_x,self.window_y = screen.get_size()
         #生成标准文字渲染器
         self.FONTSIZE = int(self.window_x/76)
@@ -309,13 +240,85 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     temp_secode.set_alpha(a)
                     screen.blit(temp_secode,(self.window_x/20+self.battleMode_info[i].get_width(),self.window_y*0.75+self.battleMode_info[i].get_height()*1.2))
             linpg.display.flip(True)
+    #储存当前进度
+    def save_process(self) -> None:
+        save_thread = linpg.SaveDataThread("Save/save.yaml", {
+            "type": "battle",
+            "chapterType": self.chapterType,
+            "chapterId": self.chapterId,
+            "collection_name": self.collection_name,
+            "griffin": self.griffinCharactersData,
+            "sangvisFerri": self.sangvisFerrisData,
+            "MAP": self.MAP,
+            "dialogKey": self.dialogKey,
+            "dialogData": self.dialogData,
+            "resultInfo": self.resultInfo,
+            "timeStamp": time.strftime(":%S", time.localtime())
+        })
+        save_thread.start()
+        save_thread.join()
+        del save_thread
+    """画面"""
+    #新增需要在屏幕上画出的物品
+    def __add_on_screen_object(self, image:pygame.Surface, weight:int=-1, pos:Union[tuple,list]=None, offSet:Union[tuple,list]=None) -> None:
+        if weight < 0:
+            self.__maxItemWeight += 1
+            weight = self.__maxItemWeight
+        elif weight > self.__maxItemWeight:
+            self.__maxItemWeight = weight
+        self.__itemsToBlit.append(linpg.ItemNeedBlit(image,weight,pos,offSet))
+    #更新屏幕
+    def __update_scene(self, screen:pygame.Surface) -> None:
+        self.__itemsToBlit.sort()
+        for item in self.__itemsToBlit:
+            item.blit(screen)
+        self.__itemsToBlit.clear()
+        self.__maxItemWeight = 0
+        #刷新画面
+        linpg.display.flip()
+    #胜利失败判定
+    def __check_whether_player_win_or_lost(self) -> None:
+        #常规
+        """检测失败条件"""
+        #如果有回合限制
+        if "round_limitation" in self.mission_objectives and self.mission_objectives["round_limitation"] != None and\
+            self.mission_objectives["round_limitation"] > 0 and self.resultInfo["total_rounds"] > self.mission_objectives["round_limitation"]:
+            self.whose_round = "result_fail"
+        #如果不允许失去任何一位同伴
+        if "allow_any_one_die" not in self.mission_objectives or not self.mission_objectives["allow_any_one_die"]:
+            for character in self.alliances_data:
+                if not isinstance(self.alliances_data[character].dying,bool) and self.alliances_data[character].dying == 0:
+                    self.whose_round = "result_fail"
+                    break
+        """检测胜利条件"""
+        #歼灭模式
+        if self.mission_objectives["type"] == "annihilation":
+            #检测是否所有敌人都已经被消灭
+            if "target" not in self.mission_objectives or self.mission_objectives["target"] == None:
+                if len(self.sangvisFerrisData) == 0:
+                    self.characterGetClick = None
+                    self.NotDrawRangeBlocks = False
+                    self.whose_round = "result_win"
+                else:
+                    pass
+            #检测是否特定敌人已经被消灭
+            elif isinstance(self.mission_objectives["target"],str) and self.mission_objectives["target"] not in self.enemies_data:
+                self.whose_round = "result_win"
+            #检测是否所有给定的目标都已经被歼灭
+            elif isinstance(self.mission_objectives["target"],(list,tuple)):
+                find_one = False
+                for key in self.alliances_data:
+                    if key in self.mission_objectives["target"]:
+                        find_one = True
+                        break
+                if not find_one: self.whose_round = "result_win"
     #更新音量
-    def __update_sound_volume(self):
+    def __update_sound_volume(self) -> None:
         self.footstep_sounds.set_volume(linpg.get_setting("Sound","sound_effects")/100)
         self.environment_sound.set_volume(linpg.get_setting("Sound","sound_environment")/100.0)
         self.set_bgm_volume(linpg.get_setting("Sound","background_music")/100.0)
     #警告某个角色周围的敌人
-    def alert_enemy_around(self,name,value=10):
+    def __alert_enemy_around(self, name:str, value:int=10) -> None:
         enemies_need_check = []
         for key in self.sangvisFerrisData:
             if self.sangvisFerrisData[key].can_attack(self.griffinCharactersData[name]):
@@ -327,62 +330,45 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 for character in self.griffinCharactersData:
                     if self.sangvisFerrisData[key].can_attack(self.griffinCharactersData[character]):
                         self.griffinCharactersData[character].notice(100)
-    #把战斗系统的画面画到screen上
-    def draw(self,screen):
-        self._update_event()
-        #环境声音-频道1
-        self.environment_sound.play()
-        # 游戏主循环
-        if self.battleMode:
-            self.__play_battle(screen)
-        #在战斗状态
-        else:
-            self.__play_dialog(screen)
-        #渐变效果：一次性的
-        if self.txt_alpha == None:
-            self.txt_alpha = 250
-        if self.txt_alpha > 0:
-            self.infoToDisplayDuringLoading.black_bg.set_alpha(self.txt_alpha)
-            self.infoToDisplayDuringLoading.draw(screen,self.txt_alpha)
-            for i in range(len(self.battleMode_info)):
-                self.battleMode_info[i].set_alpha(self.txt_alpha)
-                screen.blit(self.battleMode_info[i],(self.window_x/20,self.window_y*0.75+self.battleMode_info[i].get_height()*1.2*i))
-                if i == 1:
-                    temp_secode = self.FONT.render(time.strftime(":%S", time.localtime()),linpg.get_fontMode(),(255,255,255))
-                    temp_secode.set_alpha(self.txt_alpha)
-                    screen.blit(temp_secode,(self.window_x/20+self.battleMode_info[i].get_width(),self.window_y*0.75+self.battleMode_info[i].get_height()*1.2))
-            self.txt_alpha -= 5
-        #刷新画面
-        self.__update_scene(screen)
-        #展示暂停菜单
-        process_saved_text = linpg.ImageSurface(self.FONT.render(linpg.get_lang("Global","process_has_been_saved"),linpg.get_fontMode(),(255,255,255)),0,0)
-        process_saved_text.set_alpha(0)
-        while self.show_pause_menu:
-            self._update_event()
-            result = self.pause_menu.draw(screen,self.events)
-            if result == "Break":
-                linpg.setting.isDisplaying = False
-                self.show_pause_menu = False
-            elif result == "Save":
-                self.save_process()
-                process_saved_text.set_alpha(255)
-            elif result == "Setting":
-                linpg.setting.isDisplaying = True
-            elif result == "BackToMainMenu":
-                linpg.setting.isDisplaying = False
-                linpg.unloadBackgroundMusic()
-                self._isPlaying = False
-                self.show_pause_menu = False
-            #如果播放玩菜单后发现有东西需要更新
-            if linpg.setting.draw(screen,self.events):
-                self.__update_sound_volume()
-            process_saved_text.drawOnTheCenterOf(screen)
-            process_saved_text.fade_out(5)
-            linpg.display.flip()
-        del process_saved_text
-        self.pause_menu.screenshot = None
+    #切换回合
+    def __switch_round(self, screen:pygame.Surface) -> None:
+        if self.whose_round == "playerToSangvisFerris" or self.whose_round == "sangvisFerrisToPlayer":
+            if self.RoundSwitchUI.draw(screen,self.whose_round,self.resultInfo["total_rounds"]):
+                if self.whose_round == "playerToSangvisFerris":
+                    self.enemies_in_control_id = 0
+                    self.sangvisFerris_name_list.clear()
+                    any_is_alert = False
+                    for every_chara in self.sangvisFerrisData:
+                        if self.sangvisFerrisData[every_chara].is_alive():
+                            self.sangvisFerris_name_list.append(every_chara)
+                            if self.sangvisFerrisData[every_chara].is_alert: any_is_alert = True
+                    #如果有一个铁血角色已经处于完全察觉的状态，则让所有铁血角色进入警觉状态
+                    if any_is_alert:
+                        for every_chara in self.sangvisFerrisData:
+                            self.sangvisFerrisData[every_chara].alert(100)
+                    #让倒地的角色更接近死亡
+                    for every_chara in self.griffinCharactersData:
+                        if self.griffinCharactersData[every_chara].dying != False:
+                            self.griffinCharactersData[every_chara].dying -= 1
+                    #现在是铁血的回合！
+                    self.whose_round = "sangvisFerris"
+                elif self.whose_round == "sangvisFerrisToPlayer":
+                    for key in self.griffinCharactersData:
+                        self.griffinCharactersData[key].reset_action_point()
+                        if not self.griffinCharactersData[key].is_detected:
+                            value_reduce = int(self.griffinCharactersData[key].detection*0.3)
+                            if value_reduce < 15: value_reduce = 15
+                            self.griffinCharactersData[key].notice(0-value_reduce)
+                    for key in self.sangvisFerrisData:
+                        if not self.sangvisFerrisData[key].is_alert:
+                            value_reduce = int(self.sangvisFerrisData[key].vigilance*0.2)
+                            if value_reduce < 10: value_reduce = 10
+                            self.sangvisFerrisData[key].alert(0-value_reduce)
+                    #到你了，Good luck, you need it!
+                    self.whose_round = "player"
+                    self.resultInfo["total_rounds"] += 1
     #对话模块
-    def __play_dialog(self,screen):
+    def __play_dialog(self, screen:pygame.Surface) -> None:
         #画出地图
         self._display_map(screen)
         #角色动画
@@ -583,45 +569,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     self.sangvisFerrisData[enemies].drawUI(screen,self.MAP)
             if self.txt_alpha == 0:
                 self.battleMode = True
-    #切换回合
-    def switch_round(self,screen):
-        if self.whose_round == "playerToSangvisFerris" or self.whose_round == "sangvisFerrisToPlayer":
-            if self.RoundSwitchUI.draw(screen,self.whose_round,self.resultInfo["total_rounds"]):
-                if self.whose_round == "playerToSangvisFerris":
-                    self.enemies_in_control_id = 0
-                    self.sangvisFerris_name_list.clear()
-                    any_is_alert = False
-                    for every_chara in self.sangvisFerrisData:
-                        if self.sangvisFerrisData[every_chara].is_alive():
-                            self.sangvisFerris_name_list.append(every_chara)
-                            if self.sangvisFerrisData[every_chara].is_alert: any_is_alert = True
-                    #如果有一个铁血角色已经处于完全察觉的状态，则让所有铁血角色进入警觉状态
-                    if any_is_alert:
-                        for every_chara in self.sangvisFerrisData:
-                            self.sangvisFerrisData[every_chara].alert(100)
-                    #让倒地的角色更接近死亡
-                    for every_chara in self.griffinCharactersData:
-                        if self.griffinCharactersData[every_chara].dying != False:
-                            self.griffinCharactersData[every_chara].dying -= 1
-                    #现在是铁血的回合！
-                    self.whose_round = "sangvisFerris"
-                elif self.whose_round == "sangvisFerrisToPlayer":
-                    for key in self.griffinCharactersData:
-                        self.griffinCharactersData[key].reset_action_point()
-                        if not self.griffinCharactersData[key].is_detected:
-                            value_reduce = int(self.griffinCharactersData[key].detection*0.3)
-                            if value_reduce < 15: value_reduce = 15
-                            self.griffinCharactersData[key].notice(0-value_reduce)
-                    for key in self.sangvisFerrisData:
-                        if not self.sangvisFerrisData[key].is_alert:
-                            value_reduce = int(self.sangvisFerrisData[key].vigilance*0.2)
-                            if value_reduce < 10: value_reduce = 10
-                            self.sangvisFerrisData[key].alert(0-value_reduce)
-                    #到你了，Good luck, you need it!
-                    self.whose_round = "player"
-                    self.resultInfo["total_rounds"] += 1
     #战斗模块
-    def __play_battle(self,screen):
+    def __play_battle(self, screen:pygame.Surface) -> None:
         self.play_bgm()
         right_click = False
         #获取鼠标坐标
@@ -789,7 +738,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                                 self.characterGetClick = key
                             self.characterInfoBoardUI.update()
                             self.friendsCanSave = [key2 for key2 in self.griffinCharactersData if self.griffinCharactersData[key2].dying != False and self.griffinCharactersData[key].near(self.griffinCharactersData[key2])]
-                            self.thingsCanReact = []
+                            self.thingsCanReact.clear()
                             index = 0
                             for decoration in self.MAP.decorations:
                                 if decoration.type == "campfire" and self.griffinCharactersData[key].near(decoration):
@@ -970,7 +919,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                         self.footstep_sounds.play()
                         #是否需要更新
                         if self.characterInControl.needUpdateMap():
-                            self.alert_enemy_around(self.characterGetClick)
+                            self.__alert_enemy_around(self.characterGetClick)
                             self._calculate_darkness()
                     else:
                         self.footstep_sounds.stop()
@@ -1047,33 +996,33 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             #如果当前角色还没做出决定
             if self.enemy_instructions == None:
                 #生成决定
-                self.enemy_instructions = self.sangvisFerrisData[self.enemy_in_control].make_decision(
+                self.enemy_instructions = self.enemyInControl.make_decision(
                     self.MAP,self.griffinCharactersData,self.sangvisFerrisData,self.the_characters_detected_last_round)
             if not self.enemy_instructions.empty() or self.current_instruction != None:
                 #获取需要执行的指令
                 if self.current_instruction == None:
                     self.current_instruction = self.enemy_instructions.get()
                     if self.current_instruction.action == "move":
-                        self.sangvisFerrisData[self.enemy_in_control].move_follow(self.current_instruction.route)
+                        self.enemyInControl.move_follow(self.current_instruction.route)
                     elif self.current_instruction.action == "attack":
-                        self.sangvisFerrisData[self.enemy_in_control].set_action("attack")
-                        self.sangvisFerrisData[self.enemy_in_control].set_flip_based_on_pos(self.griffinCharactersData[self.current_instruction.target])
+                        self.enemyInControl.set_action("attack")
+                        self.enemyInControl.set_flip_based_on_pos(self.griffinCharactersData[self.current_instruction.target])
                 #根据选择调整动画
                 if self.current_instruction.action == "move":
-                    if not self.sangvisFerrisData[self.enemy_in_control].is_idle():
+                    if not self.enemyInControl.is_idle():
                         self.footstep_sounds.play()
                     else:
                         self.footstep_sounds.stop()
                         self.current_instruction = None
                 elif self.current_instruction.action == "attack":
-                    if self.sangvisFerrisData[self.enemy_in_control].get_imgId("attack") == 3:
-                        self.attackingSounds.play(self.sangvisFerrisData[self.enemy_in_control].kind)
-                    elif self.sangvisFerrisData[self.enemy_in_control].get_imgId("attack") == self.sangvisFerrisData[self.enemy_in_control].get_imgNum("attack")-1:
+                    if self.enemyInControl.get_imgId("attack") == 3:
+                        self.attackingSounds.play(self.enemyInControl.kind)
+                    elif self.enemyInControl.get_imgId("attack") == self.enemyInControl.get_imgNum("attack")-1:
                         temp_value = linpg.randomInt(0,100)
                         if self.current_instruction.target_area == "near" and temp_value <= 95\
                         or self.current_instruction.target_area == "middle" and temp_value <= 80\
                         or self.current_instruction.target_area == "far" and temp_value <= 65:
-                            the_damage = self.sangvisFerrisData[self.enemy_in_control].attack(self.griffinCharactersData[self.current_instruction.target])
+                            the_damage = self.enemyInControl.attack(self.griffinCharactersData[self.current_instruction.target])
                             #如果角色进入倒地或者死亡状态，则应该将times_characters_down加一
                             if not self.griffinCharactersData[self.current_instruction.target].is_alive(): self.resultInfo["times_characters_down"] += 1
                             #重新计算迷雾区域
@@ -1083,7 +1032,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                             self.damage_do_to_characters[self.current_instruction.target] = self.FONT.render("Miss",linpg.get_fontMode(),linpg.findColorRGBA("red"))
                         self.current_instruction = None
             else:
-                self.sangvisFerrisData[self.enemy_in_control].set_action()
+                self.enemyInControl.set_action()
                 self.enemies_in_control_id += 1
                 self.enemy_instructions = None
                 self.current_instruction = None
@@ -1184,9 +1133,9 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         self._display_weather(screen)
         
         #检测回合是否结束
-        self.switch_round(screen)
+        self.__switch_round(screen)
         #检测玩家是否胜利或失败
-        self._check_whether_player_win_or_lost()
+        self.__check_whether_player_win_or_lost()
 
         #显示获取到的物资
         if self.supply_board_ui_img.yTogo == 10:
@@ -1252,3 +1201,57 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                         self.battleMode = False
                         break
             self.__add_on_screen_object(self.ResultBoardUI)
+    #把战斗系统的画面画到screen上
+    def draw(self, screen:pygame.Surface) -> None:
+        self._update_event()
+        #环境声音-频道1
+        self.environment_sound.play()
+        # 游戏主循环
+        if self.battleMode:
+            self.__play_battle(screen)
+        #在战斗状态
+        else:
+            self.__play_dialog(screen)
+        #渐变效果：一次性的
+        if self.txt_alpha == None:
+            self.txt_alpha = 250
+        if self.txt_alpha > 0:
+            self.infoToDisplayDuringLoading.black_bg.set_alpha(self.txt_alpha)
+            self.infoToDisplayDuringLoading.draw(screen,self.txt_alpha)
+            for i in range(len(self.battleMode_info)):
+                self.battleMode_info[i].set_alpha(self.txt_alpha)
+                screen.blit(self.battleMode_info[i],(self.window_x/20,self.window_y*0.75+self.battleMode_info[i].get_height()*1.2*i))
+                if i == 1:
+                    temp_secode = self.FONT.render(time.strftime(":%S", time.localtime()),linpg.get_fontMode(),(255,255,255))
+                    temp_secode.set_alpha(self.txt_alpha)
+                    screen.blit(temp_secode,(self.window_x/20+self.battleMode_info[i].get_width(),self.window_y*0.75+self.battleMode_info[i].get_height()*1.2))
+            self.txt_alpha -= 5
+        #刷新画面
+        self.__update_scene(screen)
+        #展示暂停菜单
+        process_saved_text = linpg.ImageSurface(self.FONT.render(linpg.get_lang("Global","process_has_been_saved"),linpg.get_fontMode(),(255,255,255)),0,0)
+        process_saved_text.set_alpha(0)
+        while self.show_pause_menu:
+            self._update_event()
+            result = self.pause_menu.draw(screen,self.events)
+            if result == "Break":
+                linpg.setting.isDisplaying = False
+                self.show_pause_menu = False
+            elif result == "Save":
+                self.save_process()
+                process_saved_text.set_alpha(255)
+            elif result == "Setting":
+                linpg.setting.isDisplaying = True
+            elif result == "BackToMainMenu":
+                linpg.setting.isDisplaying = False
+                linpg.unloadBackgroundMusic()
+                self._isPlaying = False
+                self.show_pause_menu = False
+            #如果播放玩菜单后发现有东西需要更新
+            if linpg.setting.draw(screen,self.events):
+                self.__update_sound_volume()
+            process_saved_text.drawOnTheCenterOf(screen)
+            process_saved_text.fade_out(5)
+            linpg.display.flip()
+        del process_saved_text
+        self.pause_menu.screenshot = None

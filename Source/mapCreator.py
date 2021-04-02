@@ -1,22 +1,25 @@
 # cython: language_level=3
 from .skill import *
 
+#地图编辑器系统
 class MapCreator(linpg.AbstractBattleSystem):
-    def __init__(self,chapterType,chapterId,collection_name=None):
+    def __init__(self, chapterType:str, chapterId:int, collection_name:str=None):
         linpg.AbstractBattleSystem.__init__(self,chapterType,chapterId,collection_name)
-        self.fileLocation = "Data/{0}/chapter{1}_map.yaml".format(self.chapterType,self.chapterId) if self.chapterType == "main_chapter" else "Data/{0}/{1}/chapter{2}_map.yaml".format(self.chapterType,self.collection_name,self.chapterId)
+        self.fileLocation = "Data/{0}/chapter{1}_map.yaml".format(self.chapterType,self.chapterId) if self.chapterType == "main_chapter"\
+            else "Data/{0}/{1}/chapter{2}_map.yaml".format(self.chapterType,self.collection_name,self.chapterId)
     #加载角色的数据
-    def __load_characters_data(self,mapFileData):
+    def __load_characters_data(self, mapFileData:dict) -> None:
         #生成进程
         self._initial_characters_loader(mapFileData["character"],mapFileData["sangvisFerri"],"dev")
         #加载角色信息
         self._start_characters_loader()
-        while self._is_characters_loader_alive():
-            pass
-    def initialize(self,screen):
+        #类似多线程的join，待完善
+        while self._is_characters_loader_alive(): pass
+    #初始化
+    def initialize(self, screen:pygame.Surface) -> None:
         self.decorations_setting = linpg.loadConfig("Data/decorations.yaml","decorations")
         #载入地图数据
-        mapFileData = linpg.loadConfig(self.fileLocation)
+        mapFileData:dict = linpg.loadConfig(self.fileLocation)
         #初始化角色信息
         self.__load_characters_data(mapFileData)
         #初始化地图
@@ -130,7 +133,8 @@ class MapCreator(linpg.AbstractBattleSystem):
         self.UI_local_y = 0
         #读取地图原始文件
         self.originalData = linpg.loadConfig(self.fileLocation)
-    def draw(self,screen):
+    #将地图制作器的界面画到屏幕上
+    def draw(self, screen:pygame.Surface) -> None:
         self._update_event()
         mouse_x,mouse_y = linpg.controller.get_pos()
         block_get_click = self.MAP.calBlockInMap(mouse_x,mouse_y)
@@ -295,7 +299,7 @@ class MapCreator(linpg.AbstractBattleSystem):
             self.UIButton[Image].draw(screen)
 
         #显示所有可放置的友方角色
-        i=0
+        i:int = 0
         tempY = self.UIContainer.y+self.MAP.block_width*0.2
         for key in self.charactersImgDict:
             tempX = self.UIContainer.x+self.MAP.block_width*i*0.6+self.UI_local_x

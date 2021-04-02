@@ -1,8 +1,9 @@
 # cython: language_level=3
 from .scene import *
 
+#主菜单系统
 class MainMenu(linpg.SystemObject):
-    def __init__(self,screen):
+    def __init__(self, screen:pygame.Surface):
         #初始化系统模块
         linpg.SystemObject.__init__(self)
         #初始化设置
@@ -66,11 +67,11 @@ class MainMenu(linpg.SystemObject):
         #载入页面 - 渐出
         dispaly_loading_screen(screen,250,0,-2)
     #当前在Data/workshop文件夹中可以读取的文件夹的名字（font的形式）
-    def __reload_workshop_files_list(self,screen_size,createMode=False):
+    def __reload_workshop_files_list(self, screen_size:tuple, createMode:bool=False) -> None:
         self.workshop_files = []
         self.workshop_files_text = []
-        if createMode:
-            self.workshop_files.append(self.main_menu_txt["other"]["new_collection"])
+        #是否需要显示“新增”选项
+        if createMode: self.workshop_files.append(self.main_menu_txt["other"]["new_collection"])
         for path in glob.glob("Data/workshop/*"):
             try:
                 info_data = linpg.loadConfig(os.path.join(path,"info.yaml"))
@@ -78,20 +79,19 @@ class MainMenu(linpg.SystemObject):
                 info_data = linpg.loadConfig("Data/info_example.yaml")
                 info_data["default_lang"] = linpg.get_setting("Language")
                 linpg.saveConfig(os.path.join(path,"info.yaml"),info_data)
-            filePath,fileName = os.path.split(path)
-            self.workshop_files_text.append(fileName)
+            self.workshop_files_text.append(os.path.basename(path))
             self.workshop_files.append(info_data["title"][linpg.get_setting("Language")])
         self.workshop_files.append(linpg.get_lang("Global","back"))
-        txt_location = int(screen_size[0]*2/3)
-        txt_y = (screen_size[1]-len(self.workshop_files)*linpg.get_standard_font_size("medium")*2)/2
+        txt_location:int = int(screen_size[0]*2/3)
+        txt_y:int = int((screen_size[1]-len(self.workshop_files)*linpg.get_standard_font_size("medium")*2)/2)
         for i in range(len(self.workshop_files)):
             self.workshop_files[i] = linpg.fontRenderPro(self.workshop_files[i],"enable",(txt_location,txt_y),linpg.get_standard_font_size("medium"))
             txt_y += linpg.get_standard_font_size("medium")*2
     #重新加载章节选择菜单的选项
-    def __reload_chapter_select_list(self,screen_size,chapterType="main_chapter",createMode=False,fileType="dialogs"):
+    def __reload_chapter_select_list(self, screen_size:tuple, chapterType:str="main_chapter", createMode:bool=False, fileType:str="dialogs") -> None:
         self.chapter_select = []
-        if createMode:
-            self.chapter_select.append(self.main_menu_txt["other"]["new_chapter"])
+        #是否需要显示“新增”选项
+        if createMode: self.chapter_select.append(self.main_menu_txt["other"]["new_chapter"])
         chapterTitle = linpg.get_lang("Battle_UI","numChapter")
         if fileType == "dialogs":
             fileLocation = "Data/{0}/*_dialogs_{1}.yaml".format(chapterType,linpg.get_setting("Language")) if chapterType == "main_chapter" else "Data/{0}/{1}/*_dialogs_{2}.yaml".format(chapterType,self.current_selected_workshop_collection,linpg.get_setting("Language"))
@@ -119,8 +119,8 @@ class MainMenu(linpg.SystemObject):
                 self.chapter_select.append(chapterTitle.format(chapterId)+": "+titleName)
         #将返回按钮放到菜单列表中
         self.chapter_select.append(linpg.get_lang("Global","back"))
-        txt_y = (screen_size[1]-len(self.chapter_select)*linpg.get_standard_font_size("medium")*2)/2
-        txt_x = int(screen_size[0]*2/3)
+        txt_y:int = int((screen_size[1]-len(self.chapter_select)*linpg.get_standard_font_size("medium")*2)/2)
+        txt_x:int = int(screen_size[0]*2/3)
         #将菜单列表中的文字转换成文字surface
         for i in range(len(self.chapter_select)):
             """
@@ -132,8 +132,9 @@ class MainMenu(linpg.SystemObject):
             mode = "enable"
             self.chapter_select[i] = linpg.fontRenderPro(self.chapter_select[i],mode,(txt_x,txt_y),linpg.get_standard_font_size("medium"))
             txt_y += linpg.get_standard_font_size("medium")*2
-    def __draw_buttons(self,screen):
-        i=0
+    #画出文字按钮
+    def __draw_buttons(self, screen:pygame.Surface) -> None:
+        i:int = 0
         #主菜单
         if self.menu_type == 0:
             for button in self.main_menu_txt["menu_main"].values():
@@ -168,7 +169,8 @@ class MainMenu(linpg.SystemObject):
         if self.last_hover_sound_play_on != self.hover_sound_play_on:
             self.hover_on_button_sound.play()
             self.last_hover_sound_play_on = self.hover_sound_play_on
-    def __create_new_file(self):
+    #为新的创意工坊项目创建一个模板
+    def __create_new_file(self) -> None:
         #如果创意工坊的文件夹目录不存在，则创建一个
         if not os.path.exists("Data/workshop"):
             os.makedirs("Data/workshop")
@@ -187,22 +189,22 @@ class MainMenu(linpg.SystemObject):
         info_data["default_lang"] = linpg.get_setting("Language")
         linpg.saveConfig("Data/workshop/{}/info.yaml".format(fileName),info_data)
     #创建新的对话文件
-    def __create_new_dialog(self):
-        chapterId = len(glob.glob("Data/workshop/{0}/*_dialogs_{1}.yaml".format(self.current_selected_workshop_collection,linpg.get_setting("Language"))))+1
+    def __create_new_dialog(self) -> None:
+        chapterId:int = len(glob.glob("Data/workshop/{0}/*_dialogs_{1}.yaml".format(self.current_selected_workshop_collection,linpg.get_setting("Language"))))+1
         shutil.copyfile("Data/chapter_dialogs_example.yaml","Data/workshop/{0}/chapter{1}_dialogs_{2}.yaml".format(self.current_selected_workshop_collection,chapterId,linpg.get_setting("Language")))
     #创建新的地图文件
-    def __create_new_map(self):
-        chapterId = len(glob.glob("Data/workshop/{0}/*_map.yaml".format(self.current_selected_workshop_collection)))+1
+    def __create_new_map(self) -> None:
+        chapterId:int = len(glob.glob("Data/workshop/{0}/*_map.yaml".format(self.current_selected_workshop_collection)))+1
         shutil.copyfile("Data/chapter_map_example.yaml","Data/workshop/{0}/chapter{1}_map.yaml".format(self.current_selected_workshop_collection,chapterId))
     #根据路径判定章节的Id
-    def __find_chapter_id(self,path):
-        filePath,fileName = os.path.split(path)
+    def __find_chapter_id(self, path:str) -> int:
+        fileName = os.path.basename(path)
         if fileName[0:7] == "chapter":
             return int(fileName[7:fileName.index('_')])
         else:
             raise Exception('linpgEngine-Error: Cannot find the id of chapter because the file is not properly named!')
     #加载章节
-    def __load_scene(self,chapterType,chapterId,screen):
+    def __load_scene(self, chapterType:str, chapterId:int, screen:pygame.Surface) -> None:
         self.videoCapture.stop()
         collection_name = None if chapterType == "main_chapter" else self.current_selected_workshop_collection
         dialog(chapterType,chapterId,screen,"dialog_before_battle",collection_name)
@@ -216,9 +218,9 @@ class MainMenu(linpg.SystemObject):
             linpg.set_glob_value("BackToMainMenu",False)
         self.__reset_menu()
     #继续章节
-    def __continue_scene(self,screen):
+    def __continue_scene(self, screen:pygame.Surface) -> None:
         self.videoCapture.stop()
-        SAVE = linpg.loadConfig("Save/save.yaml")
+        SAVE:dict = linpg.loadConfig("Save/save.yaml")
         startPoint = SAVE["type"]
         if startPoint == "dialog_before_battle":
             dialog(None,None,screen,None)
@@ -241,7 +243,7 @@ class MainMenu(linpg.SystemObject):
             linpg.if_get_set_value("BackToMainMenu",True,False)
         self.__reset_menu()
     #更新主菜单的部分元素
-    def __reset_menu(self):
+    def __reset_menu(self) -> None:
         self.videoCapture = self.videoCapture.clone()
         self.videoCapture.start()
         #是否可以继续游戏了（save文件是否被创建）
@@ -251,7 +253,8 @@ class MainMenu(linpg.SystemObject):
         elif not os.path.exists("Save/save.yaml") and self.continueButtonIsOn == True:
             self.main_menu_txt["menu_main"]["0_continue"] = linpg.fontRenderPro(linpg.get_lang("MainMenu")["menu_main"]["0_continue"],"disable",self.main_menu_txt["menu_main"]["0_continue"].get_pos(),linpg.get_standard_font_size("medium"))
             self.continueButtonIsOn = False
-    def draw(self,screen):
+    #画出主菜单
+    def draw(self, screen:pygame.Surface) -> None:
         #开始播放背景视频
         self.videoCapture.start()
         #主循环

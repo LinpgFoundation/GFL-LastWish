@@ -2,7 +2,7 @@
 from .dialogSystem import *
 
 #对话系统
-def dialog(chapterType,chapterId,screen,part,collection_name=None):
+def dialog(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, collection_name:str=None) -> dict:
     #加载闸门动画的图片素材
     LoadingImgAbove = linpg.loadImg("Assets/image/UI/LoadingImgAbove.png",(screen.get_width()+8,screen.get_height()/1.7))
     LoadingImgBelow = linpg.loadImg("Assets/image/UI/LoadingImgBelow.png",(screen.get_width()+8,screen.get_height()/2.05))
@@ -14,7 +14,7 @@ def dialog(chapterType,chapterId,screen,part,collection_name=None):
     #卸载音乐
     linpg.unloadBackgroundMusic()
     #初始化对话系统模块
-    DIALOG = DialogSystem()
+    DIALOG:object = DialogSystem()
     if chapterType != None:
         DIALOG.new(chapterType,chapterId,part,collection_name)
     else:
@@ -34,12 +34,12 @@ def dialog(chapterType,chapterId,screen,part,collection_name=None):
     return DIALOG.dialog_options
 
 #对话编辑器
-def dialogCreator(chapterType,chapterId,screen,part,collection_name=None):
+def dialogCreator(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, collection_name:str=None) -> None:
     #卸载音乐
     linpg.unloadBackgroundMusic()
     linpg.display.set_caption("{0} ({1})".format(linpg.get_lang('General','game_title'),linpg.get_lang('General','dialog_creator')))
     #加载对话
-    DIALOG = linpg.DialogSystemDev(chapterType,chapterId,part,collection_name)
+    DIALOG:object = linpg.DialogSystemDev(chapterType,chapterId,part,collection_name)
     #主循环
     while DIALOG.is_playing():
         DIALOG.draw(screen)
@@ -47,10 +47,10 @@ def dialogCreator(chapterType,chapterId,screen,part,collection_name=None):
     linpg.display.set_caption(linpg.get_lang('General','game_title'))
 
 #战斗系统
-def battle(chapterType,chapterId,screen,collection_name=None):
+def battle(chapterType:str, chapterId:int, screen:pygame.Surface, collection_name:str=None) -> dict:
     #卸载音乐
     linpg.unloadBackgroundMusic()
-    BATTLE = TurnBasedBattleSystem(chapterType,chapterId,collection_name)
+    BATTLE:object = TurnBasedBattleSystem(chapterType,chapterId,collection_name)
     if chapterType != None:
         BATTLE.initialize(screen)
     else:
@@ -62,7 +62,7 @@ def battle(chapterType,chapterId,screen,collection_name=None):
     return BATTLE.resultInfo
 
 #地图编辑器
-def mapCreator(chapterType,chapterId,screen,collection_name=None):
+def mapCreator(chapterType:str, chapterId:int, screen:pygame.Surface, collection_name:str=None) -> None:
     #卸载音乐
     linpg.unloadBackgroundMusic()
     linpg.display.set_caption("{0} ({1})".format(linpg.get_lang('General','game_title'),linpg.get_lang('General','map_creator')))
@@ -73,7 +73,7 @@ def mapCreator(chapterType,chapterId,screen,collection_name=None):
     linpg.display.set_caption(linpg.get_lang('General','game_title'))
 
 #blit载入页面
-def dispaly_loading_screen(screen,start,end,value):
+def dispaly_loading_screen(screen:pygame.Surface, start:int, end:int, value:int) -> None:
     window_x,window_y = screen.get_size()
     #获取健康游戏忠告
     HealthyGamingAdvice = linpg.get_lang("HealthyGamingAdvice")

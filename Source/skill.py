@@ -1,17 +1,26 @@
 # cython: language_level=3
 from .battleUI import *
 
-def skill(characterName,click_potcion,the_skill_cover_area,sangvisFerris_data,characters_data,action="detect",skill_target=None,damage_do_to_character=None):
+def skill(
+    characterName:str,
+    pos_click:any,
+    the_skill_cover_area:any,
+    sangvisFerris_data:dict,
+    characters_data:dict,
+    action:str="detect",
+    skill_target:str=None,
+    damage_do_to_character:dict=None
+    ) -> any:
     if action == "detect":
         skill_target = None
         if characters_data[characterName].type == "gsh-18":
             for character in characters_data:
-                if characters_data[character].on_pos(click_potcion):
+                if characters_data[character].on_pos(pos_click):
                     skill_target = character
                     break
         elif characters_data[characterName].type == "asval" or characters_data[characterName].type == "pp1901" or characters_data[characterName].type == "sv-98":
             for enemies in sangvisFerris_data:
-                if sangvisFerris_data[enemies].on_pos(click_potcion) and sangvisFerris_data[enemies].current_hp>0:
+                if sangvisFerris_data[enemies].on_pos(pos_click) and sangvisFerris_data[enemies].current_hp>0:
                     skill_target = enemies
                     break
         return skill_target

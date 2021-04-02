@@ -1,9 +1,8 @@
 main.py
-main_pyd.py
 __pycache__/
 build/
 *.pyd
 Save/
 Cache/
 Data/workshop/
-linpg/
+Source_pyd/

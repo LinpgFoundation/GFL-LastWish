@@ -32,13 +32,13 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
         self.alliances = {"me": linpg.FriendlyCharacter(mapFileData["character"]["sv-98"],self.DATABASE["sv-98"])}
         self.MAP.calculate_darkness(self.alliances)
         self.pos_last = self.alliances["me"].get_pos()
-    def _check_key_down(self,event:object) -> None:
+    def _check_key_down(self, event:object) -> None:
         super()._check_key_down(event)
         if event.key == pygame.K_w: self.__pressKeyToMoveMe["up"] = True
         if event.key == pygame.K_s: self.__pressKeyToMoveMe["down"] = True
         if event.key == pygame.K_a: self.__pressKeyToMoveMe["left"] = True
         if event.key == pygame.K_d: self.__pressKeyToMoveMe["right"] = True
-    def _check_key_up(self,event:object) -> None:
+    def _check_key_up(self, event:object) -> None:
         super()._check_key_up(event)
         if event.key == pygame.K_w: self.__pressKeyToMoveMe["up"] = False
         if event.key == pygame.K_s: self.__pressKeyToMoveMe["down"] = False
@@ -74,21 +74,22 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
         else:
             if self.alliances["me"].get_action() != "wait":
                 self.alliances["me"].set_action("wait")
+    #根据本地坐标移动屏幕
     def _move_screen(self) -> None:
         tempX,tempY = self.MAP.calPosInMap(self.alliances["me"].x,self.alliances["me"].y)
         if tempX < self.window_x*0.3 and self.MAP.getPos_x()<=0:
             self.screen_to_move_x = self.window_x*0.3-tempX
         elif tempX > self.window_x*0.7 and self.MAP.getPos_x()>=self.MAP.column*self.MAP.block_width*-1:
             self.screen_to_move_x = self.window_x*0.7-tempX
-
         if tempY < self.window_y*0.3 and self.MAP.getPos_y()<=0:
             self.screen_to_move_y = self.window_y*0.3-tempY
         elif tempY > self.window_y*0.7 and self.MAP.getPos_y()>=self.MAP.row*self.MAP.block_height*-1:
             self.screen_to_move_y = self.window_y*0.7-tempY
         super()._move_screen()
     #展示场景装饰物
-    def _display_decoration(self,screen:pygame.Surface) -> None: self.MAP.display_decoration(screen,self.alliances,{})
-    def draw(self,screen):
+    def _display_decoration(self, screen:pygame.Surface) -> None: self.MAP.display_decoration(screen,self.alliances,{})
+    #把所有内容画到屏幕上
+    def draw(self, screen:pygame.Surface) -> None:
         self._update_event()
         mouse_x,mouse_y = linpg.controller.get_pos()
         for event in self.events:

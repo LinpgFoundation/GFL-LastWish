@@ -10,7 +10,8 @@ except:
     import linpg
 
 #加载版本信息
-version_info = linpg.loadConfig("Data/version.yaml")
-VERSION = version_info["version"]
-REVISION = version_info["revision"]
+version_info:dict = linpg.loadConfig("Data/version.yaml")
+VERSION:int = version_info["version"]
+REVISION:int = version_info["revision"]
+PATCH:int = version_info["patch"]
 del version_info

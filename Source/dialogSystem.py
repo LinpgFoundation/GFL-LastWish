@@ -1,11 +1,12 @@
+# cython: language_level=3
 from .turnBasedBattleSystem import *
 
+#视觉小说系统
 class DialogSystem(linpg.DialogSystem):
-    def __init__(self):
-        linpg.DialogSystem.__init__(self)
+    def __init__(self): linpg.DialogSystem.__init__(self)
     #保存数据
-    def save_process(self):
-        #别忘了看看Save文件夹是不是都不存在
+    def save_process(self) -> None:
+        #确保Save文件夹存在
         if not os.path.exists("Save"): os.makedirs("Save")
         #存档数据
         save_thread = linpg.SaveDataThread("Save/save.yaml",{
