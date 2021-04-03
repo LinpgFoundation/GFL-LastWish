@@ -1,11 +1,8 @@
-from distutils.core import setup
-from Cython.Build import cythonize
-from glob import glob
 import os
 import shutil
-
-#pyinstaller -i icon.ico main.py
-#pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+from distutils.core import setup
+from glob import glob
+from Cython.Build import cythonize
 
 debug_c = False
 
@@ -21,7 +18,6 @@ os.makedirs("Source_pyd")
 
 #把pyd文件移动文件夹中
 for path in glob(r'*.pyd'): shutil.move(path,"Source_pyd")
-
 
 #删除build文件夹
 if os.path.exists('build'): shutil.rmtree('build')

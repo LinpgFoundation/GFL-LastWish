@@ -98,7 +98,21 @@ This branch holds the latest version that is available to the public. While this
 
 *: These branches may not be available to the public.
 
+# :books: How to contribute / 如何贡献代码
 
+- It would be best if you can fork the "dev" branch as your starting point. If the "dev" branch does not exist, then fork the "master" branch.
+
+  你应该fork "dev"分支作为作为你的起始点。如果"dev"分支不存在，则fork "master"分支。
+
+- After you have finished your work, you should request to merge to the "dev" branch instead of the "master" branch.
+
+  所有pull request应该请求merge到"dev"分支中。如果"dev"不存在，则请求merge到"master"分支。
+
+- We are looking forward to seeing a pull request that contains a detailed explanation about any changes that were made.
+
+  所有pull reques应该阐明所有关于改动的细节。
+
+  
 
 # :video_game: ​Discord
 
@@ -108,7 +122,7 @@ https://discord.gg/3wz6bs5jvu
 
 # :open_book: ​Wiki / 维基百科
 
-https://github.com/yudonglin/GirlsFrontLine-LastWish/wiki
+https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish
 
 
 

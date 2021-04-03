@@ -1,4 +1,3 @@
-main.py
 __pycache__/
 build/
 *.pyd
@@ -6,3 +5,4 @@ Save/
 Cache/
 Data/workshop/
 Source_pyd/
+dist/
