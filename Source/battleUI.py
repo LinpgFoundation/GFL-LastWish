@@ -25,7 +25,7 @@ class RoundSwitch:
         self.enemy_round_txt_surface.set_alpha(0)
     def draw(self, screen:pygame.Surface, whose_round:str, total_rounds:int) -> bool:
         #如果“第N回合”的文字surface还没有初始化，则初始化该文字
-        if self.now_total_rounds_surface == None:
+        if self.now_total_rounds_surface is None:
             self.now_total_rounds_surface = linpg.fontRender(self.now_total_rounds_text.format(linpg.get_num_in_local_text(total_rounds)), "white",screen.get_width()/38)
             self.now_total_rounds_surface.set_alpha(0)
         #如果UI底的alpha值在渐入阶段
@@ -39,7 +39,7 @@ class RoundSwitch:
         #如果UI底的alpha值在淡出阶段
         elif not self.baseAlphaUp:
             #如果文字不在淡出阶段
-            if self.TxtAlphaUp == True:
+            if self.TxtAlphaUp is True:
                 alphaTemp = self.now_total_rounds_surface.get_alpha()
                 #“第N回合”的文字先渐入
                 if alphaTemp < 250:
@@ -215,7 +215,7 @@ class SelectMenu:
     #将菜单按钮画出
     def draw(self, screen:pygame.Surface, fontSize:Union[int,float], location:dict, kind:str, friendsCanSave:list, thingsCanReact:list) -> str:
         #如果按钮没有初始化，则应该立刻初始化按钮
-        if self.allButton == None: self.initialButtons(fontSize)
+        if self.allButton is None: self.initialButtons(fontSize)
         buttonGetHover:str = ""
         selectButtonBaseWidth = round(fontSize*5)
         #攻击按钮 - 左
@@ -318,7 +318,7 @@ class CharacterInfoBoard:
     #画出信息板
     def draw(self, screen:pygame.Surface, theCharacterData:object) -> None:
         #如果信息板还没更新，则应该先更新再画出
-        if self.informationBoard == None: self.updateInformationBoard(int(screen.get_width()/96),theCharacterData)
+        if self.informationBoard is None: self.updateInformationBoard(int(screen.get_width()/96),theCharacterData)
         #画出信息板
         screen.blit(self.informationBoard,(0,screen.get_height()-self.boardImg.get_height()))
 

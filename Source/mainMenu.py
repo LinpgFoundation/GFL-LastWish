@@ -244,13 +244,13 @@ class MainMenu(linpg.SystemObject):
         self.__reset_menu()
     #更新主菜单的部分元素
     def __reset_menu(self) -> None:
-        self.videoCapture = self.videoCapture.clone()
+        self.videoCapture = self.videoCapture.copy()
         self.videoCapture.start()
         #是否可以继续游戏了（save文件是否被创建）
-        if os.path.exists("Save/save.yaml") and self.continueButtonIsOn == False:
+        if os.path.exists("Save/save.yaml") and not self.continueButtonIsOn:
             self.main_menu_txt["menu_main"]["0_continue"] = linpg.fontRenderPro(linpg.get_lang("MainMenu")["menu_main"]["0_continue"],"enable",self.main_menu_txt["menu_main"]["0_continue"].get_pos(),linpg.get_standard_font_size("medium"))
             self.continueButtonIsOn = True
-        elif not os.path.exists("Save/save.yaml") and self.continueButtonIsOn == True:
+        elif not os.path.exists("Save/save.yaml") and self.continueButtonIsOn is True:
             self.main_menu_txt["menu_main"]["0_continue"] = linpg.fontRenderPro(linpg.get_lang("MainMenu")["menu_main"]["0_continue"],"disable",self.main_menu_txt["menu_main"]["0_continue"].get_pos(),linpg.get_standard_font_size("medium"))
             self.continueButtonIsOn = False
     #画出主菜单
@@ -405,7 +405,7 @@ class MainMenu(linpg.SystemObject):
                             if linpg.is_hover(self.chapter_select[i]):
                                 self.videoCapture.stop()
                                 mapCreator("workshop",i,screen,self.current_selected_workshop_collection)
-                                self.videoCapture = self.videoCapture.clone()
+                                self.videoCapture = self.videoCapture.copy()
                                 self.videoCapture.start()
                                 break
                 #创意工坊-选择当前合集想要编辑对话的关卡
@@ -421,7 +421,7 @@ class MainMenu(linpg.SystemObject):
                             if linpg.is_hover(self.chapter_select[i]):
                                 self.videoCapture.stop()
                                 dialogCreator("workshop",i,screen,"dialog_before_battle",self.current_selected_workshop_collection)
-                                self.videoCapture = self.videoCapture.clone()
+                                self.videoCapture = self.videoCapture.copy()
                                 self.videoCapture.start()
                                 break
             linpg.display.flip()

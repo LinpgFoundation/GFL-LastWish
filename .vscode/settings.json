@@ -41,6 +41,7 @@
         "moviepy",
         "ndarray",
         "nemeum",
+        "noconsole",
         "numpy",
         "nyto",
         "printf",

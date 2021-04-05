@@ -15,7 +15,7 @@ def dialog(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, coll
     linpg.unloadBackgroundMusic()
     #初始化对话系统模块
     DIALOG:object = DialogSystem()
-    if chapterType != None:
+    if chapterType is not None:
         DIALOG.new(chapterType,chapterId,part,collection_name)
     else:
         DIALOG.load("Save/save.yaml")
@@ -51,7 +51,7 @@ def battle(chapterType:str, chapterId:int, screen:pygame.Surface, collection_nam
     #卸载音乐
     linpg.unloadBackgroundMusic()
     BATTLE:object = TurnBasedBattleSystem(chapterType,chapterId,collection_name)
-    if chapterType != None:
+    if chapterType is not None:
         BATTLE.initialize(screen)
     else:
         BATTLE.load(screen)
@@ -77,7 +77,7 @@ def dispaly_loading_screen(screen:pygame.Surface, start:int, end:int, value:int)
     window_x,window_y = screen.get_size()
     #获取健康游戏忠告
     HealthyGamingAdvice = linpg.get_lang("HealthyGamingAdvice")
-    if HealthyGamingAdvice == None:
+    if HealthyGamingAdvice is None:
         HealthyGamingAdvice = []
     else:
         for i in range(len(HealthyGamingAdvice)):

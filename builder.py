@@ -21,3 +21,5 @@ else:
     os.system("pyinstaller -i icon.ico --noconsole main.spec")
 
 if os.path.exists('build'): shutil.rmtree('build')
+if os.path.exists('logs'): shutil.rmtree('logs')
+if os.path.exists('__pycache__'): shutil.rmtree('__pycache__')

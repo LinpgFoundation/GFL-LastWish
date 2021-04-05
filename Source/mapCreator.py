@@ -24,7 +24,7 @@ class MapCreator(linpg.AbstractBattleSystem):
         self.__load_characters_data(mapFileData)
         #初始化地图
         self.MAP = mapFileData["map"]
-        if self.MAP == None or len(self.MAP) == 0:
+        if self.MAP is None or len(self.MAP) == 0:
             SnowEnvImg = ["TileSnow01","TileSnow01ToStone01","TileSnow01ToStone02","TileSnow02","TileSnow02ToStone01","TileSnow02ToStone02"]
             block_y = 50
             block_x = 50
@@ -165,11 +165,11 @@ class MapCreator(linpg.AbstractBattleSystem):
                         self.UI_local_x += screen.get_width()*0.05
                     elif event.button == 5:
                         self.UI_local_x -= screen.get_width()*0.05
-                elif self.deleteMode == True and block_get_click != None:
+                elif self.deleteMode is True and block_get_click is not None:
                     #查看当前位置是否有装饰物
                     decoration = self.MAP.find_decoration_on((block_get_click["x"],block_get_click["y"]))
                     #如果发现有冲突的装饰物
-                    if decoration != None:
+                    if decoration is not None:
                         self.MAP.remove_decoration(decoration)
                     else:
                         any_chara_replace = None
@@ -177,23 +177,23 @@ class MapCreator(linpg.AbstractBattleSystem):
                             if value.x == block_get_click["x"] and value.y == block_get_click["y"]:
                                 any_chara_replace = key
                                 break
-                        if any_chara_replace != None:
+                        if any_chara_replace is not None:
                             if any_chara_replace in self.alliances_data:
                                 self.alliances_data.pop(any_chara_replace)
                                 self.originalData["character"].pop(any_chara_replace)
                             elif any_chara_replace in self.enemies_data:
                                 self.enemies_data.pop(any_chara_replace)
                                 self.originalData["sangvisFerri"].pop(any_chara_replace)
-                elif linpg.is_hover(self.UIButton["save"]) and self.object_to_put_down == None and self.deleteMode == False:
+                elif linpg.is_hover(self.UIButton["save"]) and self.object_to_put_down is None and not self.deleteMode:
                     linpg.saveConfig(self.fileLocation,self.originalData)
-                elif linpg.is_hover(self.UIButton["back"]) and self.object_to_put_down == None and self.deleteMode == False:
+                elif linpg.is_hover(self.UIButton["back"]) and self.object_to_put_down is None and not self.deleteMode:
                     self._isPlaying = False
                     break
-                elif linpg.is_hover(self.UIButton["delete"]) and self.object_to_put_down == None and self.deleteMode == False:
+                elif linpg.is_hover(self.UIButton["delete"]) and self.object_to_put_down is None and not self.deleteMode:
                     self.object_to_put_down = None
                     self.data_to_edit = None
                     self.deleteMode = True
-                elif linpg.is_hover(self.UIButton["reload"]) and self.object_to_put_down == None and self.deleteMode == False:
+                elif linpg.is_hover(self.UIButton["reload"]) and self.object_to_put_down is None and not self.deleteMode:
                     tempLocal_x,tempLocal_y = self.MAP.getPos()
                     #读取地图数据
                     mapFileData = linpg.loadConfig(self.fileLocation)
@@ -206,8 +206,8 @@ class MapCreator(linpg.AbstractBattleSystem):
                     #读取地图
                     self.originalData = linpg.loadConfig(self.fileLocation)
                 else:
-                    if pygame.mouse.get_pressed()[0] and block_get_click != None:
-                        if self.object_to_put_down != None:
+                    if pygame.mouse.get_pressed()[0] and block_get_click is not None:
+                        if self.object_to_put_down is not None:
                             if self.object_to_put_down["type"] == "block":
                                 self.originalData["map"][block_get_click["y"]][block_get_click["x"]] = self.object_to_put_down["id"]
                                 self.MAP.update_block(block_get_click,self.object_to_put_down["id"])
@@ -215,7 +215,7 @@ class MapCreator(linpg.AbstractBattleSystem):
                                 #查看当前位置是否有装饰物
                                 decoration = self.MAP.find_decoration_on((block_get_click["x"],block_get_click["y"]))
                                 #如果发现有冲突的装饰物
-                                if decoration != None:
+                                if decoration is not None:
                                     self.MAP.remove_decoration(decoration)
                                 decorationType = self.decorations_setting[self.object_to_put_down["id"]]
                                 if decorationType not in self.originalData["decoration"]:
@@ -232,7 +232,7 @@ class MapCreator(linpg.AbstractBattleSystem):
                                     if value.x == block_get_click["x"] and value.y == block_get_click["y"]:
                                         any_chara_replace = key
                                         break
-                                if any_chara_replace != None:
+                                if any_chara_replace is not None:
                                     if any_chara_replace in self.alliances_data:
                                         self.alliances_data.pop(any_chara_replace)
                                         self.originalData["character"].pop(any_chara_replace)
@@ -268,22 +268,22 @@ class MapCreator(linpg.AbstractBattleSystem):
         #画出地图
         self._display_map(screen)
 
-        if block_get_click != None and not linpg.is_hover(self.UIContainerRight) and not linpg.is_hover(self.UIContainer):
-            if self.deleteMode == True:
+        if block_get_click is not None and not linpg.is_hover(self.UIContainerRight) and not linpg.is_hover(self.UIContainer):
+            if self.deleteMode is True:
                 xTemp,yTemp = self.MAP.calPosInMap(block_get_click["x"],block_get_click["y"])
                 screen.blit(self.redBlock,(xTemp+self.MAP.block_width*0.1,yTemp))
-            elif self.object_to_put_down != None:
+            elif self.object_to_put_down is not None:
                 xTemp,yTemp = self.MAP.calPosInMap(block_get_click["x"],block_get_click["y"])
                 screen.blit(self.greenBlock,(xTemp+self.MAP.block_width*0.1,yTemp))
 
         #角色动画
         for key in self.alliances_data:
             self.alliances_data[key].draw(screen,self.MAP)
-            if self.object_to_put_down == None and pygame.mouse.get_pressed()[0] and self.alliances_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.alliances_data[key].y == int(mouse_y/self.greenBlock.get_height()):
+            if self.object_to_put_down is None and pygame.mouse.get_pressed()[0] and self.alliances_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.alliances_data[key].y == int(mouse_y/self.greenBlock.get_height()):
                 self.data_to_edit = self.alliances_data[key]
         for key in self.enemies_data:
             self.enemies_data[key].draw(screen,self.MAP)
-            if self.object_to_put_down == None and pygame.mouse.get_pressed()[0] and self.enemies_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.enemies_data[key].y == int(mouse_y/self.greenBlock.get_height()):
+            if self.object_to_put_down is None and pygame.mouse.get_pressed()[0] and self.enemies_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.enemies_data[key].y == int(mouse_y/self.greenBlock.get_height()):
                 self.data_to_edit = self.enemies_data[key]
 
         #展示设施
@@ -342,7 +342,7 @@ class MapCreator(linpg.AbstractBattleSystem):
                     self.object_to_put_down = {"type":"decoration","id":img_name}
             i+=1
         #跟随鼠标显示即将被放下的物品
-        if self.object_to_put_down != None:
+        if self.object_to_put_down is not None:
             if self.object_to_put_down["type"] == "block":
                 screen.blit(self.envImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y))
             elif self.object_to_put_down["type"] == "decoration":
@@ -353,7 +353,7 @@ class MapCreator(linpg.AbstractBattleSystem):
                 screen.blit(self.sangvisFerrisImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y))
         
         #显示即将被编辑的数据
-        if self.data_to_edit != None:
+        if self.data_to_edit is not None:
             screen.blits((
                 (linpg.fontRender("action points: "+str(self.data_to_edit.max_action_point),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8)),
                 (linpg.fontRender("attack range: "+str(self.data_to_edit.attack_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20)),
