@@ -3,29 +3,35 @@
 block_cipher = None
 
 a = Analysis(['main.py'],
-             pathex = ['D:\\GitHub\\GirlsFrontLine-LastWish'],
-             binaries = [],
-             datas = [
-                 ('Assets','Assets'),
-                 ('Data','Data'),
-                 ('Lang','Lang'),
-                 ('Source_pyd','Source_pyd'),
-                 ('icon.ico','.')
-             ],
-             hiddenimports = [
-                 "linpg",
-                 "pygame",
-                 "pyyaml",
-                 "av",
-                 "numpy",
-             ],
-             hookspath = [],
-             runtime_hooks = [],
-             excludes = [],
-             win_no_prefer_redirects = False,
-             win_private_assemblies = False,
-             cipher = block_cipher,
-             noarchive = False)
+            pathex = ['D:\\GitHub\\GirlsFrontLine-LastWish'],
+            binaries = [],
+            datas = [
+                ('Assets','Assets'),
+                ('Data','Data'),
+                ('Lang','Lang'),
+                ('Source_pyd','Source_pyd'),
+                ('icon.ico','.')
+            ],
+            hiddenimports = [
+                "numpy",
+                "PIL.Image",
+                "tkinter",
+                "av",
+                "yaml",
+                "linpg",
+                "pygame",
+                "pygame.freetype",
+                "pygame.locals",
+                "pygame.colordict",
+                "pygame._sdl2",
+            ],
+            hookspath = [],
+            runtime_hooks = [],
+            excludes = [],
+            win_no_prefer_redirects = False,
+            win_private_assemblies = False,
+            cipher = block_cipher,
+            noarchive = False)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher = block_cipher)
 exe = EXE(pyz,

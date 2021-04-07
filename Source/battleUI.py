@@ -221,40 +221,40 @@ class SelectMenu:
         #攻击按钮 - 左
         txt_tempX = location["xStart"]-selectButtonBaseWidth*0.6
         txt_tempY = location["yStart"]
-        if linpg.is_hover(self.allButton["attack"],(txt_tempX,txt_tempY)):
+        if linpg.isHover(self.allButton["attack"],(txt_tempX,txt_tempY)):
             buttonGetHover = "attack"
         screen.blit(self.allButton["attack"],(txt_tempX,txt_tempY))
         #移动按钮 - 右
         txt_tempX = location["xEnd"]-selectButtonBaseWidth*0.4
         #txt_tempY 与攻击按钮一致
-        if linpg.is_hover(self.allButton["move"],(txt_tempX,txt_tempY)):
+        if linpg.isHover(self.allButton["move"],(txt_tempX,txt_tempY)):
             buttonGetHover = "move"
         screen.blit(self.allButton["move"],(txt_tempX,txt_tempY))
         #换弹按钮 - 下
         txt_tempX = location["xStart"]+selectButtonBaseWidth*0.5
         txt_tempY = location["yEnd"]-selectButtonBaseWidth*0.25
-        if linpg.is_hover(self.allButton["reload"],(txt_tempX,txt_tempY)):
+        if linpg.isHover(self.allButton["reload"],(txt_tempX,txt_tempY)):
             buttonGetHover = "reload"
         screen.blit(self.allButton["reload"],(txt_tempX,txt_tempY))
         #技能按钮 - 上
         if kind != "HOC":
             #txt_tempX与换弹按钮一致
             txt_tempY = location["yStart"]-selectButtonBaseWidth*0.7
-            if linpg.is_hover(self.allButton["skill"],(txt_tempX,txt_tempY)):
+            if linpg.isHover(self.allButton["skill"],(txt_tempX,txt_tempY)):
                 buttonGetHover = "skill"
             screen.blit(self.allButton["skill"],(txt_tempX,txt_tempY))
         #救助队友
         if len(friendsCanSave)>0:
             txt_tempX = location["xStart"]-selectButtonBaseWidth*0.6
             txt_tempY = location["yStart"]-selectButtonBaseWidth*0.7
-            if linpg.is_hover(self.allButton["rescue"],(txt_tempX,txt_tempY)):
+            if linpg.isHover(self.allButton["rescue"],(txt_tempX,txt_tempY)):
                 buttonGetHover = "rescue"
             screen.blit(self.allButton["rescue"],(txt_tempX,txt_tempY))
         #互动
         if len(thingsCanReact)>0:
             txt_tempX = location["xEnd"]-selectButtonBaseWidth*0.4
             txt_tempY = location["yStart"]-selectButtonBaseWidth*0.7
-            if linpg.is_hover(self.allButton["interact"],(txt_tempX,txt_tempY)):
+            if linpg.isHover(self.allButton["interact"],(txt_tempX,txt_tempY)):
                 buttonGetHover = "interact"
             screen.blit(self.allButton["interact"],(txt_tempX,txt_tempY))
         return buttonGetHover
@@ -350,7 +350,7 @@ class ResultBoard:
 #章节标题(在加载时显示)
 class LoadingTitle:
     def __init__(self, window_x:int, window_y:int, numChapter_txt:str, chapterId:int, chapterTitle_txt:str, chapterDesc_txt:str):
-        self.black_bg = linpg.get_SingleColorSurface("black")
+        self.black_bg = linpg.getSingleColorSurface("black")
         title_chapterNum = linpg.fontRender(numChapter_txt.format(chapterId),"white",window_x/38)
         self.title_chapterNum = linpg.ImageSurface(title_chapterNum,(window_x-title_chapterNum.get_width())/2,window_y*0.37)
         title_chapterName = linpg.fontRender(chapterTitle_txt,"white",window_x/38)

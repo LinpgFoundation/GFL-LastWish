@@ -2,7 +2,7 @@
 from .skill import *
 
 #地图编辑器系统
-class MapCreator(linpg.AbstractBattleSystem):
+class MapEditor(linpg.AbstractBattleSystem):
     def __init__(self, chapterType:str, chapterId:int, collection_name:str=None):
         linpg.AbstractBattleSystem.__init__(self,chapterType,chapterId,collection_name)
         self.fileLocation = "Data/{0}/chapter{1}_map.yaml".format(self.chapterType,self.chapterId) if self.chapterType == "main_chapter"\
@@ -38,24 +38,24 @@ class MapCreator(linpg.AbstractBattleSystem):
         self._create_map(mapFileData)
         del mapFileData
         #加载背景图片
-        self.envImgDict = {}
+        self.envImgDict:dict = {}
         for imgPath in glob.glob(r'Assets/image/environment/block/*.png'):
             self.envImgDict[os.path.basename(imgPath).replace(".png","")] = linpg.loadImg(imgPath,(self.MAP.block_width/3,None))
         #加载所有的装饰品
-        self.decorationsImgDict = {}
-        for imgPath in glob.glob(r'Assets/image/environment/decoration/*'):
+        self.decorationsImgDict:dict = {}
+        for imgPath in glob.glob(r'Assets/image/environment/decoration/*.png'):
             self.decorationsImgDict[os.path.basename(imgPath).replace(".png","")] = linpg.loadImg(imgPath,(self.MAP.block_width/5,None))
         #加载所有友方的角色的图片文件
-        self.charactersImgDict = {}
+        self.charactersImgDict:dict = {}
         for imgPath in glob.glob(r'Assets/image/character/*'):
-            img_name = os.path.basename(imgPath).replace(".png","")
+            img_name = os.path.basename(imgPath)
             img = linpg.loadImg("{0}/wait/{1}_wait_0.png".format(imgPath,img_name),(self.MAP.block_width*1.5,None))
             pos = img.get_bounding_rect()
             self.charactersImgDict[img_name] = linpg.cropImg(img,(pos.left,pos.top),(pos.right,pos.top))
         #加载所有敌对角色的图片文件
-        self.sangvisFerrisImgDict = {}
+        self.sangvisFerrisImgDict:dict = {}
         for imgPath in glob.glob(r'Assets/image/sangvisFerri/*'):
-            img_name = os.path.basename(imgPath).replace(".png","")
+            img_name = os.path.basename(imgPath)
             img = linpg.loadImg("{0}/wait/{1}_wait_0.png".format(imgPath,img_name),(self.MAP.block_width*1.5,None))
             pos = img.get_bounding_rect()
             self.sangvisFerrisImgDict[img_name] = linpg.cropImg(img,(pos.left,pos.top),(pos.right,pos.top))
@@ -64,7 +64,7 @@ class MapCreator(linpg.AbstractBattleSystem):
         self.greenBlock.set_alpha(150)
         self.redBlock = linpg.loadImg("Assets/image/UI/range/red.png",(self.MAP.block_width*0.8,None))
         self.redBlock.set_alpha(150)
-        self.deleteMode = False
+        self.deleteMode:bool = False
         self.object_to_put_down = None
         #加载容器图片
         self.UIContainer = linpg.loadDynamicImage(
@@ -149,17 +149,17 @@ class MapCreator(linpg.AbstractBattleSystem):
                 self._check_key_up(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 #上下滚轮-放大和缩小地图
-                if linpg.is_hover(self.UIContainerRight) and event.button == 4 and self.UI_local_y<0:
+                if linpg.isHover(self.UIContainerRight) and event.button == 4 and self.UI_local_y<0:
                     self.UI_local_y += screen.get_height()*0.1
-                elif linpg.is_hover(self.UIContainerRight) and event.button == 5:
+                elif linpg.isHover(self.UIContainerRight) and event.button == 5:
                     self.UI_local_y -= screen.get_height()*0.1
-                elif linpg.is_hover(self.UIContainerRightButton,None,self.UIContainerRight.x):
+                elif linpg.isHover(self.UIContainerRightButton,None,self.UIContainerRight.x):
                     self.UIContainerRight.switch()
                     self.UIContainerRightButton.flip(True,False)
-                elif linpg.is_hover(self.UIContainerButton,None,0,self.UIContainer.y):
+                elif linpg.isHover(self.UIContainerButton,None,0,self.UIContainer.y):
                     self.UIContainer.switch()
                     self.UIContainerButton.flip(False,True)
-                elif linpg.is_hover(self.UIContainer):
+                elif linpg.isHover(self.UIContainer):
                     #上下滚轮-放大和缩小地图
                     if event.button == 4 and self.UI_local_x<0:
                         self.UI_local_x += screen.get_width()*0.05
@@ -184,16 +184,16 @@ class MapCreator(linpg.AbstractBattleSystem):
                             elif any_chara_replace in self.enemies_data:
                                 self.enemies_data.pop(any_chara_replace)
                                 self.originalData["sangvisFerri"].pop(any_chara_replace)
-                elif linpg.is_hover(self.UIButton["save"]) and self.object_to_put_down is None and not self.deleteMode:
+                elif linpg.isHover(self.UIButton["save"]) and self.object_to_put_down is None and not self.deleteMode:
                     linpg.saveConfig(self.fileLocation,self.originalData)
-                elif linpg.is_hover(self.UIButton["back"]) and self.object_to_put_down is None and not self.deleteMode:
+                elif linpg.isHover(self.UIButton["back"]) and self.object_to_put_down is None and not self.deleteMode:
                     self._isPlaying = False
                     break
-                elif linpg.is_hover(self.UIButton["delete"]) and self.object_to_put_down is None and not self.deleteMode:
+                elif linpg.isHover(self.UIButton["delete"]) and self.object_to_put_down is None and not self.deleteMode:
                     self.object_to_put_down = None
                     self.data_to_edit = None
                     self.deleteMode = True
-                elif linpg.is_hover(self.UIButton["reload"]) and self.object_to_put_down is None and not self.deleteMode:
+                elif linpg.isHover(self.UIButton["reload"]) and self.object_to_put_down is None and not self.deleteMode:
                     tempLocal_x,tempLocal_y = self.MAP.getPos()
                     #读取地图数据
                     mapFileData = linpg.loadConfig(self.fileLocation)
@@ -225,6 +225,7 @@ class MapCreator(linpg.AbstractBattleSystem):
                                     the_id+=1
                                 nameTemp = self.object_to_put_down["id"]+"_"+str(the_id)
                                 self.originalData["decoration"][decorationType][nameTemp] = {"image": self.object_to_put_down["id"],"x": block_get_click["x"],"y": block_get_click["y"]}
+                                if decorationType == "chest": self.originalData["decoration"][decorationType][nameTemp]["items"] = []
                                 self.MAP.load_decorations(self.originalData["decoration"])
                             elif self.object_to_put_down["type"] == "character" or self.object_to_put_down["type"] == "sangvisFerri":
                                 any_chara_replace = None
@@ -268,7 +269,7 @@ class MapCreator(linpg.AbstractBattleSystem):
         #画出地图
         self._display_map(screen)
 
-        if block_get_click is not None and not linpg.is_hover(self.UIContainerRight) and not linpg.is_hover(self.UIContainer):
+        if block_get_click is not None and not linpg.isHover(self.UIContainerRight) and not linpg.isHover(self.UIContainer):
             if self.deleteMode is True:
                 xTemp,yTemp = self.MAP.calPosInMap(block_get_click["x"],block_get_click["y"])
                 screen.blit(self.redBlock,(xTemp+self.MAP.block_width*0.1,yTemp))
@@ -295,7 +296,7 @@ class MapCreator(linpg.AbstractBattleSystem):
         self.UIContainerRightButton.display(screen,(self.UIContainerRight.x,0))
         self.UIContainerRight.draw(screen)
         for Image in self.UIButton:
-            linpg.is_hover(self.UIButton[Image])
+            linpg.isHover(self.UIButton[Image])
             self.UIButton[Image].draw(screen)
 
         #显示所有可放置的友方角色
@@ -305,7 +306,7 @@ class MapCreator(linpg.AbstractBattleSystem):
             tempX = self.UIContainer.x+self.MAP.block_width*i*0.6+self.UI_local_x
             if 0 <= tempX <= self.UIContainer.get_width()*0.9:
                 screen.blit(self.charactersImgDict[key],(tempX,tempY))
-                if pygame.mouse.get_pressed()[0] and linpg.is_hover(self.charactersImgDict[key],(tempX,tempY)):
+                if pygame.mouse.get_pressed()[0] and linpg.isHover(self.charactersImgDict[key],(tempX,tempY)):
                     self.object_to_put_down = {"type":"character","id":key}
             elif tempX > self.UIContainer.get_width()*0.9:
                 break
@@ -317,7 +318,7 @@ class MapCreator(linpg.AbstractBattleSystem):
             tempX = self.UIContainer.x+self.MAP.block_width*i*0.6+self.UI_local_x
             if 0 <= tempX <= self.UIContainer.get_width()*0.9:
                 screen.blit(self.sangvisFerrisImgDict[key],(tempX,tempY))
-                if pygame.mouse.get_pressed()[0] and linpg.is_hover(self.sangvisFerrisImgDict[key],(tempX,tempY)):
+                if pygame.mouse.get_pressed()[0] and linpg.isHover(self.sangvisFerrisImgDict[key],(tempX,tempY)):
                     self.object_to_put_down = {"type":"sangvisFerri","id":key}
             elif tempX > self.UIContainer.get_width()*0.9:
                 break
@@ -330,7 +331,7 @@ class MapCreator(linpg.AbstractBattleSystem):
             if screen.get_height()*0.05<posY<screen.get_height()*0.9:
                 posX = self.UIContainerRight.x+self.MAP.block_width/6+self.MAP.block_width/2.3*(i%4)
                 screen.blit(self.envImgDict[img_name],(posX,posY))
-                if pygame.mouse.get_pressed()[0] and linpg.is_hover(self.envImgDict[img_name],(posX,posY)):
+                if pygame.mouse.get_pressed()[0] and linpg.isHover(self.envImgDict[img_name],(posX,posY)):
                     self.object_to_put_down = {"type":"block","id":img_name}
             i+=1
         for img_name in self.decorationsImgDict:
@@ -338,7 +339,7 @@ class MapCreator(linpg.AbstractBattleSystem):
             if screen.get_height()*0.05<posY<screen.get_height()*0.9:
                 posX = self.UIContainerRight.x+self.MAP.block_width/6+self.MAP.block_width/2.3*(i%4)
                 screen.blit(self.decorationsImgDict[img_name],(posX,posY))
-                if pygame.mouse.get_pressed()[0] and linpg.is_hover(self.decorationsImgDict[img_name],(posX,posY)):
+                if pygame.mouse.get_pressed()[0] and linpg.isHover(self.decorationsImgDict[img_name],(posX,posY)):
                     self.object_to_put_down = {"type":"decoration","id":img_name}
             i+=1
         #跟随鼠标显示即将被放下的物品

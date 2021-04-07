@@ -1,10 +1,8 @@
-import pygame
-import linpg
 try:
-    from Source_pyd.mainMenu import MainMenu
+    from Source_pyd.mainMenu import MainMenu, linpg, pygame
 except:
     print("Cannot import from Source_pyd")
-    from Source.mainMenu import MainMenu
+    from Source.mainMenu import MainMenu, linpg, pygame
 
 #读取并整理配置文件
 #linpg.optimizeCNContenInFolder("剧本/*.yaml")

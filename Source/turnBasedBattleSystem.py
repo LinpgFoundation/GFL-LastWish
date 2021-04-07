@@ -201,11 +201,11 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         )
         #用于表示范围的方框图片
         self.range_ui_images = {
-            "green" : linpg.SrcalphaSurface("Assets/image/UI/range/green.png",0,0),
-            "red" : linpg.SrcalphaSurface("Assets/image/UI/range/red.png",0,0),
-            "yellow": linpg.SrcalphaSurface("Assets/image/UI/range/yellow.png",0,0),
-            "blue": linpg.SrcalphaSurface("Assets/image/UI/range/blue.png",0,0),
-            "orange": linpg.SrcalphaSurface("Assets/image/UI/range/orange.png",0,0),
+            "green" : linpg.StaticImageSurface("Assets/image/UI/range/green.png",0,0),
+            "red" : linpg.StaticImageSurface("Assets/image/UI/range/red.png",0,0),
+            "yellow": linpg.StaticImageSurface("Assets/image/UI/range/yellow.png",0,0),
+            "blue": linpg.StaticImageSurface("Assets/image/UI/range/blue.png",0,0),
+            "orange": linpg.StaticImageSurface("Assets/image/UI/range/orange.png",0,0),
         }
         for key in self.range_ui_images:
             self.range_ui_images[key].set_width_with_size_locked(self.MAP.block_width*0.8)
@@ -632,7 +632,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             if right_click is True:
                 block_get_click = self.MAP.calBlockInMap(mouse_x,mouse_y)
                 #如果点击了回合结束的按钮
-                if linpg.is_hover(self.end_round_button) and self.isWaiting is True:
+                if linpg.isHover(self.end_round_button) and self.isWaiting is True:
                     self.whose_round = "playerToSangvisFerris"
                     self.characterGetClick = None
                     self.NotDrawRangeBlocks = True

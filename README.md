@@ -16,7 +16,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 <img src="Assets\image\screenshot\dialog.png" style="zoom:50%;" />
 
-##### Dialog Creator / 视觉小说制作器
+##### Dialog Editor / 视觉小说制作器
 
 <img src="Assets\image\screenshot\dialog_creator.png" style="zoom:50%;" />
 
@@ -24,7 +24,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 <img src="Assets\image\screenshot\battle.png" style="zoom:50%;" />
 
-##### Map Creator / 地图制作器
+##### Map Editor/ 地图制作器
 
 <img src="Assets\image\screenshot\map_creator.png" style="zoom:50%;" />
 
@@ -44,10 +44,10 @@ Their stories may be forgotten by history, but what they have done will be remem
 | Linpg引擎初期重构完成，开始游戏本体的迁徙工作 | The reconfiguration of Linpg Engine was finished | 2020.6      |
 | 游戏本体迁徙工作基本完成                      | The migrations completed                         | 2020.8      |
 | 游戏进行小范围测试                            | Small-scale testing                              | 2021.3      |
-| 第1至4章发布                                  | The first to fourth chapter releases.            | 2021.4      |
-| 第5至8章发布                                  | The fifth to eighth chapter releases.            | 2021.7      |
-| 第9至11章发布                                 | The ninth to eleventh chapter releases.          | 2021.10     |
-| 最终章发布                                    | Final chapter releases                           | 2021.11     |
+| 第1至4章发布                                  | The first to fourth chapter releases.            | 2021.6      |
+| 第5至8章发布                                  | The fifth to eighth chapter releases.            | 2021.9      |
+| 第9至11章发布                                 | The ninth to eleventh chapter releases.          | 2021.11     |
+| 最终章发布                                    | Final chapter releases                           | 2021.12     |
 | 第一个DLC发布                                 | First DLC releases                               | 2022 spring |
 
 

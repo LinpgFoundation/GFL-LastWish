@@ -1,5 +1,5 @@
 # cython: language_level=3
-from .mapCreator import *
+from .mapEditor import *
 
 #生存类游戏战斗系统
 class SurvivalBattleSystem(linpg.AbstractBattleSystem):

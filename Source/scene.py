@@ -34,12 +34,12 @@ def dialog(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, coll
     return DIALOG.dialog_options
 
 #对话编辑器
-def dialogCreator(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, collection_name:str=None) -> None:
+def dialogEditor(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, collection_name:str=None) -> None:
     #卸载音乐
     linpg.unloadBackgroundMusic()
     linpg.display.set_caption("{0} ({1})".format(linpg.get_lang('General','game_title'),linpg.get_lang('General','dialog_creator')))
     #加载对话
-    DIALOG:object = linpg.DialogSystemDev(chapterType,chapterId,part,collection_name)
+    DIALOG:object = linpg.DialogEditor(chapterType,chapterId,part,collection_name)
     #主循环
     while DIALOG.is_playing():
         DIALOG.draw(screen)
@@ -62,11 +62,11 @@ def battle(chapterType:str, chapterId:int, screen:pygame.Surface, collection_nam
     return BATTLE.resultInfo
 
 #地图编辑器
-def mapCreator(chapterType:str, chapterId:int, screen:pygame.Surface, collection_name:str=None) -> None:
+def mapEditor(chapterType:str, chapterId:int, screen:pygame.Surface, collection_name:str=None) -> None:
     #卸载音乐
     linpg.unloadBackgroundMusic()
     linpg.display.set_caption("{0} ({1})".format(linpg.get_lang('General','game_title'),linpg.get_lang('General','map_creator')))
-    MAPCREATOR = MapCreator(chapterType,chapterId,collection_name)
+    MAPCREATOR = MapEditor(chapterType,chapterId,collection_name)
     MAPCREATOR.initialize(screen)
     #战斗系统主要loop
     while MAPCREATOR.is_playing(): MAPCREATOR.draw(screen)

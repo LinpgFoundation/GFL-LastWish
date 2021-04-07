@@ -4,6 +4,7 @@ import os
 import shutil
 import time
 import pygame
+#from linpgdev import linpg
 import linpg
 
 #加载版本信息
