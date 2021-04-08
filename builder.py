@@ -16,9 +16,9 @@ if os.path.exists('dist'): shutil.rmtree('dist')
 #打包main文件
 dev_mode = input("If for dev purpose:")
 if dev_mode.lower() == "y":
-    os.system("pyinstaller -i icon.ico main.spec")
+    os.system("pyinstaller main.spec")
 else:
-    os.system("pyinstaller -i icon.ico --noconsole main.spec")
+    os.system("pyinstaller --noconsole main.spec")
 
 if os.path.exists('build'): shutil.rmtree('build')
 if os.path.exists('logs'): shutil.rmtree('logs')

@@ -3,7 +3,7 @@ from .turnBasedBattleSystem import *
 
 #视觉小说系统
 class DialogSystem(linpg.DialogSystem):
-    def __init__(self): linpg.DialogSystem.__init__(self)
+    def __init__(self): super().__init__()
     #保存数据
     def save_process(self) -> None:
         #确保Save文件夹存在

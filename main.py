@@ -21,4 +21,6 @@ if GAMESTART and __name__ == "__main__":
     # 创建窗口
     screen = linpg.display.init_screen(flags)
     mainMenu = MainMenu(screen)
-    mainMenu.draw(screen)
+    while mainMenu.is_playing():
+        mainMenu.draw(screen)
+        linpg.display.flip()

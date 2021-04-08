@@ -4,7 +4,7 @@ from .survivalBattleSystem import *
 #回合制游戏战斗系统
 class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
     def __init__(self, chapterType:str=None, chapterId:int=None, collection_name:str=None):
-        linpg.AbstractBattleSystem.__init__(self,chapterType,chapterId,collection_name)
+        super().__init__(self,chapterType,chapterId,collection_name)
         #被选中的角色
         self.characterGetClick = None
         self.enemiesGetAttack = {}

@@ -5,7 +5,7 @@ from .mapEditor import *
 class SurvivalBattleSystem(linpg.AbstractBattleSystem):
     def __init__(self):
         """data"""
-        linpg.AbstractBattleSystem.__init__(self,None,None,None)
+        super().__init__(None,None,None)
         #用于检测是否有方向键被按到的字典
         self.__pressKeyToMoveMe = {"up":False,"down":False,"left":False,"right":False}
         self.window_x,self.window_y = linpg.display.get_size()
