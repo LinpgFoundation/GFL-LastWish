@@ -13,10 +13,9 @@ class MainMenu(linpg.SystemObject):
         #窗口标题图标
         linpg.display.set_icon("Assets/image/UI/icon.png")
         linpg.display.set_caption(linpg.get_lang('General','game_title'))
+        RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image="test")
         #载入页面 - 渐入
         dispaly_loading_screen(screen,0,250,2)
-        #设置引擎的标准文字大小
-        linpg.set_standard_font_size(int(window_x/40),"medium")
         #修改控制台的位置
         linpg.console.set_pos(window_x*0.1,window_y*0.8)
         self.main_menu_txt = linpg.get_lang('MainMenu')
@@ -36,8 +35,8 @@ class MainMenu(linpg.SystemObject):
             self.main_menu_txt["menu_main"][key] = linpg.fontRenderPro(txt,mode,(txt_location,txt_y),linpg.get_standard_font_size("medium"))
             txt_y += font_size
         #加载创意工坊选择页面的文字
-        self.main_menu_txt["menu_workshop_choice"]["map_creator"] = linpg.get_lang("General","map_creator")
-        self.main_menu_txt["menu_workshop_choice"]["dialog_creator"] = linpg.get_lang("General","dialog_creator")
+        self.main_menu_txt["menu_workshop_choice"]["map_editor"] = linpg.get_lang("General","map_editor")
+        self.main_menu_txt["menu_workshop_choice"]["dialog_editor"] = linpg.get_lang("General","dialog_editor")
         self.main_menu_txt["menu_workshop_choice"]["back"] = linpg.get_lang("Global","back")
         txt_y = (window_y-len(self.main_menu_txt["menu_workshop_choice"])*font_size)/2
         for key,txt in self.main_menu_txt["menu_workshop_choice"].items():
@@ -95,7 +94,7 @@ class MainMenu(linpg.SystemObject):
         elif fileType == "map":
             fileLocation = "Data/{0}/*_map.yaml".format(chapterType) if chapterType == "main_chapter" else "Data/{0}/{1}/*_map.yaml".format(chapterType,self.current_selected_workshop_collection)
         else:
-            raise Exception('linpgEngine-Error: fileType="{}" is not supported!'.format(fileType))
+            raise Exception('Error: fileType "{}" is not supported!'.format(fileType))
         #历遍路径下的所有章节文件
         for path in glob.glob(fileLocation):
             chapterId = self.__find_chapter_id(path)
@@ -207,7 +206,7 @@ class MainMenu(linpg.SystemObject):
         if fileName[0:7] == "chapter":
             return int(fileName[7:fileName.index('_')])
         else:
-            raise Exception('linpgEngine-Error: Cannot find the id of chapter because the file is not properly named!')
+            raise Exception('Error: Cannot find the id of chapter because the file is not properly named!')
     #加载章节
     def __load_scene(self, chapterType:str, chapterId:int, screen:pygame.Surface) -> None:
         self.videoCapture.stop()
@@ -316,7 +315,7 @@ class MainMenu(linpg.SystemObject):
                 #退出
                 elif linpg.isHover(self.main_menu_txt["menu_main"]["7_exit"]) and self.exit_confirm_menu.draw() == 0:
                     self.videoCapture.stop()
-                    linpg.display.quit()
+                    self._isPlaying = False
             #选择主线章节
             elif self.menu_type == 1:
                 if linpg.isHover(self.chapter_select[-1]):
@@ -332,10 +331,10 @@ class MainMenu(linpg.SystemObject):
                 if linpg.isHover(self.main_menu_txt["menu_workshop_choice"]["0_play"]):
                     self.__reload_workshop_files_list(screen.get_size(),False)
                     self.menu_type = 3
-                elif linpg.isHover(self.main_menu_txt["menu_workshop_choice"]["map_creator"]):
+                elif linpg.isHover(self.main_menu_txt["menu_workshop_choice"]["map_editor"]):
                     self.__reload_workshop_files_list(screen.get_size(),True)
                     self.menu_type = 4
-                elif linpg.isHover(self.main_menu_txt["menu_workshop_choice"]["dialog_creator"]):
+                elif linpg.isHover(self.main_menu_txt["menu_workshop_choice"]["dialog_editor"]):
                     self.__reload_workshop_files_list(screen.get_size(),True)
                     self.menu_type = 5
                 elif linpg.isHover(self.main_menu_txt["menu_workshop_choice"]["back"]):
@@ -428,3 +427,4 @@ class MainMenu(linpg.SystemObject):
                             self.videoCapture = self.videoCapture.copy()
                             self.videoCapture.start()
                             break
+        ALPHA_BUILD_WARNING.draw(screen)

@@ -4,7 +4,7 @@ from .survivalBattleSystem import *
 #回合制游戏战斗系统
 class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
     def __init__(self, chapterType:str=None, chapterId:int=None, collection_name:str=None):
-        super().__init__(self,chapterType,chapterId,collection_name)
+        super().__init__(chapterType,chapterId,collection_name)
         #被选中的角色
         self.characterGetClick = None
         self.enemiesGetAttack = {}
@@ -92,7 +92,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             self.dialogData = DataTmp["dialogData"]
             self.resultInfo = DataTmp["resultInfo"]
         else:
-            raise Exception('linpgEngine-Error: Cannot load the data from the "save.yaml" file because the file type does not match')
+            raise Exception('Error: Cannot load the data from the "save.yaml" file because the file type does not match')
         #因为地图模块已被加载，只需加载图片即可
         self.MAP.load_env_img((round(screen.get_width()/10),round(screen.get_height()/10)))
         self.loadFromSave = True
@@ -274,8 +274,6 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             item.blit(screen)
         self.__itemsToBlit.clear()
         self.__maxItemWeight = 0
-        #刷新画面
-        linpg.display.flip()
     #胜利失败判定
     def __check_whether_player_win_or_lost(self) -> None:
         #常规
@@ -404,15 +402,15 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                                 if len(routeTmp)>0:
                                     self.griffinCharactersData[key].move_follow(routeTmp)
                                 else:
-                                    raise Exception('linpgEngine-Error: Character {} cannot find a valid path!'.format(key))
+                                    raise Exception('Error: Character {} cannot find a valid path!'.format(key))
                             elif key in self.sangvisFerrisData:
                                 routeTmp = self.MAP.findPath(self.sangvisFerrisData[key],pos,self.sangvisFerrisData,self.griffinCharactersData)
                                 if len(routeTmp)>0:
                                     self.sangvisFerrisData[key].move_follow(routeTmp)
                                 else:
-                                    raise Exception('linpgEngine-Error: Character {} cannot find a valid path!'.format(key))
+                                    raise Exception('Error: Character {} cannot find a valid path!'.format(key))
                             else:
-                                raise Exception('linpgEngine-Error: Cannot find character {}!'.format(key))
+                                raise Exception('Error: Cannot find character {}!'.format(key))
                         self.dialog_ifPathSet = True
                     #播放脚步声
                     self.footstep_sounds.play()
@@ -429,7 +427,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                         elif key in self.sangvisFerrisData and not self.sangvisFerrisData[key].is_idle():
                             allGetToTargetPos = False
                         else:
-                            raise Exception('linpgEngine-Error: Cannot find character {}!'.format(key))
+                            raise Exception('Error: Cannot find character {}!'.format(key))
                     if reProcessMap:
                         self._calculate_darkness()
                     if allGetToTargetPos:
@@ -445,7 +443,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                         elif key in self.sangvisFerrisData:
                             self.sangvisFerrisData[key].set_flip(value)
                         else:
-                            raise Exception('linpgEngine-Error: Cannot find character {}!'.format(key))
+                            raise Exception('Error: Cannot find character {}!'.format(key))
                     self.dialogData["dialogId"] += 1
                 #改变动作（一次性）
                 elif "action" in currentDialog and currentDialog["action"] is not None:

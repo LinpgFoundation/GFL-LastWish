@@ -37,28 +37,94 @@ class MapEditor(linpg.AbstractBattleSystem):
         #加载地图
         self._create_map(mapFileData)
         del mapFileData
+        """加载右侧的界面"""
+        #加载容器图片
+        container_width:int = int(screen.get_width()*0.2)
+        container_height:int = int(screen.get_height())
+        button_width:int = int(screen.get_width()*0.04)
+        button_height:int = int(screen.get_height()*0.2)
+        panding:int = int(screen.get_height()*0.01)
+        self.__button_select_block = linpg.ButtonWithFadeInOut(
+            "Assets/image/UI/menu.png",linpg.get_lang("MapEditor","block"),"black",100,0,screen.get_width()*0.03,button_width/3
+            )
+        self.__button_select_decoration = linpg.ButtonWithFadeInOut(
+            "Assets/image/UI/menu.png",linpg.get_lang("MapEditor","decoration"),"black",100,0,screen.get_width()*0.03,button_width/3
+            )
+        self.__button_select_block.set_left(
+            int((container_width-self.__button_select_block.get_width()-self.__button_select_decoration.get_width()-panding)/2)
+            )
+        self.__button_select_decoration.set_left(self.__button_select_block.right+panding)
+        self.__UIContainerRight = linpg.loadImage("Assets/image/UI/container.png",(0,0),container_width,container_height)
+        self.__UIContainerButtonRight = linpg.loadDynamicImage("Assets/image/UI/container_button.png",
+        (screen.get_width()-button_width,int((screen.get_height()-button_height)/2)),
+        (screen.get_width()-button_width-container_width,int((screen.get_height()-button_height)/2)),
+        (int(container_width/10),0),button_width,button_height
+        )
+        self.__UIContainerRight.rotate(90)
+        self.__UIContainerButtonRight.rotate(90)
         #加载背景图片
-        self.envImgDict:dict = {}
+        self.__envImgContainer:object = linpg.SurfaceContainerWithScrollbar(
+            None, int(container_width*0.075), int(screen.get_height()*0.1), int(container_width*0.85), int(screen.get_height()*0.85), "vertical"
+            )
         for imgPath in glob.glob(r'Assets/image/environment/block/*.png'):
-            self.envImgDict[os.path.basename(imgPath).replace(".png","")] = linpg.loadImg(imgPath,(self.MAP.block_width/3,None))
+            self.__envImgContainer.set(os.path.basename(imgPath).replace(".png",""),linpg.loadImg(imgPath,(self.MAP.block_width/3,None)))
+        self.__envImgContainer.set_item_per_line(4)
+        self.__envImgContainer.set_scroll_bar_pos("right")
+        self.__envImgContainer.hidden = False
+        self.__envImgContainer.distance_between_item = panding
         #加载所有的装饰品
-        self.decorationsImgDict:dict = {}
+        self.__decorationsImgContainer:object = linpg.SurfaceContainerWithScrollbar(
+            None, int(container_width*0.075), int(screen.get_height()*0.1), int(container_width*0.85), int(screen.get_height()*0.85), "vertical"
+            )
         for imgPath in glob.glob(r'Assets/image/environment/decoration/*.png'):
-            self.decorationsImgDict[os.path.basename(imgPath).replace(".png","")] = linpg.loadImg(imgPath,(self.MAP.block_width/5,None))
+            self.__decorationsImgContainer.set(os.path.basename(imgPath).replace(".png",""),linpg.loadImg(imgPath,(self.MAP.block_width/3,None)))
+        self.__decorationsImgContainer.set_item_per_line(4)
+        self.__decorationsImgContainer.set_scroll_bar_pos("right")
+        self.__decorationsImgContainer.hidden = True
+        self.__decorationsImgContainer.distance_between_item = panding
+        """加载下方的界面"""
+        container_width = int(screen.get_width()*0.8)
+        container_height = int(screen.get_height()*0.3)
+        button_width = int(screen.get_width()*0.14)
+        button_height = int(screen.get_height()*0.05)
+        panding = int(screen.get_height()*0.01)
+        self.__button_select_character = linpg.ButtonWithFadeInOut(
+            "Assets/image/UI/menu.png",linpg.get_lang("General","griffin_Kryuger"),"black",100,0,0,button_height/2
+            )
+        self.__button_select_sangvisFerri = linpg.ButtonWithFadeInOut(
+            "Assets/image/UI/menu.png",linpg.get_lang("General","sangvis_ferri"),"black",100,self.__button_select_character.get_width(),0,button_height/2
+            )
+        self.__UIContainerBottom = linpg.loadImage("Assets/image/UI/container.png",(0,0),container_width,container_height)
+        self.__UIContainerButtonBottom = linpg.loadDynamicImage(
+            "Assets/image/UI/container_button.png",
+            ((container_width-button_width)/2,screen.get_height()-button_height),
+            ((container_width-button_width)/2,screen.get_height()-button_height-container_height),
+            (0,container_height/10),button_width,button_height
+            )
         #加载所有友方的角色的图片文件
-        self.charactersImgDict:dict = {}
+        self.__charactersImgContainer:object = linpg.SurfaceContainerWithScrollbar(
+            None, container_width*0.025, container_height*0.2, container_width*0.95, container_height*0.7, "horizontal"
+            )
         for imgPath in glob.glob(r'Assets/image/character/*'):
             img_name = os.path.basename(imgPath)
-            img = linpg.loadImg("{0}/wait/{1}_wait_0.png".format(imgPath,img_name),(self.MAP.block_width*1.5,None))
-            pos = img.get_bounding_rect()
-            self.charactersImgDict[img_name] = linpg.cropImg(img,(pos.left,pos.top),(pos.right,pos.top))
+            self.__charactersImgContainer.set(
+                img_name,linpg.copeBounding(linpg.loadImg("{0}/wait/{1}_wait_0.png".format(imgPath,img_name),(None,container_height*1.5)))
+                )
+        self.__charactersImgContainer.set_scroll_bar_pos("bottom")
+        self.__charactersImgContainer.hidden = False
+        self.__charactersImgContainer.distance_between_item = panding
         #加载所有敌对角色的图片文件
-        self.sangvisFerrisImgDict:dict = {}
+        self.__sangvisFerrisImgContainer:object = linpg.SurfaceContainerWithScrollbar(
+            None, container_width*0.025, container_height*0.2, container_width*0.95, container_height*0.7, "horizontal"
+            )
         for imgPath in glob.glob(r'Assets/image/sangvisFerri/*'):
             img_name = os.path.basename(imgPath)
-            img = linpg.loadImg("{0}/wait/{1}_wait_0.png".format(imgPath,img_name),(self.MAP.block_width*1.5,None))
-            pos = img.get_bounding_rect()
-            self.sangvisFerrisImgDict[img_name] = linpg.cropImg(img,(pos.left,pos.top),(pos.right,pos.top))
+            self.__sangvisFerrisImgContainer.set(
+                img_name,linpg.copeBounding(linpg.loadImg("{0}/wait/{1}_wait_0.png".format(imgPath,img_name),(None,container_height*1.5)))
+                )
+        self.__sangvisFerrisImgContainer.set_scroll_bar_pos("bottom")
+        self.__sangvisFerrisImgContainer.hidden = True
+        self.__sangvisFerrisImgContainer.distance_between_item = panding
         #绿色方块/方块标准
         self.greenBlock = linpg.loadImg("Assets/image/UI/range/green.png",(self.MAP.block_width*0.8,None))
         self.greenBlock.set_alpha(150)
@@ -66,38 +132,6 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.redBlock.set_alpha(150)
         self.deleteMode:bool = False
         self.object_to_put_down = None
-        #加载容器图片
-        self.UIContainer = linpg.loadDynamicImage(
-            "Assets/image/UI/container.png",
-            (0,screen.get_height()),
-            (0,screen.get_height()*0.75),
-            (0,screen.get_height()*0.25/10),
-            int(screen.get_width()*0.8),
-            int(screen.get_height()*0.25)
-            )
-        self.UIContainerButton = linpg.loadImage(
-            "Assets/image/UI/container_button.png",
-            (screen.get_width()*0.33,-screen.get_height()*0.05),
-            int(screen.get_width()*0.14),
-            int(screen.get_height()*0.06)
-            )
-        widthTmp = int(screen.get_width()*0.2)
-        self.UIContainerRight = linpg.loadDynamicImage(
-            "Assets/image/UI/container.png",
-            (screen.get_width()*0.8+widthTmp,0),
-            (screen.get_width()*0.8,0),
-            (widthTmp/10,0),
-            widthTmp,
-            screen.get_height()
-            )
-        self.UIContainerRightButton = linpg.loadImage(
-            "Assets/image/UI/container_button.png",
-            (-screen.get_width()*0.03,screen.get_height()*0.4),
-            int(screen.get_width()*0.04),
-            int(screen.get_height()*0.2)
-            )
-        self.UIContainerRight.rotate(90)
-        self.UIContainerRightButton.rotate(90)
         #UI按钮
         self.UIButton = {}
         UI_x = self.MAP.block_width*0.5
@@ -117,13 +151,13 @@ class MapEditor(linpg.AbstractBattleSystem):
         UI_x += self.UIButton["back"].get_width()+UI_height
         self.UIButton["delete"] = linpg.ButtonWithFadeInOut(
             "Assets/image/UI/menu.png",
-            linpg.get_lang("MapCreator","delete"),
+            linpg.get_lang("MapEditor","delete"),
             "black",100,UI_x,UI_y,UI_height
             )
         UI_x += self.UIButton["delete"].get_width()+UI_height
         self.UIButton["reload"] = linpg.ButtonWithFadeInOut(
             "Assets/image/UI/menu.png",
-            linpg.get_lang("MapCreator","reload"),
+            linpg.get_lang("MapEditor","reload"),
             "black",100,UI_x,UI_y,UI_height
             )
         #数据控制器
@@ -149,22 +183,12 @@ class MapEditor(linpg.AbstractBattleSystem):
                 self._check_key_up(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 #上下滚轮-放大和缩小地图
-                if linpg.isHover(self.UIContainerRight) and event.button == 4 and self.UI_local_y<0:
-                    self.UI_local_y += screen.get_height()*0.1
-                elif linpg.isHover(self.UIContainerRight) and event.button == 5:
-                    self.UI_local_y -= screen.get_height()*0.1
-                elif linpg.isHover(self.UIContainerRightButton,None,self.UIContainerRight.x):
-                    self.UIContainerRight.switch()
-                    self.UIContainerRightButton.flip(True,False)
-                elif linpg.isHover(self.UIContainerButton,None,0,self.UIContainer.y):
-                    self.UIContainer.switch()
-                    self.UIContainerButton.flip(False,True)
-                elif linpg.isHover(self.UIContainer):
-                    #上下滚轮-放大和缩小地图
-                    if event.button == 4 and self.UI_local_x<0:
-                        self.UI_local_x += screen.get_width()*0.05
-                    elif event.button == 5:
-                        self.UI_local_x -= screen.get_width()*0.05
+                if self.__UIContainerButtonRight.is_hover():
+                    self.__UIContainerButtonRight.switch()
+                    self.__UIContainerButtonRight.flip(True,False)
+                elif self.__UIContainerButtonBottom.is_hover():
+                    self.__UIContainerButtonBottom.switch()
+                    self.__UIContainerButtonBottom.flip(False,True)
                 elif self.deleteMode is True and block_get_click is not None:
                     #查看当前位置是否有装饰物
                     decoration = self.MAP.find_decoration_on((block_get_click["x"],block_get_click["y"]))
@@ -268,8 +292,9 @@ class MapEditor(linpg.AbstractBattleSystem):
 
         #画出地图
         self._display_map(screen)
-
-        if block_get_click is not None and not linpg.isHover(self.UIContainerRight) and not linpg.isHover(self.UIContainer):
+        if block_get_click is not None and\
+            not linpg.isHover(self.__UIContainerRight,local_x=self.__UIContainerButtonRight.right) and\
+                not linpg.isHover(self.__UIContainerBottom,local_x=self.__UIContainerButtonBottom.right):
             if self.deleteMode is True:
                 xTemp,yTemp = self.MAP.calPosInMap(block_get_click["x"],block_get_click["y"])
                 screen.blit(self.redBlock,(xTemp+self.MAP.block_width*0.1,yTemp))
@@ -290,68 +315,60 @@ class MapEditor(linpg.AbstractBattleSystem):
         #展示设施
         self._display_decoration(screen)
 
-        #画出UI
-        self.UIContainerButton.display(screen,(0,self.UIContainer.y))
-        self.UIContainer.draw(screen)
-        self.UIContainerRightButton.display(screen,(self.UIContainerRight.x,0))
-        self.UIContainerRight.draw(screen)
-        for Image in self.UIButton:
-            linpg.isHover(self.UIButton[Image])
-            self.UIButton[Image].draw(screen)
-
-        #显示所有可放置的友方角色
-        i:int = 0
-        tempY = self.UIContainer.y+self.MAP.block_width*0.2
-        for key in self.charactersImgDict:
-            tempX = self.UIContainer.x+self.MAP.block_width*i*0.6+self.UI_local_x
-            if 0 <= tempX <= self.UIContainer.get_width()*0.9:
-                screen.blit(self.charactersImgDict[key],(tempX,tempY))
-                if pygame.mouse.get_pressed()[0] and linpg.isHover(self.charactersImgDict[key],(tempX,tempY)):
-                    self.object_to_put_down = {"type":"character","id":key}
-            elif tempX > self.UIContainer.get_width()*0.9:
-                break
-            i+=1
-        i=0
-        tempY += self.MAP.block_width*0.4
-        #显示所有可放置的敌方角色
-        for key in self.sangvisFerrisImgDict:
-            tempX = self.UIContainer.x+self.MAP.block_width*i*0.6+self.UI_local_x
-            if 0 <= tempX <= self.UIContainer.get_width()*0.9:
-                screen.blit(self.sangvisFerrisImgDict[key],(tempX,tempY))
-                if pygame.mouse.get_pressed()[0] and linpg.isHover(self.sangvisFerrisImgDict[key],(tempX,tempY)):
-                    self.object_to_put_down = {"type":"sangvisFerri","id":key}
-            elif tempX > self.UIContainer.get_width()*0.9:
-                break
-            i+=1
+        #画出右侧容器的UI
+        self.__UIContainerButtonRight.draw(screen)
+        if self.__UIContainerButtonRight.right < screen.get_width():
+            self.__UIContainerRight.display(screen,(self.__UIContainerButtonRight.right,0))
+            self.__envImgContainer.display(screen,(self.__UIContainerButtonRight.right,0),self.events)
+            self.__decorationsImgContainer.display(screen,(self.__UIContainerButtonRight.right,0),self.events)
+            if linpg.isHover(self.__button_select_block,local_x=self.__UIContainerButtonRight.right) and pygame.mouse.get_pressed()[0]:
+                self.__envImgContainer.hidden = False
+                self.__decorationsImgContainer.hidden = True
+            if linpg.isHover(self.__button_select_decoration,local_x=self.__UIContainerButtonRight.right) and pygame.mouse.get_pressed()[0]:
+                self.__envImgContainer.hidden = True
+                self.__decorationsImgContainer.hidden = False
+            self.__button_select_block.display(screen,(self.__UIContainerButtonRight.right,0))
+            self.__button_select_decoration.display(screen,(self.__UIContainerButtonRight.right,0))
+            if pygame.mouse.get_pressed()[0]:
+                if not self.__envImgContainer.hidden and self.__envImgContainer.current_hovered_item is not None:
+                    self.object_to_put_down = {"type":"block","id":self.__envImgContainer.current_hovered_item}
+                elif not self.__decorationsImgContainer.hidden and self.__decorationsImgContainer.current_hovered_item is not None:
+                    self.object_to_put_down = {"type":"decoration","id":self.__decorationsImgContainer.current_hovered_item}
+        #画出下方容器的UI
+        self.__UIContainerButtonBottom.draw(screen)
+        if self.__UIContainerButtonBottom.bottom < screen.get_height():
+            self.__UIContainerBottom.display(screen,(0,self.__UIContainerButtonBottom.bottom))
+            self.__charactersImgContainer.display(screen,(0,self.__UIContainerButtonBottom.bottom),self.events)
+            self.__sangvisFerrisImgContainer.display(screen,(0,self.__UIContainerButtonBottom.bottom),self.events)
+            if linpg.isHover(self.__button_select_character,local_y=self.__UIContainerButtonBottom.bottom) and pygame.mouse.get_pressed()[0]:
+                self.__charactersImgContainer.hidden = False
+                self.__sangvisFerrisImgContainer.hidden = True
+            if linpg.isHover(self.__button_select_sangvisFerri,local_y=self.__UIContainerButtonBottom.bottom) and pygame.mouse.get_pressed()[0]:
+                self.__charactersImgContainer.hidden = True
+                self.__sangvisFerrisImgContainer.hidden = False
+            self.__button_select_character.display(screen,(0,self.__UIContainerButtonBottom.bottom))
+            self.__button_select_sangvisFerri.display(screen,(0,self.__UIContainerButtonBottom.bottom))
+            if pygame.mouse.get_pressed()[0]:
+                if not self.__charactersImgContainer.hidden and self.__charactersImgContainer.current_hovered_item is not None:
+                    self.object_to_put_down = {"type":"character","id":self.__charactersImgContainer.current_hovered_item}
+                elif not self.__sangvisFerrisImgContainer.hidden and self.__sangvisFerrisImgContainer.current_hovered_item is not None:
+                    self.object_to_put_down = {"type":"sangvisFerri","id":self.__sangvisFerrisImgContainer.current_hovered_item}
         
-        #显示所有可放置的环境方块
-        i=0
-        for img_name in self.envImgDict:
-            posY = self.UIContainerRight.y+self.MAP.block_width*int(i/4)+self.UI_local_y
-            if screen.get_height()*0.05<posY<screen.get_height()*0.9:
-                posX = self.UIContainerRight.x+self.MAP.block_width/6+self.MAP.block_width/2.3*(i%4)
-                screen.blit(self.envImgDict[img_name],(posX,posY))
-                if pygame.mouse.get_pressed()[0] and linpg.isHover(self.envImgDict[img_name],(posX,posY)):
-                    self.object_to_put_down = {"type":"block","id":img_name}
-            i+=1
-        for img_name in self.decorationsImgDict:
-            posY = self.UIContainerRight.y+self.MAP.block_width*int(i/4)+self.UI_local_y
-            if screen.get_height()*0.05<posY<screen.get_height()*0.9:
-                posX = self.UIContainerRight.x+self.MAP.block_width/6+self.MAP.block_width/2.3*(i%4)
-                screen.blit(self.decorationsImgDict[img_name],(posX,posY))
-                if pygame.mouse.get_pressed()[0] and linpg.isHover(self.decorationsImgDict[img_name],(posX,posY)):
-                    self.object_to_put_down = {"type":"decoration","id":img_name}
-            i+=1
+        #画出上方其他按钮
+        for key in self.UIButton:
+            linpg.isHover(self.UIButton[key])
+            self.UIButton[key].draw(screen)
+        
         #跟随鼠标显示即将被放下的物品
         if self.object_to_put_down is not None:
             if self.object_to_put_down["type"] == "block":
-                screen.blit(self.envImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y))
+                screen.blit(self.__envImgContainer.get(self.object_to_put_down["id"]),(mouse_x,mouse_y))
             elif self.object_to_put_down["type"] == "decoration":
-                screen.blit(self.decorationsImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y))
+                screen.blit(self.__decorationsImgContainer.get(self.object_to_put_down["id"]),(mouse_x,mouse_y))
             elif self.object_to_put_down["type"] == "character":
-                screen.blit(self.charactersImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y))
+                screen.blit(self.__charactersImgContainer.get(self.object_to_put_down["id"]),(mouse_x,mouse_y))
             elif self.object_to_put_down["type"] == "sangvisFerri":
-                screen.blit(self.sangvisFerrisImgDict[self.object_to_put_down["id"]],(mouse_x,mouse_y))
+                screen.blit(self.__sangvisFerrisImgContainer.get(self.object_to_put_down["id"]),(mouse_x,mouse_y))
         
         #显示即将被编辑的数据
         if self.data_to_edit is not None:
@@ -367,5 +384,3 @@ class MapEditor(linpg.AbstractBattleSystem):
                 (linpg.fontRender("x: "+str(self.data_to_edit.x),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*8)),
                 (linpg.fontRender("y: "+str(self.data_to_edit.y),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*9)),
             ))
-
-        linpg.display.flip()

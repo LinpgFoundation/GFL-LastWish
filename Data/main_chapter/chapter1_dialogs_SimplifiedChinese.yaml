@@ -126,8 +126,8 @@ dialogs:
       background_img: research.jpg
       background_music: null
       characters_img:
-      - kalina_5.png&dark
-      - k.png&communication
+      - kalina_5.png<d>
+      - k.png<c>
       content:
       - 指挥官，按照计划，现在并不是我们的通讯时间
       last_dialog_id: head
@@ -139,8 +139,8 @@ dialogs:
       background_img: research.jpg
       background_music: null
       characters_img:
-      - kalina_5.png&dark
-      - k&communication.png&dark
+      - kalina_5.png<d>
+      - k<c>.png<d>
       content:
       - 现在究竟是什么状况，我想你比我还要清楚。我的梯队已经溃散
       - 所以我想知道你所说的救援什么时候能够到达
@@ -153,8 +153,8 @@ dialogs:
       background_img: research.jpg
       background_music: null
       characters_img:
-      - kalina_5.png&dark
-      - k.png&communication
+      - kalina_5.png<d>
+      - k.png<c>
       content:
       - 我想你也该察觉到了，我所说的救援一直就在你们的身边
       - 但如果东西没有拿到，我是不会让它们出手的
@@ -167,8 +167,8 @@ dialogs:
       background_img: research.jpg
       background_music: null
       characters_img:
-      - kalina_5.png&dark
-      - k.png&communication&dark
+      - kalina_5.png<d>
+      - k.png<c><d>
       content:
       - 那我想知道，为什么你们一开始提供的情报里，并没有提到丝毫关于铁血的事情
       last_dialog_id: 3
@@ -180,8 +180,8 @@ dialogs:
       background_img: research.jpg
       background_music: null
       characters_img:
-      - kalina_5.png&dark
-      - k.png&communication
+      - kalina_5.png<d>
+      - k.png<c>
       content:
       - 按道理来讲，铁血应该不知道这件事。但就目前的情况来看，
       - 我们的内部肯定有人把这份情报透露了出去
@@ -194,8 +194,8 @@ dialogs:
       background_img: research.jpg
       background_music: null
       characters_img:
-      - kalina_5.png&dark
-      - k.png&communication&dark
+      - kalina_5.png<d>
+      - k.png<c><d>
       content:
       - 如果没有支援，我们的梯队很快就会支撑不住了，怎么可能会找得到你所要求的东西
       last_dialog_id: 5
@@ -207,8 +207,8 @@ dialogs:
       background_img: research.jpg
       background_music: null
       characters_img:
-      - kalina_5.png&dark
-      - k.png&communication
+      - kalina_5.png<d>
+      - k.png<c>
       content:
       - 那也没关系。既然你手下的人形只能做到支撑，那就继续支撑下去吧，其他的我会继续想办法的
       last_dialog_id: 6
@@ -220,7 +220,7 @@ dialogs:
       background_img: research.jpg
       background_music: null
       characters_img:
-      - kalina_5.png&dark
+      - kalina_5.png<d>
       content:
       - 通讯结束
       last_dialog_id: 7
@@ -232,7 +232,7 @@ dialogs:
       background_img: research.jpg
       background_music: null
       characters_img:
-      - kalina_5.png&dark
+      - kalina_5.png<d>
       content:
       - 该死，早知道一开始就不应接受这份委托。
       last_dialog_id: 8
@@ -256,7 +256,7 @@ dialogs:
       background_img: research.jpg
       background_music: null
       characters_img:
-      - kalina_8.png&dark
+      - kalina_8.png<d>
       content:
       - 现在只希望，sv-98他们能够及时回来，之后再考虑其他的事情吧
       last_dialog_id: 10
@@ -280,7 +280,7 @@ dialogs:
       background_img: research.jpg
       background_music: null
       characters_img:
-      - kalina_5.png&dark
+      - kalina_5.png<d>
       content:
       - 那我就...没有其他的办法了...
       last_dialog_id: 12
@@ -339,7 +339,7 @@ dialogs:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
-      - kalina_5.png&dark
+      - kalina_5.png<d>
       content:
       - 还是没有一点关于她们的消息吗
       - 后勤第十小队...
@@ -380,7 +380,7 @@ dialogs:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
-      - kalina_5.png&dark
+      - kalina_5.png<d>
       content:
       - 能派一些人形前去搜索吗？
       last_dialog_id: 5
@@ -406,7 +406,7 @@ dialogs:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
-      - kalina_8.png&dark
+      - kalina_8.png<d>
       content:
       - 该死，说好的支援呢
       - 而且这只是一座什么资源都没有的孤岛而已，为什么安全局会如此重视
@@ -432,7 +432,7 @@ dialogs:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
-      - kalina_5.png&dark
+      - kalina_5.png<d>
       content:
       - 格林娜
       last_dialog_id: 9
@@ -456,7 +456,7 @@ dialogs:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
-      - kalina_3.png&dark
+      - kalina_3.png<d>
       content:
       - 开始撤离程序吧，然后帮我接通K，我需要和他谈谈
       last_dialog_id: 11
@@ -516,7 +516,7 @@ dialogs:
       background_music: BGM_Brain_1.ogg
       characters_img:
       - asval.png
-      - sv-98.png&dark
+      - sv-98.png<d>
       content:
       - 指挥官已经派直升机来接我们了，我们只需要清空地面上铁血火力，防止直升机降落时出现意外
       last_dialog_id: 16
@@ -541,7 +541,7 @@ dialogs:
       background_img: snowfield.jpg
       background_music: BGM_Brain_1.ogg
       characters_img:
-      - sv-98.png&dark
+      - sv-98.png<d>
       content:
       - 好！
       last_dialog_id: 18

@@ -1,8 +1,8 @@
 try:
-    from Source_pyd.mainMenu import MainMenu, linpg, pygame
+    from Source_pyd.mainMenu import MainMenu, linpg, pygame, RPC
 except:
     print("Cannot import from Source_pyd")
-    from Source.mainMenu import MainMenu, linpg, pygame
+    from Source.mainMenu import MainMenu, linpg, pygame, RPC
 
 #读取并整理配置文件
 #linpg.optimizeCNContenInFolder("剧本/*.yaml")
@@ -24,3 +24,6 @@ if GAMESTART and __name__ == "__main__":
     while mainMenu.is_playing():
         mainMenu.draw(screen)
         linpg.display.flip()
+    
+    linpg.display.quit()
+    RPC.close()

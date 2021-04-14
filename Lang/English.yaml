@@ -6,10 +6,16 @@ Battle_UI:
   numChapter: Chapter {}
   numRound: Round {}
   yourRound: Your Round
+DiscordStatus:
+  game_is_initializing: The game is initializing...
+  now_playing: 'Now playing:'
+  staying_at_main_menu: Browsing main menu
 General:
-  dialog_creator: Dialog Creator
+  dialog_editor: Dialog Editor
   game_title: Girls' Frontline - Last Wish
-  map_creator: Map Creator
+  griffin_Kryuger: Griffin & Kryuger
+  map_editor: Map Editor
+  sangvis_ferri: Sangvis Ferri
 LoadingTxt:
   now_loading: Loading...
   now_loading_characters: Loading characters' data...
@@ -34,7 +40,9 @@ MainMenu:
     new_chapter: Create New Chapter
     new_collection: Create New Collection
     tip: Tip
-MapCreator:
+MapEditor:
+  block: Block
+  decoration: Decoration
   delete: Delete
   reload: Reload
 ResultBoard:
@@ -72,6 +80,7 @@ Warnings:
   no_enough_ap_to_reload: You don't have enough action points for reloading.
   no_enough_ap_to_rescue: You don't have enough action points for rescuing.
   no_enough_ap_to_use_skill: You don't have enough action points for using skill.
+alpha_build_warning: 'Alpha Build: Far From Finish'
 title1: 'Warning: All content is still in development and does not represent final
   results'
 title2: Presents by Tigeia-Workshop

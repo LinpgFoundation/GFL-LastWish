@@ -29,6 +29,7 @@ def dialog(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, coll
     #主循环
     while DIALOG.is_playing():
         DIALOG.draw(screen)
+        ALPHA_BUILD_WARNING.draw(screen)
         linpg.display.flip()
     #返回玩家做出的选项
     return DIALOG.dialog_options
@@ -37,14 +38,20 @@ def dialog(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, coll
 def dialogEditor(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, collection_name:str=None) -> None:
     #卸载音乐
     linpg.unloadBackgroundMusic()
-    linpg.display.set_caption("{0} ({1})".format(linpg.get_lang('General','game_title'),linpg.get_lang('General','dialog_creator')))
+    #改变标题
+    linpg.display.set_caption("{0} ({1})".format(linpg.get_lang('General','game_title'),linpg.get_lang('General','dialog_editor')))
+    if RPC is not None:
+        RPC.update(details=linpg.get_lang("DiscordStatus","now_playing"),state=linpg.get_lang('General','dialog_editor'),large_image="test")
     #加载对话
     DIALOG:object = linpg.DialogEditor(chapterType,chapterId,part,collection_name)
     #主循环
     while DIALOG.is_playing():
         DIALOG.draw(screen)
+        ALPHA_BUILD_WARNING.draw(screen)
         linpg.display.flip()
+    #改变标题回主菜单的样式
     linpg.display.set_caption(linpg.get_lang('General','game_title'))
+    if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image="test")
 
 #战斗系统
 def battle(chapterType:str, chapterId:int, screen:pygame.Surface, collection_name:str=None) -> dict:
@@ -56,7 +63,10 @@ def battle(chapterType:str, chapterId:int, screen:pygame.Surface, collection_nam
     else:
         BATTLE.load(screen)
     #战斗系统主要loop
-    while BATTLE.is_playing(): BATTLE.draw(screen)
+    while BATTLE.is_playing():
+        BATTLE.draw(screen)
+        ALPHA_BUILD_WARNING.draw(screen)
+        linpg.display.flip()
     #暂停声效 - 尤其是环境声
     linpg.unloadBackgroundMusic()
     return BATTLE.resultInfo
@@ -65,12 +75,20 @@ def battle(chapterType:str, chapterId:int, screen:pygame.Surface, collection_nam
 def mapEditor(chapterType:str, chapterId:int, screen:pygame.Surface, collection_name:str=None) -> None:
     #卸载音乐
     linpg.unloadBackgroundMusic()
-    linpg.display.set_caption("{0} ({1})".format(linpg.get_lang('General','game_title'),linpg.get_lang('General','map_creator')))
-    MAPCREATOR = MapEditor(chapterType,chapterId,collection_name)
-    MAPCREATOR.initialize(screen)
+    MAPEDITOR = MapEditor(chapterType,chapterId,collection_name)
+    MAPEDITOR.initialize(screen)
+    #改变标题
+    linpg.display.set_caption("{0} ({1})".format(linpg.get_lang('General','game_title'),linpg.get_lang('General','map_editor')))
+    if RPC is not None:
+        RPC.update(details=linpg.get_lang("DiscordStatus","now_playing"),state=linpg.get_lang('General','map_editor'),large_image="test")
     #战斗系统主要loop
-    while MAPCREATOR.is_playing(): MAPCREATOR.draw(screen)
+    while MAPEDITOR.is_playing():
+        MAPEDITOR.draw(screen)
+        ALPHA_BUILD_WARNING.draw(screen)
+        linpg.display.flip()
+    #改变标题回主菜单的样式
     linpg.display.set_caption(linpg.get_lang('General','game_title'))
+    if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image="test")
 
 #blit载入页面
 def dispaly_loading_screen(screen:pygame.Surface, start:int, end:int, value:int) -> None:
