@@ -160,13 +160,20 @@ class MapEditor(linpg.AbstractBattleSystem):
             linpg.get_lang("MapEditor","reload"),
             "black",100,UI_x,UI_y,UI_height
             )
-        #数据控制器
-        self.data_to_edit = None
         #其他函数
         self.UI_local_x = 0
         self.UI_local_y = 0
+        #未保存离开时的警告
+        self.__no_save_warning = linpg.LeaveWithoutSavingWarning(
+            os.path.join("Assets/image/UI","container.png"),0,0,screen.get_width()/2,screen.get_height()/4
+            )
+        self.__no_save_warning.set_center(screen.get_width()/2,screen.get_height()/2)
+        #用于储存即将发下的物品的具体参数
+        self.data_to_edit = None
         #读取地图原始文件
         self.originalData = linpg.loadConfig(self.fileLocation)
+    #保存改动
+    def __save(self) -> None: linpg.saveConfig(self.fileLocation,self.originalData)
     #将地图制作器的界面画到屏幕上
     def draw(self, screen:pygame.Surface) -> None:
         self._update_event()
@@ -209,10 +216,13 @@ class MapEditor(linpg.AbstractBattleSystem):
                                 self.enemies_data.pop(any_chara_replace)
                                 self.originalData["sangvisFerri"].pop(any_chara_replace)
                 elif linpg.isHover(self.UIButton["save"]) and self.object_to_put_down is None and not self.deleteMode:
-                    linpg.saveConfig(self.fileLocation,self.originalData)
+                    self.__save()
                 elif linpg.isHover(self.UIButton["back"]) and self.object_to_put_down is None and not self.deleteMode:
-                    self._isPlaying = False
-                    break
+                    if linpg.loadConfig(self.fileLocation) == self.originalData:
+                        self._isPlaying = False
+                        break
+                    else:
+                        self.__no_save_warning.hidden = False
                 elif linpg.isHover(self.UIButton["delete"]) and self.object_to_put_down is None and not self.deleteMode:
                     self.object_to_put_down = None
                     self.data_to_edit = None
@@ -230,62 +240,63 @@ class MapEditor(linpg.AbstractBattleSystem):
                     #读取地图
                     self.originalData = linpg.loadConfig(self.fileLocation)
                 else:
-                    if pygame.mouse.get_pressed()[0] and block_get_click is not None:
-                        if self.object_to_put_down is not None:
-                            if self.object_to_put_down["type"] == "block":
-                                self.originalData["map"][block_get_click["y"]][block_get_click["x"]] = self.object_to_put_down["id"]
-                                self.MAP.update_block(block_get_click,self.object_to_put_down["id"])
-                            elif self.object_to_put_down["type"] == "decoration":
-                                #查看当前位置是否有装饰物
-                                decoration = self.MAP.find_decoration_on((block_get_click["x"],block_get_click["y"]))
-                                #如果发现有冲突的装饰物
-                                if decoration is not None:
-                                    self.MAP.remove_decoration(decoration)
-                                decorationType = self.decorations_setting[self.object_to_put_down["id"]]
-                                if decorationType not in self.originalData["decoration"]:
-                                    self.originalData["decoration"][decorationType] = {}
-                                the_id = 0
-                                while self.object_to_put_down["id"]+"_"+str(the_id) in self.originalData["decoration"][decorationType]:
+                    if pygame.mouse.get_pressed()[0] and block_get_click is not None and self.object_to_put_down is not None and\
+                        not linpg.isHover(self.__UIContainerRight,local_x=self.__UIContainerButtonRight.right) and\
+                            not linpg.isHover(self.__UIContainerBottom,local_y=self.__UIContainerButtonBottom.bottom):
+                        if self.object_to_put_down["type"] == "block":
+                            self.originalData["map"][block_get_click["y"]][block_get_click["x"]] = self.object_to_put_down["id"]
+                            self.MAP.update_block(block_get_click,self.object_to_put_down["id"])
+                        elif self.object_to_put_down["type"] == "decoration":
+                            #查看当前位置是否有装饰物
+                            decoration = self.MAP.find_decoration_on((block_get_click["x"],block_get_click["y"]))
+                            #如果发现有冲突的装饰物
+                            if decoration is not None:
+                                self.MAP.remove_decoration(decoration)
+                            decorationType = self.decorations_setting[self.object_to_put_down["id"]]
+                            if decorationType not in self.originalData["decoration"]:
+                                self.originalData["decoration"][decorationType] = {}
+                            the_id = 0
+                            while self.object_to_put_down["id"]+"_"+str(the_id) in self.originalData["decoration"][decorationType]:
+                                the_id+=1
+                            nameTemp = self.object_to_put_down["id"]+"_"+str(the_id)
+                            self.originalData["decoration"][decorationType][nameTemp] = {"image": self.object_to_put_down["id"],"x": block_get_click["x"],"y": block_get_click["y"]}
+                            if decorationType == "chest": self.originalData["decoration"][decorationType][nameTemp]["items"] = []
+                            self.MAP.load_decorations(self.originalData["decoration"])
+                        elif self.object_to_put_down["type"] == "character" or self.object_to_put_down["type"] == "sangvisFerri":
+                            any_chara_replace = None
+                            for key,value in linpg.dicMerge(self.alliances_data,self.enemies_data).items():
+                                if value.x == block_get_click["x"] and value.y == block_get_click["y"]:
+                                    any_chara_replace = key
+                                    break
+                            if any_chara_replace is not None:
+                                if any_chara_replace in self.alliances_data:
+                                    self.alliances_data.pop(any_chara_replace)
+                                    self.originalData["character"].pop(any_chara_replace)
+                                elif any_chara_replace in self.enemies_data:
+                                    self.enemies_data.pop(any_chara_replace)
+                                    self.originalData["sangvisFerri"].pop(any_chara_replace)
+                            the_id = 0
+                            if self.object_to_put_down["type"] == "character":
+                                while self.object_to_put_down["id"]+"_"+str(the_id) in self.alliances_data:
                                     the_id+=1
                                 nameTemp = self.object_to_put_down["id"]+"_"+str(the_id)
-                                self.originalData["decoration"][decorationType][nameTemp] = {"image": self.object_to_put_down["id"],"x": block_get_click["x"],"y": block_get_click["y"]}
-                                if decorationType == "chest": self.originalData["decoration"][decorationType][nameTemp]["items"] = []
-                                self.MAP.load_decorations(self.originalData["decoration"])
-                            elif self.object_to_put_down["type"] == "character" or self.object_to_put_down["type"] == "sangvisFerri":
-                                any_chara_replace = None
-                                for key,value in linpg.dicMerge(self.alliances_data,self.enemies_data).items():
-                                    if value.x == block_get_click["x"] and value.y == block_get_click["y"]:
-                                        any_chara_replace = key
-                                        break
-                                if any_chara_replace is not None:
-                                    if any_chara_replace in self.alliances_data:
-                                        self.alliances_data.pop(any_chara_replace)
-                                        self.originalData["character"].pop(any_chara_replace)
-                                    elif any_chara_replace in self.enemies_data:
-                                        self.enemies_data.pop(any_chara_replace)
-                                        self.originalData["sangvisFerri"].pop(any_chara_replace)
-                                the_id = 0
-                                if self.object_to_put_down["type"] == "character":
-                                    while self.object_to_put_down["id"]+"_"+str(the_id) in self.alliances_data:
-                                        the_id+=1
-                                    nameTemp = self.object_to_put_down["id"]+"_"+str(the_id)
-                                    self.originalData["character"][nameTemp] = {
-                                        "bullets_carried": 100,
-                                        "type": self.object_to_put_down["id"],
-                                        "x": block_get_click["x"],
-                                        "y": block_get_click["y"]
-                                    }
-                                    self.alliances_data[nameTemp] = linpg.FriendlyCharacter(self.originalData["character"][nameTemp],self.DATABASE[self.originalData["character"][nameTemp]["type"]],"dev")
-                                elif self.object_to_put_down["type"] == "sangvisFerri":
-                                    while self.object_to_put_down["id"]+"_"+str(the_id) in self.enemies_data:
-                                        the_id+=1
-                                    nameTemp = self.object_to_put_down["id"]+"_"+str(the_id)
-                                    self.originalData["sangvisFerri"][nameTemp] = {
-                                        "type": self.object_to_put_down["id"],
-                                        "x": block_get_click["x"],
-                                        "y": block_get_click["y"]
-                                    }
-                                    self.enemies_data[nameTemp] = linpg.HostileCharacter(self.originalData["sangvisFerri"][nameTemp],self.DATABASE[self.originalData["sangvisFerri"][nameTemp]["type"]],"dev")
+                                self.originalData["character"][nameTemp] = {
+                                    "bullets_carried": 100,
+                                    "type": self.object_to_put_down["id"],
+                                    "x": block_get_click["x"],
+                                    "y": block_get_click["y"]
+                                }
+                                self.alliances_data[nameTemp] = linpg.FriendlyCharacter(self.originalData["character"][nameTemp],self.DATABASE[self.originalData["character"][nameTemp]["type"]],"dev")
+                            elif self.object_to_put_down["type"] == "sangvisFerri":
+                                while self.object_to_put_down["id"]+"_"+str(the_id) in self.enemies_data:
+                                    the_id+=1
+                                nameTemp = self.object_to_put_down["id"]+"_"+str(the_id)
+                                self.originalData["sangvisFerri"][nameTemp] = {
+                                    "type": self.object_to_put_down["id"],
+                                    "x": block_get_click["x"],
+                                    "y": block_get_click["y"]
+                                }
+                                self.enemies_data[nameTemp] = linpg.HostileCharacter(self.originalData["sangvisFerri"][nameTemp],self.DATABASE[self.originalData["sangvisFerri"][nameTemp]["type"]],"dev")
         #其他移动的检查
         self._check_right_click_move(mouse_x,mouse_y)
         self._check_jostick_events()
@@ -294,7 +305,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         self._display_map(screen)
         if block_get_click is not None and\
             not linpg.isHover(self.__UIContainerRight,local_x=self.__UIContainerButtonRight.right) and\
-                not linpg.isHover(self.__UIContainerBottom,local_x=self.__UIContainerButtonBottom.right):
+                not linpg.isHover(self.__UIContainerBottom,local_y=self.__UIContainerButtonBottom.bottom):
             if self.deleteMode is True:
                 xTemp,yTemp = self.MAP.calPosInMap(block_get_click["x"],block_get_click["y"])
                 screen.blit(self.redBlock,(xTemp+self.MAP.block_width*0.1,yTemp))
@@ -384,3 +395,16 @@ class MapEditor(linpg.AbstractBattleSystem):
                 (linpg.fontRender("x: "+str(self.data_to_edit.x),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*8)),
                 (linpg.fontRender("y: "+str(self.data_to_edit.y),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*9)),
             ))
+        #未保存离开时的警告
+        self.__no_save_warning.draw(screen)
+        if pygame.mouse.get_pressed()[0] is True and self.__no_save_warning.button_hovered != "":
+            #保存并离开
+            if self.__no_save_warning.button_hovered == "save":
+                self.__save()
+                self._isPlaying = False
+            #取消
+            elif self.__no_save_warning.button_hovered == "cancel":
+                self.__no_save_warning.hidden = True
+            #不保存并离开
+            elif self.__no_save_warning.button_hovered == "dont_save":
+                self._isPlaying = False

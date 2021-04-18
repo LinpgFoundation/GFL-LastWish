@@ -1,11 +1,7 @@
 # cython: language_level=3
-import glob
-import os
-import shutil
-import time
-import pygame
-#from linpgdev import linpg
-import linpg
+import glob, os, shutil, time
+#from linpgdev import linpg, pygame
+import linpg, pygame
 try:
     from pypresence import Presence
     RPC = Presence("831417008734208011") 

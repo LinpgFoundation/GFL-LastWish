@@ -21,14 +21,14 @@ dialog_during_battle:
   - dialoguebox_down:
       content:
       - At last, we're free of SangvisFerri's
-      - pursuers. Is everyone okay?
+      - pursuers. Did anyone get hurt?
       speaker: sv-98
       speaker_icon: sv-98
     dialoguebox_up: null
   - dialoguebox_down:
       content:
       - At last, we're free of SangvisFerri's
-      - pursuers. Is everyone okay?
+      - pursuers. Did anyone get hurt?
       speaker: sv-98
       speaker_icon: sv-98
     dialoguebox_up:
@@ -121,12 +121,14 @@ dialogs:
       - Ding......
     1:
       content:
-      - Commander, according to the plan, this is not our time to communicate.
+      - Commander, according to the plan, this is not the time for us to have a conversation.
     2:
       content:
-      - I think you know better than I do what's really going on right now. My echelon
-        has crumbled.
-      - So I'd like to know when that rescue you were talking about will arrive.
+      - I think you know better than I do about how urgent the situation is right
+        now.
+      - My defense was close to disintegrating, and I'd like to know when that rescue
+        team
+      - you were talking about would finally arrive.
       narrator: Me
     3:
       content:
@@ -141,18 +143,18 @@ dialogs:
       narrator: Me
     5:
       content:
-      - By all rights, SangvisFerri should not know about this. But as things stood,
-      - someone on the inside must have leaked this information.
+      - SangvisFerri should not know about this, if I may say so. But as things stood,
+      - someone on the inside must have leaked the information.
     6:
       content:
-      - If we don't have support, our echelon will soon be unable to hold up, so how
-        will we ever
-      - find what you're asking for?
+      - If we don't get the support, I don't think my troops will be able to hold
+        very long,
+      - so how will we ever find what you're asking for?
       narrator: Me
     7:
       content:
       - That's okay. Since the girls under your command can only do so much to support
-      - you, then just keep going. I'll figure out the rest
+      - you, then just keep going. I'll figure out the rest.
     8:
       content:
       - End of communication.
@@ -168,7 +170,7 @@ dialogs:
       content:
       - Now, let's just hope that sv-98 and the others will be back in time, and we'll
         think about
-      - other things after that!
+      - other things after that.
       narrator: Me
     12:
       content:
@@ -186,15 +188,19 @@ dialogs:
   dialog_before_battle:
     head:
       content:
-      - In my subconscious, I used to worry about accidents.
+      - I have to admit, that I have thought about all kinds of situations that may
+        occur
+      - during the mission.
     1:
       content:
-      - But I didn't expect, that the accident will come such soon.
+      - But I didn't expect, that our mission will go south so quickly.
     2:
       content:
       - Commander, SangvisFerri's attack is getting fiercer. If this continues, the
         remaining
-      - echelon will soon be routed! It's time to order a standard evacuation procedure.
+      - troops will soon be surrounded and annihilated! It's time to proceed with
+        the evacuation
+      - procedure.
       narrator: Kalina
     3:
       content:
@@ -203,7 +209,7 @@ dialogs:
     4:
       content:
       - I haven't been able to get ahold of them, so i have no idea what's going on...
-      - That's worrisome. If we keep this up, it's only a matter of time before SangvisFerri
+      - That's worrisome. If we keep this up, it is only a matter of time before SangvisFerri
       - surrounds the place.
       narrator: Kalina
       next_dialog_id:
@@ -213,8 +219,8 @@ dialogs:
         type: option
     5:
       content:
-      - It's on a plain about 50 kilometers east of here.
-      - It fell under SangvisFerri's control 13 hours ago.
+      - The latest communication shows that they were on a site 50 kilometers away.
+      - However, it fell under SangvisFerri's control 13 hours ago.
       narrator: Kalina
     6:
       content:
@@ -222,11 +228,11 @@ dialogs:
       narrator: Me
     7:
       content:
-      - All operational echelons are currently spread out on the first line of defense.
-        Not to mention
-      - breaking through, it's already fortunate to be able to barely block SangvisFerri's
-        attack! If we
-      - pull out any more force at this point, the defense may soon be routed.
+      - All operational troops are currently spread out on the first line of defense.
+      - Not to mention breaking through, it's already fortunate to be able to block
+        SangvisFerri's
+      - attack! If we pull out any force at this point, the defense will soon fall
+        apart.
       narrator: Kalina
     8:
       content:
@@ -251,7 +257,7 @@ dialogs:
       narrator: Kalina
     12:
       content:
-      - Start the evacuation procedure. Then get me K. I need to talk to him.
+      - Please start the evacuation procedure. Then get me K. I need to talk to him.
       narrator: Me
     13:
       content:
@@ -259,18 +265,19 @@ dialogs:
       narrator: Kalina
     14:
       content:
-      - At the moment, I was very uneasy, whether sv-98 and the others could make
-        it back before
-      - the evacuation is one thing, but I have a feeling there's a mystery on this
-        island that
-      - Griffin and even the National Security Bureau themselves don't know about
-        yet.
+      - At the moment, I was very anxious, whether sv-98 and the others could make
+        it back
+      - before the evacuation is one thing. I have a feeling that there is something
+        very secret
+      - on this island that Griffin and even the National Security Bureau themselves
+        don't even
+      - know about yet.
     15:
       content:
       - 24 hours ago.
     16:
       content:
-      - Asval, how's everything going so far?
+      - Asval, how is everything going so far?
       narrator: Sv-98
     17:
       content:
@@ -279,10 +286,9 @@ dialogs:
         lands.
     18:
       content:
-      - Let's hurry up! As long as we take out as much of the current SangvisFerri
-        forces
-      - in the area before the helicopters arrive, then we'll be able to evacuate
-        safely.
+      - Let's hurry up! As long as we can destroy all SangvisFerri's forces in the
+        area before
+      - the helicopters arrive, we'll be able to evacuate safely.
       narrator: Sv-98
     19:
       content:

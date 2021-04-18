@@ -15,9 +15,8 @@ GAMESTART:bool = True
 
 #游戏主进程
 if GAMESTART and __name__ == "__main__":
-    flags =  pygame.DOUBLEBUF | pygame.SCALED | pygame.FULLSCREEN
-    #flags = FULLSCREEN | DOUBLEBUF
-
+    #屏幕设置
+    flags = pygame.DOUBLEBUF | pygame.SCALED | pygame.FULLSCREEN if linpg.get_setting("FullScreen") is True else pygame.SCALED
     # 创建窗口
     screen = linpg.display.init_screen(flags)
     mainMenu = MainMenu(screen)

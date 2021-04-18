@@ -13,9 +13,9 @@ class MainMenu(linpg.SystemObject):
         #窗口标题图标
         linpg.display.set_icon("Assets/image/UI/icon.png")
         linpg.display.set_caption(linpg.get_lang('General','game_title'))
-        RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image="test")
+        if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image="test")
         #载入页面 - 渐入
-        dispaly_loading_screen(screen,0,250,2)
+        dispaly_loading_screen(screen,0,250,int(2*linpg.display.sfpsp))
         #修改控制台的位置
         linpg.console.set_pos(window_x*0.1,window_y*0.8)
         self.main_menu_txt = linpg.get_lang('MainMenu')
@@ -61,7 +61,7 @@ class MainMenu(linpg.SystemObject):
         #初始化返回菜单判定参数
         linpg.set_glob_value("BackToMainMenu",False)
         #载入页面 - 渐出
-        dispaly_loading_screen(screen,250,0,-2)
+        dispaly_loading_screen(screen,250,0,int(-2*linpg.display.sfpsp))
     #当前在Data/workshop文件夹中可以读取的文件夹的名字（font的形式）
     def __reload_workshop_files_list(self, screen_size:tuple, createMode:bool=False) -> None:
         self.workshop_files = []

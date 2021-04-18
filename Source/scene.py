@@ -95,7 +95,7 @@ def dispaly_loading_screen(screen:pygame.Surface, start:int, end:int, value:int)
     window_x,window_y = screen.get_size()
     #获取健康游戏忠告
     HealthyGamingAdvice = linpg.get_lang("HealthyGamingAdvice")
-    if HealthyGamingAdvice is None:
+    if HealthyGamingAdvice == "HealthyGamingAdvice":
         HealthyGamingAdvice = []
     else:
         for i in range(len(HealthyGamingAdvice)):
