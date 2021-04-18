@@ -28,8 +28,7 @@ def skill(
         if characters_data[characterName].type == "gsh-18":
             healed_hp = round((characters_data[skill_target].max_hp - characters_data[skill_target].current_hp)*0.3)
             characters_data[skill_target].heal(healed_hp)
-            if characters_data[skill_target].dying != False:
-                characters_data[skill_target].dying = False
+            if not characters_data[skill_target].dying: characters_data[skill_target].dying = False
             damage_do_to_character[skill_target] = linpg.fontRender("+"+str(healed_hp),"green",25)
         elif characters_data[characterName].type == "asval" or characters_data[characterName].type == "pp1901" or characters_data[characterName].type == "sv-98":
             the_damage = linpg.randomInt(characters_data[characterName].min_damage,characters_data[characterName].max_damage)

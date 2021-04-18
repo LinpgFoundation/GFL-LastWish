@@ -1,10 +1,8 @@
-import pygame
-import linpg
 try:
-    from Source_pyd.mainMenu import MainMenu
+    from Source_pyd.mainMenu import MainMenu, linpg, pygame, RPC
 except:
     print("Cannot import from Source_pyd")
-    from Source.mainMenu import MainMenu
+    from Source.mainMenu import MainMenu, linpg, pygame, RPC
 
 #读取并整理配置文件
 #linpg.optimizeCNContenInFolder("剧本/*.yaml")
@@ -17,10 +15,14 @@ GAMESTART:bool = True
 
 #游戏主进程
 if GAMESTART and __name__ == "__main__":
-    flags =  pygame.DOUBLEBUF | pygame.SCALED | pygame.FULLSCREEN
-    #flags = FULLSCREEN | DOUBLEBUF
-
+    #屏幕设置
+    flags = pygame.DOUBLEBUF | pygame.SCALED | pygame.FULLSCREEN if linpg.get_setting("FullScreen") is True else pygame.SCALED
     # 创建窗口
     screen = linpg.display.init_screen(flags)
     mainMenu = MainMenu(screen)
-    mainMenu.draw(screen)
+    while mainMenu.is_playing():
+        mainMenu.draw(screen)
+        linpg.display.flip()
+    
+    linpg.display.quit()
+    RPC.close()

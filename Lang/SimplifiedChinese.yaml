@@ -6,11 +6,16 @@ Battle_UI:
   numChapter: 第{}章
   numRound: 第{}回合
   yourRound: 你的回合
+DiscordStatus:
+  game_is_initializing: 游戏正在初始化...
+  now_playing: '正在游玩:'
+  staying_at_main_menu: 正在浏览主菜单
 General:
-  dialog_creator: 对话编辑器
+  dialog_editor: 对话编辑器
   game_title: 少女前线-遗愿
-  map_creator: 地图编辑器
-  save: 保存
+  griffin_Kryuger: 格里芬
+  map_editor: 地图编辑器
+  sangvis_ferri: 铁血工造
 HealthyGamingAdvice:
 - 抵制不良游戏，拒绝盗版游戏。
 - 注意自我保护，谨防受骗上当。
@@ -40,7 +45,9 @@ MainMenu:
     new_chapter: 新建章节
     new_collection: 新建合集
     tip: 提示
-MapCreator:
+MapEditor:
+  block: 方块
+  decoration: 装饰物
   delete: 删除
   reload: 重新加载
 ResultBoard:
@@ -78,5 +85,6 @@ Warnings:
   no_enough_ap_to_reload: 当前角色没有足够的行动值用于换弹
   no_enough_ap_to_rescue: 当前角色没有足够的行动值进行救助
   no_enough_ap_to_use_skill: 当前角色没有足够的行动值使用技能
+alpha_build_warning: '测试版本: 不代表最终效果'
 title1: 缇吉娅工坊 呈现
 title2: 警告：所有内容仍处于研发阶段，不代表最终效果

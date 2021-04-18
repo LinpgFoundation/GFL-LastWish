@@ -4,10 +4,10 @@ from .survivalBattleSystem import *
 #回合制游戏战斗系统
 class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
     def __init__(self, chapterType:str=None, chapterId:int=None, collection_name:str=None):
-        linpg.AbstractBattleSystem.__init__(self,chapterType,chapterId,collection_name)
+        super().__init__(chapterType,chapterId,collection_name)
         #被选中的角色
         self.characterGetClick = None
-        self.enemiesGetAttack = {}
+        self.enemiesGetAttack:dict = {}
         self.action_choice = None
         #是否不要画出用于表示范围的方块
         self.NotDrawRangeBlocks = True
@@ -26,7 +26,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         #被救助的那个角色
         self.friendGetHelp = None
         #AI系统正在操控的敌对角色ID
-        self.enemies_in_control_id = None
+        self.enemies_in_control_id:int = 0
         #所有敌对角色的名字列表
         self.sangvisFerris_name_list = []
         #战斗状态数据
@@ -92,7 +92,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             self.dialogData = DataTmp["dialogData"]
             self.resultInfo = DataTmp["resultInfo"]
         else:
-            raise Exception('linpgEngine-Error: Cannot load the data from the "save.yaml" file because the file type does not match')
+            raise Exception('Error: Cannot load the data from the "save.yaml" file because the file type does not match')
         #因为地图模块已被加载，只需加载图片即可
         self.MAP.load_env_img((round(screen.get_width()/10),round(screen.get_height()/10)))
         self.loadFromSave = True
@@ -201,11 +201,11 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         )
         #用于表示范围的方框图片
         self.range_ui_images = {
-            "green" : linpg.SrcalphaSurface("Assets/image/UI/range/green.png",0,0),
-            "red" : linpg.SrcalphaSurface("Assets/image/UI/range/red.png",0,0),
-            "yellow": linpg.SrcalphaSurface("Assets/image/UI/range/yellow.png",0,0),
-            "blue": linpg.SrcalphaSurface("Assets/image/UI/range/blue.png",0,0),
-            "orange": linpg.SrcalphaSurface("Assets/image/UI/range/orange.png",0,0),
+            "green" : linpg.StaticImageSurface("Assets/image/UI/range/green.png",0,0),
+            "red" : linpg.StaticImageSurface("Assets/image/UI/range/red.png",0,0),
+            "yellow": linpg.StaticImageSurface("Assets/image/UI/range/yellow.png",0,0),
+            "blue": linpg.StaticImageSurface("Assets/image/UI/range/blue.png",0,0),
+            "orange": linpg.StaticImageSurface("Assets/image/UI/range/orange.png",0,0),
         }
         for key in self.range_ui_images:
             self.range_ui_images[key].set_width_with_size_locked(self.MAP.block_width*0.8)
@@ -274,8 +274,6 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             item.blit(screen)
         self.__itemsToBlit.clear()
         self.__maxItemWeight = 0
-        #刷新画面
-        linpg.display.flip()
     #胜利失败判定
     def __check_whether_player_win_or_lost(self) -> None:
         #常规
@@ -330,6 +328,9 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 for character in self.griffinCharactersData:
                     if self.sangvisFerrisData[key].can_attack(self.griffinCharactersData[character]):
                         self.griffinCharactersData[character].notice(100)
+    #重置用于储存需要画出范围方块的字典
+    def reset_areaDrawColorBlock(self):
+        for value in self.areaDrawColorBlock.values(): value.clear()
     #切换回合
     def __switch_round(self, screen:pygame.Surface) -> None:
         if self.whose_round == "playerToSangvisFerris" or self.whose_round == "sangvisFerrisToPlayer":
@@ -348,7 +349,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                             self.sangvisFerrisData[every_chara].alert(100)
                     #让倒地的角色更接近死亡
                     for every_chara in self.griffinCharactersData:
-                        if self.griffinCharactersData[every_chara].dying != False:
+                        if self.griffinCharactersData[every_chara].dying is not False:
                             self.griffinCharactersData[every_chara].dying -= 1
                     #现在是铁血的回合！
                     self.whose_round = "sangvisFerris"
@@ -404,15 +405,15 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                                 if len(routeTmp)>0:
                                     self.griffinCharactersData[key].move_follow(routeTmp)
                                 else:
-                                    raise Exception('linpgEngine-Error: Character {} cannot find a valid path!'.format(key))
+                                    raise Exception('Error: Character {} cannot find a valid path!'.format(key))
                             elif key in self.sangvisFerrisData:
                                 routeTmp = self.MAP.findPath(self.sangvisFerrisData[key],pos,self.sangvisFerrisData,self.griffinCharactersData)
                                 if len(routeTmp)>0:
                                     self.sangvisFerrisData[key].move_follow(routeTmp)
                                 else:
-                                    raise Exception('linpgEngine-Error: Character {} cannot find a valid path!'.format(key))
+                                    raise Exception('Error: Character {} cannot find a valid path!'.format(key))
                             else:
-                                raise Exception('linpgEngine-Error: Cannot find character {}!'.format(key))
+                                raise Exception('Error: Cannot find character {}!'.format(key))
                         self.dialog_ifPathSet = True
                     #播放脚步声
                     self.footstep_sounds.play()
@@ -429,7 +430,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                         elif key in self.sangvisFerrisData and not self.sangvisFerrisData[key].is_idle():
                             allGetToTargetPos = False
                         else:
-                            raise Exception('linpgEngine-Error: Cannot find character {}!'.format(key))
+                            raise Exception('Error: Cannot find character {}!'.format(key))
                     if reProcessMap:
                         self._calculate_darkness()
                     if allGetToTargetPos:
@@ -445,7 +446,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                         elif key in self.sangvisFerrisData:
                             self.sangvisFerrisData[key].set_flip(value)
                         else:
-                            raise Exception('linpgEngine-Error: Cannot find character {}!'.format(key))
+                            raise Exception('Error: Cannot find character {}!'.format(key))
                     self.dialogData["dialogId"] += 1
                 #改变动作（一次性）
                 elif "action" in currentDialog and currentDialog["action"] is not None:
@@ -585,7 +586,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     self.characterGetClick = None
                     self.action_choice = None
                     skill_range = None
-                    self.areaDrawColorBlock = {"green":[],"red":[],"yellow":[],"blue":[],"orange":[]}
+                    self.reset_areaDrawColorBlock()
                 self._check_key_down(event)
                 if event.key == pygame.K_m:
                     linpg.display.quit()
@@ -611,7 +612,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 self.zoomIn -= 5
             elif self.zoomIntoBe > self.zoomIn:
                 self.zoomIn += 5
-            self.MAP.changePerBlockSize(self.standard_block_width*self.zoomIn/100,self.standard_block_height*self.zoomIn/100)
+            self.MAP.changePerBlockSize(self._standard_block_width*self.zoomIn/100,self._standard_block_height*self.zoomIn/100)
             #根据block尺寸重新加载对应尺寸的UI
             for key in self.range_ui_images:
                 self.range_ui_images[key].set_width_with_size_locked(self.MAP.block_width*0.8)
@@ -632,19 +633,19 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             if right_click is True:
                 block_get_click = self.MAP.calBlockInMap(mouse_x,mouse_y)
                 #如果点击了回合结束的按钮
-                if linpg.is_hover(self.end_round_button) and self.isWaiting is True:
+                if linpg.isHover(self.end_round_button) and self.isWaiting is True:
                     self.whose_round = "playerToSangvisFerris"
                     self.characterGetClick = None
                     self.NotDrawRangeBlocks = True
                     skill_range = None
-                    self.areaDrawColorBlock = {"green":[],"red":[],"yellow":[],"blue":[],"orange":[]}
+                    self.reset_areaDrawColorBlock()
                 #是否在显示移动范围后点击了且点击区域在移动范围内
-                elif len(self.the_route) != 0 and block_get_click is not None and (block_get_click["x"], block_get_click["y"]) in self.the_route and self.NotDrawRangeBlocks==False:
+                elif len(self.the_route) != 0 and block_get_click is not None and (block_get_click["x"], block_get_click["y"]) in self.the_route and not self.NotDrawRangeBlocks:
                     self.isWaiting = False
                     self.NotDrawRangeBlocks = True
                     self.characterInControl.try_reduce_action_point(len(self.the_route)*2)
                     self.characterInControl.move_follow(self.the_route)
-                    self.areaDrawColorBlock = {"green":[],"red":[],"yellow":[],"blue":[],"orange":[]}
+                    self.reset_areaDrawColorBlock()
                 elif self.NotDrawRangeBlocks == "SelectMenu" and self.buttonGetHover == "attack":
                     if self.characterInControl.current_bullets > 0 and self.characterInControl.have_enough_action_point(5):
                         self.action_choice = "attack"
@@ -692,7 +693,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     self.characterInControl.set_action("attack",False)
                     self.isWaiting = False
                     self.NotDrawRangeBlocks = True
-                    self.areaDrawColorBlock = {"green":[],"red":[],"yellow":[],"blue":[],"orange":[]}
+                    self.reset_areaDrawColorBlock()
+                #技能
                 elif self.action_choice == "skill" and not self.NotDrawRangeBlocks and self.characterGetClick is not None and self.skill_target is not None:
                     if self.skill_target in self.griffinCharactersData:
                         self.characterInControl.set_flip_based_on_pos(self.griffinCharactersData[self.skill_target])
@@ -705,7 +707,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     self.isWaiting = False
                     self.NotDrawRangeBlocks = True
                     skill_range = None
-                    self.areaDrawColorBlock = {"green":[],"red":[],"yellow":[],"blue":[],"orange":[]}
+                    self.reset_areaDrawColorBlock()
                 elif self.action_choice == "rescue" and not self.NotDrawRangeBlocks and self.characterGetClick is not None and self.friendGetHelp is not None:
                     self.characterInControl.try_reduce_action_point(8)
                     self.characterInControl.notice()
@@ -714,7 +716,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     self.action_choice = None
                     self.isWaiting = True
                     self.NotDrawRangeBlocks = True
-                    self.areaDrawColorBlock = {"green":[],"red":[],"yellow":[],"blue":[],"orange":[]}
+                    self.reset_areaDrawColorBlock()
                 elif self.action_choice == "interact" and not self.NotDrawRangeBlocks and self.characterGetClick is not None and self.decorationGetClick is not None:
                     self.characterInControl.try_reduce_action_point(2)
                     self.MAP.interact_decoration_with_id(self.decorationGetClick)
@@ -723,20 +725,20 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     self.action_choice = None
                     self.isWaiting = True
                     self.NotDrawRangeBlocks = True
-                    self.areaDrawColorBlock = {"green":[],"red":[],"yellow":[],"blue":[],"orange":[]}
+                    self.reset_areaDrawColorBlock()
                 #判断是否有被点击的角色
                 elif block_get_click is not None:
                     for key in self.griffinCharactersData:
-                        if self.griffinCharactersData[key].on_pos(block_get_click) and self.isWaiting is True and not self.griffinCharactersData[key].dying and self.NotDrawRangeBlocks != False:
+                        if self.griffinCharactersData[key].on_pos(block_get_click) and self.isWaiting is True and not self.griffinCharactersData[key].dying and self.NotDrawRangeBlocks is not False:
                             self.screen_to_move_x = None
                             self.screen_to_move_y = None
                             skill_range = None
-                            self.areaDrawColorBlock = {"green":[],"red":[],"yellow":[],"blue":[],"orange":[]}
+                            self.reset_areaDrawColorBlock()
                             if self.characterGetClick != key:
                                 self.griffinCharactersData[key].play_sound("get_click")
                                 self.characterGetClick = key
                             self.characterInfoBoardUI.update()
-                            self.friendsCanSave = [key2 for key2 in self.griffinCharactersData if self.griffinCharactersData[key2].dying != False and self.griffinCharactersData[key].near(self.griffinCharactersData[key2])]
+                            self.friendsCanSave = [key2 for key2 in self.griffinCharactersData if self.griffinCharactersData[key2].dying is not False and self.griffinCharactersData[key].near(self.griffinCharactersData[key2])]
                             self.thingsCanReact.clear()
                             index = 0
                             for decoration in self.MAP.decorations:
@@ -764,7 +766,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 block_get_click = self.MAP.calBlockInMap(mouse_x,mouse_y)
                 #显示移动范围
                 if self.action_choice == "move":
-                    self.areaDrawColorBlock["green"] = []
+                    self.areaDrawColorBlock["green"].clear()
                     if block_get_click is not None:
                         #根据行动值计算最远可以移动的距离
                         max_blocks_can_move = int(self.characterInControl.current_action_point/2)
@@ -887,8 +889,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                         self.warnings_to_display.add("magazine_is_full")
                         self.NotDrawRangeBlocks = "SelectMenu"
                 elif self.action_choice == "rescue":
-                    self.areaDrawColorBlock["green"] = []
-                    self.areaDrawColorBlock["orange"] = []
+                    self.areaDrawColorBlock["green"].clear()
+                    self.areaDrawColorBlock["orange"].clear()
                     self.friendGetHelp = None
                     for friendNeedHelp in self.friendsCanSave:
                         if block_get_click is not None and block_get_click["x"] == self.griffinCharactersData[friendNeedHelp].x and block_get_click["y"] == self.griffinCharactersData[friendNeedHelp].y:
@@ -897,8 +899,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                         else:
                             self.areaDrawColorBlock["green"].append((self.griffinCharactersData[friendNeedHelp].x,self.griffinCharactersData[friendNeedHelp].y))
                 elif self.action_choice == "interact":
-                    self.areaDrawColorBlock["green"] = []
-                    self.areaDrawColorBlock["orange"] = []
+                    self.areaDrawColorBlock["green"].clear()
+                    self.areaDrawColorBlock["orange"].clear()
                     self.decorationGetClick = None
                     for index in self.thingsCanReact:
                         decoration = self.MAP.find_decoration_with_id(index)
@@ -1111,9 +1113,9 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 self.range_ui_images["blue"].set_alpha(self.rightClickCharacterAlpha)
                 self.range_ui_images["green"].set_alpha(self.rightClickCharacterAlpha)
             elif self.rightClickCharacterAlpha == 0:
-                self.areaDrawColorBlock["yellow"] = []
-                self.areaDrawColorBlock["blue"] = []
-                self.areaDrawColorBlock["green"] = []
+                self.areaDrawColorBlock["yellow"].clear()
+                self.areaDrawColorBlock["blue"].clear()
+                self.areaDrawColorBlock["green"].clear()
                 self.range_ui_images["yellow"].set_alpha(255)
                 self.range_ui_images["blue"].set_alpha(255)
                 self.range_ui_images["green"].set_alpha(255)
