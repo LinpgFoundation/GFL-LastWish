@@ -3,10 +3,10 @@ from .skill import *
 
 #地图编辑器系统
 class MapEditor(linpg.AbstractBattleSystem):
-    def __init__(self, chapterType:str, chapterId:int, collection_name:str=None):
-        super().__init__(chapterType,chapterId,collection_name)
+    def __init__(self, chapterType:str, chapterId:int, project_name:str=None):
+        super().__init__(chapterType,chapterId,project_name)
         self.fileLocation = "Data/{0}/chapter{1}_map.yaml".format(self.chapterType,self.chapterId) if self.chapterType == "main_chapter"\
-            else "Data/{0}/{1}/chapter{2}_map.yaml".format(self.chapterType,self.collection_name,self.chapterId)
+            else "Data/{0}/{1}/chapter{2}_map.yaml".format(self.chapterType,self.project_name,self.chapterId)
     #加载角色的数据
     def __load_characters_data(self, mapFileData:dict) -> None:
         #生成进程

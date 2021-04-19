@@ -3,8 +3,8 @@ from .survivalBattleSystem import *
 
 #回合制游戏战斗系统
 class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
-    def __init__(self, chapterType:str=None, chapterId:int=None, collection_name:str=None):
-        super().__init__(chapterType,chapterId,collection_name)
+    def __init__(self, chapterType:str=None, chapterId:int=None, project_name:str=None):
+        super().__init__(chapterType,chapterId,project_name)
         #被选中的角色
         self.characterGetClick = None
         self.enemiesGetAttack:dict = {}
@@ -85,7 +85,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         if DataTmp["type"] == "battle":
             self.chapterType = DataTmp["chapterType"]
             self.chapterId = DataTmp["chapterId"]
-            self.collection_name = DataTmp["collection_name"]
+            self.project_name = DataTmp["project_name"]
             self._initial_characters_loader(DataTmp["griffin"],DataTmp["sangvisFerri"])
             self.MAP = DataTmp["MAP"]
             self.dialogKey = DataTmp["dialogKey"]
@@ -114,9 +114,9 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             self.chapterId,
             linpg.get_setting('Language')
             )
-        ) if self.collection_name is None else linpg.loadConfig("Data/{0}/{1}/chapter{2}_dialogs_{3}.yaml".format(
+        ) if self.project_name is None else linpg.loadConfig("Data/{0}/{1}/chapter{2}_dialogs_{3}.yaml".format(
             self.chapterType,
-            self.collection_name,
+            self.project_name,
             self.chapterId,linpg.get_setting('Language')
             )
         )
@@ -146,8 +146,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         nowLoadingIcon.draw(screen)
         linpg.display.flip(True)
         #读取并初始化章节信息
-        DataTmp = linpg.loadConfig("Data/{0}/chapter{1}_map.yaml".format(self.chapterType,self.chapterId)) if self.collection_name is None\
-            else linpg.loadConfig("Data/{0}/{1}/chapter{2}_map.yaml".format(self.chapterType,self.collection_name,self.chapterId))
+        DataTmp = linpg.loadConfig("Data/{0}/chapter{1}_map.yaml".format(self.chapterType,self.chapterId)) if self.project_name is None\
+            else linpg.loadConfig("Data/{0}/{1}/chapter{2}_map.yaml".format(self.chapterType,self.project_name,self.chapterId))
         #设置背景音乐
         self.set_bgm("Assets\music\{}".format(DataTmp["background_music"]))
         #加载胜利目标
@@ -241,12 +241,12 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     screen.blit(temp_secode,(self.window_x/20+self.battleMode_info[i].get_width(),self.window_y*0.75+self.battleMode_info[i].get_height()*1.2))
             linpg.display.flip(True)
     #储存当前进度
-    def save_process(self) -> None:
+    def save_progress(self) -> None:
         save_thread = linpg.SaveDataThread("Save/save.yaml", {
             "type": "battle",
             "chapterType": self.chapterType,
             "chapterId": self.chapterId,
-            "collection_name": self.collection_name,
+            "project_name": self.project_name,
             "griffin": self.griffinCharactersData,
             "sangvisFerri": self.sangvisFerrisData,
             "MAP": self.MAP,
@@ -1197,7 +1197,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         linpg.unloadBackgroundMusic()
-                        self.__init__(self.chapterType,self.chapterId,self.collection_name)
+                        self.__init__(self.chapterType,self.chapterId,self.project_name)
                         self.initialize(screen)
                         break
                     elif event.key == pygame.K_BACKSPACE:
@@ -1234,8 +1234,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         #刷新画面
         self.__update_scene(screen)
         #展示暂停菜单
-        process_saved_text = linpg.ImageSurface(self.FONT.render(linpg.get_lang("Global","process_has_been_saved"),linpg.get_fontMode(),(255,255,255)),0,0)
-        process_saved_text.set_alpha(0)
+        progress_saved_text = linpg.ImageSurface(self.FONT.render(linpg.get_lang("Global","progress_has_been_saved"),linpg.get_fontMode(),(255,255,255)),0,0)
+        progress_saved_text.set_alpha(0)
         while self.show_pause_menu:
             self._update_event()
             result = self.pause_menu.draw(screen,self.events)
@@ -1243,8 +1243,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 linpg.setting.isDisplaying = False
                 self.show_pause_menu = False
             elif result == "Save":
-                self.save_process()
-                process_saved_text.set_alpha(255)
+                self.save_progress()
+                progress_saved_text.set_alpha(255)
             elif result == "Setting":
                 linpg.setting.isDisplaying = True
             elif result == "BackToMainMenu":
@@ -1255,8 +1255,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             #如果播放玩菜单后发现有东西需要更新
             if linpg.setting.draw(screen,self.events):
                 self.__update_sound_volume()
-            process_saved_text.drawOnTheCenterOf(screen)
-            process_saved_text.fade_out(5)
+            progress_saved_text.drawOnTheCenterOf(screen)
+            progress_saved_text.fade_out(5)
             linpg.display.flip()
-        del process_saved_text
+        del progress_saved_text
         self.pause_menu.screenshot = None

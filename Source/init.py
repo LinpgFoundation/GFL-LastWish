@@ -2,11 +2,16 @@
 import glob, os, shutil, time
 #from linpgdev import linpg, pygame
 import linpg, pygame
+
+#本游戏的客户端ID
+CLIENT_ID:int = 831417008734208011
+LARGE_IMAGE:str = "test"
+#尝试连接Discord
 try:
     from pypresence import Presence
-    RPC = Presence("831417008734208011") 
+    RPC = Presence(str(CLIENT_ID)) 
     RPC.connect()
-    RPC.update(state=linpg.get_lang("DiscordStatus","game_is_initializing"),large_image="test")
+    RPC.update(state=linpg.get_lang("DiscordStatus","game_is_initializing"),large_image=LARGE_IMAGE)
 except:
     RPC = None
 

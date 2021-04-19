@@ -5,7 +5,7 @@ from .turnBasedBattleSystem import *
 class DialogSystem(linpg.DialogSystem):
     def __init__(self): super().__init__()
     #保存数据
-    def save_process(self) -> None:
+    def save_progress(self) -> None:
         #确保Save文件夹存在
         if not os.path.exists("Save"): os.makedirs("Save")
         #存档数据
@@ -15,7 +15,7 @@ class DialogSystem(linpg.DialogSystem):
             "type": self.part,
             "id": self.dialogId,
             "dialog_options": self.dialog_options,
-            "collection_name": self.collection_name
+            "project_name": self.project_name
         })
         save_thread.start()
         save_thread.join()

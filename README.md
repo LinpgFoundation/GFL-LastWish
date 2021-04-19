@@ -6,7 +6,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 
 
-# :framed_picture: Screenshot / 游戏截图
+# :framed_picture: Screenshots / 游戏截图
 
 ##### Main Menu / 主菜单
 
@@ -24,7 +24,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 <img src="Assets\image\screenshot\battle.png" style="zoom:50%;" />
 
-##### Map Editor/ 地图制作器
+##### Map Editor / 地图制作器
 
 <img src="Assets\image\screenshot\map_creator.png" style="zoom:50%;" />
 
@@ -94,25 +94,15 @@ This branch holds the latest version that is available to the public. While this
 
 实验版本，包含了部分仍在试验阶段的内容，请勿使用
 
-
-
 *: These branches may not be available to the public.
+
+
 
 # :books: How to contribute / 如何贡献代码
 
-- It would be best if you can fork the "dev" branch as your starting point. If the "dev" branch does not exist, then fork the "master" branch.
+See **[CONTRIBUTING.md](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/CONTRIBUTING.md)**
 
-  你应该fork "dev"分支作为作为你的起始点。如果"dev"分支不存在，则fork "master"分支。
 
-- After you have finished your work, you should request to merge to the "dev" branch instead of the "master" branch.
-
-  所有pull request应该请求merge到"dev"分支中。如果"dev"不存在，则请求merge到"master"分支。
-
-- We are looking forward to seeing a pull request that contains a detailed explanation about any changes that were made.
-
-  所有pull reques应该阐明所有关于改动的细节。
-
-  
 
 # :video_game: ​Discord
 
@@ -128,6 +118,6 @@ https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish
 
 # :memo: License / 版权说明
 
-The code of this game is distributed under the [GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE), which means you can use our code for commercial purposes as long as you are following the [GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE). However, all images and music used in this game are from third parties, and secondary distribution or commercialization without the authorization of the corresponding creators is strictly prohibited. Also, Tigeia Workshop (the developer of this game and Linpg engine) is responsible for any disputes and damages caused by neither this game nor Linpg Engine.
+This game's codes are distributed under the **[GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**, which means you can use our codes for commercial purposes as long as you are following the **[GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**. However, all images and music used in this game are from third parties, and secondary distribution or commercialization without the authorization of the corresponding creators is strictly prohibited. Also, Tigeia Workshop (the developer of this game and Linpg engine) is not responsible for any disputes and damages caused by neither this game nor Linpg Engine.
 
-本游戏的代码将采用[GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE)进行分发，这意味着你可以商用我们的代码。然而，需要注意的是，本游戏用到的所有图片和音乐素材均来自第三方，严禁在没有对应创作者授权的情况下进行二次发布或者商用。同时，因使用该游戏或者linpg导致的任何形式的冲突（比如但不仅限法律冲突，经济冲突等）与缇吉娅工坊（本游戏和Linpg引擎的开发者）无关。
+本游戏的代码将采用**[GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**进行分发，这意味着你可以商用我们的代码。然而，需要注意的是，本游戏用到的所有图片和音乐素材均来自第三方，严禁在没有对应创作者授权的情况下进行二次发布或者商用。同时，因使用该游戏或者linpg导致的任何形式的冲突（比如但不仅限法律冲突，经济冲突等）与缇吉娅工坊（本游戏和Linpg引擎的开发者）无关。

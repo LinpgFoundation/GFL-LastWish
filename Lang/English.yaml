@@ -14,8 +14,10 @@ General:
   dialog_editor: Dialog Editor
   game_title: Girls' Frontline - Last Wish
   griffin_Kryuger: Griffin & Kryuger
+  main_chapter: Main Chapter
   map_editor: Map Editor
   sangvis_ferri: Sangvis Ferri
+  workshop: Workshop
 LoadingTxt:
   now_loading: Loading...
   now_loading_characters: Loading characters' data...
@@ -38,7 +40,7 @@ MainMenu:
     deny: 'No'
     exit_confirm: Are you sure you want to quit the game?
     new_chapter: Create New Chapter
-    new_collection: Create New Collection
+    new_project: Create New Project
     tip: Tip
 MapEditor:
   block: Block
