@@ -3,8 +3,8 @@ from .survivalBattleSystem import *
 
 #回合制游戏战斗系统
 class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
-    def __init__(self, chapterType:str=None, chapterId:int=None, project_name:str=None):
-        super().__init__(chapterType,chapterId,project_name)
+    def __init__(self, chapterType:str=None, chapterId:int=None, projectName:str=None):
+        super().__init__(chapterType,chapterId,projectName)
         #被选中的角色
         self.characterGetClick = None
         self.enemiesGetAttack:dict = {}
@@ -83,9 +83,9 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
     def load(self, screen:pygame.Surface) -> None:
         DataTmp = linpg.loadConfig("Save/save.yaml")
         if DataTmp["type"] == "battle":
-            self.chapterType = DataTmp["chapterType"]
-            self.chapterId = DataTmp["chapterId"]
-            self.project_name = DataTmp["project_name"]
+            self._chapter_type = DataTmp["chapter_type"]
+            self._chapter_id = DataTmp["chapter_id"]
+            self._project_name = DataTmp["project_name"]
             self._initial_characters_loader(DataTmp["griffin"],DataTmp["sangvisFerri"])
             self.MAP = DataTmp["MAP"]
             self.dialogKey = DataTmp["dialogKey"]
@@ -110,14 +110,14 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         loading_info = linpg.get_lang("LoadingTxt")
         #加载剧情
         DataTmp = linpg.loadConfig("Data/{0}/chapter{1}_dialogs_{2}.yaml".format(
-            self.chapterType,
-            self.chapterId,
+            self._chapter_type,
+            self._chapter_id,
             linpg.get_setting('Language')
             )
-        ) if self.project_name is None else linpg.loadConfig("Data/{0}/{1}/chapter{2}_dialogs_{3}.yaml".format(
-            self.chapterType,
-            self.project_name,
-            self.chapterId,linpg.get_setting('Language')
+        ) if self._project_name is None else linpg.loadConfig("Data/{0}/{1}/chapter{2}_dialogs_{3}.yaml".format(
+            self._chapter_type,
+            self._project_name,
+            self._chapter_id,linpg.get_setting('Language')
             )
         )
         #章节标题显示
@@ -125,7 +125,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             self.window_x,
             self.window_y,
             self.battleModeUiTxt["numChapter"],
-            self.chapterId,DataTmp["title"],DataTmp["description"]
+            self._chapter_id,DataTmp["title"],DataTmp["description"]
         )
         self.battleMode_info = DataTmp["battle_info"]
         self.dialog_during_battle = DataTmp["dialog_during_battle"]
@@ -146,17 +146,18 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         nowLoadingIcon.draw(screen)
         linpg.display.flip(True)
         #读取并初始化章节信息
-        DataTmp = linpg.loadConfig("Data/{0}/chapter{1}_map.yaml".format(self.chapterType,self.chapterId)) if self.project_name is None\
-            else linpg.loadConfig("Data/{0}/{1}/chapter{2}_map.yaml".format(self.chapterType,self.project_name,self.chapterId))
+        DataTmp = linpg.loadConfig(self.get_map_file_location())
+        #背景音乐路径
+        self._background_music_folder_path:str = "Assets/music"
         #设置背景音乐
-        self.set_bgm("Assets\music\{}".format(DataTmp["background_music"]))
+        self.set_bgm(os.path.join(self._background_music_folder_path,DataTmp["background_music"]))
         #加载胜利目标
         self.mission_objectives = DataTmp["mission_objectives"]
         #初始化天气和环境的音效 -- 频道1
         self.environment_sound = linpg.SoundManagement(1)
         self.weatherController = None
         if DataTmp["weather"] is not None:
-            self.environment_sound.add("Assets/sound/environment/{}.ogg".format(DataTmp["weather"]))
+            self.environment_sound.add(os.path.join("Assets/sound/environment","{}.ogg".format(DataTmp["weather"])))
             self.weatherController = linpg.WeatherSystem(DataTmp["weather"],self.window_x,self.window_y)
         #加载对话信息
         self.dialogInfo = DataTmp["dialogs"]
@@ -240,13 +241,10 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     temp_secode.set_alpha(a)
                     screen.blit(temp_secode,(self.window_x/20+self.battleMode_info[i].get_width(),self.window_y*0.75+self.battleMode_info[i].get_height()*1.2))
             linpg.display.flip(True)
-    #储存当前进度
-    def save_progress(self) -> None:
-        save_thread = linpg.SaveDataThread("Save/save.yaml", {
+    #返回需要保存数据
+    def _get_data_need_to_save(self) -> dict: return linpg.dicMerge(
+        self.data_of_parent_game_system,{
             "type": "battle",
-            "chapterType": self.chapterType,
-            "chapterId": self.chapterId,
-            "project_name": self.project_name,
             "griffin": self.griffinCharactersData,
             "sangvisFerri": self.sangvisFerrisData,
             "MAP": self.MAP,
@@ -254,10 +252,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             "dialogData": self.dialogData,
             "resultInfo": self.resultInfo,
             "timeStamp": time.strftime(":%S", time.localtime())
-        })
-        save_thread.start()
-        save_thread.join()
-        del save_thread
+            }
+        )
     """画面"""
     #新增需要在屏幕上画出的物品
     def __add_on_screen_object(self, image:pygame.Surface, weight:int=-1, pos:Union[tuple,list]=None, offSet:Union[tuple,list]=None) -> None:
@@ -1186,7 +1182,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         self.battleMode = False
-                        self._isPlaying = False
+                        self.stop()
             self.__add_on_screen_object(self.ResultBoardUI)
         #结束动画--失败
         elif self.whose_round == "result_fail":
@@ -1197,12 +1193,12 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         linpg.unloadBackgroundMusic()
-                        self.__init__(self.chapterType,self.chapterId,self.project_name)
+                        self.__init__(self._chapter_type,self._chapter_id,self._project_name)
                         self.initialize(screen)
                         break
                     elif event.key == pygame.K_BACKSPACE:
                         linpg.unloadBackgroundMusic()
-                        self._isPlaying = False
+                        self.stop()
                         self.battleMode = False
                         break
             self.__add_on_screen_object(self.ResultBoardUI)
@@ -1250,7 +1246,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             elif result == "BackToMainMenu":
                 linpg.setting.isDisplaying = False
                 linpg.unloadBackgroundMusic()
-                self._isPlaying = False
+                self.stop()
                 self.show_pause_menu = False
             #如果播放玩菜单后发现有东西需要更新
             if linpg.setting.draw(screen,self.events):

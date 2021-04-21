@@ -230,17 +230,17 @@ class MainMenu(linpg.SystemObject):
         self.videoCapture.stop()
         SAVE:dict = linpg.loadConfig("Save/save.yaml")
         if RPC is not None: RPC.update(
-            details = linpg.get_lang('General','main_chapter') if SAVE["chapterType"] == "main_chapter" else linpg.get_lang('General','workshop'),
-            state = self.__get_chapter_title(SAVE["chapterType"],SAVE["chapterId"]),
+            details = linpg.get_lang('General','main_chapter') if SAVE["chapter_type"] == "main_chapter" else linpg.get_lang('General','workshop'),
+            state = self.__get_chapter_title(SAVE["chapter_type"],SAVE["chapter_id"]),
             large_image = LARGE_IMAGE,
             )
         startPoint = SAVE["type"]
         if startPoint == "dialog_before_battle":
             dialog(None,None,screen,None)
             if not linpg.get_glob_value("BackToMainMenu"):
-                battle(SAVE["chapterType"],SAVE["chapterId"],screen,SAVE["project_name"])
+                battle(SAVE["chapter_type"],SAVE["chapter_id"],screen,SAVE["project_name"])
                 if not linpg.get_glob_value("BackToMainMenu"):
-                    dialog(SAVE["chapterType"],SAVE["chapterId"],screen,"dialog_after_battle",SAVE["project_name"])
+                    dialog(SAVE["chapter_type"],SAVE["chapter_id"],screen,"dialog_after_battle",SAVE["project_name"])
                 else:
                     linpg.set_glob_value("BackToMainMenu",False)
             else:
@@ -248,7 +248,7 @@ class MainMenu(linpg.SystemObject):
         elif startPoint == "battle":
             battle(None,None,screen)
             if not linpg.get_glob_value("BackToMainMenu"):
-                dialog(SAVE["chapterType"],SAVE["chapterId"],screen,"dialog_after_battle",SAVE["project_name"])
+                dialog(SAVE["chapter_type"],SAVE["chapter_id"],screen,"dialog_after_battle",SAVE["project_name"])
             else:
                 linpg.set_glob_value("BackToMainMenu",False)
         elif startPoint == "dialog_after_battle":
@@ -331,7 +331,7 @@ class MainMenu(linpg.SystemObject):
                 #退出
                 elif linpg.isHover(self.main_menu_txt["menu_main"]["7_exit"]) and self.exit_confirm_menu.draw() == 0:
                     self.videoCapture.stop()
-                    self._isPlaying = False
+                    self.stop()
             #选择主线章节
             elif self.menu_type == 1:
                 if linpg.isHover(self.chapter_select[-1]):

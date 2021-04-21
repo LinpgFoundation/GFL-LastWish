@@ -95,7 +95,7 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
         for event in self.events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self._isPlaying = False
+                    self.stop()
                 self._check_key_down(event)
             elif event.type == pygame.KEYUP:
                 self._check_key_up(event)

@@ -54,13 +54,13 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 # :white_check_mark: Dependencies / 运行库
 
-| 名称 Name | 当前版本 Current Version | 兼容版本 May compatible |
-| --------- | ------------------------ | :---------------------- |
-| pygame    | 2.0.1                    | 1.9.6                   |
-| pyyaml    | 5.3.1                    | 5.0.0                   |
-| pyav      | 8.0.2                    | 7.0.0                   |
-| numpy     | 1.20                     | 1.17                    |
-| linpg     | 3                        | *                       |
+| Name / 名称 | Recommended Version / 建议版本 |
+| :---------: | :----------------------------: |
+|   pygame    |             2.0.1              |
+|   pyyaml    |             5.3.1              |
+|    pyav     |             8.0.2              |
+|    numpy    |              1.20              |
+|    linpg    |               *                |
 
 ##### * You have to install the latest version of Linpg Engine!
 
