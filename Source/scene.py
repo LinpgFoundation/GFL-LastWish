@@ -4,13 +4,13 @@ from .dialogSystem import *
 #对话系统
 def dialog(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, project_name:str=None) -> dict:
     #加载闸门动画的图片素材
-    LoadingImgAbove = linpg.loadImg("Assets/image/UI/LoadingImgAbove.png",(screen.get_width()+8,screen.get_height()/1.7))
-    LoadingImgBelow = linpg.loadImg("Assets/image/UI/LoadingImgBelow.png",(screen.get_width()+8,screen.get_height()/2.05))
+    LoadingImgAbove:pygame.Surface = linpg.loadImg("Assets/image/UI/LoadingImgAbove.png",(screen.get_width()+8,screen.get_height()/1.7))
+    LoadingImgBelow:pygame.Surface = linpg.loadImg("Assets/image/UI/LoadingImgBelow.png",(screen.get_width()+8,screen.get_height()/2.05))
     #开始加载-闸门关闭的效果
     for i in range(101):
         screen.blit(LoadingImgAbove,(-4,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()))
         screen.blit(LoadingImgBelow,(-4,screen.get_height()-LoadingImgBelow.get_height()/100*i))
-        linpg.display.flip(True)
+        linpg.display.flip()
     #卸载音乐
     linpg.unloadBackgroundMusic()
     #初始化对话系统模块
@@ -24,7 +24,7 @@ def dialog(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, proj
         DIALOG.display_background_image(screen)
         screen.blit(LoadingImgAbove,(-4,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()))
         screen.blit(LoadingImgBelow,(-4,screen.get_height()-LoadingImgBelow.get_height()/100*i))
-        linpg.display.flip(True)
+        linpg.display.flip()
     #DIALOG.auto_save = True
     #主循环
     while DIALOG.is_playing():
@@ -112,4 +112,4 @@ def dispaly_loading_screen(screen:pygame.Surface, start:int, end:int, value:int)
         for a in range(len(HealthyGamingAdvice)):
             HealthyGamingAdvice[a].set_alpha(i)
             screen.blit(HealthyGamingAdvice[a],(window_x-window_x/32-HealthyGamingAdvice[a].get_width(),window_y*0.9-window_x/64*a*1.5))
-        linpg.display.flip(True)
+        linpg.display.flip()

@@ -3,3 +3,4 @@ linpg
 numpy
 pygame
 pyyaml
+pypresence

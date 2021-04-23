@@ -90,9 +90,8 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
     def _display_decoration(self, screen:pygame.Surface) -> None: self.MAP.display_decoration(screen,self.alliances,{})
     #把所有内容画到屏幕上
     def draw(self, screen:pygame.Surface) -> None:
-        self._update_event()
-        mouse_x,mouse_y = linpg.controller.get_pos()
-        for event in self.events:
+        mouse_x,mouse_y = linpg.controller.get_mouse_pos()
+        for event in linpg.controller.events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.stop()

@@ -109,7 +109,8 @@ class MapEditor(linpg.AbstractBattleSystem):
         for imgPath in glob.glob(r'Assets/image/character/*'):
             img_name = os.path.basename(imgPath)
             self.__charactersImgContainer.set(
-                img_name,linpg.copeBounding(linpg.loadImg("{0}/wait/{1}_wait_0.png".format(imgPath,img_name),(None,container_height*1.5)))
+                img_name,
+                linpg.copeBounding(linpg.loadImg(os.path.join(imgPath, "wait", "{}_wait_0.png".format(img_name)), (None, container_height*1.5)))
                 )
         self.__charactersImgContainer.set_scroll_bar_pos("bottom")
         self.__charactersImgContainer.hidden = False
@@ -121,7 +122,8 @@ class MapEditor(linpg.AbstractBattleSystem):
         for imgPath in glob.glob(r'Assets/image/sangvisFerri/*'):
             img_name = os.path.basename(imgPath)
             self.__sangvisFerrisImgContainer.set(
-                img_name,linpg.copeBounding(linpg.loadImg("{0}/wait/{1}_wait_0.png".format(imgPath,img_name),(None,container_height*1.5)))
+                img_name,
+                linpg.copeBounding(linpg.loadImg(os.path.join(imgPath, "wait", "{}_wait_0.png".format(img_name)), (None, container_height*1.5)))
                 )
         self.__sangvisFerrisImgContainer.set_scroll_bar_pos("bottom")
         self.__sangvisFerrisImgContainer.hidden = True
@@ -175,10 +177,9 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.originalData = linpg.loadConfig(self.get_map_file_location())
     #将地图制作器的界面画到屏幕上
     def draw(self, screen:pygame.Surface) -> None:
-        self._update_event()
-        mouse_x,mouse_y = linpg.controller.get_pos()
+        mouse_x,mouse_y = linpg.controller.get_mouse_pos()
         block_get_click = self.MAP.calBlockInMap(mouse_x,mouse_y)
-        for event in self.events:
+        for event in linpg.controller.events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.object_to_put_down = None
@@ -329,8 +330,8 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.__UIContainerButtonRight.draw(screen)
         if self.__UIContainerButtonRight.right < screen.get_width():
             self.__UIContainerRight.display(screen,(self.__UIContainerButtonRight.right,0))
-            self.__envImgContainer.display(screen,(self.__UIContainerButtonRight.right,0),self.events)
-            self.__decorationsImgContainer.display(screen,(self.__UIContainerButtonRight.right,0),self.events)
+            self.__envImgContainer.display(screen,(self.__UIContainerButtonRight.right,0))
+            self.__decorationsImgContainer.display(screen,(self.__UIContainerButtonRight.right,0))
             if linpg.isHover(self.__button_select_block,local_x=self.__UIContainerButtonRight.right) and pygame.mouse.get_pressed()[0]:
                 self.__envImgContainer.hidden = False
                 self.__decorationsImgContainer.hidden = True
@@ -348,8 +349,8 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.__UIContainerButtonBottom.draw(screen)
         if self.__UIContainerButtonBottom.bottom < screen.get_height():
             self.__UIContainerBottom.display(screen,(0,self.__UIContainerButtonBottom.bottom))
-            self.__charactersImgContainer.display(screen,(0,self.__UIContainerButtonBottom.bottom),self.events)
-            self.__sangvisFerrisImgContainer.display(screen,(0,self.__UIContainerButtonBottom.bottom),self.events)
+            self.__charactersImgContainer.display(screen,(0,self.__UIContainerButtonBottom.bottom))
+            self.__sangvisFerrisImgContainer.display(screen,(0,self.__UIContainerButtonBottom.bottom))
             if linpg.isHover(self.__button_select_character,local_y=self.__UIContainerButtonBottom.bottom) and pygame.mouse.get_pressed()[0]:
                 self.__charactersImgContainer.hidden = False
                 self.__sangvisFerrisImgContainer.hidden = True

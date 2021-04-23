@@ -60,7 +60,6 @@ ResultBoard:
   total_kills: 总消灭
   total_rounds: 回合数
   total_time: 通关时间
-SaveGame: 保存游戏
 SelectMenu:
   attack: 攻击
   interact: 互动
@@ -68,15 +67,6 @@ SelectMenu:
   reload: 换弹
   rescue: 救助
   skill: 技能
-SettingUI:
-  background_music: 背景音乐
-  cancel: 取消
-  confirm: 应用
-  currentLang: 简体中文
-  language: 语言
-  setting: 设置
-  sound_effects: 音效
-  sound_environment: 环境声效
 Warnings:
   magazine_is_empty: 当前角色已经没有子弹，请及时换弹
   magazine_is_full: 当前弹夹已满，无需换弹

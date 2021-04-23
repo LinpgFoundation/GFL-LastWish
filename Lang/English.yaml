@@ -55,7 +55,6 @@ ResultBoard:
   total_kills: Total elimination
   total_rounds: Rounds
   total_time: Time
-SaveGame: Save Game
 SelectMenu:
   attack: Attack
   interact: Interact
@@ -63,15 +62,6 @@ SelectMenu:
   reload: Reload
   rescue: Rescue
   skill: Skill
-SettingUI:
-  background_music: Background Music
-  cancel: Cancel
-  confirm: Confirm
-  currentLang: English
-  language: Language
-  setting: Setting
-  sound_effects: Sound Effects
-  sound_environment: Environmental Sounds
 Warnings:
   magazine_is_empty: Current character has an empty magazine, please reload.
   magazine_is_full: Current character has a full magazine, no need to reload.

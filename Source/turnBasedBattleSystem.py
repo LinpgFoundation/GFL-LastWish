@@ -61,7 +61,6 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         self.loadFromSave = False
         #暂停菜单
         self.pause_menu = linpg.PauseMenu()
-        self.show_pause_menu = False
         #每次需要更新的物品
         self.__itemsToBlit = []
         self.__maxItemWeight = 0
@@ -109,16 +108,14 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         self.warnings_to_display = WarningSystem()
         loading_info = linpg.get_lang("LoadingTxt")
         #加载剧情
-        DataTmp = linpg.loadConfig("Data/{0}/chapter{1}_dialogs_{2}.yaml".format(
-            self._chapter_type,
-            self._chapter_id,
-            linpg.get_setting('Language')
-            )
-        ) if self._project_name is None else linpg.loadConfig("Data/{0}/{1}/chapter{2}_dialogs_{3}.yaml".format(
-            self._chapter_type,
-            self._project_name,
-            self._chapter_id,linpg.get_setting('Language')
-            )
+        DataTmp = linpg.loadConfig(
+            os.path.join(
+                "Data", self._chapter_type,
+                "chapter{0}_dialogs_{1}.yaml".format(self._chapter_id,linpg.get_setting('Language'))
+                ) if self._project_name is None else os.path.join(
+                    "Data", self._chapter_type, self._project_name,
+                    "chapter{0}_dialogs_{1}.yaml".format(self._chapter_id,linpg.get_setting('Language'))
+                    )
         )
         #章节标题显示
         self.infoToDisplayDuringLoading = LoadingTitle(
@@ -138,13 +135,13 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         #渐入效果
         for i in range(1,255,2):
             self.infoToDisplayDuringLoading.draw(screen,i)
-            linpg.display.flip(True)
+            linpg.display.flip()
         #开始加载地图场景
         self.infoToDisplayDuringLoading.draw(screen)
         now_loading = self.FONT.render(loading_info["now_loading_map"],linpg.get_fontMode(),(255,255,255))
         screen.blit(now_loading,(self.window_x*0.75,self.window_y*0.9))
         nowLoadingIcon.draw(screen)
-        linpg.display.flip(True)
+        linpg.display.flip()
         #读取并初始化章节信息
         DataTmp = linpg.loadConfig(self.get_map_file_location())
         #背景音乐路径
@@ -178,7 +175,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             now_loading = self.FONT.render(loading_info["now_loading_characters"]+"({}/{})".format(self.characters_loaded,self.characters_total),linpg.get_fontMode(),(255,255,255))
             screen.blit(now_loading,(self.window_x*0.75,self.window_y*0.9))
             nowLoadingIcon.draw(screen)
-            linpg.display.flip(True)
+            linpg.display.flip()
         #计算光亮区域 并初始化地图
         self._calculate_darkness()
         #开始加载关卡设定
@@ -186,7 +183,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         now_loading = self.FONT.render(loading_info["now_loading_level"],linpg.get_fontMode(),linpg.findColorRGBA("white"))
         screen.blit(now_loading,(self.window_x*0.75,self.window_y*0.9))
         nowLoadingIcon.draw(screen)
-        linpg.display.flip(True)
+        linpg.display.flip()
         #加载UI:
         #加载结束回合的图片
         self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_fontMode(),linpg.findColorRGBA("white"))
@@ -240,7 +237,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     temp_secode = self.FONT.render(time.strftime(":%S", time.localtime()),linpg.get_fontMode(),(255,255,255))
                     temp_secode.set_alpha(a)
                     screen.blit(temp_secode,(self.window_x/20+self.battleMode_info[i].get_width(),self.window_y*0.75+self.battleMode_info[i].get_height()*1.2))
-            linpg.display.flip(True)
+            linpg.display.flip()
     #返回需要保存数据
     def _get_data_need_to_save(self) -> dict: return linpg.dicMerge(
         self.data_of_parent_game_system,{
@@ -256,7 +253,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         )
     """画面"""
     #新增需要在屏幕上画出的物品
-    def __add_on_screen_object(self, image:pygame.Surface, weight:int=-1, pos:Union[tuple,list]=None, offSet:Union[tuple,list]=None) -> None:
+    def __add_on_screen_object(self, image:pygame.Surface, weight:int=-1, pos:Union[tuple,list]=(0,0), offSet:Union[tuple,list]=(0,0)) -> None:
         if weight < 0:
             self.__maxItemWeight += 1
             weight = self.__maxItemWeight
@@ -267,7 +264,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
     def __update_scene(self, screen:pygame.Surface) -> None:
         self.__itemsToBlit.sort()
         for item in self.__itemsToBlit:
-            item.blit(screen)
+            item.draw(screen)
         self.__itemsToBlit.clear()
         self.__maxItemWeight = 0
     #胜利失败判定
@@ -512,10 +509,10 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 else:
                     raise Exception("Error: Dialog Data on '{0}' with id '{1}' cannot pass through any statement!".format(self.dialogKey,self.dialogData["dialogId"]))
                 #玩家输入按键判定
-                for event in self.events:
+                for event in linpg.controller.events:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
-                            self.show_pause_menu = True
+                            self.pause_menu.hidden = False
                     elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 or event.type == pygame.JOYBUTTONDOWN and linpg.controller.joystick.get_button(0) == 1:
                         goToNextSlide = False
                         if "dialoguebox_up" in currentDialog and self.dialoguebox_up.updated:
@@ -571,12 +568,12 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         self.play_bgm()
         right_click = False
         #获取鼠标坐标
-        mouse_x,mouse_y = linpg.controller.get_pos()
+        mouse_x,mouse_y = linpg.controller.get_mouse_pos()
         skill_range = None
-        for event in self.events:
+        for event in linpg.controller.events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE and self.characterGetClick is None:
-                    self.show_pause_menu = True
+                    self.pause_menu.hidden = False
                 if event.key == pygame.K_ESCAPE and self.isWaiting is True:
                     self.NotDrawRangeBlocks = True
                     self.characterGetClick = None
@@ -1178,7 +1175,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             if self.ResultBoardUI is None:
                 self.resultInfo["total_time"] = time.localtime(time.time()-self.resultInfo["total_time"])
                 self.ResultBoardUI = ResultBoard(self.resultInfo,self.window_x/96)
-            for event in self.events:
+            for event in linpg.controller.events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         self.battleMode = False
@@ -1189,7 +1186,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             if self.ResultBoardUI is None:
                 self.resultInfo["total_time"] = time.localtime(time.time()-self.resultInfo["total_time"])
                 self.ResultBoardUI = ResultBoard(self.resultInfo,self.window_x/96,False)
-            for event in self.events:
+            for event in linpg.controller.events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         linpg.unloadBackgroundMusic()
@@ -1204,7 +1201,6 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             self.__add_on_screen_object(self.ResultBoardUI)
     #把战斗系统的画面画到screen上
     def draw(self, screen:pygame.Surface) -> None:
-        self._update_event()
         #环境声音-频道1
         self.environment_sound.play()
         # 游戏主循环
@@ -1230,29 +1226,33 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         #刷新画面
         self.__update_scene(screen)
         #展示暂停菜单
-        progress_saved_text = linpg.ImageSurface(self.FONT.render(linpg.get_lang("Global","progress_has_been_saved"),linpg.get_fontMode(),(255,255,255)),0,0)
-        progress_saved_text.set_alpha(0)
-        while self.show_pause_menu:
-            self._update_event()
-            result = self.pause_menu.draw(screen,self.events)
-            if result == "Break":
-                linpg.setting.isDisplaying = False
-                self.show_pause_menu = False
-            elif result == "Save":
-                self.save_progress()
-                progress_saved_text.set_alpha(255)
-            elif result == "Setting":
-                linpg.setting.isDisplaying = True
-            elif result == "BackToMainMenu":
-                linpg.setting.isDisplaying = False
-                linpg.unloadBackgroundMusic()
-                self.stop()
-                self.show_pause_menu = False
-            #如果播放玩菜单后发现有东西需要更新
-            if linpg.setting.draw(screen,self.events):
-                self.__update_sound_volume()
-            progress_saved_text.drawOnTheCenterOf(screen)
-            progress_saved_text.fade_out(5)
-            linpg.display.flip()
-        del progress_saved_text
-        self.pause_menu.screenshot = None
+        if not self.pause_menu.hidden:
+            progress_saved_text = linpg.ImageSurface(self.FONT.render(linpg.get_lang("Global","progress_has_been_saved"),linpg.get_fontMode(),(255,255,255)),0,0)
+            progress_saved_text.set_alpha(0)
+            while not self.pause_menu.hidden:
+                linpg.display.flip()
+                self.pause_menu.draw(screen)
+                result = self.pause_menu.get_button_clicked()
+                if result == "break":
+                    linpg.get_option_menu().hidden = True
+                    self.pause_menu.hidden = True
+                elif result == "save":
+                    self.save_progress()
+                    progress_saved_text.set_alpha(255)
+                elif result == "option_menu":
+                    linpg.get_option_menu().hidden = False
+                elif result == "back_to_mainMenu":
+                    linpg.get_option_menu().hidden = True
+                    linpg.unloadBackgroundMusic()
+                    self.stop()
+                    self.pause_menu.hidden = True
+                #展示设置UI
+                linpg.get_option_menu().draw(screen)
+                #更新音量
+                if linpg.get_option_menu().need_update is True:
+                    self.__update_sound_volume()
+                    linpg.get_option_menu().need_update = False
+                progress_saved_text.drawOnTheCenterOf(screen)
+                progress_saved_text.fade_out(5)
+            del progress_saved_text
+            self.pause_menu.screenshot = None
