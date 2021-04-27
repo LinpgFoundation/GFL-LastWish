@@ -1,4 +1,5 @@
 # cython: language_level=3
+import os
 from .skill import *
 
 #地图编辑器系统
@@ -45,11 +46,12 @@ class MapEditor(linpg.AbstractBattleSystem):
         button_width:int = int(screen.get_width()*0.04)
         button_height:int = int(screen.get_height()*0.2)
         panding:int = int(screen.get_height()*0.01)
-        self.__button_select_block = linpg.ButtonWithFadeInOut(
-            "Assets/image/UI/menu.png",linpg.get_lang("MapEditor","block"),"black",100,0,screen.get_width()*0.03,button_width/3
+        font_size:int = int(button_width/3)
+        self.__button_select_block = linpg.loadButtonWithTextInCenter(
+            "Assets/image/UI/menu.png",linpg.get_lang("MapEditor","block"),"black",font_size,(0,screen.get_width()*0.03),100
             )
-        self.__button_select_decoration = linpg.ButtonWithFadeInOut(
-            "Assets/image/UI/menu.png",linpg.get_lang("MapEditor","decoration"),"black",100,0,screen.get_width()*0.03,button_width/3
+        self.__button_select_decoration = linpg.loadButtonWithTextInCenter(
+            "Assets/image/UI/menu.png",linpg.get_lang("MapEditor","decoration"),"black",font_size,(0,screen.get_width()*0.03),100
             )
         self.__button_select_block.set_left(
             int((container_width-self.__button_select_block.get_width()-self.__button_select_decoration.get_width()-panding)/2)
@@ -89,11 +91,12 @@ class MapEditor(linpg.AbstractBattleSystem):
         button_width = int(screen.get_width()*0.14)
         button_height = int(screen.get_height()*0.05)
         panding = int(screen.get_height()*0.01)
-        self.__button_select_character = linpg.ButtonWithFadeInOut(
-            "Assets/image/UI/menu.png",linpg.get_lang("General","griffin_Kryuger"),"black",100,0,0,button_height/2
+        font_size = int(button_height/2)
+        self.__button_select_character = linpg.loadButtonWithTextInCenter(
+            "Assets/image/UI/menu.png",linpg.get_lang("General","griffin_Kryuger"),"black",font_size,(0,0),100
             )
-        self.__button_select_sangvisFerri = linpg.ButtonWithFadeInOut(
-            "Assets/image/UI/menu.png",linpg.get_lang("General","sangvis_ferri"),"black",100,self.__button_select_character.get_width(),0,button_height/2
+        self.__button_select_sangvisFerri = linpg.loadButtonWithTextInCenter(
+            "Assets/image/UI/menu.png",linpg.get_lang("General","sangvis_ferri"),"black",font_size,(self.__button_select_character.get_width(),0),100
             )
         self.__UIContainerBottom = linpg.loadImage("Assets/image/UI/container.png",(0,0),container_width,container_height)
         self.__UIContainerButtonBottom = linpg.loadDynamicImage(
@@ -139,29 +142,21 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.UIButton = {}
         UI_x = self.MAP.block_width*0.5
         UI_y = int(screen.get_height()*0.02)
-        UI_height = int(self.MAP.block_width*0.3)
-        self.UIButton["save"] = linpg.ButtonWithFadeInOut(
-            "Assets/image/UI/menu.png",
-            linpg.get_lang("Global","save"),
-            "black",100,UI_x,UI_y,UI_height
+        font_size = int(self.MAP.block_width*0.2)
+        self.UIButton["save"] = linpg.loadButtonWithTextInCenter(
+            "Assets/image/UI/menu.png", linpg.get_lang("Global", "save"), "black", font_size, (UI_x, UI_y), 100
             )
-        UI_x += self.UIButton["save"].get_width()+UI_height
-        self.UIButton["back"] = linpg.ButtonWithFadeInOut(
-            "Assets/image/UI/menu.png",
-            linpg.get_lang("Global","back"),
-            "black",100,UI_x,UI_y,UI_height
+        UI_x += self.UIButton["save"].get_width()+font_size
+        self.UIButton["back"] = linpg.loadButtonWithTextInCenter(
+            "Assets/image/UI/menu.png", linpg.get_lang("Global", "back"), "black", font_size, (UI_x, UI_y), 100
             )
-        UI_x += self.UIButton["back"].get_width()+UI_height
-        self.UIButton["delete"] = linpg.ButtonWithFadeInOut(
-            "Assets/image/UI/menu.png",
-            linpg.get_lang("MapEditor","delete"),
-            "black",100,UI_x,UI_y,UI_height
+        UI_x += self.UIButton["back"].get_width()+font_size
+        self.UIButton["delete"] = linpg.loadButtonWithTextInCenter(
+            "Assets/image/UI/menu.png", linpg.get_lang("Global", "delete"), "black", font_size, (UI_x, UI_y), 100
             )
-        UI_x += self.UIButton["delete"].get_width()+UI_height
-        self.UIButton["reload"] = linpg.ButtonWithFadeInOut(
-            "Assets/image/UI/menu.png",
-            linpg.get_lang("MapEditor","reload"),
-            "black",100,UI_x,UI_y,UI_height
+        UI_x += self.UIButton["delete"].get_width()+font_size
+        self.UIButton["reload"] = linpg.loadButtonWithTextInCenter(
+            "Assets/image/UI/menu.png", linpg.get_lang("Global", "reload_file"), "black", font_size, (UI_x, UI_y), 100
             )
         #其他函数
         self.UI_local_x = 0

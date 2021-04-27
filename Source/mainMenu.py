@@ -1,5 +1,6 @@
 # cython: language_level=3
 from .scene import *
+import shutil
 
 #主菜单系统
 class MainMenu(linpg.AbstractSystem):
@@ -218,6 +219,7 @@ class MainMenu(linpg.AbstractSystem):
             battle(chapterType,chapterId,screen,project_name)
             if not linpg.get_glob_value("BackToMainMenu"):
                 dialog(chapterType,chapterId,screen,"dialog_after_battle",project_name)
+                linpg.if_get_set_value("BackToMainMenu",True,False)
             else:
                 linpg.set_glob_value("BackToMainMenu",False)
         else:

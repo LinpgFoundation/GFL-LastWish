@@ -1,7 +1,5 @@
 # cython: language_level=3
-import glob, os, shutil, time
-#from linpgdev import linpg, pygame
-import linpg, pygame
+from .battle import *
 
 #本游戏的客户端ID
 CLIENT_ID:int = 831417008734208011

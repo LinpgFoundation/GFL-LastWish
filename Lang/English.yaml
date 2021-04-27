@@ -45,8 +45,6 @@ MainMenu:
 MapEditor:
   block: Block
   decoration: Decoration
-  delete: Delete
-  reload: Reload
 ResultBoard:
   characters_down: Friendly character down
   pressKeyContinue: Press Space to continue

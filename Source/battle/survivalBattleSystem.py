@@ -21,7 +21,7 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
             "supplyBoard":linpg.loadImage("Assets/image/UI/score.png",((self.window_x-self.window_x/3)/2,-self.window_y/12),self.window_x/3,self.window_y/12),
         }
         """init"""
-        shutil.copyfile("Data/chapter_map_example.yaml","Save/map1.yaml")
+        #shutil.copyfile("Data/chapter_map_example.yaml","Save/map1.yaml")
         mapFileData = linpg.loadConfig("Save/map1.yaml")
         SnowEnvImg = ["TileSnow01","TileSnow01ToStone01","TileSnow01ToStone02","TileSnow02","TileSnow02ToStone01","TileSnow02ToStone02"]
         block_y = 50

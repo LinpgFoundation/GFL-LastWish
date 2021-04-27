@@ -50,8 +50,6 @@ MainMenu:
 MapEditor:
   block: 方块
   decoration: 装饰物
-  delete: 删除
-  reload: 重新加载
 ResultBoard:
   characters_down: 友方角色被击倒
   pressKeyContinue: 按空格继续

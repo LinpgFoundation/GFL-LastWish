@@ -1,8 +1,15 @@
 # cython: language_level=3
+# python本体库
+import glob
+import time
 from typing import Union
-from .init import *
+# 第三方库
+import linpg
+#import linpgdev as linpg
+import pygame
 
-#显示回合切换的UI
+
+# 显示回合切换的UI
 class RoundSwitch:
     def __init__(self, window_x:int, window_y:int, battleUiTxt:dict):
         self.lineRedDown = linpg.loadImg("Assets/image/UI/lineRed.png",(window_x,window_y/50))

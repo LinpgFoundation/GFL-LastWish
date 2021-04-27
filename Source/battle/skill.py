@@ -1,5 +1,5 @@
 # cython: language_level=3
-from .battleUI import *
+from .ui import *
 
 def skill(
     characterName:str,
