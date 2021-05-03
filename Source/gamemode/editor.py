@@ -1,12 +1,9 @@
 # cython: language_level=3
 import os
-from .skill import *
+from .ui import *
 
 #地图编辑器系统
 class MapEditor(linpg.AbstractBattleSystem):
-    def __init__(self, chapterType:str, chapterId:int, project_name:str=None):
-        super().__init__(chapterType,chapterId,project_name)
-        self.folder_for_save_file,self.name_for_save_file = os.path.split(self.get_map_file_location())
     #返回需要保存数据
     def _get_data_need_to_save(self) -> dict: return self.originalData
     #加载角色的数据
@@ -18,7 +15,9 @@ class MapEditor(linpg.AbstractBattleSystem):
         #类似多线程的join，待完善
         while self._is_characters_loader_alive(): pass
     #初始化
-    def initialize(self, screen:pygame.Surface) -> None:
+    def load(self, screen:pygame.Surface, chapterType:str, chapterId:int, projectName:str=None) -> None:
+        self._initialize(chapterType, chapterId, projectName)
+        self.folder_for_save_file,self.name_for_save_file = os.path.split(self.get_map_file_location())
         self.decorations_setting = linpg.loadConfig("Data/decorations.yaml","decorations")
         #载入地图数据
         mapFileData:dict = linpg.loadConfig(self.get_map_file_location())

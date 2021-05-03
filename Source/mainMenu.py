@@ -213,12 +213,12 @@ class MainMenu(linpg.AbstractSystem):
             large_image = LARGE_IMAGE,
             )
         self.videoCapture.stop()
-        project_name = None if chapterType == "main_chapter" else self.current_selected_workshop_project
-        dialog(chapterType,chapterId,screen,"dialog_before_battle",project_name)
+        projectName = None if chapterType == "main_chapter" else self.current_selected_workshop_project
+        dialog(screen, chapterType, chapterId, "dialog_before_battle", projectName)
         if not linpg.get_glob_value("BackToMainMenu"):
-            battle(chapterType,chapterId,screen,project_name)
+            battle(screen,chapterType,chapterId,projectName)
             if not linpg.get_glob_value("BackToMainMenu"):
-                dialog(chapterType,chapterId,screen,"dialog_after_battle",project_name)
+                dialog(screen, chapterType, chapterId, "dialog_after_battle", projectName)
                 linpg.if_get_set_value("BackToMainMenu",True,False)
             else:
                 linpg.set_glob_value("BackToMainMenu",False)
@@ -237,23 +237,23 @@ class MainMenu(linpg.AbstractSystem):
             )
         startPoint = SAVE["type"]
         if startPoint == "dialog_before_battle":
-            dialog(None,None,screen,None)
+            dialog(screen, None, None, None)
             if not linpg.get_glob_value("BackToMainMenu"):
-                battle(SAVE["chapter_type"],SAVE["chapter_id"],screen,SAVE["project_name"])
+                battle(screen,SAVE["chapter_type"],SAVE["chapter_id"],SAVE["project_name"])
                 if not linpg.get_glob_value("BackToMainMenu"):
-                    dialog(SAVE["chapter_type"],SAVE["chapter_id"],screen,"dialog_after_battle",SAVE["project_name"])
+                    dialog(screen, SAVE["chapter_type"], SAVE["chapter_id"], "dialog_after_battle", SAVE["project_name"])
                 else:
                     linpg.set_glob_value("BackToMainMenu",False)
             else:
                 linpg.set_glob_value("BackToMainMenu",False)
         elif startPoint == "battle":
-            battle(None,None,screen)
+            battle(screen, None, None)
             if not linpg.get_glob_value("BackToMainMenu"):
-                dialog(SAVE["chapter_type"],SAVE["chapter_id"],screen,"dialog_after_battle",SAVE["project_name"])
+                dialog(screen, SAVE["chapter_type"], SAVE["chapter_id"], "dialog_after_battle", SAVE["project_name"])
             else:
                 linpg.set_glob_value("BackToMainMenu",False)
         elif startPoint == "dialog_after_battle":
-            dialog(None,None,screen,None)
+            dialog(screen, None, None, None)
             linpg.if_get_set_value("BackToMainMenu",True,False)
         self.__reset_menu()
         if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
@@ -429,7 +429,7 @@ class MainMenu(linpg.AbstractSystem):
                         #章节选择
                         if linpg.isHover(self.chapter_select[i]):
                             self.videoCapture.stop()
-                            mapEditor("workshop",i,screen,self.current_selected_workshop_project)
+                            mapEditor(screen,"workshop",i,self.current_selected_workshop_project)
                             self.videoCapture = self.videoCapture.copy()
                             self.videoCapture.start()
                             break
@@ -445,7 +445,7 @@ class MainMenu(linpg.AbstractSystem):
                         #章节选择
                         if linpg.isHover(self.chapter_select[i]):
                             self.videoCapture.stop()
-                            dialogEditor("workshop",i,screen,"dialog_before_battle",self.current_selected_workshop_project)
+                            dialogEditor(screen,"workshop",i,"dialog_before_battle",self.current_selected_workshop_project)
                             self.videoCapture = self.videoCapture.copy()
                             self.videoCapture.start()
                             break

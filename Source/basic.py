@@ -1,5 +1,5 @@
 # cython: language_level=3
-from .battle import *
+from .gamemode import *
 
 #本游戏的客户端ID
 CLIENT_ID:int = 831417008734208011

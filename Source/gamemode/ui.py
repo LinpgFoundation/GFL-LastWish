@@ -4,10 +4,9 @@ import glob
 import time
 from typing import Union
 # 第三方库
-import linpg
-#import linpgdev as linpg
-import pygame
-
+#import linpg
+#from linpg import pygame
+from linpgdev import linpg, pygame
 
 # 显示回合切换的UI
 class RoundSwitch:
