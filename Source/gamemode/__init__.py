@@ -1,6 +1,6 @@
 # cython: language_level=3
 """
 结构:
-ui -> editor -> survival -> tbs
+ui -> editor -> survival -> towerDefense-> turnBased
 """
-from .tbs import *
+from .turnBased import *

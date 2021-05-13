@@ -57,7 +57,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 | Name / 名称 | Recommended Version / 建议版本 |
 | :---------: | :----------------------------: |
 |   pygame    |             2.0.1              |
-|   pyyaml    |             5.3.1              |
+|   pyyaml    |              5.4               |
 |    pyav     |             8.0.2              |
 |    numpy    |              1.20              |
 |    linpg    |               *                |
@@ -65,6 +65,18 @@ Their stories may be forgotten by history, but what they have done will be remem
 ##### * You have to install the latest version of Linpg Engine!
 
 ##### * For more information about Linpg Engine, please visit https://github.com/Tigeia-Workshop/linpg.
+
+
+
+# :computer: System Requirements / 系统需求
+
+| Type             | 类型     | Minimum / 最低要求                        | Recommended / 推荐配置                    |
+| ---------------- | -------- | ----------------------------------------- | ----------------------------------------- |
+| Operating System | 操作系统 | Windows®7/Vista/XP, MacOS, Ubuntu         | Windows®10                                |
+| CPU              | 处理器   | Intel® or AMD 1.2 GHz processor or better | Intel® or AMD 2.8 GHz processor or better |
+| Memory           | 内存     | 8 GB RAM                                  | 16GB RAM                                  |
+| Graphics Cards   | 显卡     | Any Nvidia or AMD Graphics Cards          | Same as left                              |
+| Storage          | 硬盘空间 | 1.5 GB                                    | 2 GB                                      |
 
 
 
@@ -120,4 +132,4 @@ https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish
 
 This game's codes are distributed under the **[GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**, which means you can use our codes for commercial purposes as long as you are following the **[GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**. However, all images and music used in this game are from third parties, and secondary distribution or commercialization without the authorization of the corresponding creators is strictly prohibited. Also, Tigeia Workshop (the developer of this game and Linpg engine) is not responsible for any disputes and damages caused by neither this game nor Linpg Engine.
 
-本游戏的代码将采用**[GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**进行分发，这意味着你可以商用我们的代码。然而，需要注意的是，本游戏用到的所有图片和音乐素材均来自第三方，严禁在没有对应创作者授权的情况下进行二次发布或者商用。同时，因使用该游戏或者linpg导致的任何形式的冲突（比如但不仅限法律冲突，经济冲突等）与缇吉娅工坊（本游戏和Linpg引擎的开发者）无关。
+本游戏的代码将采用 **[GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE)** 进行分发，这意味着你可以商用我们的代码。然而，需要注意的是，本游戏用到的所有图片和音乐素材均来自第三方，严禁在没有对应创作者授权的情况下进行二次发布或者商用。同时，因使用该游戏或者linpg导致的任何形式的冲突（比如但不仅限法律冲突，经济冲突等）与缇吉娅工坊（本游戏和Linpg引擎的开发者）无关。

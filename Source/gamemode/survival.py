@@ -1,8 +1,8 @@
 # cython: language_level=3
-from .editor import *
+from .battleSystem import *
 
 #生存类游戏战斗系统
-class SurvivalBattleSystem(linpg.AbstractBattleSystem):
+class SurvivalBattleSystem(BattleSystem):
     def __init__(self):
         """data"""
         super().__init__(None,None,None)

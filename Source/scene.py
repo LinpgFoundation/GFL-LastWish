@@ -105,7 +105,7 @@ def mapEditor(screen:pygame.Surface, chapterType:str, chapterId:int, projectName
 def dispaly_loading_screen(screen:pygame.Surface, start:int, end:int, value:int) -> None:
     window_x,window_y = screen.get_size()
     #获取健康游戏忠告
-    HealthyGamingAdvice = linpg.get_lang("HealthyGamingAdvice")
+    HealthyGamingAdvice = linpg.try_get_lang("HealthyGamingAdvice")
     if HealthyGamingAdvice == "HealthyGamingAdvice":
         HealthyGamingAdvice = []
     else:
