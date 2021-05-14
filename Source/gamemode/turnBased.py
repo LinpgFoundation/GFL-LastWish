@@ -308,6 +308,29 @@ class TurnBasedBattleSystem(BattleSystem):
         self.footstep_sounds.set_volume(linpg.get_setting("Sound","sound_effects")/100)
         self.environment_sound.set_volume(linpg.get_setting("Sound","sound_environment")/100.0)
         self.set_bgm_volume(linpg.get_setting("Sound","background_music")/100.0)
+    #更新语言
+    def updated_language(self, screen) -> None:
+        super().updated_language()
+        self.pause_menu.initialize(screen)
+        self.selectMenuUI = SelectMenu()
+        self.battleModeUiTxt = linpg.get_lang("Battle_UI")
+        self.RoundSwitchUI = RoundSwitch(self.window_x,self.window_y,self.battleModeUiTxt)
+        self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.findColorRGBA("white"))
+        self.end_round_button = linpg.loadImage("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
+        self.warnings_to_display = WarningSystem(int(screen.get_height()*0.03))
+        self.dialog_during_battle = linpg.loadConfig(
+            os.path.join(
+                "Data", self._chapter_type,
+                "chapter{0}_dialogs_{1}.yaml".format(self._chapter_id,linpg.get_setting('Language'))
+                ) if self._project_name is None else os.path.join(
+                    "Data", self._chapter_type, self._project_name,
+                    "chapter{0}_dialogs_{1}.yaml".format(self._chapter_id,linpg.get_setting('Language'))
+                    ),
+            "dialog_during_battle"
+        )
+        if not self.__is_battle_mode:
+            self.dialoguebox_up.reset()
+            self.dialoguebox_down.reset()
     #警告某个角色周围的敌人
     def __alert_enemy_around(self, name:str, value:int=10) -> None:
         enemies_need_check:list = []
@@ -1275,9 +1298,10 @@ class TurnBasedBattleSystem(BattleSystem):
                 #展示设置UI
                 linpg.get_option_menu().draw(screen)
                 #更新音量
-                if linpg.get_option_menu().need_update is True:
-                    self.__update_sound_volume()
-                    linpg.get_option_menu().need_update = False
+                if linpg.get_option_menu().need_update["volume"] is True: self.__update_sound_volume()
+                #更新语言
+                if linpg.get_option_menu().need_update["language"] is True: self.updated_language(screen)
+                #显示进度已保存的文字
                 progress_saved_text.drawOnTheCenterOf(screen)
                 progress_saved_text.fade_out(5)
             del progress_saved_text

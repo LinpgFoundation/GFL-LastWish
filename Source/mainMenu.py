@@ -68,18 +68,21 @@ class MainMenu(linpg.AbstractSystem):
             txt_y += linpg.get_standard_font_size("medium")*2
     #获取章节id
     def __get_chapter_title(self, chapterType:str, chapterId:int) -> str:
-        return "{0}: {1}".format(
-            linpg.get_lang("Battle_UI","numChapter").format(linpg.get_num_in_local_text(chapterId)),
-            #读取dialog文件中的title
-            linpg.loadConfig(
-                os.path.join("Data", chapterType, "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.get_setting("Language"))
-                    ) if chapterType == "main_chapter" else os.path.join(
-                        "Data", chapterType, self.current_selected_workshop_project,
-                        "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.get_setting("Language"))
-                        ),
-                "title"
-                )
+        #生成dialog文件的路径
+        dialog_file_path:str = os.path.join(
+            "Data", chapterType, "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.get_setting("Language"))
+        ) if chapterType == "main_chapter" else os.path.join(
+            "Data", chapterType, self.current_selected_workshop_project,
+            "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.get_setting("Language"))
             )
+        chapter_title:str
+        if os.path.exists(dialog_file_path):
+            dialog_data = linpg.loadConfig(dialog_file_path)
+            #如果dialog文件中有title，则读取
+            chapter_title = dialog_data["title"] if "title" in dialog_data else linpg.get_lang("Global","no_translation")
+        else:
+            chapter_title = linpg.get_lang("Global","no_translation")
+        return "{0}: {1}".format(linpg.get_lang("Battle_UI", "numChapter").format(linpg.get_num_in_local_text(chapterId)), chapter_title)
     #重新加载章节选择菜单的选项
     def __reload_chapter_select_list(self, screen_size:tuple, chapterType:str="main_chapter", createMode:bool=False) -> None:
         self.chapter_select.clear()
@@ -294,8 +297,8 @@ class MainMenu(linpg.AbstractSystem):
         if self.menu_type == 1:
             self.__reload_chapter_select_list(screen.get_size())
         elif self.menu_type == 6:
-            self.__reload_workshop_files_list(screen.get_size(),False)
-            self.__reload_chapter_select_list(screen.get_size(),"workshop")
+            self.__reload_workshop_files_list(screen.get_size(), False)
+            self.__reload_chapter_select_list(screen.get_size(), "workshop")
     #更新音量
     def __update_sound_volume(self) -> None:
         self.click_button_sound.set_volume(linpg.get_setting("Sound","sound_effects")/100.0)
