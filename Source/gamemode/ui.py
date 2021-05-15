@@ -3,10 +3,10 @@
 import glob
 import time
 from typing import Union
-# 第三方库
-#import linpg
-#from linpg import pygame
-from linpgdev import linpg, pygame
+# 第三方
+import pygame
+import linpg
+#from linpgdev import linpg, pygame
 from collections import deque
 
 # 显示回合切换的UI

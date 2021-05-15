@@ -111,6 +111,11 @@ class TurnBasedBattleSystem(BattleSystem):
                     "chapter{0}_dialogs_{1}.yaml".format(self._chapter_id,linpg.get_setting('Language'))
                     )
         )
+        #如果暂时没有翻译
+        if "title" not in DataTmp: DataTmp["title"] = linpg.get_lang("Global", "no_translation")
+        if "description" not in DataTmp: DataTmp["description"] = linpg.get_lang("Global", "no_translation")
+        if "battle_info" not in DataTmp: DataTmp["battle_info"] = linpg.loadConfig(r"Data/chapter_dialogs_example.yaml", "battle_info")
+        if "dialog_during_battle" not in DataTmp: DataTmp["dialog_during_battle"] = {}
         #章节标题显示
         self.infoToDisplayDuringLoading = LoadingTitle(
             self.window_x,
@@ -240,7 +245,7 @@ class TurnBasedBattleSystem(BattleSystem):
             linpg.display.flip()
     #返回需要保存数据
     def _get_data_need_to_save(self) -> dict: return linpg.dicMerge(
-        self.data_of_parent_game_system,{
+        self.get_data_of_parent_game_system(),{
             "type": "battle",
             "griffin": self.griffinCharactersData,
             "sangvisFerri": self.sangvisFerrisData,
@@ -913,7 +918,7 @@ class TurnBasedBattleSystem(BattleSystem):
                     #需要换弹
                     if bullets_to_add > 0:
                         #如果角色有换弹动画，则播放角色的换弹动画
-                        if self.characterInControl.get_imgId("reload") is not None:
+                        if self.characterInControl.get_imgId("reload") != -1:
                             self.characterInControl.set_action("reload",False)
                         #扣去对应的行动值
                         self.characterInControl.try_reduce_action_point(5)
@@ -1238,8 +1243,9 @@ class TurnBasedBattleSystem(BattleSystem):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         linpg.unloadBackgroundMusic()
-                        self.__init__(self._chapter_type,self._chapter_id,self._project_name)
-                        self.__process_data(screen)
+                        chapter_info:dict = self.get_data_of_parent_game_system()
+                        self.__init__()
+                        self.new(screen,chapter_info["chapter_type"], chapter_info["chapter_id"], chapter_info["project_name"])
                         break
                     elif event.key == pygame.K_BACKSPACE:
                         linpg.unloadBackgroundMusic()

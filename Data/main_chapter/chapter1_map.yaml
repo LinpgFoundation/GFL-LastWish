@@ -18,10 +18,11 @@ character:
     y: 0
   sv-98:
     bullets_carried: 0
+    current_bullets: 0
     type: sv-98
     x: 5
     y: 7
-darkMode: true
+darkMode: false
 decoration:
   campfire:
     campfire1:
