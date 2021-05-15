@@ -1,19 +1,23 @@
 # cython: language_level=3
-import glob, os, shutil, time
-#from linpgdev import linpg, pygame
-import linpg, pygame
+from .gamemode import *
 
 #本游戏的客户端ID
 CLIENT_ID:int = 831417008734208011
 LARGE_IMAGE:str = "test"
-#尝试连接Discord
-try:
-    from pypresence import Presence
-    RPC = Presence(str(CLIENT_ID)) 
-    RPC.connect()
-    RPC.update(state=linpg.get_lang("DiscordStatus","game_is_initializing"),large_image=LARGE_IMAGE)
-except:
+#discord接口
+RPC:object
+#如果不想要展示Discord的Rich Presence
+if linpg.try_get_setting("DiscordRichPresence") is False:
     RPC = None
+else:
+    #尝试连接Discord
+    try:
+        from pypresence import Presence
+        RPC = Presence(str(CLIENT_ID))
+        RPC.connect()
+        RPC.update(state=linpg.get_lang("DiscordStatus","game_is_initializing"),large_image=LARGE_IMAGE)
+    except:
+        RPC = None
 
 #加载版本信息
 version_info:dict = linpg.loadConfig("Data/version.yaml")

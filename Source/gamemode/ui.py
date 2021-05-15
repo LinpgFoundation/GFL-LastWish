@@ -1,8 +1,15 @@
 # cython: language_level=3
+# python本体库
+import glob
+import time
 from typing import Union
-from .init import *
+# 第三方
+import pygame
+import linpg
+#from linpgdev import linpg, pygame
+from collections import deque
 
-#显示回合切换的UI
+# 显示回合切换的UI
 class RoundSwitch:
     def __init__(self, window_x:int, window_y:int, battleUiTxt:dict):
         self.lineRedDown = linpg.loadImg("Assets/image/UI/lineRed.png",(window_x,window_y/50))
@@ -114,14 +121,15 @@ class RoundSwitch:
 
 #警告系统
 class WarningSystem:
-    def __init__(self):
-        self.__all_warnings = []
-        self.__warnings_msg = linpg.get_lang("Warnings")
+    def __init__(self, font_size:int=30):
+        self.__all_warnings:deque = deque()
+        self.__warnings_msg:dict = linpg.get_lang("Warnings")
+        self.font_size:int = font_size
     #新增一个讯息
-    def add(self, the_warning:str, fontSize:int=30) -> None:
+    def add(self, the_warning:str) -> None:
         if len(self.__all_warnings)>=5:
             self.__all_warnings.pop()
-        self.__all_warnings.insert(0,linpg.fontRender(self.__warnings_msg[the_warning],"red",fontSize,True))
+        self.__all_warnings.appendleft(linpg.fontRender(self.__warnings_msg[the_warning], "red", self.font_size, True))
     #清空所有当前正在播放的警告讯息
     def clear(self) -> None: self.__all_warnings.clear()
     #画出
@@ -135,7 +143,7 @@ class WarningSystem:
                 screen.blit(self.__all_warnings[i],((screen.get_width()-self.__all_warnings[i].get_width())/2,(screen.get_height()-self.__all_warnings[i].get_height())/2+i*self.__all_warnings[i].get_height()*1.2))
                 self.__all_warnings[i].set_alpha(img_alpha-5)
             else:
-                self.__all_warnings.pop(i)
+                self.__all_warnings.pop()
 
 #角色行动选项菜单
 class SelectMenu:
@@ -267,7 +275,7 @@ class CharacterInfoBoard:
         all_icon_file_list = glob.glob(r'Assets/image/npc_icon/*.png')
         for i in range(len(all_icon_file_list)):
             img_name = all_icon_file_list[i].replace("Assets","").replace("image","").replace("npc_icon","").replace(".png","").replace("\\","").replace("/","")
-            self.characterIconImages[img_name] = linpg.loadImg(all_icon_file_list[i],(window_y*0.08,window_y*0.08))
+            self.characterIconImages[img_name] = linpg.smoothscaleImg(linpg.loadImg(all_icon_file_list[i]),(window_y*0.08,window_y*0.08))
         del all_icon_file_list
         self.text_size = text_size
         self.informationBoard = None

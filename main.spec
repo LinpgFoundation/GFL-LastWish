@@ -25,6 +25,7 @@ a = Analysis(
         "pygame.locals",
         "pygame.colordict",
         "pygame._sdl2",
+        "pypresence",
     ],
     hookspath = [],
     runtime_hooks = [],

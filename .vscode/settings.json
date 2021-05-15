@@ -20,6 +20,7 @@
         "cpdef",
         "cutscene",
         "deadbush",
+        "deque",
         "dialoguebox",
         "dinergate",
         "dizzys",
@@ -69,5 +70,5 @@
         "spine cython"
     ],
     "cmake.configureOnOpen": false,
-    "python.pythonPath": "C:\\Python\\python.exe"
+    "python.pythonPath": "C:\\Program Files\\Python38\\python.exe"
 }

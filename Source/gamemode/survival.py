@@ -1,8 +1,8 @@
 # cython: language_level=3
-from .mapEditor import *
+from .battleSystem import *
 
 #生存类游戏战斗系统
-class SurvivalBattleSystem(linpg.AbstractBattleSystem):
+class SurvivalBattleSystem(BattleSystem):
     def __init__(self):
         """data"""
         super().__init__(None,None,None)
@@ -21,7 +21,7 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
             "supplyBoard":linpg.loadImage("Assets/image/UI/score.png",((self.window_x-self.window_x/3)/2,-self.window_y/12),self.window_x/3,self.window_y/12),
         }
         """init"""
-        shutil.copyfile("Data/chapter_map_example.yaml","Save/map1.yaml")
+        #shutil.copyfile("Data/chapter_map_example.yaml","Save/map1.yaml")
         mapFileData = linpg.loadConfig("Save/map1.yaml")
         SnowEnvImg = ["TileSnow01","TileSnow01ToStone01","TileSnow01ToStone02","TileSnow02","TileSnow02ToStone01","TileSnow02ToStone02"]
         block_y = 50
@@ -90,12 +90,11 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
     def _display_decoration(self, screen:pygame.Surface) -> None: self.MAP.display_decoration(screen,self.alliances,{})
     #把所有内容画到屏幕上
     def draw(self, screen:pygame.Surface) -> None:
-        self._update_event()
-        mouse_x,mouse_y = linpg.controller.get_pos()
-        for event in self.events:
+        mouse_x,mouse_y = linpg.controller.get_mouse_pos()
+        for event in linpg.controller.events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self._isPlaying = False
+                    self.stop()
                 self._check_key_down(event)
             elif event.type == pygame.KEYUP:
                 self._check_key_up(event)

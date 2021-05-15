@@ -1,22 +1,32 @@
 # cython: language_level=3
-from .dialogSystem import *
+from .basic import *
+
+#视觉小说系统
+class DialogSystem(linpg.DialogSystem):
+    #保存数据
+    def save_progress(self) -> None:
+        super().save_progress()
+        #检查global.yaml配置文件
+        if not os.path.exists(os.path.join(self.folder_for_save_file,"global.yaml")):
+            DataTmp = {"chapter_unlocked":1}
+            linpg.saveConfig(os.path.join(self.folder_for_save_file,"global.yaml"),DataTmp)
 
 #对话系统
-def dialog(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, project_name:str=None) -> dict:
+def dialog(screen:pygame.Surface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> dict:
     #加载闸门动画的图片素材
-    LoadingImgAbove = linpg.loadImg("Assets/image/UI/LoadingImgAbove.png",(screen.get_width()+8,screen.get_height()/1.7))
-    LoadingImgBelow = linpg.loadImg("Assets/image/UI/LoadingImgBelow.png",(screen.get_width()+8,screen.get_height()/2.05))
+    LoadingImgAbove:pygame.Surface = linpg.loadImg("Assets/image/UI/LoadingImgAbove.png",(screen.get_width()+8,screen.get_height()/1.7))
+    LoadingImgBelow:pygame.Surface = linpg.loadImg("Assets/image/UI/LoadingImgBelow.png",(screen.get_width()+8,screen.get_height()/2.05))
     #开始加载-闸门关闭的效果
     for i in range(101):
         screen.blit(LoadingImgAbove,(-4,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()))
         screen.blit(LoadingImgBelow,(-4,screen.get_height()-LoadingImgBelow.get_height()/100*i))
-        linpg.display.flip(True)
+        linpg.display.flip()
     #卸载音乐
     linpg.unloadBackgroundMusic()
     #初始化对话系统模块
     DIALOG:object = DialogSystem()
     if chapterType is not None:
-        DIALOG.new(chapterType,chapterId,part,project_name)
+        DIALOG.new(chapterType,chapterId,part,projectName)
     else:
         DIALOG.load("Save/save.yaml")
     #加载完成-闸门开启的效果
@@ -24,7 +34,7 @@ def dialog(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, proj
         DIALOG.display_background_image(screen)
         screen.blit(LoadingImgAbove,(-4,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()))
         screen.blit(LoadingImgBelow,(-4,screen.get_height()-LoadingImgBelow.get_height()/100*i))
-        linpg.display.flip(True)
+        linpg.display.flip()
     #DIALOG.auto_save = True
     #主循环
     while DIALOG.is_playing():
@@ -35,7 +45,7 @@ def dialog(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, proj
     return DIALOG.dialog_options
 
 #对话编辑器
-def dialogEditor(chapterType:str, chapterId:int, screen:pygame.Surface, part:str, project_name:str=None) -> None:
+def dialogEditor(screen:pygame.Surface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> None:
     #卸载音乐
     linpg.unloadBackgroundMusic()
     #改变标题
@@ -43,7 +53,8 @@ def dialogEditor(chapterType:str, chapterId:int, screen:pygame.Surface, part:str
     if RPC is not None:
         RPC.update(details=linpg.get_lang("DiscordStatus","now_playing"),state=linpg.get_lang('General','dialog_editor'),large_image=LARGE_IMAGE)
     #加载对话
-    DIALOG:object = linpg.DialogEditor(chapterType,chapterId,part,project_name)
+    DIALOG:object = linpg.DialogEditor()
+    DIALOG.load(chapterType,chapterId,part,projectName)
     #主循环
     while DIALOG.is_playing():
         DIALOG.draw(screen)
@@ -54,12 +65,12 @@ def dialogEditor(chapterType:str, chapterId:int, screen:pygame.Surface, part:str
     if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
 
 #战斗系统
-def battle(chapterType:str, chapterId:int, screen:pygame.Surface, project_name:str=None) -> dict:
+def battle(screen:pygame.Surface, chapterType:str, chapterId:int, projectName:str=None) -> dict:
     #卸载音乐
     linpg.unloadBackgroundMusic()
-    BATTLE:object = TurnBasedBattleSystem(chapterType,chapterId,project_name)
+    BATTLE:object = TurnBasedBattleSystem()
     if chapterType is not None:
-        BATTLE.initialize(screen)
+        BATTLE.new(screen, chapterType, chapterId, projectName)
     else:
         BATTLE.load(screen)
     #战斗系统主要loop
@@ -72,18 +83,18 @@ def battle(chapterType:str, chapterId:int, screen:pygame.Surface, project_name:s
     return BATTLE.resultInfo
 
 #地图编辑器
-def mapEditor(chapterType:str, chapterId:int, screen:pygame.Surface, project_name:str=None) -> None:
+def mapEditor(screen:pygame.Surface, chapterType:str, chapterId:int, projectName:str=None) -> None:
     #卸载音乐
     linpg.unloadBackgroundMusic()
-    MAPEDITOR = MapEditor(chapterType,chapterId,project_name)
-    MAPEDITOR.initialize(screen)
+    MAP_EDITOR = MapEditor()
+    MAP_EDITOR.load(screen, chapterType, chapterId, projectName)
     #改变标题
     linpg.display.set_caption("{0} ({1})".format(linpg.get_lang('General','game_title'),linpg.get_lang('General','map_editor')))
     if RPC is not None:
         RPC.update(details=linpg.get_lang("DiscordStatus","now_playing"),state=linpg.get_lang('General','map_editor'),large_image=LARGE_IMAGE)
     #战斗系统主要loop
-    while MAPEDITOR.is_playing():
-        MAPEDITOR.draw(screen)
+    while MAP_EDITOR.is_playing():
+        MAP_EDITOR.draw(screen)
         ALPHA_BUILD_WARNING.draw(screen)
         linpg.display.flip()
     #改变标题回主菜单的样式
@@ -94,7 +105,7 @@ def mapEditor(chapterType:str, chapterId:int, screen:pygame.Surface, project_nam
 def dispaly_loading_screen(screen:pygame.Surface, start:int, end:int, value:int) -> None:
     window_x,window_y = screen.get_size()
     #获取健康游戏忠告
-    HealthyGamingAdvice = linpg.get_lang("HealthyGamingAdvice")
+    HealthyGamingAdvice = linpg.try_get_lang("HealthyGamingAdvice")
     if HealthyGamingAdvice == "HealthyGamingAdvice":
         HealthyGamingAdvice = []
     else:
@@ -112,4 +123,4 @@ def dispaly_loading_screen(screen:pygame.Surface, start:int, end:int, value:int)
         for a in range(len(HealthyGamingAdvice)):
             HealthyGamingAdvice[a].set_alpha(i)
             screen.blit(HealthyGamingAdvice[a],(window_x-window_x/32-HealthyGamingAdvice[a].get_width(),window_y*0.9-window_x/64*a*1.5))
-        linpg.display.flip(True)
+        linpg.display.flip()
