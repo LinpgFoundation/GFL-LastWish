@@ -31,7 +31,7 @@ linpg.set_standard_font_size(int(linpg.display.get_width()/40),"medium")
 
 #alpha构建警告
 ALPHA_BUILD_WARNING = linpg.TextSurface(
-    linpg.fontRender(linpg.get_lang("alpha_build_warning"),"white",linpg.get_standard_font_size("medium")/2),0,0
+    linpg.render_font(linpg.get_lang("alpha_build_warning"),"white",linpg.get_standard_font_size("medium")/2),0,0
     )
 ALPHA_BUILD_WARNING.set_centerx(linpg.display.get_width()/2)
 ALPHA_BUILD_WARNING.set_bottom(linpg.display.get_height()-ALPHA_BUILD_WARNING.get_height())

@@ -4,7 +4,7 @@ import shutil
 
 #主菜单系统
 class MainMenu(linpg.AbstractSystem):
-    def __init__(self, screen:pygame.Surface):
+    def __init__(self, screen:linpg.ImageSurface):
         #初始化系统模块
         super().__init__()
         #获取屏幕的尺寸
@@ -29,14 +29,14 @@ class MainMenu(linpg.AbstractSystem):
         self.workshop_files_text:list = []
         self.current_selected_workshop_project = None
         #关卡选择的封面
-        self.cover_img = linpg.loadImg(r"Assets/image/covers/chapter1.png",screen.get_size())
+        self.cover_img = linpg.load_img(r"Assets/image/covers/chapter1.png",screen.get_size())
         #音效
-        self.click_button_sound = linpg.loadSound(r"Assets/sound/ui/main_menu_click_button.ogg",linpg.get_setting("Sound","sound_effects")/100.0)
-        self.hover_on_button_sound = linpg.loadSound(r"Assets/sound/ui/main_menu_hover_on_button.ogg",linpg.get_setting("Sound","sound_effects")/100.0)
+        self.click_button_sound = linpg.load_sound(r"Assets/sound/ui/main_menu_click_button.ogg",linpg.get_setting("Sound","sound_effects")/100.0)
+        self.hover_on_button_sound = linpg.load_sound(r"Assets/sound/ui/main_menu_hover_on_button.ogg",linpg.get_setting("Sound","sound_effects")/100.0)
         self.hover_sound_play_on = None
         self.last_hover_sound_play_on = None
         #加载主菜单背景
-        self.videoCapture = linpg.VedioFrame(
+        self.videoCapture = linpg.VedioSurface(
             r"Assets/movie/SquadAR.mp4",window_x,window_y,True,True,(32,103),linpg.get_setting("Sound","background_music")/100.0
             )
         #初始化返回菜单判定参数
@@ -64,7 +64,7 @@ class MainMenu(linpg.AbstractSystem):
         txt_location:int = int(screen_size[0]*2/3)
         txt_y:int = int((screen_size[1]-len(self.workshop_files)*linpg.get_standard_font_size("medium")*2)/2)
         for i in range(len(self.workshop_files)):
-            self.workshop_files[i] = linpg.fontRenderPro(self.workshop_files[i],"enable",(txt_location,txt_y),linpg.get_standard_font_size("medium"))
+            self.workshop_files[i] = linpg.load_dynamic_text(self.workshop_files[i],"enable",(txt_location,txt_y),linpg.get_standard_font_size("medium"))
             txt_y += linpg.get_standard_font_size("medium")*2
     #获取章节id
     def __get_chapter_title(self, chapterType:str, chapterId:int) -> str:
@@ -106,40 +106,40 @@ class MainMenu(linpg.AbstractSystem):
                 mode = "disable"
             """
             mode = "enable"
-            self.chapter_select[i] = linpg.fontRenderPro(self.chapter_select[i],mode,(txt_x,txt_y),linpg.get_standard_font_size("medium"))
+            self.chapter_select[i] = linpg.load_dynamic_text(self.chapter_select[i],mode,(txt_x,txt_y),linpg.get_standard_font_size("medium"))
             txt_y += linpg.get_standard_font_size("medium")*2
     #画出文字按钮
-    def __draw_buttons(self, screen:pygame.Surface) -> None:
+    def __draw_buttons(self, screen:linpg.ImageSurface) -> None:
         i:int = 0
         #主菜单
         if self.menu_type == 0:
             for button in self.main_menu_txt["menu_main"].values():
                 button.draw(screen)
-                if linpg.isHover(button): self.hover_sound_play_on = i
+                if linpg.is_hover(button): self.hover_sound_play_on = i
                 i+=1
         #选择主线的章节
         elif self.menu_type == 1:
             for button in self.chapter_select:
                 button.draw(screen)
-                if linpg.isHover(button): self.hover_sound_play_on = i
+                if linpg.is_hover(button): self.hover_sound_play_on = i
                 i+=1
         #创意工坊选择菜单
         elif self.menu_type == 2:
             for button in self.main_menu_txt["menu_workshop_choice"].values():
                 button.draw(screen)
-                if linpg.isHover(button): self.hover_sound_play_on = i
+                if linpg.is_hover(button): self.hover_sound_play_on = i
                 i+=1
         #展示合集 （3-游玩，4-地图编辑器，5-对话编辑器）
         elif 5 >= self.menu_type >= 3:
             for button in self.workshop_files:
                 button.draw(screen)
-                if linpg.isHover(button): self.hover_sound_play_on = i
+                if linpg.is_hover(button): self.hover_sound_play_on = i
                 i+=1
         #选择章节（6-游玩，7-地图编辑器，8-对话编辑器）
         elif 8 >= self.menu_type >= 6:
             for button in self.chapter_select:
                 button.draw(screen)
-                if linpg.isHover(button): self.hover_sound_play_on = i
+                if linpg.is_hover(button): self.hover_sound_play_on = i
                 i+=1
         #播放按钮的音效
         if self.last_hover_sound_play_on != self.hover_sound_play_on:
@@ -189,7 +189,7 @@ class MainMenu(linpg.AbstractSystem):
         else:
             raise Exception('Error: Cannot find the id of chapter because the file is not properly named!')
     #加载章节
-    def __load_scene(self, chapterType:str, chapterId:int, screen:pygame.Surface) -> None:
+    def __load_scene(self, chapterType:str, chapterId:int, screen:linpg.ImageSurface) -> None:
         if RPC is not None: RPC.update(
             details = linpg.get_lang('General','main_chapter') if chapterType == "main_chapter" else linpg.get_lang('General','workshop'),
             state = self.__get_chapter_title(chapterType,chapterId),
@@ -211,7 +211,7 @@ class MainMenu(linpg.AbstractSystem):
         self.__reset_menu()
         if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
     #继续章节
-    def __continue_scene(self, screen:pygame.Surface) -> None:
+    def __continue_scene(self, screen:linpg.ImageSurface) -> None:
         self.videoCapture.stop()
         SAVE:dict = linpg.loadConfig("Save/save.yaml")
         if RPC is not None: RPC.update(
@@ -248,13 +248,13 @@ class MainMenu(linpg.AbstractSystem):
         self.videoCapture.start()
         #是否可以继续游戏了（save文件是否被创建）
         if os.path.exists("Save/save.yaml") and not self.continueButtonIsOn:
-            self.main_menu_txt["menu_main"]["0_continue"] = linpg.fontRenderPro(
+            self.main_menu_txt["menu_main"]["0_continue"] = linpg.load_dynamic_text(
                 linpg.get_lang("MainMenu","menu_main")["0_continue"], "enable",
                 self.main_menu_txt["menu_main"]["0_continue"].get_pos(), linpg.get_standard_font_size("medium")
                 )
             self.continueButtonIsOn = True
         elif not os.path.exists("Save/save.yaml") and self.continueButtonIsOn is True:
-            self.main_menu_txt["menu_main"]["0_continue"] = linpg.fontRenderPro(
+            self.main_menu_txt["menu_main"]["0_continue"] = linpg.load_dynamic_text(
                 linpg.get_lang("MainMenu","menu_main")["0_continue"], "disable",
                 self.main_menu_txt["menu_main"]["0_continue"].get_pos(), linpg.get_standard_font_size("medium")
                 )
@@ -275,7 +275,7 @@ class MainMenu(linpg.AbstractSystem):
         txt_y = (screen_size[1]-len(self.main_menu_txt["menu_main"])*font_size)/2
         for key,txt in self.main_menu_txt["menu_main"].items():
             mode = "enable" if key not in disabled_option else "disable"
-            self.main_menu_txt["menu_main"][key] = linpg.fontRenderPro(txt,mode,(txt_location,txt_y),linpg.get_standard_font_size("medium"))
+            self.main_menu_txt["menu_main"][key] = linpg.load_dynamic_text(txt,mode,(txt_location,txt_y),linpg.get_standard_font_size("medium"))
             txt_y += font_size
         #加载创意工坊选择页面的文字
         self.main_menu_txt["menu_workshop_choice"]["map_editor"] = linpg.get_lang("General","map_editor")
@@ -283,7 +283,7 @@ class MainMenu(linpg.AbstractSystem):
         self.main_menu_txt["menu_workshop_choice"]["back"] = linpg.get_lang("Global","back")
         txt_y = (screen_size[1]-len(self.main_menu_txt["menu_workshop_choice"])*font_size)/2
         for key,txt in self.main_menu_txt["menu_workshop_choice"].items():
-            self.main_menu_txt["menu_workshop_choice"][key] = linpg.fontRenderPro(txt,"enable",(txt_location,txt_y),linpg.get_standard_font_size("medium"))
+            self.main_menu_txt["menu_workshop_choice"][key] = linpg.load_dynamic_text(txt,"enable",(txt_location,txt_y),linpg.get_standard_font_size("medium"))
             txt_y += font_size
         #加载退出确认消息框
         self.exit_confirm_menu = linpg.Message(
@@ -291,7 +291,7 @@ class MainMenu(linpg.AbstractSystem):
             (self.main_menu_txt["other"]["confirm"],self.main_menu_txt["other"]["deny"]),True,return_button=1,escape_button=1
             )
     #更新语言
-    def updated_language(self, screen:pygame.Surface) -> None:
+    def updated_language(self, screen:linpg.ImageSurface) -> None:
         super().updated_language()
         self.__reset_menu_text(screen.get_size())
         if self.menu_type == 1:
@@ -305,13 +305,13 @@ class MainMenu(linpg.AbstractSystem):
         self.hover_on_button_sound.set_volume(linpg.get_setting("Sound","sound_effects")/100.0)
         self.videoCapture.set_volume(linpg.get_setting("Sound","background_music")/100.0)
     #画出主菜单
-    def draw(self, screen:pygame.Surface) -> None:
+    def draw(self, screen:linpg.ImageSurface) -> None:
         #开始播放背景视频
         if not self.videoCapture.started: self.videoCapture.start()
         #背景视频
         self.videoCapture.draw(screen)
         #画出章节背景
-        if self.menu_type == 1 and linpg.isHover(self.chapter_select[0]):
+        if self.menu_type == 1 and linpg.is_hover(self.chapter_select[0]):
             if self.cover_alpha < 255:
                 self.cover_alpha += 15
         elif self.cover_alpha >= 0:
@@ -338,64 +338,64 @@ class MainMenu(linpg.AbstractSystem):
             #主菜单
             if self.menu_type == 0:
                 #继续游戏
-                if linpg.isHover(self.main_menu_txt["menu_main"]["0_continue"]) and os.path.exists("Save/save.yaml"):
+                if linpg.is_hover(self.main_menu_txt["menu_main"]["0_continue"]) and os.path.exists("Save/save.yaml"):
                     self.__continue_scene(screen)
                 #选择章节
-                elif linpg.isHover(self.main_menu_txt["menu_main"]["1_chooseChapter"]):
+                elif linpg.is_hover(self.main_menu_txt["menu_main"]["1_chooseChapter"]):
                     #加载菜单章节选择页面的文字
                     self.__reload_chapter_select_list(screen.get_size())
                     self.menu_type = 1
                 #dlc
-                elif linpg.isHover(self.main_menu_txt["menu_main"]["2_dlc"]):
+                elif linpg.is_hover(self.main_menu_txt["menu_main"]["2_dlc"]):
                     pass
                 #创意工坊
-                elif linpg.isHover(self.main_menu_txt["menu_main"]["3_workshop"]):
+                elif linpg.is_hover(self.main_menu_txt["menu_main"]["3_workshop"]):
                     self.menu_type = 2
                 #收集物
-                elif linpg.isHover(self.main_menu_txt["menu_main"]["4_collection"]):
+                elif linpg.is_hover(self.main_menu_txt["menu_main"]["4_collection"]):
                     pass
                 #设置
-                elif linpg.isHover(self.main_menu_txt["menu_main"]["5_setting"]):
+                elif linpg.is_hover(self.main_menu_txt["menu_main"]["5_setting"]):
                     linpg.get_option_menu().hidden = False
                 #制作组
-                elif linpg.isHover(self.main_menu_txt["menu_main"]["6_developer_team"]):
+                elif linpg.is_hover(self.main_menu_txt["menu_main"]["6_developer_team"]):
                     pass
                 #退出
-                elif linpg.isHover(self.main_menu_txt["menu_main"]["7_exit"]) and self.exit_confirm_menu.draw() == 0:
+                elif linpg.is_hover(self.main_menu_txt["menu_main"]["7_exit"]) and self.exit_confirm_menu.draw() == 0:
                     self.videoCapture.stop()
                     self.stop()
                     if RPC is not None: RPC.close()
             #选择主线章节
             elif self.menu_type == 1:
-                if linpg.isHover(self.chapter_select[-1]):
+                if linpg.is_hover(self.chapter_select[-1]):
                     self.menu_type = 0
                 else:
                     for i in range(len(self.chapter_select)-1):
                         #章节选择
-                        if linpg.isHover(self.chapter_select[i]):
+                        if linpg.is_hover(self.chapter_select[i]):
                             self.__load_scene("main_chapter",i+1,screen)
                             break
             #选择创意工坊选项
             elif self.menu_type == 2:
-                if linpg.isHover(self.main_menu_txt["menu_workshop_choice"]["0_play"]):
+                if linpg.is_hover(self.main_menu_txt["menu_workshop_choice"]["0_play"]):
                     self.__reload_workshop_files_list(screen.get_size(),False)
                     self.menu_type = 3
-                elif linpg.isHover(self.main_menu_txt["menu_workshop_choice"]["map_editor"]):
+                elif linpg.is_hover(self.main_menu_txt["menu_workshop_choice"]["map_editor"]):
                     self.__reload_workshop_files_list(screen.get_size(),True)
                     self.menu_type = 4
-                elif linpg.isHover(self.main_menu_txt["menu_workshop_choice"]["dialog_editor"]):
+                elif linpg.is_hover(self.main_menu_txt["menu_workshop_choice"]["dialog_editor"]):
                     self.__reload_workshop_files_list(screen.get_size(),True)
                     self.menu_type = 5
-                elif linpg.isHover(self.main_menu_txt["menu_workshop_choice"]["back"]):
+                elif linpg.is_hover(self.main_menu_txt["menu_workshop_choice"]["back"]):
                     self.menu_type = 0
             #创意工坊-选择想要游玩的合集
             elif self.menu_type == 3:
-                if linpg.isHover(self.workshop_files[-1]):
+                if linpg.is_hover(self.workshop_files[-1]):
                     self.menu_type = 2
                 else:
                     for i in range(len(self.workshop_files)-1):
                         #章节选择
-                        if linpg.isHover(self.workshop_files[i]):
+                        if linpg.is_hover(self.workshop_files[i]):
                             self.current_selected_workshop_project = self.workshop_files_text[i]
                             self.__reload_chapter_select_list(screen.get_size(),"workshop")
                             self.menu_type = 6
@@ -403,16 +403,16 @@ class MainMenu(linpg.AbstractSystem):
             #创意工坊-选择想要编辑地图的合集
             elif self.menu_type == 4:
                 #新建合集
-                if linpg.isHover(self.workshop_files[0]):
+                if linpg.is_hover(self.workshop_files[0]):
                     self.__create_new_project()
                     self.__reload_workshop_files_list(screen.get_size(),True)
                 #返回创意工坊选项菜单
-                elif linpg.isHover(self.workshop_files[-1]):
+                elif linpg.is_hover(self.workshop_files[-1]):
                     self.menu_type = 2
                 else:
                     for i in range(1,len(self.workshop_files)-1):
                         #章节选择
-                        if linpg.isHover(self.workshop_files[i]):
+                        if linpg.is_hover(self.workshop_files[i]):
                             self.current_selected_workshop_project = self.workshop_files_text[i-1]
                             self.__reload_chapter_select_list(screen.get_size(),"workshop",True)
                             self.menu_type = 7
@@ -420,41 +420,41 @@ class MainMenu(linpg.AbstractSystem):
             #创意工坊-选择想要编辑对话的合集
             elif self.menu_type == 5:
                 #新建合集
-                if linpg.isHover(self.workshop_files[0]):
+                if linpg.is_hover(self.workshop_files[0]):
                     self.__create_new_project()
                     self.__reload_workshop_files_list(screen.get_size(),True)
                 #返回创意工坊选项菜单
-                elif linpg.isHover(self.workshop_files[-1]):
+                elif linpg.is_hover(self.workshop_files[-1]):
                     self.menu_type = 2
                 else:
                     for i in range(1,len(self.workshop_files)-1):
                         #章节选择
-                        if linpg.isHover(self.workshop_files[i]):
+                        if linpg.is_hover(self.workshop_files[i]):
                             self.current_selected_workshop_project = self.workshop_files_text[i-1]
                             self.__reload_chapter_select_list(screen.get_size(),"workshop",True)
                             self.menu_type = 8
                             break
             #创意工坊-选择当前合集想要游玩的关卡
             elif self.menu_type == 6:
-                if linpg.isHover(self.chapter_select[-1]):
+                if linpg.is_hover(self.chapter_select[-1]):
                     self.menu_type = 3
                 else:
                     for i in range(len(self.chapter_select)-1):
                         #章节选择
-                        if linpg.isHover(self.chapter_select[i]):
+                        if linpg.is_hover(self.chapter_select[i]):
                             self.__load_scene("workshop",i+1,screen)
                             break
             #创意工坊-选择当前合集想要编辑地图的关卡
             elif self.menu_type == 7:
-                if linpg.isHover(self.chapter_select[0]):
+                if linpg.is_hover(self.chapter_select[0]):
                     self.__create_new_chapter()
                     self.__reload_chapter_select_list(screen.get_size(),"workshop",True)
-                elif linpg.isHover(self.chapter_select[-1]):
+                elif linpg.is_hover(self.chapter_select[-1]):
                     self.menu_type = 4
                 else:
                     for i in range(1,len(self.chapter_select)-1):
                         #章节选择
-                        if linpg.isHover(self.chapter_select[i]):
+                        if linpg.is_hover(self.chapter_select[i]):
                             self.videoCapture.stop()
                             mapEditor(screen,"workshop",i,self.current_selected_workshop_project)
                             self.videoCapture = self.videoCapture.copy()
@@ -462,15 +462,15 @@ class MainMenu(linpg.AbstractSystem):
                             break
             #创意工坊-选择当前合集想要编辑对话的关卡
             elif self.menu_type == 8:
-                if linpg.isHover(self.chapter_select[0]):
+                if linpg.is_hover(self.chapter_select[0]):
                     self.__create_new_chapter()
                     self.__reload_chapter_select_list(screen.get_size(),"workshop",True)
-                elif linpg.isHover(self.chapter_select[-1]):
+                elif linpg.is_hover(self.chapter_select[-1]):
                     self.menu_type = 5
                 else:
                     for i in range(1,len(self.chapter_select)-1):
                         #章节选择
-                        if linpg.isHover(self.chapter_select[i]):
+                        if linpg.is_hover(self.chapter_select[i]):
                             self.videoCapture.stop()
                             dialogEditor(screen,"workshop",i,"dialog_before_battle",self.current_selected_workshop_project)
                             self.videoCapture = self.videoCapture.copy()

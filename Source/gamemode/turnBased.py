@@ -72,7 +72,7 @@ class TurnBasedBattleSystem(BattleSystem):
     def enemyInControl(self) -> object: return self.enemies_data[self.sangvisFerris_name_list[self.enemies_in_control_id]]
     """加载与储存"""
     #从存档中加载游戏进程
-    def load(self, screen:pygame.Surface) -> None:
+    def load(self, screen:linpg.ImageSurface) -> None:
         DataTmp = linpg.loadConfig("Save/save.yaml")
         if DataTmp["type"] == "battle":
             self._initialize(DataTmp["chapter_type"], DataTmp["chapter_id"], DataTmp["project_name"])
@@ -87,15 +87,15 @@ class TurnBasedBattleSystem(BattleSystem):
         self.MAP.load_env_img((round(screen.get_width()/10),round(screen.get_height()/10)))
         self.__load_from_save = True
         self.__process_data(screen)
-    def new(self, screen:pygame.Surface, chapterType:str, chapterId:int, projectName:str=None):
+    def new(self, screen:linpg.ImageSurface, chapterType:str, chapterId:int, projectName:str=None):
         self._initialize(chapterType, chapterId, projectName)
         self.__process_data(screen)
     #加载游戏进程
-    def __process_data(self, screen:pygame.Surface) -> None:
+    def __process_data(self, screen:linpg.ImageSurface) -> None:
         self.window_x,self.window_y = screen.get_size()
         #生成标准文字渲染器
         self.FONTSIZE = int(self.window_x/76)
-        self.FONT = linpg.createFont(self.FONTSIZE)
+        self.FONT = linpg.create_font(self.FONTSIZE)
         #加载按钮的文字
         self.selectMenuUI = SelectMenu()
         self.battleModeUiTxt = linpg.get_lang("Battle_UI")
@@ -126,7 +126,7 @@ class TurnBasedBattleSystem(BattleSystem):
         self.battleMode_info = DataTmp["battle_info"]
         self.dialog_during_battle = DataTmp["dialog_during_battle"]
         #正在加载的gif动态图标
-        nowLoadingIcon = linpg.loadGif(
+        nowLoadingIcon = linpg.load_gif(
             "Assets/image/UI/sv98_walking.gif",
             (self.window_x*0.7,self.window_y*0.83),
             (self.window_x*0.003*15,self.window_x*0.003*21)
@@ -179,21 +179,21 @@ class TurnBasedBattleSystem(BattleSystem):
         self._calculate_darkness()
         #开始加载关卡设定
         self.infoToDisplayDuringLoading.draw(screen)
-        now_loading = self.FONT.render(loading_info["now_loading_level"],linpg.get_antialias(),linpg.findColorRGBA("white"))
+        now_loading = self.FONT.render(loading_info["now_loading_level"],linpg.get_antialias(),linpg.get_color_rbga("white"))
         screen.blit(now_loading,(self.window_x*0.75,self.window_y*0.9))
         nowLoadingIcon.draw(screen)
         linpg.display.flip()
         #加载UI:
         #加载结束回合的图片
-        self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.findColorRGBA("white"))
-        self.end_round_button = linpg.loadImage("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
+        self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.get_color_rbga("white"))
+        self.end_round_button = linpg.load_image("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
         #加载子弹图片
-        #bullet_img = loadImg("Assets/image/UI/bullet.png", get_block_width()/6, self.MAP.block_height/12)
+        #bullet_img = load_img("Assets/image/UI/bullet.png", get_block_width()/6, self.MAP.block_height/12)
         #加载显示获取到补给后的信息栏
         supply_board_width:int = int(self.window_x/3)
         supply_board_height:int = int(self.window_y/12)
         supply_board_x:int = int((self.window_x-supply_board_width)/2)
-        self.supply_board = linpg.loadDynamicImage(
+        self.supply_board = linpg.load_dynamic_image(
             "Assets/image/UI/score.png",
             (supply_board_x,-supply_board_height),
             (supply_board_x,0),
@@ -204,11 +204,11 @@ class TurnBasedBattleSystem(BattleSystem):
         self.supply_board.stayingTime = 0
         #用于表示范围的方框图片
         self.range_ui_images = {
-            "green" : linpg.StaticImageSurface("Assets/image/UI/range/green.png",0,0),
-            "red" : linpg.StaticImageSurface("Assets/image/UI/range/red.png",0,0),
-            "yellow": linpg.StaticImageSurface("Assets/image/UI/range/yellow.png",0,0),
-            "blue": linpg.StaticImageSurface("Assets/image/UI/range/blue.png",0,0),
-            "orange": linpg.StaticImageSurface("Assets/image/UI/range/orange.png",0,0),
+            "green" : linpg.StaticImage("Assets/image/UI/range/green.png",0,0),
+            "red" : linpg.StaticImage("Assets/image/UI/range/red.png",0,0),
+            "yellow": linpg.StaticImage("Assets/image/UI/range/yellow.png",0,0),
+            "blue": linpg.StaticImage("Assets/image/UI/range/blue.png",0,0),
+            "orange": linpg.StaticImage("Assets/image/UI/range/orange.png",0,0),
         }
         for key in self.range_ui_images:
             self.range_ui_images[key].set_width_with_size_locked(self.MAP.block_width*0.8)
@@ -244,7 +244,7 @@ class TurnBasedBattleSystem(BattleSystem):
                     screen.blit(temp_secode,(self.window_x/20+self.battleMode_info[i].get_width(),self.window_y*0.75+self.battleMode_info[i].get_height()*1.2))
             linpg.display.flip()
     #返回需要保存数据
-    def _get_data_need_to_save(self) -> dict: return linpg.dicMerge(
+    def _get_data_need_to_save(self) -> dict: return linpg.merge_dict(
         self.get_data_of_parent_game_system(),{
             "type": "battle",
             "griffin": self.griffinCharactersData,
@@ -258,7 +258,7 @@ class TurnBasedBattleSystem(BattleSystem):
         )
     """画面"""
     #新增需要在屏幕上画出的物品
-    def __add_on_screen_object(self, image:pygame.Surface, weight:int=-1, pos:Union[tuple,list]=(0,0), offSet:Union[tuple,list]=(0,0)) -> None:
+    def __add_on_screen_object(self, image:linpg.ImageSurface, weight:int=-1, pos:Union[tuple,list]=(0,0), offSet:Union[tuple,list]=(0,0)) -> None:
         if weight < 0:
             self.__max_item_weight += 1
             weight = self.__max_item_weight
@@ -266,7 +266,7 @@ class TurnBasedBattleSystem(BattleSystem):
             self.__max_item_weight = weight
         self.__items_to_blit.append(linpg.ItemNeedBlit(image,weight,pos,offSet))
     #更新屏幕
-    def __update_scene(self, screen:pygame.Surface) -> None:
+    def __update_scene(self, screen:linpg.ImageSurface) -> None:
         self.__items_to_blit.sort()
         for item in self.__items_to_blit:
             item.draw(screen)
@@ -320,8 +320,8 @@ class TurnBasedBattleSystem(BattleSystem):
         self.selectMenuUI = SelectMenu()
         self.battleModeUiTxt = linpg.get_lang("Battle_UI")
         self.RoundSwitchUI = RoundSwitch(self.window_x,self.window_y,self.battleModeUiTxt)
-        self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.findColorRGBA("white"))
-        self.end_round_button = linpg.loadImage("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
+        self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.get_color_rbga("white"))
+        self.end_round_button = linpg.load_image("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
         self.warnings_to_display = WarningSystem(int(screen.get_height()*0.03))
         self.dialog_during_battle = linpg.loadConfig(
             os.path.join(
@@ -353,7 +353,7 @@ class TurnBasedBattleSystem(BattleSystem):
     def reset_areaDrawColorBlock(self):
         for value in self.areaDrawColorBlock.values(): value.clear()
     #切换回合
-    def __switch_round(self, screen:pygame.Surface) -> None:
+    def __switch_round(self, screen:linpg.ImageSurface) -> None:
         if self.whose_round == "playerToSangvisFerris" or self.whose_round == "sangvisFerrisToPlayer":
             if self.RoundSwitchUI.draw(screen,self.whose_round,self.resultInfo["total_rounds"]):
                 if self.whose_round == "playerToSangvisFerris":
@@ -409,14 +409,14 @@ class TurnBasedBattleSystem(BattleSystem):
                 healed_hp = round((self.griffinCharactersData[skill_target].max_hp - self.griffinCharactersData[skill_target].current_hp)*0.3)
                 self.griffinCharactersData[skill_target].heal(healed_hp)
                 if not self.griffinCharactersData[skill_target].dying: self.griffinCharactersData[skill_target].dying = False
-                damage_do_to_character[skill_target] = linpg.fontRender("+"+str(healed_hp),"green",25)
+                damage_do_to_character[skill_target] = linpg.render_font("+"+str(healed_hp),"green",25)
             elif self.griffinCharactersData[characterName].type == "asval" or self.griffinCharactersData[characterName].type == "pp1901" or self.griffinCharactersData[characterName].type == "sv-98":
-                the_damage = linpg.randomInt(self.griffinCharactersData[characterName].min_damage,self.griffinCharactersData[characterName].max_damage)
+                the_damage = linpg.get_random_int(self.griffinCharactersData[characterName].min_damage,self.griffinCharactersData[characterName].max_damage)
                 self.sangvisFerrisData[skill_target].decreaseHp(the_damage)
-                damage_do_to_character[skill_target] = linpg.fontRender("-"+str(the_damage),"red",25)
+                damage_do_to_character[skill_target] = linpg.render_font("-"+str(the_damage),"red",25)
             return damage_do_to_character
     #对话模块
-    def __play_dialog(self, screen:pygame.Surface) -> None:
+    def __play_dialog(self, screen:linpg.ImageSurface) -> None:
         #画出地图
         self._display_map(screen)
         #角色动画
@@ -618,7 +618,7 @@ class TurnBasedBattleSystem(BattleSystem):
             if self.txt_alpha == 0:
                 self.__is_battle_mode = True
     #战斗模块
-    def __play_battle(self, screen:pygame.Surface) -> None:
+    def __play_battle(self, screen:linpg.ImageSurface) -> None:
         self.play_bgm()
         right_click = False
         #获取鼠标坐标
@@ -680,7 +680,7 @@ class TurnBasedBattleSystem(BattleSystem):
             if right_click is True:
                 block_get_click = self.MAP.calBlockInMap(mouse_x,mouse_y)
                 #如果点击了回合结束的按钮
-                if linpg.isHover(self.end_round_button) and self.__is_waiting is True:
+                if linpg.is_hover(self.end_round_button) and self.__is_waiting is True:
                     self.whose_round = "playerToSangvisFerris"
                     self.characterGetClick = None
                     self.__if_draw_range = True
@@ -1020,12 +1020,12 @@ class TurnBasedBattleSystem(BattleSystem):
                         self.attackingSounds.play(self.characterInControl.kind)
                     if self.characterInControl.get_imgId("attack") == self.characterInControl.get_imgNum("attack")-2:
                         for each_enemy in self.enemiesGetAttack:
-                            if self.enemiesGetAttack[each_enemy] == "near" and linpg.randomInt(1,100) <= 95 or self.enemiesGetAttack[each_enemy] == "middle" and linpg.randomInt(1,100) <= 80 or self.enemiesGetAttack[each_enemy] == "far" and linpg.randomInt(1,100) <= 65:
+                            if self.enemiesGetAttack[each_enemy] == "near" and linpg.get_random_int(1,100) <= 95 or self.enemiesGetAttack[each_enemy] == "middle" and linpg.get_random_int(1,100) <= 80 or self.enemiesGetAttack[each_enemy] == "far" and linpg.get_random_int(1,100) <= 65:
                                 the_damage = self.characterInControl.attack(self.sangvisFerrisData[each_enemy])
-                                self.damage_do_to_characters[each_enemy] = self.FONT.render("-"+str(the_damage),linpg.get_antialias(),linpg.findColorRGBA("red"))
+                                self.damage_do_to_characters[each_enemy] = self.FONT.render("-"+str(the_damage),linpg.get_antialias(),linpg.get_color_rbga("red"))
                                 self.sangvisFerrisData[each_enemy].alert(100)
                             else:
-                                self.damage_do_to_characters[each_enemy] = self.FONT.render("Miss",linpg.get_antialias(),linpg.findColorRGBA("red"))
+                                self.damage_do_to_characters[each_enemy] = self.FONT.render("Miss",linpg.get_antialias(),linpg.get_color_rbga("red"))
                                 self.sangvisFerrisData[each_enemy].alert(50)
                     elif self.characterInControl.get_imgId("attack") == self.characterInControl.get_imgNum("attack")-1:
                         self.characterInControl.current_bullets -= 1
@@ -1068,7 +1068,7 @@ class TurnBasedBattleSystem(BattleSystem):
                     if self.enemyInControl.get_imgId("attack") == 3:
                         self.attackingSounds.play(self.enemyInControl.kind)
                     elif self.enemyInControl.get_imgId("attack") == self.enemyInControl.get_imgNum("attack")-1:
-                        temp_value = linpg.randomInt(0,100)
+                        temp_value = linpg.get_random_int(0,100)
                         if self.current_instruction.target_area == "near" and temp_value <= 95 \
                         or self.current_instruction.target_area == "middle" and temp_value <= 80 \
                         or self.current_instruction.target_area == "far" and temp_value <= 65:
@@ -1077,9 +1077,9 @@ class TurnBasedBattleSystem(BattleSystem):
                             if not self.griffinCharactersData[self.current_instruction.target].is_alive(): self.resultInfo["times_characters_down"] += 1
                             #重新计算迷雾区域
                             self._calculate_darkness()
-                            self.damage_do_to_characters[self.current_instruction.target] = self.FONT.render("-"+str(the_damage),linpg.get_antialias(),linpg.findColorRGBA("red"))
+                            self.damage_do_to_characters[self.current_instruction.target] = self.FONT.render("-"+str(the_damage),linpg.get_antialias(),linpg.get_color_rbga("red"))
                         else:
-                            self.damage_do_to_characters[self.current_instruction.target] = self.FONT.render("Miss",linpg.get_antialias(),linpg.findColorRGBA("red"))
+                            self.damage_do_to_characters[self.current_instruction.target] = self.FONT.render("Miss",linpg.get_antialias(),linpg.get_color_rbga("red"))
                         self.current_instruction = None
             else:
                 self.enemyInControl.set_action()
@@ -1090,7 +1090,7 @@ class TurnBasedBattleSystem(BattleSystem):
 
         """↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓角色动画展示区↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓"""
         rightClickCharacterAlphaDeduct = True
-        for key,value in linpg.dicMerge(self.griffinCharactersData,self.sangvisFerrisData).items():
+        for key,value in linpg.merge_dict(self.griffinCharactersData,self.sangvisFerrisData).items():
             #如果天亮的双方都可以看见/天黑，但是是友方角色/天黑，但是是敌方角色在可观测的范围内 -- 则画出角色
             if value.faction == "character" or value.faction == "sangvisFerri" and self.MAP.inLightArea(value):
                 if self.__if_draw_range is True and pygame.mouse.get_pressed()[2]:
@@ -1122,7 +1122,7 @@ class TurnBasedBattleSystem(BattleSystem):
                     xTemp,yTemp = self.MAP.calPosInMap(value.x,value.y)
                     xTemp+=self.MAP.block_width*0.05
                     yTemp-=self.MAP.block_width*0.05
-                    linpg.displayInCenter(self.damage_do_to_characters[key],self.range_ui_images["green"],xTemp,yTemp,screen)
+                    linpg.display_in_center(self.damage_do_to_characters[key],self.range_ui_images["green"],xTemp,yTemp,screen)
                     self.damage_do_to_characters[key].set_alpha(the_alpha_to_check-5)
                 else:
                     del self.damage_do_to_characters[key]
@@ -1242,19 +1242,19 @@ class TurnBasedBattleSystem(BattleSystem):
             for event in linpg.controller.events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        linpg.unloadBackgroundMusic()
+                        linpg.unload_all_music()
                         chapter_info:dict = self.get_data_of_parent_game_system()
                         self.__init__()
                         self.new(screen,chapter_info["chapter_type"], chapter_info["chapter_id"], chapter_info["project_name"])
                         break
                     elif event.key == pygame.K_BACKSPACE:
-                        linpg.unloadBackgroundMusic()
+                        linpg.unload_all_music()
                         self.stop()
                         self.__is_battle_mode = False
                         break
             if self.ResultBoardUI is not None: self.__add_on_screen_object(self.ResultBoardUI)
     #把战斗系统的画面画到screen上
-    def draw(self, screen:pygame.Surface) -> None:
+    def draw(self, screen:linpg.ImageSurface) -> None:
         #环境声音-频道1
         self.environment_sound.play()
         # 游戏主循环
@@ -1281,7 +1281,10 @@ class TurnBasedBattleSystem(BattleSystem):
         self.__update_scene(screen)
         #展示暂停菜单
         if not self.pause_menu.hidden:
-            progress_saved_text = linpg.ImageSurface(self.FONT.render(linpg.get_lang("Global","progress_has_been_saved"),linpg.get_antialias(),(255,255,255)),0,0)
+            progress_saved_text = linpg.load_image(
+                self.FONT.render(linpg.get_lang("Global","progress_has_been_saved"),linpg.get_antialias(),(255,255,255)),
+                (0,0)
+                )
             progress_saved_text.set_alpha(0)
             while not self.pause_menu.hidden:
                 linpg.display.flip()
@@ -1297,7 +1300,7 @@ class TurnBasedBattleSystem(BattleSystem):
                     linpg.get_option_menu().hidden = False
                 elif result == "back_to_mainMenu":
                     linpg.get_option_menu().hidden = True
-                    linpg.unloadBackgroundMusic()
+                    linpg.unload_all_music()
                     progress_saved_text.set_alpha(0)
                     self.stop()
                     self.pause_menu.hidden = True

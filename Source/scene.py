@@ -12,17 +12,17 @@ class DialogSystem(linpg.DialogSystem):
             linpg.saveConfig(os.path.join(self.folder_for_save_file,"global.yaml"),DataTmp)
 
 #对话系统
-def dialog(screen:pygame.Surface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> dict:
+def dialog(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> dict:
     #加载闸门动画的图片素材
-    LoadingImgAbove:pygame.Surface = linpg.loadImg("Assets/image/UI/LoadingImgAbove.png",(screen.get_width()+8,screen.get_height()/1.7))
-    LoadingImgBelow:pygame.Surface = linpg.loadImg("Assets/image/UI/LoadingImgBelow.png",(screen.get_width()+8,screen.get_height()/2.05))
+    LoadingImgAbove:linpg.ImageSurface = linpg.load_img("Assets/image/UI/LoadingImgAbove.png",(screen.get_width()+8,screen.get_height()/1.7))
+    LoadingImgBelow:linpg.ImageSurface = linpg.load_img("Assets/image/UI/LoadingImgBelow.png",(screen.get_width()+8,screen.get_height()/2.05))
     #开始加载-闸门关闭的效果
     for i in range(101):
         screen.blit(LoadingImgAbove,(-4,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()))
         screen.blit(LoadingImgBelow,(-4,screen.get_height()-LoadingImgBelow.get_height()/100*i))
         linpg.display.flip()
     #卸载音乐
-    linpg.unloadBackgroundMusic()
+    linpg.unload_all_music()
     #初始化对话系统模块
     DIALOG:object = DialogSystem()
     if chapterType is not None:
@@ -45,9 +45,9 @@ def dialog(screen:pygame.Surface, chapterType:str, chapterId:int, part:str, proj
     return DIALOG.dialog_options
 
 #对话编辑器
-def dialogEditor(screen:pygame.Surface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> None:
+def dialogEditor(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> None:
     #卸载音乐
-    linpg.unloadBackgroundMusic()
+    linpg.unload_all_music()
     #改变标题
     linpg.display.set_caption("{0} ({1})".format(linpg.get_lang('General','game_title'),linpg.get_lang('General','dialog_editor')))
     if RPC is not None:
@@ -65,9 +65,9 @@ def dialogEditor(screen:pygame.Surface, chapterType:str, chapterId:int, part:str
     if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
 
 #战斗系统
-def battle(screen:pygame.Surface, chapterType:str, chapterId:int, projectName:str=None) -> dict:
+def battle(screen:linpg.ImageSurface, chapterType:str, chapterId:int, projectName:str=None) -> dict:
     #卸载音乐
-    linpg.unloadBackgroundMusic()
+    linpg.unload_all_music()
     BATTLE:object = TurnBasedBattleSystem()
     if chapterType is not None:
         BATTLE.new(screen, chapterType, chapterId, projectName)
@@ -79,13 +79,13 @@ def battle(screen:pygame.Surface, chapterType:str, chapterId:int, projectName:st
         ALPHA_BUILD_WARNING.draw(screen)
         linpg.display.flip()
     #暂停声效 - 尤其是环境声
-    linpg.unloadBackgroundMusic()
+    linpg.unload_all_music()
     return BATTLE.resultInfo
 
 #地图编辑器
-def mapEditor(screen:pygame.Surface, chapterType:str, chapterId:int, projectName:str=None) -> None:
+def mapEditor(screen:linpg.ImageSurface, chapterType:str, chapterId:int, projectName:str=None) -> None:
     #卸载音乐
-    linpg.unloadBackgroundMusic()
+    linpg.unload_all_music()
     MAP_EDITOR = MapEditor()
     MAP_EDITOR.load(screen, chapterType, chapterId, projectName)
     #改变标题
@@ -102,7 +102,7 @@ def mapEditor(screen:pygame.Surface, chapterType:str, chapterId:int, projectName
     if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
 
 #blit载入页面
-def dispaly_loading_screen(screen:pygame.Surface, start:int, end:int, value:int) -> None:
+def dispaly_loading_screen(screen:linpg.ImageSurface, start:int, end:int, value:int) -> None:
     window_x,window_y = screen.get_size()
     #获取健康游戏忠告
     HealthyGamingAdvice = linpg.try_get_lang("HealthyGamingAdvice")
@@ -110,13 +110,13 @@ def dispaly_loading_screen(screen:pygame.Surface, start:int, end:int, value:int)
         HealthyGamingAdvice = []
     else:
         for i in range(len(HealthyGamingAdvice)):
-            HealthyGamingAdvice[i] = linpg.fontRender(HealthyGamingAdvice[i],"white",window_x/64)
+            HealthyGamingAdvice[i] = linpg.render_font(HealthyGamingAdvice[i],"white",window_x/64)
     #其他载入页面需要的数据
-    text1 = linpg.fontRender(linpg.get_lang("title1"),"white",window_x/64)
-    text2 = linpg.fontRender(linpg.get_lang("title2"),"white",window_x/64)
+    text1 = linpg.render_font(linpg.get_lang("title1"),"white",window_x/64)
+    text2 = linpg.render_font(linpg.get_lang("title2"),"white",window_x/64)
     #主循环
     for i in range(start,end,value):
-        screen.fill(linpg.findColorRGBA("black"))
+        screen.fill(linpg.get_color_rbga("black"))
         text1.set_alpha(i)
         text2.set_alpha(i)
         screen.blits(((text1,(window_x/64,window_y*0.9)),(text2,(window_x/64,window_y*0.9-window_x/32))))
