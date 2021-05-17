@@ -73,7 +73,7 @@ class TurnBasedBattleSystem(BattleSystem):
     """加载与储存"""
     #从存档中加载游戏进程
     def load(self, screen:linpg.ImageSurface) -> None:
-        DataTmp = linpg.loadConfig("Save/save.yaml")
+        DataTmp = linpg.load_config("Save/save.yaml")
         if DataTmp["type"] == "battle":
             self._initialize(DataTmp["chapter_type"], DataTmp["chapter_id"], DataTmp["project_name"])
             self._initial_characters_loader(DataTmp["griffin"],DataTmp["sangvisFerri"])
@@ -102,7 +102,7 @@ class TurnBasedBattleSystem(BattleSystem):
         self.warnings_to_display = WarningSystem(int(screen.get_height()*0.03))
         loading_info = linpg.get_lang("LoadingTxt")
         #加载剧情
-        DataTmp = linpg.loadConfig(
+        DataTmp = linpg.load_config(
             os.path.join(
                 "Data", self._chapter_type,
                 "chapter{0}_dialogs_{1}.yaml".format(self._chapter_id,linpg.get_setting('Language'))
@@ -114,7 +114,7 @@ class TurnBasedBattleSystem(BattleSystem):
         #如果暂时没有翻译
         if "title" not in DataTmp: DataTmp["title"] = linpg.get_lang("Global", "no_translation")
         if "description" not in DataTmp: DataTmp["description"] = linpg.get_lang("Global", "no_translation")
-        if "battle_info" not in DataTmp: DataTmp["battle_info"] = linpg.loadConfig(r"Data/chapter_dialogs_example.yaml", "battle_info")
+        if "battle_info" not in DataTmp: DataTmp["battle_info"] = linpg.load_config(r"Data/chapter_dialogs_example.yaml", "battle_info")
         if "dialog_during_battle" not in DataTmp: DataTmp["dialog_during_battle"] = {}
         #章节标题显示
         self.infoToDisplayDuringLoading = LoadingTitle(
@@ -142,7 +142,7 @@ class TurnBasedBattleSystem(BattleSystem):
         nowLoadingIcon.draw(screen)
         linpg.display.flip()
         #读取并初始化章节信息
-        DataTmp = linpg.loadConfig(self.get_map_file_location())
+        DataTmp = linpg.load_config(self.get_map_file_location())
         #背景音乐路径
         self._background_music_folder_path:str = "Assets/music"
         #设置背景音乐
@@ -323,7 +323,7 @@ class TurnBasedBattleSystem(BattleSystem):
         self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.get_color_rbga("white"))
         self.end_round_button = linpg.load_image("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
         self.warnings_to_display = WarningSystem(int(screen.get_height()*0.03))
-        self.dialog_during_battle = linpg.loadConfig(
+        self.dialog_during_battle = linpg.load_config(
             os.path.join(
                 "Data", self._chapter_type,
                 "chapter{0}_dialogs_{1}.yaml".format(self._chapter_id,linpg.get_setting('Language'))
@@ -563,46 +563,43 @@ class TurnBasedBattleSystem(BattleSystem):
                 else:
                     raise Exception("Error: Dialog Data on '{0}' with id '{1}' cannot pass through any statement!".format(self.dialogKey,self.dialogData["dialogId"]))
                 #玩家输入按键判定
-                for event in linpg.controller.events:
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_ESCAPE:
-                            self.pause_menu.hidden = False
-                    elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 or event.type == pygame.JOYBUTTONDOWN and linpg.controller.joystick.get_button(0) == 1:
-                        goToNextSlide = False
-                        if "dialoguebox_up" in currentDialog and self.dialoguebox_up.updated:
-                            if not self.dialoguebox_up.is_all_played():
-                                self.dialoguebox_up.play_all()
-                            else:
-                                goToNextSlide = True
-                        if "dialoguebox_down" in currentDialog and self.dialoguebox_down.updated:
-                            if not self.dialoguebox_down.is_all_played():
-                                self.dialoguebox_down.play_all()
-                            else:
-                                goToNextSlide = True
-                        if goToNextSlide:
-                            self.dialogData["dialogId"] += 1
-                            if self.dialogData["dialogId"] < len(self.dialog_during_battle[self.dialogKey]):
-                                currentDialog = self.dialog_during_battle[self.dialogKey][self.dialogData["dialogId"]]
-                                lastDialog = self.dialog_during_battle[self.dialogKey][self.dialogData["dialogId"]-1] if self.dialogData["dialogId"] > 0 else {}
-                                if "dialoguebox_up" in currentDialog:
-                                    #检测上方对话框
-                                    if currentDialog["dialoguebox_up"] is None or "dialoguebox_up" not in lastDialog or lastDialog["dialoguebox_up"] is None or currentDialog["dialoguebox_up"]["speaker"] != lastDialog["dialoguebox_up"]["speaker"]:
-                                        self.dialoguebox_up.reset()
-                                    elif currentDialog["dialoguebox_up"]["content"] != lastDialog["dialoguebox_up"]["content"]:
-                                        self.dialoguebox_up.updated = False
-                                else:
+                if linpg.controller.get_event("back"): self.pause_menu.hidden = False
+                if linpg.controller.get_event("confirm"):
+                    goToNextSlide = False
+                    if "dialoguebox_up" in currentDialog and self.dialoguebox_up.updated:
+                        if not self.dialoguebox_up.is_all_played():
+                            self.dialoguebox_up.play_all()
+                        else:
+                            goToNextSlide = True
+                    if "dialoguebox_down" in currentDialog and self.dialoguebox_down.updated:
+                        if not self.dialoguebox_down.is_all_played():
+                            self.dialoguebox_down.play_all()
+                        else:
+                            goToNextSlide = True
+                    if goToNextSlide:
+                        self.dialogData["dialogId"] += 1
+                        if self.dialogData["dialogId"] < len(self.dialog_during_battle[self.dialogKey]):
+                            currentDialog = self.dialog_during_battle[self.dialogKey][self.dialogData["dialogId"]]
+                            lastDialog = self.dialog_during_battle[self.dialogKey][self.dialogData["dialogId"]-1] if self.dialogData["dialogId"] > 0 else {}
+                            if "dialoguebox_up" in currentDialog:
+                                #检测上方对话框
+                                if currentDialog["dialoguebox_up"] is None or "dialoguebox_up" not in lastDialog or lastDialog["dialoguebox_up"] is None or currentDialog["dialoguebox_up"]["speaker"] != lastDialog["dialoguebox_up"]["speaker"]:
                                     self.dialoguebox_up.reset()
-                                if "dialoguebox_down" in currentDialog:
-                                    #检测下方对话框    
-                                    if currentDialog["dialoguebox_down"] is None or "dialoguebox_down" not in lastDialog or lastDialog["dialoguebox_down"] is None or currentDialog["dialoguebox_down"]["speaker"] != lastDialog["dialoguebox_down"]["speaker"]:
-                                        self.dialoguebox_down.reset()
-                                    elif currentDialog["dialoguebox_down"]["content"] != lastDialog["dialoguebox_down"]["content"]:
-                                        self.dialoguebox_down.updated = False
-                                else:
-                                    self.dialoguebox_down.reset()
+                                elif currentDialog["dialoguebox_up"]["content"] != lastDialog["dialoguebox_up"]["content"]:
+                                    self.dialoguebox_up.updated = False
                             else:
                                 self.dialoguebox_up.reset()
+                            if "dialoguebox_down" in currentDialog:
+                                #检测下方对话框    
+                                if currentDialog["dialoguebox_down"] is None or "dialoguebox_down" not in lastDialog or lastDialog["dialoguebox_down"] is None or currentDialog["dialoguebox_down"]["speaker"] != lastDialog["dialoguebox_down"]["speaker"]:
+                                    self.dialoguebox_down.reset()
+                                elif currentDialog["dialoguebox_down"]["content"] != lastDialog["dialoguebox_down"]["content"]:
+                                    self.dialoguebox_down.updated = False
+                            else:
                                 self.dialoguebox_down.reset()
+                        else:
+                            self.dialoguebox_up.reset()
+                            self.dialoguebox_down.reset()
             else:
                 self.dialogData = None
                 self.dialogKey = None
@@ -620,32 +617,26 @@ class TurnBasedBattleSystem(BattleSystem):
     #战斗模块
     def __play_battle(self, screen:linpg.ImageSurface) -> None:
         self.play_bgm()
-        right_click = False
         #获取鼠标坐标
         mouse_x,mouse_y = linpg.controller.get_mouse_pos()
         skill_range = None
         for event in linpg.controller.events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE and self.characterGetClick is None:
+            if event.type == linpg.KEY_DOWN:
+                if event.key == linpg.KEY_ESCAPE and self.characterGetClick is None:
                     self.pause_menu.hidden = False
-                if event.key == pygame.K_ESCAPE and self.__is_waiting is True:
+                if event.key == linpg.KEY_ESCAPE and self.__is_waiting is True:
                     self.__if_draw_range = True
                     self.characterGetClick = None
                     self.action_choice = None
                     skill_range = None
                     self.reset_areaDrawColorBlock()
                 self._check_key_down(event)
-                if event.key == pygame.K_m:
-                    linpg.display.quit()
-            elif event.type == pygame.KEYUP:
+            elif event.type == linpg.KEY_UP:
                 self._check_key_up(event)
             #鼠标点击
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                #右键
-                if event.button == 1 or event.type == pygame.JOYBUTTONDOWN and linpg.controller.joystick.get_button(0) == 1:
-                    right_click = True
+            elif event.type == linpg.MOUSE_BUTTON_DOWN:
                 #上下滚轮-放大和缩小地图
-                elif event.button == 4 and self.zoomIntoBe < 150:
+                if event.button == 4 and self.zoomIntoBe < 150:
                     self.zoomIntoBe += 10
                 elif event.button == 5 and self.zoomIntoBe > 50:
                     self.zoomIntoBe -= 10
@@ -677,7 +668,7 @@ class TurnBasedBattleSystem(BattleSystem):
 
         #玩家回合
         if self.whose_round == "player":
-            if right_click is True:
+            if linpg.controller.get_event("confirm"):
                 block_get_click = self.MAP.calBlockInMap(mouse_x,mouse_y)
                 #如果点击了回合结束的按钮
                 if linpg.is_hover(self.end_round_button) and self.__is_waiting is True:
@@ -1093,7 +1084,7 @@ class TurnBasedBattleSystem(BattleSystem):
         for key,value in linpg.merge_dict(self.griffinCharactersData,self.sangvisFerrisData).items():
             #如果天亮的双方都可以看见/天黑，但是是友方角色/天黑，但是是敌方角色在可观测的范围内 -- 则画出角色
             if value.faction == "character" or value.faction == "sangvisFerri" and self.MAP.inLightArea(value):
-                if self.__if_draw_range is True and pygame.mouse.get_pressed()[2]:
+                if self.__if_draw_range is True and linpg.controller.mouse_get_press(2):
                     block_get_click = self.MAP.calBlockInMap(mouse_x,mouse_y)
                     if block_get_click is not None and block_get_click["x"] == value.x and block_get_click["y"]  == value.y:
                         rightClickCharacterAlphaDeduct = False
@@ -1229,8 +1220,8 @@ class TurnBasedBattleSystem(BattleSystem):
                 self.resultInfo["total_time"] = time.localtime(time.time()-self.resultInfo["total_time"])
                 self.ResultBoardUI = ResultBoard(self.resultInfo,self.window_x/96)
             for event in linpg.controller.events:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
+                if event.type == linpg.KEY_DOWN:
+                    if event.key == linpg.KEY_SPACE:
                         self.__is_battle_mode = False
                         self.stop()
             self.__add_on_screen_object(self.ResultBoardUI)
@@ -1240,14 +1231,14 @@ class TurnBasedBattleSystem(BattleSystem):
                 self.resultInfo["total_time"] = time.localtime(time.time()-self.resultInfo["total_time"])
                 self.ResultBoardUI = ResultBoard(self.resultInfo,self.window_x/96,False)
             for event in linpg.controller.events:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
+                if event.type == linpg.KEY_DOWN:
+                    if event.key == linpg.KEY_SPACE:
                         linpg.unload_all_music()
                         chapter_info:dict = self.get_data_of_parent_game_system()
                         self.__init__()
                         self.new(screen,chapter_info["chapter_type"], chapter_info["chapter_id"], chapter_info["project_name"])
                         break
-                    elif event.key == pygame.K_BACKSPACE:
+                    elif event.key == linpg.KEY_BACKSPACE:
                         linpg.unload_all_music()
                         self.stop()
                         self.__is_battle_mode = False

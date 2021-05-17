@@ -53,11 +53,11 @@ class MainMenu(linpg.AbstractSystem):
         if createMode: self.workshop_files.append(self.main_menu_txt["other"]["new_project"])
         for path in glob.glob(r"Data/workshop/*"):
             try:
-                info_data = linpg.loadConfig(os.path.join(path,"info.yaml"))
+                info_data = linpg.load_config(os.path.join(path,"info.yaml"))
             except:
-                info_data = linpg.loadConfig(r"Data/info_example.yaml")
+                info_data = linpg.load_config(r"Data/info_example.yaml")
                 info_data["default_lang"] = linpg.get_setting("Language")
-                linpg.saveConfig(os.path.join(path,"info.yaml"),info_data)
+                linpg.save_config(os.path.join(path,"info.yaml"),info_data)
             self.workshop_files_text.append(os.path.basename(path))
             self.workshop_files.append(info_data["title"][linpg.get_setting("Language")])
         self.workshop_files.append(linpg.get_lang("Global","back"))
@@ -77,7 +77,7 @@ class MainMenu(linpg.AbstractSystem):
             )
         chapter_title:str
         if os.path.exists(dialog_file_path):
-            dialog_data = linpg.loadConfig(dialog_file_path)
+            dialog_data = linpg.load_config(dialog_file_path)
             #如果dialog文件中有title，则读取
             chapter_title = dialog_data["title"] if "title" in dialog_data else linpg.get_lang("Global","no_translation")
         else:
@@ -160,9 +160,9 @@ class MainMenu(linpg.AbstractSystem):
         #创建文件夹
         os.makedirs(os.path.join("Data","workshop",fileName))
         #储存数据
-        info_data:dict = linpg.loadConfig("Data/info_example.yaml")
+        info_data:dict = linpg.load_config("Data/info_example.yaml")
         info_data["default_lang"] = linpg.get_setting("Language")
-        linpg.saveConfig(os.path.join("Data","workshop",fileName,"info.yaml"),info_data)
+        linpg.save_config(os.path.join("Data","workshop",fileName,"info.yaml"),info_data)
     #创建新的对话文和地图文件
     def __create_new_chapter(self) -> None:
         chapterId:int = len(glob.glob(os.path.join(
@@ -213,7 +213,7 @@ class MainMenu(linpg.AbstractSystem):
     #继续章节
     def __continue_scene(self, screen:linpg.ImageSurface) -> None:
         self.videoCapture.stop()
-        SAVE:dict = linpg.loadConfig("Save/save.yaml")
+        SAVE:dict = linpg.load_config("Save/save.yaml")
         if RPC is not None: RPC.update(
             details = linpg.get_lang('General','main_chapter') if SAVE["chapter_type"] == "main_chapter" else linpg.get_lang('General','workshop'),
             state = self.__get_chapter_title(SAVE["chapter_type"],SAVE["chapter_id"]),
@@ -333,7 +333,7 @@ class MainMenu(linpg.AbstractSystem):
         #展示控制台
         linpg.console.draw(screen)
         #判断按键
-        if linpg.controller.get_event("comfirm") is True and linpg.get_option_menu().hidden is True:
+        if linpg.controller.get_event("confirm") is True and linpg.get_option_menu().hidden is True:
             self.click_button_sound.play()
             #主菜单
             if self.menu_type == 0:

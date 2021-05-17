@@ -18,9 +18,9 @@ class MapEditor(linpg.AbstractBattleSystem):
     def load(self, screen:linpg.ImageSurface, chapterType:str, chapterId:int, projectName:str=None) -> None:
         self._initialize(chapterType, chapterId, projectName)
         self.folder_for_save_file,self.name_for_save_file = os.path.split(self.get_map_file_location())
-        self.decorations_setting = linpg.loadConfig("Data/decorations.yaml","decorations")
+        self.decorations_setting = linpg.load_config("Data/decorations.yaml","decorations")
         #载入地图数据
-        mapFileData:dict = linpg.loadConfig(self.get_map_file_location())
+        mapFileData:dict = linpg.load_config(self.get_map_file_location())
         #初始化角色信息
         self.__load_characters_data(mapFileData)
         #初始化地图
@@ -31,7 +31,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             block_x = 50
             default_map = [[SnowEnvImg[linpg.get_random_int(0,5)] for a in range(block_x)] for i in range(block_y)]
             mapFileData["map"] = default_map
-            linpg.saveConfig(self.get_map_file_location(),mapFileData)
+            linpg.save_config(self.get_map_file_location(),mapFileData)
         else:
             block_y = len(mapFileData["map"])
             block_x = len(mapFileData["map"][0])
@@ -168,21 +168,21 @@ class MapEditor(linpg.AbstractBattleSystem):
         #用于储存即将发下的物品的具体参数
         self.data_to_edit = None
         #读取地图原始文件
-        self.originalData = linpg.loadConfig(self.get_map_file_location())
+        self.originalData = linpg.load_config(self.get_map_file_location())
     #将地图制作器的界面画到屏幕上
     def draw(self, screen:linpg.ImageSurface) -> None:
         mouse_x,mouse_y = linpg.controller.get_mouse_pos()
         block_get_click = self.MAP.calBlockInMap(mouse_x,mouse_y)
         for event in linpg.controller.events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+            if event.type == linpg.KEY_DOWN:
+                if event.key == linpg.KEY_ESCAPE:
                     self.object_to_put_down = None
                     self.data_to_edit = None
                     self.deleteMode = False
                 self._check_key_down(event)
-            elif event.type == pygame.KEYUP:
+            elif event.type == linpg.KEY_UP:
                 self._check_key_up(event)
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == linpg.MOUSE_BUTTON_DOWN:
                 #上下滚轮-放大和缩小地图
                 if self.__UIContainerButtonRight.is_hover():
                     self.__UIContainerButtonRight.switch()
@@ -212,7 +212,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                 elif linpg.is_hover(self.UIButton["save"]) and self.object_to_put_down is None and not self.deleteMode:
                     self.save_progress()
                 elif linpg.is_hover(self.UIButton["back"]) and self.object_to_put_down is None and not self.deleteMode:
-                    if linpg.loadConfig(self.get_map_file_location()) == self.originalData:
+                    if linpg.load_config(self.get_map_file_location()) == self.originalData:
                         self.stop()
                         break
                     else:
@@ -224,7 +224,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                 elif linpg.is_hover(self.UIButton["reload"]) and self.object_to_put_down is None and not self.deleteMode:
                     tempLocal_x,tempLocal_y = self.MAP.getPos()
                     #读取地图数据
-                    mapFileData = linpg.loadConfig(self.get_map_file_location())
+                    mapFileData = linpg.load_config(self.get_map_file_location())
                     #初始化角色信息
                     self.__load_characters_data(mapFileData)
                     #加载地图
@@ -232,9 +232,9 @@ class MapEditor(linpg.AbstractBattleSystem):
                     del mapFileData
                     self.MAP.setPos(tempLocal_x,tempLocal_y)
                     #读取地图
-                    self.originalData = linpg.loadConfig(self.get_map_file_location())
+                    self.originalData = linpg.load_config(self.get_map_file_location())
                 else:
-                    if pygame.mouse.get_pressed()[0] and block_get_click is not None and self.object_to_put_down is not None and\
+                    if linpg.controller.get_event("confirm") and block_get_click is not None and self.object_to_put_down is not None and\
                         not linpg.is_hover(self.__UIContainerRight,local_x=self.__UIContainerButtonRight.right) and\
                             not linpg.is_hover(self.__UIContainerBottom,local_y=self.__UIContainerButtonBottom.bottom):
                         if self.object_to_put_down["type"] == "block":
@@ -310,11 +310,11 @@ class MapEditor(linpg.AbstractBattleSystem):
         #角色动画
         for key in self.alliances_data:
             self.alliances_data[key].draw(screen,self.MAP)
-            if self.object_to_put_down is None and pygame.mouse.get_pressed()[0] and self.alliances_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.alliances_data[key].y == int(mouse_y/self.greenBlock.get_height()):
+            if self.object_to_put_down is None and linpg.controller.get_event("confirm") and self.alliances_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.alliances_data[key].y == int(mouse_y/self.greenBlock.get_height()):
                 self.data_to_edit = self.alliances_data[key]
         for key in self.enemies_data:
             self.enemies_data[key].draw(screen,self.MAP)
-            if self.object_to_put_down is None and pygame.mouse.get_pressed()[0] and self.enemies_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.enemies_data[key].y == int(mouse_y/self.greenBlock.get_height()):
+            if self.object_to_put_down is None and linpg.controller.get_event("confirm") and self.enemies_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.enemies_data[key].y == int(mouse_y/self.greenBlock.get_height()):
                 self.data_to_edit = self.enemies_data[key]
 
         #展示设施
@@ -326,15 +326,15 @@ class MapEditor(linpg.AbstractBattleSystem):
             self.__UIContainerRight.display(screen,(self.__UIContainerButtonRight.right,0))
             self.__envImgContainer.display(screen,(self.__UIContainerButtonRight.right,0))
             self.__decorationsImgContainer.display(screen,(self.__UIContainerButtonRight.right,0))
-            if linpg.is_hover(self.__button_select_block,local_x=self.__UIContainerButtonRight.right) and pygame.mouse.get_pressed()[0]:
+            if linpg.is_hover(self.__button_select_block,local_x=self.__UIContainerButtonRight.right) and linpg.controller.get_event("confirm"):
                 self.__envImgContainer.hidden = False
                 self.__decorationsImgContainer.hidden = True
-            if linpg.is_hover(self.__button_select_decoration,local_x=self.__UIContainerButtonRight.right) and pygame.mouse.get_pressed()[0]:
+            if linpg.is_hover(self.__button_select_decoration,local_x=self.__UIContainerButtonRight.right) and linpg.controller.get_event("confirm"):
                 self.__envImgContainer.hidden = True
                 self.__decorationsImgContainer.hidden = False
             self.__button_select_block.display(screen,(self.__UIContainerButtonRight.right,0))
             self.__button_select_decoration.display(screen,(self.__UIContainerButtonRight.right,0))
-            if pygame.mouse.get_pressed()[0]:
+            if linpg.controller.get_event("confirm"):
                 if not self.__envImgContainer.hidden and self.__envImgContainer.current_hovered_item is not None:
                     self.object_to_put_down = {"type":"block","id":self.__envImgContainer.current_hovered_item}
                 elif not self.__decorationsImgContainer.hidden and self.__decorationsImgContainer.current_hovered_item is not None:
@@ -345,15 +345,15 @@ class MapEditor(linpg.AbstractBattleSystem):
             self.__UIContainerBottom.display(screen,(0,self.__UIContainerButtonBottom.bottom))
             self.__charactersImgContainer.display(screen,(0,self.__UIContainerButtonBottom.bottom))
             self.__sangvisFerrisImgContainer.display(screen,(0,self.__UIContainerButtonBottom.bottom))
-            if linpg.is_hover(self.__button_select_character,local_y=self.__UIContainerButtonBottom.bottom) and pygame.mouse.get_pressed()[0]:
+            if linpg.is_hover(self.__button_select_character,local_y=self.__UIContainerButtonBottom.bottom) and linpg.controller.get_event("confirm"):
                 self.__charactersImgContainer.hidden = False
                 self.__sangvisFerrisImgContainer.hidden = True
-            if linpg.is_hover(self.__button_select_sangvisFerri,local_y=self.__UIContainerButtonBottom.bottom) and pygame.mouse.get_pressed()[0]:
+            if linpg.is_hover(self.__button_select_sangvisFerri,local_y=self.__UIContainerButtonBottom.bottom) and linpg.controller.get_event("confirm"):
                 self.__charactersImgContainer.hidden = True
                 self.__sangvisFerrisImgContainer.hidden = False
             self.__button_select_character.display(screen,(0,self.__UIContainerButtonBottom.bottom))
             self.__button_select_sangvisFerri.display(screen,(0,self.__UIContainerButtonBottom.bottom))
-            if pygame.mouse.get_pressed()[0]:
+            if linpg.controller.get_event("confirm"):
                 if not self.__charactersImgContainer.hidden and self.__charactersImgContainer.current_hovered_item is not None:
                     self.object_to_put_down = {"type":"character","id":self.__charactersImgContainer.current_hovered_item}
                 elif not self.__sangvisFerrisImgContainer.hidden and self.__sangvisFerrisImgContainer.current_hovered_item is not None:
@@ -391,7 +391,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             ))
         #未保存离开时的警告
         self.__no_save_warning.draw(screen)
-        if pygame.mouse.get_pressed()[0] is True and self.__no_save_warning.button_hovered != "":
+        if linpg.controller.get_event("confirm") and self.__no_save_warning.button_hovered != "":
             #保存并离开
             if self.__no_save_warning.button_hovered == "save":
                 self.save_progress()

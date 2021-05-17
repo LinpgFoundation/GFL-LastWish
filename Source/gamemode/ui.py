@@ -4,19 +4,18 @@ import glob
 import time
 from typing import Union
 # 第三方
-#import pygame
 #import linpg
-from linpgdev import linpg, pygame
+from linpgdev import linpg
 from collections import deque
 
 # 显示回合切换的UI
 class RoundSwitch:
     def __init__(self, window_x:int, window_y:int, battleUiTxt:dict):
-        self.lineRedDown = linpg.load_img("Assets/image/UI/lineRed.png",(window_x,window_y/50))
-        self.lineRedUp = pygame.transform.rotate(self.lineRedDown, 180)
-        self.lineGreenDown = linpg.load_img("Assets/image/UI/lineGreen.png",(window_x,window_y/50))
-        self.lineGreenUp = pygame.transform.rotate(self.lineGreenDown, 180)
-        self.baseImg = linpg.load_img("Assets/image/UI/roundSwitchBase.png",(window_x,window_y/5))
+        self.lineRedDown = linpg.load_img(r"Assets/image/UI/lineRed.png",(window_x,window_y/50))
+        self.lineRedUp = linpg.rotate_img(self.lineRedDown, 180)
+        self.lineGreenDown = linpg.load_img(r"Assets/image/UI/lineGreen.png",(window_x,window_y/50))
+        self.lineGreenUp = linpg.rotate_img(self.lineGreenDown, 180)
+        self.baseImg = linpg.load_img(r"Assets/image/UI/roundSwitchBase.png",(window_x,window_y/5))
         self.baseImg.set_alpha(0)
         self.x = -window_x
         self.y = int((window_y - self.baseImg.get_height())/2)

@@ -9,7 +9,7 @@ class DialogSystem(linpg.DialogSystem):
         #检查global.yaml配置文件
         if not os.path.exists(os.path.join(self.folder_for_save_file,"global.yaml")):
             DataTmp = {"chapter_unlocked":1}
-            linpg.saveConfig(os.path.join(self.folder_for_save_file,"global.yaml"),DataTmp)
+            linpg.save_config(os.path.join(self.folder_for_save_file,"global.yaml"),DataTmp)
 
 #对话系统
 def dialog(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> dict:

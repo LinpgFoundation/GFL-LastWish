@@ -22,7 +22,7 @@ class SurvivalBattleSystem(BattleSystem):
         }
         """init"""
         #shutil.copyfile("Data/chapter_map_example.yaml","Save/map1.yaml")
-        mapFileData = linpg.loadConfig("Save/map1.yaml")
+        mapFileData = linpg.load_config("Save/map1.yaml")
         SnowEnvImg = ["TileSnow01","TileSnow01ToStone01","TileSnow01ToStone02","TileSnow02","TileSnow02ToStone01","TileSnow02ToStone02"]
         block_y = 50
         block_x = 50
@@ -34,16 +34,16 @@ class SurvivalBattleSystem(BattleSystem):
         self.pos_last = self.alliances["me"].get_pos()
     def _check_key_down(self, event:object) -> None:
         super()._check_key_down(event)
-        if event.key == pygame.K_w: self.__pressKeyToMoveMe["up"] = True
-        if event.key == pygame.K_s: self.__pressKeyToMoveMe["down"] = True
-        if event.key == pygame.K_a: self.__pressKeyToMoveMe["left"] = True
-        if event.key == pygame.K_d: self.__pressKeyToMoveMe["right"] = True
+        if event.unicode == "w": self.__pressKeyToMoveMe["up"] = True
+        if event.unicode == "s": self.__pressKeyToMoveMe["down"] = True
+        if event.unicode == "a": self.__pressKeyToMoveMe["left"] = True
+        if event.unicode == "d": self.__pressKeyToMoveMe["right"] = True
     def _check_key_up(self, event:object) -> None:
         super()._check_key_up(event)
-        if event.key == pygame.K_w: self.__pressKeyToMoveMe["up"] = False
-        if event.key == pygame.K_s: self.__pressKeyToMoveMe["down"] = False
-        if event.key == pygame.K_a: self.__pressKeyToMoveMe["left"] = False
-        if event.key == pygame.K_d: self.__pressKeyToMoveMe["right"] = False
+        if event.unicode == "w": self.__pressKeyToMoveMe["up"] = False
+        if event.unicode == "s": self.__pressKeyToMoveMe["down"] = False
+        if event.unicode == "a": self.__pressKeyToMoveMe["left"] = False
+        if event.unicode == "d": self.__pressKeyToMoveMe["right"] = False
     def _check_if_move_screen(self) -> None:
         super()._check_if_move_screen()
         ifDisplayMove = False
@@ -92,11 +92,11 @@ class SurvivalBattleSystem(BattleSystem):
     def draw(self, screen:linpg.ImageSurface) -> None:
         mouse_x,mouse_y = linpg.controller.get_mouse_pos()
         for event in linpg.controller.events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+            if event.type == linpg.KEY_DOWN:
+                if event.key == linpg.KEY_ESCAPE:
                     self.stop()
                 self._check_key_down(event)
-            elif event.type == pygame.KEYUP:
+            elif event.type == linpg.KEY_UP:
                 self._check_key_up(event)
         #其他移动的检查
         self._check_right_click_move(mouse_x,mouse_y)
@@ -108,5 +108,5 @@ class SurvivalBattleSystem(BattleSystem):
         self._display_decoration(screen)
         pos_x,pos_y = self.MAP.calPosInMap(self.alliances["me"].x,self.alliances["me"].y)
         pos_x += linpg.display.get_width()/20
-        pygame.draw.line(screen,linpg.get_color_rbga("red"),(pos_x,pos_y),(mouse_x,mouse_y),5)
+        #pygame.draw.line(screen,linpg.get_color_rbga("red"),(pos_x,pos_y),(mouse_x,mouse_y),5)
         linpg.display.flip()
