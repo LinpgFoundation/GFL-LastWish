@@ -56,10 +56,8 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 | Name / 名称 | Recommended Version / 建议版本 |
 | :---------: | :----------------------------: |
-|   pygame    |             2.0.1              |
 |   pyyaml    |              5.4               |
-|    pyav     |             8.0.2              |
-|    numpy    |              1.20              |
+| pypresence  |              4.2               |
 |    linpg    |               *                |
 
 ##### * You have to install the latest version of Linpg Engine!

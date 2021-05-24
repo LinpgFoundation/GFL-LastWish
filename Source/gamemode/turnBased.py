@@ -186,14 +186,14 @@ class TurnBasedBattleSystem(BattleSystem):
         #加载UI:
         #加载结束回合的图片
         self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.get_color_rbga("white"))
-        self.end_round_button = linpg.load_image("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
+        self.end_round_button = linpg.load_static_image("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
         #加载子弹图片
         #bullet_img = load_img("Assets/image/UI/bullet.png", get_block_width()/6, self.MAP.block_height/12)
         #加载显示获取到补给后的信息栏
         supply_board_width:int = int(self.window_x/3)
         supply_board_height:int = int(self.window_y/12)
         supply_board_x:int = int((self.window_x-supply_board_width)/2)
-        self.supply_board = linpg.load_dynamic_image(
+        self.supply_board = linpg.load_movable_image(
             "Assets/image/UI/score.png",
             (supply_board_x,-supply_board_height),
             (supply_board_x,0),
@@ -204,21 +204,39 @@ class TurnBasedBattleSystem(BattleSystem):
         self.supply_board.stayingTime = 0
         #用于表示范围的方框图片
         self.range_ui_images = {
-            "green" : linpg.StaticImage("Assets/image/UI/range/green.png",0,0),
-            "red" : linpg.StaticImage("Assets/image/UI/range/red.png",0,0),
-            "yellow": linpg.StaticImage("Assets/image/UI/range/yellow.png",0,0),
-            "blue": linpg.StaticImage("Assets/image/UI/range/blue.png",0,0),
-            "orange": linpg.StaticImage("Assets/image/UI/range/orange.png",0,0),
+            "green" : linpg.load_static_image(r"Assets/image/UI/range/green.png",(0,0)),
+            "red" : linpg.load_static_image(r"Assets/image/UI/range/red.png",(0,0)),
+            "yellow": linpg.load_static_image(r"Assets/image/UI/range/yellow.png",(0,0)),
+            "blue": linpg.load_static_image(r"Assets/image/UI/range/blue.png",(0,0)),
+            "orange": linpg.load_static_image(r"Assets/image/UI/range/orange.png",(0,0)),
         }
         for key in self.range_ui_images:
             self.range_ui_images[key].set_width_with_size_locked(self.MAP.block_width*0.8)
         #角色信息UI管理
         self.characterInfoBoardUI = CharacterInfoBoard(self.window_x,self.window_y)
         #加载对话框图片
-        self.dialoguebox_up = linpg.DialogBox("Assets/image/UI/dialoguebox.png",self.window_x,self.window_y/2-self.window_y*0.35,self.window_x*0.3,self.window_y*0.15,self.FONTSIZE)
+        self.dialoguebox_up = linpg.DialogBox(
+            r"Assets/image/UI/dialoguebox.png",
+            self.window_x,self.window_y/2-self.window_y*0.35,
+            self.window_x*0.3,self.window_y*0.15,
+            self.FONTSIZE
+            )
         self.dialoguebox_up.flip()
-        self.dialoguebox_down = linpg.DialogBox("Assets/image/UI/dialoguebox.png",-self.window_x*0.3,self.window_y/2+self.window_y*0.2,self.window_x*0.3,self.window_y*0.15,self.FONTSIZE)
-        #-----加载音效-----
+        self.dialoguebox_down = linpg.DialogBox(
+            r"Assets/image/UI/dialoguebox.png",
+            -self.window_x*0.3,self.window_y/2+self.window_y*0.2,
+            self.window_x*0.3,self.window_y*0.15,
+            self.FONTSIZE
+            )
+        black_curtain = linpg.new_surface((self.window_x,self.window_y*0.15)).convert()
+        black_curtain.fill(linpg.get_color_rbga("black"))
+        self.__up_black_curtain = linpg.load_movable_image(
+            black_curtain,(0,-black_curtain.get_height()),(0,0),(0,black_curtain.get_height()*0.05)
+        )
+        self.__down_black_curtain = linpg.load_movable_image(
+            black_curtain,(0,self.window_y),(0,self.window_y-black_curtain.get_height()),(0,black_curtain.get_height()*0.051)
+        )
+        """-----加载音效-----"""
         #行走的音效 -- 频道0
         self.footstep_sounds = linpg.SoundManagement(0)
         for walkingSoundPath in glob.glob(r'Assets/sound/snow/*.wav'):
@@ -321,7 +339,7 @@ class TurnBasedBattleSystem(BattleSystem):
         self.battleModeUiTxt = linpg.get_lang("Battle_UI")
         self.RoundSwitchUI = RoundSwitch(self.window_x,self.window_y,self.battleModeUiTxt)
         self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.get_color_rbga("white"))
-        self.end_round_button = linpg.load_image("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
+        self.end_round_button = linpg.load_static_image("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
         self.warnings_to_display = WarningSystem(int(screen.get_height()*0.03))
         self.dialog_during_battle = linpg.load_config(
             os.path.join(
@@ -417,8 +435,6 @@ class TurnBasedBattleSystem(BattleSystem):
             return damage_do_to_character
     #对话模块
     def __play_dialog(self, screen:linpg.ImageSurface) -> None:
-        #画出地图
-        self._display_map(screen)
         #角色动画
         for every_chara in self.griffinCharactersData:
             self.griffinCharactersData[every_chara].draw(screen,self.MAP)
@@ -429,6 +445,11 @@ class TurnBasedBattleSystem(BattleSystem):
         self._display_decoration(screen)
         #加载雪花
         self._display_weather(screen)
+        #营造电影视觉
+        self.__up_black_curtain.move_toward()
+        self.__up_black_curtain.draw(screen)
+        self.__down_black_curtain.move_toward()
+        self.__down_black_curtain.draw(screen)
         #如果战斗有对话
         if self.dialogKey is not None:
             #设定初始化
@@ -616,22 +637,21 @@ class TurnBasedBattleSystem(BattleSystem):
                 self.__is_battle_mode = True
     #战斗模块
     def __play_battle(self, screen:linpg.ImageSurface) -> None:
-        self.play_bgm()
         #获取鼠标坐标
         mouse_x,mouse_y = linpg.controller.get_mouse_pos()
         skill_range = None
         for event in linpg.controller.events:
-            if event.type == linpg.KEY_DOWN:
-                if event.key == linpg.KEY_ESCAPE and self.characterGetClick is None:
+            if event.type == linpg.KEY.DOWN:
+                if event.key == linpg.KEY.ESCAPE and self.characterGetClick is None:
                     self.pause_menu.hidden = False
-                if event.key == linpg.KEY_ESCAPE and self.__is_waiting is True:
+                if event.key == linpg.KEY.ESCAPE and self.__is_waiting is True:
                     self.__if_draw_range = True
                     self.characterGetClick = None
                     self.action_choice = None
                     skill_range = None
                     self.reset_areaDrawColorBlock()
                 self._check_key_down(event)
-            elif event.type == linpg.KEY_UP:
+            elif event.type == linpg.KEY.UP:
                 self._check_key_up(event)
             #鼠标点击
             elif event.type == linpg.MOUSE_BUTTON_DOWN:
@@ -640,24 +660,6 @@ class TurnBasedBattleSystem(BattleSystem):
                     self.zoomIntoBe += 10
                 elif event.button == 5 and self.zoomIntoBe > 50:
                     self.zoomIntoBe -= 10
-        #其他移动的检查
-        self._check_right_click_move(mouse_x,mouse_y)
-        self._check_jostick_events()
-
-        #根据self.zoomIntoBe调整self.zoomIn大小
-        if self.zoomIntoBe != self.zoomIn:
-            if self.zoomIntoBe < self.zoomIn:
-                self.zoomIn -= 5
-            elif self.zoomIntoBe > self.zoomIn:
-                self.zoomIn += 5
-            self.MAP.changePerBlockSize(self._standard_block_width*self.zoomIn/100,self._standard_block_height*self.zoomIn/100)
-            #根据block尺寸重新加载对应尺寸的UI
-            for key in self.range_ui_images:
-                self.range_ui_images[key].set_width_with_size_locked(self.MAP.block_width*0.8)
-            self.selectMenuUI.allButton = None
-
-        #画出地图
-        self._display_map(screen)
 
         #画出用彩色方块表示的范围
         for area in self.areaDrawColorBlock:
@@ -793,14 +795,14 @@ class TurnBasedBattleSystem(BattleSystem):
                 #移动画面以使得被点击的角色可以被更好的操作
                 tempX,tempY = self.MAP.calPosInMap(self.characterInControl.x,self.characterInControl.y)
                 if self.screen_to_move_x is None:
-                    if tempX < self.window_x*0.2 and self.MAP.getPos_x()<=0:
+                    if tempX < self.window_x*0.2 and self.MAP.get_local_x()<=0:
                         self.screen_to_move_x = self.window_x*0.2-tempX
-                    elif tempX > self.window_x*0.8 and self.MAP.getPos_x()>=self.MAP.column*self.MAP.block_width*-1:
+                    elif tempX > self.window_x*0.8 and self.MAP.get_local_x()>=self.MAP.column*self.MAP.block_width*-1:
                         self.screen_to_move_x = self.window_x*0.8-tempX
                 if self.screen_to_move_y is None:
-                    if tempY < self.window_y*0.2 and self.MAP.getPos_y()<=0:
+                    if tempY < self.window_y*0.2 and self.MAP.get_local_y()<=0:
                         self.screen_to_move_y = self.window_y*0.2-tempY
-                    elif tempY > self.window_y*0.8 and self.MAP.getPos_y()>=self.MAP.row*self.MAP.block_height*-1:
+                    elif tempY > self.window_y*0.8 and self.MAP.get_local_y()>=self.MAP.row*self.MAP.block_height*-1:
                         self.screen_to_move_y = self.window_y*0.8-tempY
             #显示攻击/移动/技能范围
             if not self.__if_draw_range and self.characterGetClick is not None:
@@ -1174,7 +1176,14 @@ class TurnBasedBattleSystem(BattleSystem):
             self.buttonGetHover = self.selectMenuUI.draw(screen,round(self.MAP.block_width/10),self.MAP.getBlockExactLocation(self.characterInControl.x,self.characterInControl.y),self.characterInControl.kind,self.friendsCanSave,self.thingsCanReact)
         #加载雪花
         self._display_weather(screen)
-        
+        #移除电影视觉
+        self.__up_black_curtain.move_back()
+        self.__up_black_curtain.draw(screen)
+        self.__down_black_curtain.move_back()
+        self.__down_black_curtain.draw(screen)
+        #其他移动的检查
+        self._check_right_click_move()
+        self._check_jostick_events()
         #检测回合是否结束
         self.__switch_round(screen)
         #检测玩家是否胜利或失败
@@ -1220,8 +1229,8 @@ class TurnBasedBattleSystem(BattleSystem):
                 self.resultInfo["total_time"] = time.localtime(time.time()-self.resultInfo["total_time"])
                 self.ResultBoardUI = ResultBoard(self.resultInfo,self.window_x/96)
             for event in linpg.controller.events:
-                if event.type == linpg.KEY_DOWN:
-                    if event.key == linpg.KEY_SPACE:
+                if event.type == linpg.KEY.DOWN:
+                    if event.key == linpg.KEY.SPACE:
                         self.__is_battle_mode = False
                         self.stop()
             self.__add_on_screen_object(self.ResultBoardUI)
@@ -1231,14 +1240,14 @@ class TurnBasedBattleSystem(BattleSystem):
                 self.resultInfo["total_time"] = time.localtime(time.time()-self.resultInfo["total_time"])
                 self.ResultBoardUI = ResultBoard(self.resultInfo,self.window_x/96,False)
             for event in linpg.controller.events:
-                if event.type == linpg.KEY_DOWN:
-                    if event.key == linpg.KEY_SPACE:
+                if event.type == linpg.KEY.DOWN:
+                    if event.key == linpg.KEY.SPACE:
                         linpg.unload_all_music()
                         chapter_info:dict = self.get_data_of_parent_game_system()
                         self.__init__()
                         self.new(screen,chapter_info["chapter_type"], chapter_info["chapter_id"], chapter_info["project_name"])
                         break
-                    elif event.key == linpg.KEY_BACKSPACE:
+                    elif event.key == linpg.KEY.BACKSPACE:
                         linpg.unload_all_music()
                         self.stop()
                         self.__is_battle_mode = False
@@ -1248,8 +1257,25 @@ class TurnBasedBattleSystem(BattleSystem):
     def draw(self, screen:linpg.ImageSurface) -> None:
         #环境声音-频道1
         self.environment_sound.play()
+        #调整并更新地图大小
+        if self.zoomIntoBe != self.zoomIn:
+            if self.zoomIntoBe < self.zoomIn:
+                self.zoomIn -= 10
+            elif self.zoomIntoBe > self.zoomIn:
+                self.zoomIn += 10
+            self.MAP.changePerBlockSize(self._standard_block_width*self.zoomIn/100,self._standard_block_height*self.zoomIn/100)
+            #根据block尺寸重新加载对应尺寸的UI
+            for key in self.range_ui_images:
+                self.range_ui_images[key].set_width_with_size_locked(self.MAP.block_width*0.8)
+            self.selectMenuUI.allButton = None
+        #画出地图
+        self._display_map(screen)
         # 游戏主循环
-        if self.__is_battle_mode:
+        if self.__is_battle_mode is True:
+            self.play_bgm()
+            #营造电影视觉
+            self.__up_black_curtain.move_toward()
+            self.__down_black_curtain.move_toward()
             self.__play_battle(screen)
         #在战斗状态
         else:
@@ -1272,11 +1298,12 @@ class TurnBasedBattleSystem(BattleSystem):
         self.__update_scene(screen)
         #展示暂停菜单
         if not self.pause_menu.hidden:
-            progress_saved_text = linpg.load_image(
+            progress_saved_text = linpg.load_static_image(
                 self.FONT.render(linpg.get_lang("Global","progress_has_been_saved"),linpg.get_antialias(),(255,255,255)),
                 (0,0)
                 )
             progress_saved_text.set_alpha(0)
+            progress_saved_text.set_center(screen.get_width()/2, screen.get_height()/2)
             while not self.pause_menu.hidden:
                 linpg.display.flip()
                 self.pause_menu.draw(screen)
@@ -1302,7 +1329,7 @@ class TurnBasedBattleSystem(BattleSystem):
                 #更新语言
                 if linpg.get_option_menu().need_update["language"] is True: self.updated_language(screen)
                 #显示进度已保存的文字
-                progress_saved_text.drawOnTheCenterOf(screen)
+                progress_saved_text.draw(screen)
                 progress_saved_text.fade_out(5)
             del progress_saved_text
             self.pause_menu.screenshot = None

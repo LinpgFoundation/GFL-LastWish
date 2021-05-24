@@ -359,11 +359,11 @@ class LoadingTitle:
     def __init__(self, window_x:int, window_y:int, numChapter_txt:str, chapterId:int, chapterTitle_txt:str, chapterDesc_txt:str):
         self.black_bg = linpg.get_single_color_surface("black")
         title_chapterNum = linpg.render_font(numChapter_txt.format(chapterId),"white",window_x/38)
-        self.title_chapterNum = linpg.load_image(title_chapterNum,((window_x-title_chapterNum.get_width())/2,window_y*0.37))
+        self.title_chapterNum = linpg.load_static_image(title_chapterNum,((window_x-title_chapterNum.get_width())/2,window_y*0.37))
         title_chapterName = linpg.render_font(chapterTitle_txt,"white",window_x/38)
-        self.title_chapterName = linpg.load_image(title_chapterName,((window_x-title_chapterName.get_width())/2,window_y*0.46))
+        self.title_chapterName = linpg.load_static_image(title_chapterName,((window_x-title_chapterName.get_width())/2,window_y*0.46))
         title_description = linpg.render_font(chapterDesc_txt,"white",window_x/76)
-        self.title_description = linpg.load_image(title_description,((window_x-title_description.get_width())/2,window_y*0.6))
+        self.title_description = linpg.load_static_image(title_description,((window_x-title_description.get_width())/2,window_y*0.6))
     def draw(self, screen:linpg.ImageSurface, alpha:int=255) -> None:
         self.title_chapterNum.set_alpha(alpha)
         self.title_chapterName.set_alpha(alpha)

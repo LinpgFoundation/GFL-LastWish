@@ -14,12 +14,16 @@ class DialogSystem(linpg.DialogSystem):
 #对话系统
 def dialog(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> dict:
     #加载闸门动画的图片素材
-    LoadingImgAbove:linpg.ImageSurface = linpg.load_img("Assets/image/UI/LoadingImgAbove.png",(screen.get_width()+8,screen.get_height()/1.7))
-    LoadingImgBelow:linpg.ImageSurface = linpg.load_img("Assets/image/UI/LoadingImgBelow.png",(screen.get_width()+8,screen.get_height()/2.05))
+    LoadingImgAbove:linpg.ImageSurface = linpg.smoothly_resize_img(
+        linpg.cope_bounding(linpg.quickly_load_img(r"Assets/image/UI/LoadingImgAbove.png")), (screen.get_width()+4, screen.get_height()/1.7)
+        )
+    LoadingImgBelow:linpg.ImageSurface = linpg.smoothly_resize_img(
+        linpg.cope_bounding(linpg.quickly_load_img(r"Assets/image/UI/LoadingImgBelow.png")), (screen.get_width()+4, screen.get_height()/2.05)
+    )
     #开始加载-闸门关闭的效果
     for i in range(101):
-        screen.blit(LoadingImgAbove,(-4,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()))
-        screen.blit(LoadingImgBelow,(-4,screen.get_height()-LoadingImgBelow.get_height()/100*i))
+        screen.blit(LoadingImgAbove,(-2,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()))
+        screen.blit(LoadingImgBelow,(-2,screen.get_height()-LoadingImgBelow.get_height()/100*i))
         linpg.display.flip()
     #卸载音乐
     linpg.unload_all_music()
@@ -32,8 +36,8 @@ def dialog(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, 
     #加载完成-闸门开启的效果
     for i in range(100,-1,-1):
         DIALOG.display_background_image(screen)
-        screen.blit(LoadingImgAbove,(-4,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()))
-        screen.blit(LoadingImgBelow,(-4,screen.get_height()-LoadingImgBelow.get_height()/100*i))
+        screen.blit(LoadingImgAbove,(-2,LoadingImgAbove.get_height()/100*i-LoadingImgAbove.get_height()))
+        screen.blit(LoadingImgBelow,(-2,screen.get_height()-LoadingImgBelow.get_height()/100*i))
         linpg.display.flip()
     #DIALOG.auto_save = True
     #主循环

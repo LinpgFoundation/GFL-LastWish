@@ -18,7 +18,7 @@ class SurvivalBattleSystem(BattleSystem):
             "orange": linpg.load_img("Assets/image/UI/range/orange.png"),
             "eyeImg": linpg.ProgressBarSurface("Assets/image/UI/eye_red.png","Assets/image/UI/eye_orange.png",0,0,0,0),
             "vigilanceImg": linpg.ProgressBarSurface("Assets/image/UI/vigilance_red.png","Assets/image/UI/vigilance_orange.png",0,0,0,0,"height"),
-            "supplyBoard":linpg.load_image("Assets/image/UI/score.png",((self.window_x-self.window_x/3)/2,-self.window_y/12),self.window_x/3,self.window_y/12),
+            "supplyBoard":linpg.load_dynamic_image("Assets/image/UI/score.png",((self.window_x-self.window_x/3)/2,-self.window_y/12),self.window_x/3,self.window_y/12),
         }
         """init"""
         #shutil.copyfile("Data/chapter_map_example.yaml","Save/map1.yaml")
@@ -77,29 +77,28 @@ class SurvivalBattleSystem(BattleSystem):
     #根据本地坐标移动屏幕
     def _move_screen(self) -> None:
         tempX,tempY = self.MAP.calPosInMap(self.alliances["me"].x,self.alliances["me"].y)
-        if tempX < self.window_x*0.3 and self.MAP.getPos_x()<=0:
+        if tempX < self.window_x*0.3 and self.MAP.get_local_x()<=0:
             self.screen_to_move_x = self.window_x*0.3-tempX
-        elif tempX > self.window_x*0.7 and self.MAP.getPos_x()>=self.MAP.column*self.MAP.block_width*-1:
+        elif tempX > self.window_x*0.7 and self.MAP.get_local_x()>=self.MAP.column*self.MAP.block_width*-1:
             self.screen_to_move_x = self.window_x*0.7-tempX
-        if tempY < self.window_y*0.3 and self.MAP.getPos_y()<=0:
+        if tempY < self.window_y*0.3 and self.MAP.get_local_y()<=0:
             self.screen_to_move_y = self.window_y*0.3-tempY
-        elif tempY > self.window_y*0.7 and self.MAP.getPos_y()>=self.MAP.row*self.MAP.block_height*-1:
+        elif tempY > self.window_y*0.7 and self.MAP.get_local_y()>=self.MAP.row*self.MAP.block_height*-1:
             self.screen_to_move_y = self.window_y*0.7-tempY
         super()._move_screen()
     #展示场景装饰物
     def _display_decoration(self, screen:linpg.ImageSurface) -> None: self.MAP.display_decoration(screen,self.alliances,{})
     #把所有内容画到屏幕上
     def draw(self, screen:linpg.ImageSurface) -> None:
-        mouse_x,mouse_y = linpg.controller.get_mouse_pos()
         for event in linpg.controller.events:
-            if event.type == linpg.KEY_DOWN:
-                if event.key == linpg.KEY_ESCAPE:
+            if event.type == linpg.KEY.DOWN:
+                if event.key == linpg.KEY.ESCAPE:
                     self.stop()
                 self._check_key_down(event)
-            elif event.type == linpg.KEY_UP:
+            elif event.type == linpg.KEY.UP:
                 self._check_key_up(event)
         #其他移动的检查
-        self._check_right_click_move(mouse_x,mouse_y)
+        self._check_right_click_move()
         #画出地图
         self._display_map(screen)
         self.alliances["me"].draw(screen,self.MAP)
