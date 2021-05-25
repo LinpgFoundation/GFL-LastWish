@@ -78,8 +78,8 @@ class TurnBasedBattleSystem(BattleSystem):
             self._initialize(DataTmp["chapter_type"], DataTmp["chapter_id"], DataTmp["project_name"])
             self._initial_characters_loader(DataTmp["griffin"],DataTmp["sangvisFerri"])
             self.MAP = DataTmp["MAP"]
-            self.dialogKey = DataTmp["dialogKey"]
-            self.dialogData = DataTmp["dialogData"]
+            self.dialog_key = DataTmp["dialog_key"]
+            self.dialog_parameters = DataTmp["dialog_parameters"]
             self.resultInfo = DataTmp["resultInfo"]
         else:
             raise Exception('Error: Cannot load the data from the "save.yaml" file because the file type does not match')
@@ -156,6 +156,8 @@ class TurnBasedBattleSystem(BattleSystem):
             self.environment_sound.add(os.path.join("Assets/sound/environment","{}.ogg".format(DataTmp["weather"])))
             self.weatherController = linpg.WeatherSystem(DataTmp["weather"],self.window_x,self.window_y)
         #加载对话信息
+        self._DIALOG.new(self._chapter_type, self._chapter_id, "dialog_during_battle", self._project_name)
+        self._DIALOG.stop()
         self.dialogInfo = DataTmp["dialogs"]
         if not self.__load_from_save:
             self._create_map(DataTmp)
@@ -163,10 +165,10 @@ class TurnBasedBattleSystem(BattleSystem):
             self._initial_characters_loader(DataTmp["character"],DataTmp["sangvisFerri"])
             #查看是否有战斗开始前的对话
             if "initial" not in self.dialogInfo or self.dialogInfo["initial"] is None:
-                self.dialogKey = None
+                self.dialog_key = None
             else:
-                self.dialogKey = self.dialogInfo["initial"]
-            self.dialogData = None
+                self.dialog_key = self.dialogInfo["initial"]
+            self.dialog_parameters = None
         #加载角色信息
         self._start_characters_loader()
         while self._is_characters_loader_alive():
@@ -214,20 +216,7 @@ class TurnBasedBattleSystem(BattleSystem):
             self.range_ui_images[key].set_width_with_size_locked(self.MAP.block_width*0.8)
         #角色信息UI管理
         self.characterInfoBoardUI = CharacterInfoBoard(self.window_x,self.window_y)
-        #加载对话框图片
-        self.dialoguebox_up = linpg.DialogBox(
-            r"Assets/image/UI/dialoguebox.png",
-            self.window_x,self.window_y/2-self.window_y*0.35,
-            self.window_x*0.3,self.window_y*0.15,
-            self.FONTSIZE
-            )
-        self.dialoguebox_up.flip()
-        self.dialoguebox_down = linpg.DialogBox(
-            r"Assets/image/UI/dialoguebox.png",
-            -self.window_x*0.3,self.window_y/2+self.window_y*0.2,
-            self.window_x*0.3,self.window_y*0.15,
-            self.FONTSIZE
-            )
+        #加载用于渲染电影效果的上下黑色帘幕
         black_curtain = linpg.new_surface((self.window_x,self.window_y*0.15)).convert()
         black_curtain.fill(linpg.get_color_rbga("black"))
         self.__up_black_curtain = linpg.load_movable_image(
@@ -268,8 +257,8 @@ class TurnBasedBattleSystem(BattleSystem):
             "griffin": self.griffinCharactersData,
             "sangvisFerri": self.sangvisFerrisData,
             "MAP": self.MAP,
-            "dialogKey": self.dialogKey,
-            "dialogData": self.dialogData,
+            "dialog_key": self.dialog_key,
+            "dialog_parameters": self.dialog_parameters,
             "resultInfo": self.resultInfo,
             "timeStamp": time.strftime(":%S", time.localtime())
             }
@@ -451,18 +440,18 @@ class TurnBasedBattleSystem(BattleSystem):
         self.__down_black_curtain.move_toward()
         self.__down_black_curtain.draw(screen)
         #如果战斗有对话
-        if self.dialogKey is not None:
+        if self.dialog_key is not None:
             #设定初始化
-            if self.dialogData is None:
-                self.dialogData = {
+            if self.dialog_parameters is None:
+                self.dialog_parameters = {
                     "dialogId": 0,
                     "charactersPaths": None,
                     "secondsAlreadyIdle":0,
                     "secondsToIdle":None
                 }
             #对话系统总循环
-            if self.dialogData["dialogId"] < len(self.dialog_during_battle[self.dialogKey]):
-                currentDialog = self.dialog_during_battle[self.dialogKey][self.dialogData["dialogId"]]
+            if self.dialog_parameters["dialogId"] < len(self.dialog_during_battle[self.dialog_key]):
+                currentDialog = self.dialog_during_battle[self.dialog_key][self.dialog_parameters["dialogId"]]
                 #如果操作是移动
                 if "move" in currentDialog and currentDialog["move"] is not None:
                     #为所有角色设置路径
@@ -504,7 +493,7 @@ class TurnBasedBattleSystem(BattleSystem):
                     if allGetToTargetPos:
                         #脚步停止
                         self.footstep_sounds.stop()
-                        self.dialogData["dialogId"] += 1
+                        self.dialog_parameters["dialogId"] += 1
                         self.__dialog_is_route_generated = False
                 #改变方向
                 elif "direction" in currentDialog and currentDialog["direction"] is not None:
@@ -515,7 +504,7 @@ class TurnBasedBattleSystem(BattleSystem):
                             self.sangvisFerrisData[key].set_flip(value)
                         else:
                             raise Exception('Error: Cannot find character {}!'.format(key))
-                    self.dialogData["dialogId"] += 1
+                    self.dialog_parameters["dialogId"] += 1
                 #改变动作（一次性）
                 elif "action" in currentDialog and currentDialog["action"] is not None:
                     for key,action in currentDialog["action"].items():
@@ -523,7 +512,7 @@ class TurnBasedBattleSystem(BattleSystem):
                             self.griffinCharactersData[key].set_action(action,False)
                         elif key in self.sangvisFerrisData:
                             self.sangvisFerrisData[key].set_action(action,False)
-                    self.dialogData["dialogId"] += 1 
+                    self.dialog_parameters["dialogId"] += 1 
                 #改变动作（长期）
                 elif "actionLoop" in currentDialog and currentDialog["actionLoop"] is not None:
                     for key,action in currentDialog["actionLoop"].items():
@@ -531,46 +520,30 @@ class TurnBasedBattleSystem(BattleSystem):
                             self.griffinCharactersData[key].set_action(action)
                         elif key in self.sangvisFerrisData:
                             self.sangvisFerrisData[key].set_action(action)
-                    self.dialogData["dialogId"] += 1
+                    self.dialog_parameters["dialogId"] += 1
                 #开始对话
-                elif "dialoguebox_up" in currentDialog or "dialoguebox_down" in currentDialog:
-                    #上方对话框
-                    if currentDialog["dialoguebox_up"] is not None:
-                        #对话框的移动
-                        if self.dialoguebox_up.x > self.window_x/2+self.dialoguebox_up.get_width()*0.4:
-                            self.dialoguebox_up.x -= self.dialoguebox_up.get_width()*0.134
-                        elif not self.dialoguebox_up.updated:
-                            self.dialoguebox_up.update(
-                                currentDialog["dialoguebox_up"]["content"],
-                                currentDialog["dialoguebox_up"]["speaker"],
-                                currentDialog["dialoguebox_up"]["speaker_icon"]
-                            )
-                        #对话框图片
-                        self.dialoguebox_up.draw(screen,self.characterInfoBoardUI)
-                    #下方对话框
-                    if currentDialog["dialoguebox_down"] is not None:
-                        #对话框的移动
-                        if self.dialoguebox_down.x < self.window_x/2-self.dialoguebox_down.get_width()*1.4:
-                            self.dialoguebox_down.x += self.dialoguebox_down.get_width()*0.134
-                        elif not self.dialoguebox_down.updated:
-                            self.dialoguebox_down.update(
-                                currentDialog["dialoguebox_down"]["content"],
-                                currentDialog["dialoguebox_down"]["speaker"],
-                                currentDialog["dialoguebox_down"]["speaker_icon"]
-                            )
-                        #对话框图片
-                        self.dialoguebox_down.draw(screen,self.characterInfoBoardUI)
+                elif "dialog" in currentDialog:
+                    # 如果当前段落的对话数据还没被更新
+                    if not self._is_dialog_updated:
+                        self._DIALOG.continue_scene(currentDialog["dialog"])
+                        self._is_dialog_updated = True
+                    # 如果对话还在播放
+                    if self._DIALOG.is_playing():
+                        self._DIALOG.draw(screen)
+                    else:
+                        self.dialog_parameters["dialogId"] += 1
+                        self._is_dialog_updated = False
                 #闲置一定时间（秒）
                 elif "idle" in currentDialog and currentDialog["idle"] is not None:
-                    if self.dialogData["secondsToIdle"] is None:
-                        self.dialogData["secondsToIdle"] = currentDialog["idle"]*linpg.display.fps
+                    if self.dialog_parameters["secondsToIdle"] is None:
+                        self.dialog_parameters["secondsToIdle"] = currentDialog["idle"]*linpg.display.fps
                     else:
-                        if self.dialogData["secondsAlreadyIdle"] < self.dialogData["secondsToIdle"]:
-                            self.dialogData["secondsAlreadyIdle"] += 1
+                        if self.dialog_parameters["secondsAlreadyIdle"] < self.dialog_parameters["secondsToIdle"]:
+                            self.dialog_parameters["secondsAlreadyIdle"] += 1
                         else:
-                            self.dialogData["dialogId"] += 1
-                            self.dialogData["secondsAlreadyIdle"] = 0
-                            self.dialogData["secondsToIdle"] = None
+                            self.dialog_parameters["dialogId"] += 1
+                            self.dialog_parameters["secondsAlreadyIdle"] = 0
+                            self.dialog_parameters["secondsToIdle"] = None
                 #调整窗口位置
                 elif "changePos" in currentDialog and currentDialog["changePos"] is not None:
                     if self.screen_to_move_x is None or self.screen_to_move_y is None:
@@ -580,53 +553,17 @@ class TurnBasedBattleSystem(BattleSystem):
                     if self.screen_to_move_x == 0 and self.screen_to_move_y == 0:
                         self.screen_to_move_x = None
                         self.screen_to_move_y = None
-                        self.dialogData["dialogId"] += 1
+                        self.dialog_parameters["dialogId"] += 1
                 else:
-                    raise Exception("Error: Dialog Data on '{0}' with id '{1}' cannot pass through any statement!".format(self.dialogKey,self.dialogData["dialogId"]))
+                    raise Exception("Error: Dialog Data on '{0}' with id '{1}' cannot pass through any statement!".format(self.dialog_key,self.dialog_parameters["dialogId"]))
                 #玩家输入按键判定
                 if linpg.controller.get_event("back"): self.pause_menu.hidden = False
-                if linpg.controller.get_event("confirm"):
-                    goToNextSlide = False
-                    if "dialoguebox_up" in currentDialog and self.dialoguebox_up.updated:
-                        if not self.dialoguebox_up.is_all_played():
-                            self.dialoguebox_up.play_all()
-                        else:
-                            goToNextSlide = True
-                    if "dialoguebox_down" in currentDialog and self.dialoguebox_down.updated:
-                        if not self.dialoguebox_down.is_all_played():
-                            self.dialoguebox_down.play_all()
-                        else:
-                            goToNextSlide = True
-                    if goToNextSlide:
-                        self.dialogData["dialogId"] += 1
-                        if self.dialogData["dialogId"] < len(self.dialog_during_battle[self.dialogKey]):
-                            currentDialog = self.dialog_during_battle[self.dialogKey][self.dialogData["dialogId"]]
-                            lastDialog = self.dialog_during_battle[self.dialogKey][self.dialogData["dialogId"]-1] if self.dialogData["dialogId"] > 0 else {}
-                            if "dialoguebox_up" in currentDialog:
-                                #检测上方对话框
-                                if currentDialog["dialoguebox_up"] is None or "dialoguebox_up" not in lastDialog or lastDialog["dialoguebox_up"] is None or currentDialog["dialoguebox_up"]["speaker"] != lastDialog["dialoguebox_up"]["speaker"]:
-                                    self.dialoguebox_up.reset()
-                                elif currentDialog["dialoguebox_up"]["content"] != lastDialog["dialoguebox_up"]["content"]:
-                                    self.dialoguebox_up.updated = False
-                            else:
-                                self.dialoguebox_up.reset()
-                            if "dialoguebox_down" in currentDialog:
-                                #检测下方对话框    
-                                if currentDialog["dialoguebox_down"] is None or "dialoguebox_down" not in lastDialog or lastDialog["dialoguebox_down"] is None or currentDialog["dialoguebox_down"]["speaker"] != lastDialog["dialoguebox_down"]["speaker"]:
-                                    self.dialoguebox_down.reset()
-                                elif currentDialog["dialoguebox_down"]["content"] != lastDialog["dialoguebox_down"]["content"]:
-                                    self.dialoguebox_down.updated = False
-                            else:
-                                self.dialoguebox_down.reset()
-                        else:
-                            self.dialoguebox_up.reset()
-                            self.dialoguebox_down.reset()
             else:
-                self.dialogData = None
-                self.dialogKey = None
+                self.dialog_parameters = None
+                self.dialog_key = None
                 self.__is_battle_mode = True
         #如果战斗前无·对话
-        elif self.dialogKey is None:
+        elif self.dialog_key is None:
             #角色UI
             for every_chara in self.griffinCharactersData:
                 self.griffinCharactersData[every_chara].drawUI(screen,self.MAP)
@@ -993,7 +930,7 @@ class TurnBasedBattleSystem(BattleSystem):
                             if "whitelist" not in dialog_to_check or dialog_to_check["whitelist"] is None \
                                 or self.characterGetClick == dialog_to_check["whitelist"] \
                                     or self.characterGetClick in dialog_to_check["whitelist"]:
-                                self.dialogKey = dialog_to_check["dialog_key"]
+                                self.dialog_key = dialog_to_check["dialog_key"]
                                 self.__is_battle_mode = False
                                 #如果对话不重复，则删除（默认不重复）
                                 if "repeat" not in dialog_to_check or not dialog_to_check["repeat"]: del dialog_to_check
