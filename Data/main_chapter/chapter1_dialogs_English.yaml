@@ -6,114 +6,6 @@ battle_info:
 - 'Location: approximately 50 km east of the temporary base'
 description: Above the snowy plains, the bitter cold wind whipped my cheeks. But at
   least, you are with me.
-dialog_during_battle:
-  initial_dialog:
-  - changePos:
-      x: 0
-      y: 0
-  - move:
-      gsh-18:
-        x: 8
-        y: 4
-      pp1901:
-        x: 8
-        y: 3
-  - dialoguebox_down:
-      content:
-      - At last, we're free of SangvisFerri's
-      - pursuers. Did anyone get hurt?
-      speaker: sv-98
-      speaker_icon: sv-98
-    dialoguebox_up: null
-  - dialoguebox_down:
-      content:
-      - At last, we're free of SangvisFerri's
-      - pursuers. Did anyone get hurt?
-      speaker: sv-98
-      speaker_icon: sv-98
-    dialoguebox_up:
-      content:
-      - Fine
-      speaker: Everyone
-      speaker_icon: null
-  - direction:
-      asval: true
-  - idle: 1
-  - direction:
-      asval: false
-  - idle: 1
-  - dialoguebox_down:
-      content:
-      - Sv-98, we have signs of SangvisFerri
-      - activity ahead.
-      speaker: asval
-      speaker_icon: asval
-    dialoguebox_up: null
-  - changePos:
-      x: 30
-      y: 30
-  - idle: 1
-  - changePos:
-      x: 0
-      y: 0
-  - dialoguebox_down:
-      content:
-      - Oh no! I'm out of ammo...
-      speaker: sv-98
-      speaker_icon: sv-98
-    dialoguebox_up: null
-  - dialoguebox_down:
-      content:
-      - The SangvisFerri in the front...
-      - Seems to be guarding something.
-      speaker: pp1901
-      speaker_icon: pp1901
-    dialoguebox_up: null
-  - move:
-      sv-98:
-        x: 5
-        y: 12
-  - dialoguebox_down:
-      content:
-      - From a distance, it looks like a supply
-      - crate.
-      speaker: gsh-18
-      speaker_icon: gsh-18
-    dialoguebox_up: null
-  - dialoguebox_down:
-      content:
-      - Sv-98, go for it. We'll cover you.
-      speaker: asval
-      speaker_icon: asval
-    dialoguebox_up: null
-  - dialoguebox_down:
-      content:
-      - It seems like I have no choice...
-      - Girls, load your guns and prepare to
-      - fight!
-      speaker: sv-98
-      speaker_icon: sv-98
-    dialoguebox_up: null
-  - dialoguebox_down:
-      content:
-      - sv-98 has no bullets at this moment
-      - and cannot attack
-      speaker: Tip
-      speaker_icon: null
-    dialoguebox_up: null
-  tutorial1:
-  - dialoguebox_down:
-      content:
-      - Guys, I got the supplies!
-      speaker: sv-98
-      speaker_icon: sv-98
-    dialoguebox_up: null
-  - dialoguebox_down:
-      content:
-      - Please note the ammunition change.
-      speaker: Tip
-      speaker_icon: null
-    dialoguebox_up: null
 dialogs:
   dialog_after_battle:
     head:
@@ -278,7 +170,6 @@ dialogs:
     16:
       content:
       - Asval, how is everything going so far?
-      narrator: Sv-98
     17:
       content:
       - The commander has already sent a helicopter to pick us up.
@@ -289,7 +180,6 @@ dialogs:
       - Let's hurry up! As long as we can destroy all SangvisFerri's forces in the
         area before
       - the helicopters arrive, we'll be able to evacuate safely.
-      narrator: Sv-98
     19:
       content:
       - Great!
@@ -297,5 +187,45 @@ dialogs:
     20:
       content:
       - Keep your voice down! It's not like SangvisFerri didn't have ears.
-      narrator: Sv-98
+  dialog_during_battle:
+    head:
+      content:
+      - At last, we're free of SangvisFerri's
+      - pursuers. Did anyone get hurt?
+    initial_dialog_2:
+      content:
+      - Fine
+      narrator: Everyone
+    initial_dialog_3:
+      content:
+      - Sv-98, we have signs of SangvisFerri activity ahead.
+    initial_dialog_4:
+      content:
+      - Oh no! I'm out of ammo...
+    initial_dialog_5:
+      content:
+      - The SangvisFerri in the front...
+      - Seems to be guarding something.
+    initial_dialog_6:
+      content:
+      - From a distance, it looks like a supply crate.
+    initial_dialog_7:
+      content:
+      - Sv-98, go for it. We'll cover you.
+    initial_dialog_8:
+      content:
+      - It seems like I have no choice...
+      - Girls, get ready, it is our show time!
+    initial_dialog_9:
+      content:
+      - sv-98 has no bullets at this moment
+      - and cannot attack
+      narrator: Tip
+    tutorial1:
+      content:
+      - Guys, I got the supplies!
+    tutorial2:
+      content:
+      - Please remember to reload.
+      narrator: Tip
 title: A Wish Likes Snow

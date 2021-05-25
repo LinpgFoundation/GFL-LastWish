@@ -5,36 +5,6 @@ battle_info:
 - 能见度：0.78公里
 - 地点：临时据点以东约50公里
 description: 茫茫雪原之上，刺骨的寒风拂过我的脸颊。但至少，还有你们的陪伴
-dialog_during_battle:
-  initial_dialog:
-  - changePos:
-      x: 0
-      y: 0
-  - move:
-      gsh-18:
-        x: 8
-        y: 4
-      pp1901:
-        x: 8
-        y: 3
-  - dialog: head
-  - direction:
-      asval: true
-  - idle: 1
-  - direction:
-      asval: false
-  - idle: 1
-  - dialog: initial_dialog_3
-  - changePos:
-      x: 30
-      y: 30
-  - idle: 1
-  - changePos:
-      x: 0
-      y: 0
-  - dialog: initial_dialog_4
-  tutorial1:
-  - dialog: tutorial1
 dialogs:
   dialog_after_battle:
     head:
@@ -509,7 +479,8 @@ dialogs:
       - 没事
       last_dialog_id: head
       narrator: 众人
-      next_dialog_id: null
+      next_dialog_id:
+        type: break
     initial_dialog_3:
       background_img: <transparent>
       background_music: null
@@ -519,7 +490,8 @@ dialogs:
       - sv-98，前方发现有铁血活动的痕迹
       last_dialog_id: null
       narrator: asval
-      next_dialog_id: null
+      next_dialog_id:
+        type: break
     initial_dialog_4:
       background_img: <transparent>
       background_music: null
@@ -541,7 +513,9 @@ dialogs:
       - 前方的铁血...好像在守着什么
       last_dialog_id: initial_dialog_4
       narrator: pp1901
-      next_dialog_id: null
+      next_dialog_id:
+        target: initial_dialog_6
+        type: default
     initial_dialog_6:
       background_img: <transparent>
       background_music: null
@@ -587,7 +561,8 @@ dialogs:
       - 目前sv-98没有子弹，无法攻击
       last_dialog_id: initial_dialog_8
       narrator: 提示
-      next_dialog_id: null
+      next_dialog_id:
+        type: break
     tutorial1:
       background_img: <transparent>
       background_music: null
@@ -608,5 +583,6 @@ dialogs:
       - 请注意换弹
       last_dialog_id: tutorial1
       narrator: 提示
-      next_dialog_id: null
+      next_dialog_id:
+        type: break
 title: 白色的希望

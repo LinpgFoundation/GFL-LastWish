@@ -124,7 +124,6 @@ class TurnBasedBattleSystem(BattleSystem):
             self._chapter_id,DataTmp["title"],DataTmp["description"]
         )
         self.battleMode_info = DataTmp["battle_info"]
-        self.dialog_during_battle = DataTmp["dialog_during_battle"]
         #正在加载的gif动态图标
         nowLoadingIcon = linpg.load_gif(
             "Assets/image/UI/sv98_walking.gif",
@@ -158,16 +157,17 @@ class TurnBasedBattleSystem(BattleSystem):
         #加载对话信息
         self._DIALOG.new(self._chapter_type, self._chapter_id, "dialog_during_battle", self._project_name)
         self._DIALOG.stop()
-        self.dialogInfo = DataTmp["dialogs"]
+        self._dialog_dictionary = DataTmp["dialogs"]["dictionary"]
+        self._dialog_data = DataTmp["dialogs"]["data"]
         if not self.__load_from_save:
             self._create_map(DataTmp)
             #加载对应角色所需的图片
             self._initial_characters_loader(DataTmp["character"],DataTmp["sangvisFerri"])
             #查看是否有战斗开始前的对话
-            if "initial" not in self.dialogInfo or self.dialogInfo["initial"] is None:
+            if "initial" not in self._dialog_dictionary or self._dialog_dictionary["initial"] is None:
                 self.dialog_key = None
             else:
-                self.dialog_key = self.dialogInfo["initial"]
+                self.dialog_key = self._dialog_dictionary["initial"]
             self.dialog_parameters = None
         #加载角色信息
         self._start_characters_loader()
@@ -330,19 +330,7 @@ class TurnBasedBattleSystem(BattleSystem):
         self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.get_color_rbga("white"))
         self.end_round_button = linpg.load_static_image("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
         self.warnings_to_display = WarningSystem(int(screen.get_height()*0.03))
-        self.dialog_during_battle = linpg.load_config(
-            os.path.join(
-                "Data", self._chapter_type,
-                "chapter{0}_dialogs_{1}.yaml".format(self._chapter_id,linpg.get_setting('Language'))
-                ) if self._project_name is None else os.path.join(
-                    "Data", self._chapter_type, self._project_name,
-                    "chapter{0}_dialogs_{1}.yaml".format(self._chapter_id,linpg.get_setting('Language'))
-                    ),
-            "dialog_during_battle"
-        )
-        if not self.__is_battle_mode:
-            self.dialoguebox_up.reset()
-            self.dialoguebox_down.reset()
+        self._DIALOG.updated_language(screen)
     #警告某个角色周围的敌人
     def __alert_enemy_around(self, name:str, value:int=10) -> None:
         enemies_need_check:list = []
@@ -450,8 +438,8 @@ class TurnBasedBattleSystem(BattleSystem):
                     "secondsToIdle":None
                 }
             #对话系统总循环
-            if self.dialog_parameters["dialogId"] < len(self.dialog_during_battle[self.dialog_key]):
-                currentDialog = self.dialog_during_battle[self.dialog_key][self.dialog_parameters["dialogId"]]
+            if self.dialog_parameters["dialogId"] < len(self._dialog_data[self.dialog_key]):
+                currentDialog = self._dialog_data[self.dialog_key][self.dialog_parameters["dialogId"]]
                 #如果操作是移动
                 if "move" in currentDialog and currentDialog["move"] is not None:
                     #为所有角色设置路径
@@ -925,8 +913,8 @@ class TurnBasedBattleSystem(BattleSystem):
                                 self.MAP.remove_decoration(decoration)
                         #检测当前所在点是否应该触发对话
                         name_from_by_pos = str(self.characterInControl.x)+"-"+str(self.characterInControl.y)
-                        if "move" in self.dialogInfo and name_from_by_pos in self.dialogInfo["move"]:
-                            dialog_to_check = self.dialogInfo["move"][name_from_by_pos]
+                        if "move" in self._dialog_dictionary and name_from_by_pos in self._dialog_dictionary["move"]:
+                            dialog_to_check = self._dialog_dictionary["move"][name_from_by_pos]
                             if "whitelist" not in dialog_to_check or dialog_to_check["whitelist"] is None \
                                 or self.characterGetClick == dialog_to_check["whitelist"] \
                                     or self.characterGetClick in dialog_to_check["whitelist"]:
