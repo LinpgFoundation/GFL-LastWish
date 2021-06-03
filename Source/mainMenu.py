@@ -1,5 +1,5 @@
 # cython: language_level=3
-from .scene import *
+from .component import *
 import shutil
 
 #主菜单系统
@@ -11,8 +11,6 @@ class MainMenu(linpg.AbstractSystem):
         window_x,window_y = screen.get_size()
         #载入页面 - 渐入
         dispaly_loading_screen(screen,0,250,int(2*linpg.display.sfpsp))
-        #修改控制台的位置
-        linpg.console.set_pos(window_x*0.1,window_y*0.8)
         #检测继续按钮是否可用的参数
         self.continueButtonIsOn:bool = False
         #主菜单文字
@@ -54,7 +52,7 @@ class MainMenu(linpg.AbstractSystem):
         for path in glob.glob(r"Data/workshop/*"):
             try:
                 info_data = linpg.load_config(os.path.join(path,"info.yaml"))
-            except:
+            except BaseException:
                 info_data = linpg.load_config(r"Data/info_example.yaml")
                 info_data["default_lang"] = linpg.get_setting("Language")
                 linpg.save_config(os.path.join(path,"info.yaml"),info_data)
@@ -331,7 +329,7 @@ class MainMenu(linpg.AbstractSystem):
         if linpg.get_option_menu().need_update["language"] is True or self.language_need_update() is True:
             self.updated_language(screen)
         #展示控制台
-        linpg.console.draw(screen)
+        console.draw(screen)
         #判断按键
         if linpg.controller.get_event("confirm") is True and linpg.get_option_menu().hidden is True:
             self.click_button_sound.play()

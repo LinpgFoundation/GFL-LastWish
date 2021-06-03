@@ -1,6 +1,7 @@
+#导入核心组件
 try:
     from Source_pyd.mainMenu import MainMenu, linpg
-except:
+except BaseException:
     print("Cannot import from Source_pyd")
     from Source.mainMenu import MainMenu, linpg
 

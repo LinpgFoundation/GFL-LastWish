@@ -16,7 +16,7 @@ else:
         RPC = Presence(str(CLIENT_ID))
         RPC.connect()
         RPC.update(state=linpg.get_lang("DiscordStatus","game_is_initializing"),large_image=LARGE_IMAGE)
-    except:
+    except BaseException:
         RPC = None
 
 #加载版本信息

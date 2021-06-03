@@ -32,9 +32,6 @@ class MapEditor(linpg.AbstractBattleSystem):
             default_map = [[SnowEnvImg[linpg.get_random_int(0,5)] for a in range(block_x)] for i in range(block_y)]
             mapFileData["map"] = default_map
             linpg.save_config(self.get_map_file_location(),mapFileData)
-        else:
-            block_y = len(mapFileData["map"])
-            block_x = len(mapFileData["map"][0])
         #加载地图
         self._create_map(mapFileData)
         del mapFileData
@@ -161,10 +158,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.UI_local_x = 0
         self.UI_local_y = 0
         #未保存离开时的警告
-        self.__no_save_warning = linpg.LeaveWithoutSavingWarning(
-            os.path.join("Assets/image/UI","container.png"),0,0,screen.get_width()/2,screen.get_height()/4
-            )
-        self.__no_save_warning.set_center(screen.get_width()/2,screen.get_height()/2)
+        self.__no_save_warning = linpg.converter.generate_ui(linpg.get_raw_deault_ui("leave_without_saving_warning"))
         #用于储存即将发下的物品的具体参数
         self.data_to_edit = None
         #读取地图原始文件
@@ -391,14 +385,14 @@ class MapEditor(linpg.AbstractBattleSystem):
             ))
         #未保存离开时的警告
         self.__no_save_warning.draw(screen)
-        if linpg.controller.get_event("confirm") and self.__no_save_warning.button_hovered != "":
+        if linpg.controller.get_event("confirm") and self.__no_save_warning.item_hovered != "":
             #保存并离开
-            if self.__no_save_warning.button_hovered == "save":
+            if self.__no_save_warning.item_hovered == "save":
                 self.save_progress()
                 self.stop()
             #取消
-            elif self.__no_save_warning.button_hovered == "cancel":
+            elif self.__no_save_warning.item_hovered == "cancel":
                 self.__no_save_warning.hidden = True
             #不保存并离开
-            elif self.__no_save_warning.button_hovered == "dont_save":
+            elif self.__no_save_warning.item_hovered == "dont_save":
                 self.stop()

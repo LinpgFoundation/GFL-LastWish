@@ -93,6 +93,9 @@ class TurnBasedBattleSystem(BattleSystem):
     #加载游戏进程
     def __process_data(self, screen:linpg.ImageSurface) -> None:
         self.window_x,self.window_y = screen.get_size()
+        #加载视觉小说系统
+        self._DIALOG.new(self._chapter_type, self._chapter_id, "dialog_during_battle", self._project_name)
+        self._DIALOG.stop()
         #生成标准文字渲染器
         self.FONTSIZE = int(self.window_x/76)
         self.FONT = linpg.create_font(self.FONTSIZE)
@@ -102,20 +105,11 @@ class TurnBasedBattleSystem(BattleSystem):
         self.warnings_to_display = WarningSystem(int(screen.get_height()*0.03))
         loading_info = linpg.get_lang("LoadingTxt")
         #加载剧情
-        DataTmp = linpg.load_config(
-            os.path.join(
-                "Data", self._chapter_type,
-                "chapter{0}_dialogs_{1}.yaml".format(self._chapter_id,linpg.get_setting('Language'))
-                ) if self._project_name is None else os.path.join(
-                    "Data", self._chapter_type, self._project_name,
-                    "chapter{0}_dialogs_{1}.yaml".format(self._chapter_id,linpg.get_setting('Language'))
-                    )
-        )
+        DataTmp = linpg.load_config(self._DIALOG.get_dialog_file_location())
         #如果暂时没有翻译
         if "title" not in DataTmp: DataTmp["title"] = linpg.get_lang("Global", "no_translation")
         if "description" not in DataTmp: DataTmp["description"] = linpg.get_lang("Global", "no_translation")
         if "battle_info" not in DataTmp: DataTmp["battle_info"] = linpg.load_config(r"Data/chapter_dialogs_example.yaml", "battle_info")
-        if "dialog_during_battle" not in DataTmp: DataTmp["dialog_during_battle"] = {}
         #章节标题显示
         self.infoToDisplayDuringLoading = LoadingTitle(
             self.window_x,
@@ -126,9 +120,9 @@ class TurnBasedBattleSystem(BattleSystem):
         self.battleMode_info = DataTmp["battle_info"]
         #正在加载的gif动态图标
         nowLoadingIcon = linpg.load_gif(
-            "Assets/image/UI/sv98_walking.gif",
-            (self.window_x*0.7,self.window_y*0.83),
-            (self.window_x*0.003*15,self.window_x*0.003*21)
+            r"Assets/image/UI/sv98_walking.gif",
+            (self.window_x*0.7, self.window_y*0.83),
+            (self.window_x*0.003*15, self.window_x*0.003*21)
         )
         #渐入效果
         for i in range(1,255,2):
@@ -155,8 +149,6 @@ class TurnBasedBattleSystem(BattleSystem):
             self.environment_sound.add(os.path.join("Assets/sound/environment","{}.ogg".format(DataTmp["weather"])))
             self.weatherController = linpg.WeatherSystem(DataTmp["weather"],self.window_x,self.window_y)
         #加载对话信息
-        self._DIALOG.new(self._chapter_type, self._chapter_id, "dialog_during_battle", self._project_name)
-        self._DIALOG.stop()
         self._dialog_dictionary = DataTmp["dialogs"]["dictionary"]
         self._dialog_data = DataTmp["dialogs"]["data"]
         if not self.__load_from_save:
@@ -328,7 +320,12 @@ class TurnBasedBattleSystem(BattleSystem):
         self.battleModeUiTxt = linpg.get_lang("Battle_UI")
         self.RoundSwitchUI = RoundSwitch(self.window_x,self.window_y,self.battleModeUiTxt)
         self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.get_color_rbga("white"))
-        self.end_round_button = linpg.load_static_image("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
+        self.end_round_button = linpg.load_static_image(
+            r"Assets/image/UI/end_round_button.png",
+            (self.window_x*0.8, self.window_y*0.7),
+            self.end_round_txt.get_width()*2,
+            self.end_round_txt.get_height()*2.5
+            )
         self.warnings_to_display = WarningSystem(int(screen.get_height()*0.03))
         self._DIALOG.updated_language(screen)
     #警告某个角色周围的敌人

@@ -1,5 +1,5 @@
 # cython: language_level=3
-from .basic import *
+from .base import *
 
 #视觉小说系统
 class DialogSystem(linpg.DialogSystem):
@@ -104,27 +104,3 @@ def mapEditor(screen:linpg.ImageSurface, chapterType:str, chapterId:int, project
     #改变标题回主菜单的样式
     linpg.display.set_caption(linpg.get_lang('General','game_title'))
     if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
-
-#blit载入页面
-def dispaly_loading_screen(screen:linpg.ImageSurface, start:int, end:int, value:int) -> None:
-    window_x,window_y = screen.get_size()
-    #获取健康游戏忠告
-    HealthyGamingAdvice = linpg.try_get_lang("HealthyGamingAdvice")
-    if HealthyGamingAdvice == "HealthyGamingAdvice":
-        HealthyGamingAdvice = []
-    else:
-        for i in range(len(HealthyGamingAdvice)):
-            HealthyGamingAdvice[i] = linpg.render_font(HealthyGamingAdvice[i],"white",window_x/64)
-    #其他载入页面需要的数据
-    text1 = linpg.render_font(linpg.get_lang("title1"),"white",window_x/64)
-    text2 = linpg.render_font(linpg.get_lang("title2"),"white",window_x/64)
-    #主循环
-    for i in range(start,end,value):
-        screen.fill(linpg.get_color_rbga("black"))
-        text1.set_alpha(i)
-        text2.set_alpha(i)
-        screen.blits(((text1,(window_x/64,window_y*0.9)),(text2,(window_x/64,window_y*0.9-window_x/32))))
-        for a in range(len(HealthyGamingAdvice)):
-            HealthyGamingAdvice[a].set_alpha(i)
-            screen.blit(HealthyGamingAdvice[a],(window_x-window_x/32-HealthyGamingAdvice[a].get_width(),window_y*0.9-window_x/64*a*1.5))
-        linpg.display.flip()
