@@ -1,6 +1,3 @@
-av
-linpg
-numpy
-pygame
 pyyaml
 pypresence
+linpg

@@ -50,4 +50,15 @@ dialogs:
       last_dialog_id: head
       narrator: Name
       next_dialog_id: null
+  dialog_during_battle:
+    head:
+      background_img: <transparent>
+      background_music: null
+      characters_img: null
+      content:
+      - ''
+      last_dialog_id: null
+      narrator: Name
+      next_dialog_id:
+        type: break
 title: The title of this chapter

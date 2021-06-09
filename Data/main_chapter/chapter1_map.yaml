@@ -1,3 +1,4 @@
+atNight: false
 backgroundImage: snowfield.jpg
 background_music: Combat_02_RemnantFantasyPackage_Synari.ogg
 character:
@@ -22,7 +23,6 @@ character:
     type: sv-98
     x: 5
     y: 7
-darkMode: false
 decoration:
   campfire:
     campfire1:
@@ -441,13 +441,44 @@ decoration:
       x: 3
       y: 5
 dialogs:
-  initial: initial_dialog
-  move:
-    15-10:
-      dialog_key: tutorial1
-      repeat: false
-      whitelist:
-      - sv-98
+  data:
+    initial_dialog:
+    - changePos:
+        x: 0
+        y: 0
+    - move:
+        gsh-18:
+          x: 8
+          y: 4
+        pp1901:
+          x: 8
+          y: 3
+    - dialog: head
+    - direction:
+        asval: true
+    - idle: 1
+    - direction:
+        asval: false
+    - idle: 1
+    - dialog: initial_dialog_3
+    - changePos:
+        x: 30
+        y: 30
+    - idle: 1
+    - changePos:
+        x: 0
+        y: 0
+    - dialog: initial_dialog_4
+    tutorial1:
+    - dialog: tutorial1
+  dictionary:
+    initial: initial_dialog
+    move:
+      15-10:
+        dialog_key: tutorial1
+        repeat: false
+        whitelist:
+        - sv-98
 local_x: -3000
 local_y: 1000
 map:

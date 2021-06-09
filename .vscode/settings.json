@@ -51,6 +51,7 @@
         "pyinstaller",
         "pypresence",
         "qsize",
+        "rbga",
         "sangvis",
         "sfpsp",
         "simhei",

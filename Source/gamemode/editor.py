@@ -15,12 +15,12 @@ class MapEditor(linpg.AbstractBattleSystem):
         #类似多线程的join，待完善
         while self._is_characters_loader_alive(): pass
     #初始化
-    def load(self, screen:pygame.Surface, chapterType:str, chapterId:int, projectName:str=None) -> None:
+    def load(self, screen:linpg.ImageSurface, chapterType:str, chapterId:int, projectName:str=None) -> None:
         self._initialize(chapterType, chapterId, projectName)
         self.folder_for_save_file,self.name_for_save_file = os.path.split(self.get_map_file_location())
-        self.decorations_setting = linpg.loadConfig("Data/decorations.yaml","decorations")
+        self.decorations_setting = linpg.load_config("Data/decorations.yaml","decorations")
         #载入地图数据
-        mapFileData:dict = linpg.loadConfig(self.get_map_file_location())
+        mapFileData:dict = linpg.load_config(self.get_map_file_location())
         #初始化角色信息
         self.__load_characters_data(mapFileData)
         #初始化地图
@@ -29,12 +29,9 @@ class MapEditor(linpg.AbstractBattleSystem):
             SnowEnvImg = ["TileSnow01","TileSnow01ToStone01","TileSnow01ToStone02","TileSnow02","TileSnow02ToStone01","TileSnow02ToStone02"]
             block_y = 50
             block_x = 50
-            default_map = [[SnowEnvImg[linpg.randomInt(0,5)] for a in range(block_x)] for i in range(block_y)]
+            default_map = [[SnowEnvImg[linpg.get_random_int(0,5)] for a in range(block_x)] for i in range(block_y)]
             mapFileData["map"] = default_map
-            linpg.saveConfig(self.get_map_file_location(),mapFileData)
-        else:
-            block_y = len(mapFileData["map"])
-            block_x = len(mapFileData["map"][0])
+            linpg.save_config(self.get_map_file_location(),mapFileData)
         #加载地图
         self._create_map(mapFileData)
         del mapFileData
@@ -46,18 +43,18 @@ class MapEditor(linpg.AbstractBattleSystem):
         button_height:int = int(screen.get_height()*0.2)
         panding:int = int(screen.get_height()*0.01)
         font_size:int = int(button_width/3)
-        self.__button_select_block = linpg.loadButtonWithTextInCenter(
+        self.__button_select_block = linpg.load_button_with_text_in_center(
             "Assets/image/UI/menu.png",linpg.get_lang("MapEditor","block"),"black",font_size,(0,screen.get_width()*0.03),100
             )
-        self.__button_select_decoration = linpg.loadButtonWithTextInCenter(
+        self.__button_select_decoration = linpg.load_button_with_text_in_center(
             "Assets/image/UI/menu.png",linpg.get_lang("MapEditor","decoration"),"black",font_size,(0,screen.get_width()*0.03),100
             )
         self.__button_select_block.set_left(
             int((container_width-self.__button_select_block.get_width()-self.__button_select_decoration.get_width()-panding)/2)
             )
         self.__button_select_decoration.set_left(self.__button_select_block.right+panding)
-        self.__UIContainerRight = linpg.loadImage("Assets/image/UI/container.png",(0,0),container_width,container_height)
-        self.__UIContainerButtonRight = linpg.loadDynamicImage("Assets/image/UI/container_button.png",
+        self.__UIContainerRight = linpg.load_dynamic_image("Assets/image/UI/container.png",(0,0),container_width,container_height)
+        self.__UIContainerButtonRight = linpg.load_movable_image("Assets/image/UI/container_button.png",
         (screen.get_width()-button_width,int((screen.get_height()-button_height)/2)),
         (screen.get_width()-button_width-container_width,int((screen.get_height()-button_height)/2)),
         (int(container_width/10),0),button_width,button_height
@@ -69,7 +66,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             None, int(container_width*0.075), int(screen.get_height()*0.1), int(container_width*0.85), int(screen.get_height()*0.85), "vertical"
             )
         for imgPath in glob.glob(r'Assets/image/environment/block/*.png'):
-            self.__envImgContainer.set(os.path.basename(imgPath).replace(".png",""),linpg.loadImg(imgPath,(self.MAP.block_width/3,None)))
+            self.__envImgContainer.set(os.path.basename(imgPath).replace(".png",""),linpg.load_img(imgPath,(self.MAP.block_width/3,None)))
         self.__envImgContainer.set_item_per_line(4)
         self.__envImgContainer.set_scroll_bar_pos("right")
         self.__envImgContainer.hidden = False
@@ -79,7 +76,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             None, int(container_width*0.075), int(screen.get_height()*0.1), int(container_width*0.85), int(screen.get_height()*0.85), "vertical"
             )
         for imgPath in glob.glob(r'Assets/image/environment/decoration/*.png'):
-            self.__decorationsImgContainer.set(os.path.basename(imgPath).replace(".png",""),linpg.loadImg(imgPath,(self.MAP.block_width/3,None)))
+            self.__decorationsImgContainer.set(os.path.basename(imgPath).replace(".png",""),linpg.load_img(imgPath,(self.MAP.block_width/3,None)))
         self.__decorationsImgContainer.set_item_per_line(4)
         self.__decorationsImgContainer.set_scroll_bar_pos("right")
         self.__decorationsImgContainer.hidden = True
@@ -91,14 +88,14 @@ class MapEditor(linpg.AbstractBattleSystem):
         button_height = int(screen.get_height()*0.05)
         panding = int(screen.get_height()*0.01)
         font_size = int(button_height/2)
-        self.__button_select_character = linpg.loadButtonWithTextInCenter(
+        self.__button_select_character = linpg.load_button_with_text_in_center(
             "Assets/image/UI/menu.png",linpg.get_lang("General","griffin_Kryuger"),"black",font_size,(0,0),100
             )
-        self.__button_select_sangvisFerri = linpg.loadButtonWithTextInCenter(
+        self.__button_select_sangvisFerri = linpg.load_button_with_text_in_center(
             "Assets/image/UI/menu.png",linpg.get_lang("General","sangvis_ferri"),"black",font_size,(self.__button_select_character.get_width(),0),100
             )
-        self.__UIContainerBottom = linpg.loadImage("Assets/image/UI/container.png",(0,0),container_width,container_height)
-        self.__UIContainerButtonBottom = linpg.loadDynamicImage(
+        self.__UIContainerBottom = linpg.load_dynamic_image("Assets/image/UI/container.png",(0,0),container_width,container_height)
+        self.__UIContainerButtonBottom = linpg.load_movable_image(
             "Assets/image/UI/container_button.png",
             ((container_width-button_width)/2,screen.get_height()-button_height),
             ((container_width-button_width)/2,screen.get_height()-button_height-container_height),
@@ -112,7 +109,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             img_name = os.path.basename(imgPath)
             self.__charactersImgContainer.set(
                 img_name,
-                linpg.copeBounding(linpg.loadImg(os.path.join(imgPath, "wait", "{}_wait_0.png".format(img_name)), (None, container_height*1.5)))
+                linpg.cope_bounding(linpg.load_img(os.path.join(imgPath, "wait", "{}_wait_0.png".format(img_name)), (None, container_height*1.5)))
                 )
         self.__charactersImgContainer.set_scroll_bar_pos("bottom")
         self.__charactersImgContainer.hidden = False
@@ -125,15 +122,15 @@ class MapEditor(linpg.AbstractBattleSystem):
             img_name = os.path.basename(imgPath)
             self.__sangvisFerrisImgContainer.set(
                 img_name,
-                linpg.copeBounding(linpg.loadImg(os.path.join(imgPath, "wait", "{}_wait_0.png".format(img_name)), (None, container_height*1.5)))
+                linpg.cope_bounding(linpg.load_img(os.path.join(imgPath, "wait", "{}_wait_0.png".format(img_name)), (None, container_height*1.5)))
                 )
         self.__sangvisFerrisImgContainer.set_scroll_bar_pos("bottom")
         self.__sangvisFerrisImgContainer.hidden = True
         self.__sangvisFerrisImgContainer.distance_between_item = panding
         #绿色方块/方块标准
-        self.greenBlock = linpg.loadImg("Assets/image/UI/range/green.png",(self.MAP.block_width*0.8,None))
+        self.greenBlock = linpg.load_img("Assets/image/UI/range/green.png",(self.MAP.block_width*0.8,None))
         self.greenBlock.set_alpha(150)
-        self.redBlock = linpg.loadImg("Assets/image/UI/range/red.png",(self.MAP.block_width*0.8,None))
+        self.redBlock = linpg.load_img("Assets/image/UI/range/red.png",(self.MAP.block_width*0.8,None))
         self.redBlock.set_alpha(150)
         self.deleteMode:bool = False
         self.object_to_put_down = None
@@ -142,54 +139,51 @@ class MapEditor(linpg.AbstractBattleSystem):
         UI_x = self.MAP.block_width*0.5
         UI_y = int(screen.get_height()*0.02)
         font_size = int(self.MAP.block_width*0.2)
-        self.UIButton["save"] = linpg.loadButtonWithTextInCenter(
+        self.UIButton["save"] = linpg.load_button_with_text_in_center(
             "Assets/image/UI/menu.png", linpg.get_lang("Global", "save"), "black", font_size, (UI_x, UI_y), 100
             )
         UI_x += self.UIButton["save"].get_width()+font_size
-        self.UIButton["back"] = linpg.loadButtonWithTextInCenter(
+        self.UIButton["back"] = linpg.load_button_with_text_in_center(
             "Assets/image/UI/menu.png", linpg.get_lang("Global", "back"), "black", font_size, (UI_x, UI_y), 100
             )
         UI_x += self.UIButton["back"].get_width()+font_size
-        self.UIButton["delete"] = linpg.loadButtonWithTextInCenter(
+        self.UIButton["delete"] = linpg.load_button_with_text_in_center(
             "Assets/image/UI/menu.png", linpg.get_lang("Global", "delete"), "black", font_size, (UI_x, UI_y), 100
             )
         UI_x += self.UIButton["delete"].get_width()+font_size
-        self.UIButton["reload"] = linpg.loadButtonWithTextInCenter(
+        self.UIButton["reload"] = linpg.load_button_with_text_in_center(
             "Assets/image/UI/menu.png", linpg.get_lang("Global", "reload_file"), "black", font_size, (UI_x, UI_y), 100
             )
         #其他函数
         self.UI_local_x = 0
         self.UI_local_y = 0
         #未保存离开时的警告
-        self.__no_save_warning = linpg.LeaveWithoutSavingWarning(
-            os.path.join("Assets/image/UI","container.png"),0,0,screen.get_width()/2,screen.get_height()/4
-            )
-        self.__no_save_warning.set_center(screen.get_width()/2,screen.get_height()/2)
+        self.__no_save_warning = linpg.converter.generate_ui(linpg.get_raw_deault_ui("leave_without_saving_warning"))
         #用于储存即将发下的物品的具体参数
         self.data_to_edit = None
         #读取地图原始文件
-        self.originalData = linpg.loadConfig(self.get_map_file_location())
+        self.originalData = linpg.load_config(self.get_map_file_location())
     #将地图制作器的界面画到屏幕上
-    def draw(self, screen:pygame.Surface) -> None:
+    def draw(self, screen:linpg.ImageSurface) -> None:
         mouse_x,mouse_y = linpg.controller.get_mouse_pos()
         block_get_click = self.MAP.calBlockInMap(mouse_x,mouse_y)
         for event in linpg.controller.events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+            if event.type == linpg.KEY.DOWN:
+                if event.key == linpg.KEY.ESCAPE:
                     self.object_to_put_down = None
                     self.data_to_edit = None
                     self.deleteMode = False
                 self._check_key_down(event)
-            elif event.type == pygame.KEYUP:
+            elif event.type == linpg.KEY.UP:
                 self._check_key_up(event)
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == linpg.MOUSE_BUTTON_DOWN:
                 #上下滚轮-放大和缩小地图
                 if self.__UIContainerButtonRight.is_hover():
                     self.__UIContainerButtonRight.switch()
-                    self.__UIContainerButtonRight.flip(True,False)
+                    self.__UIContainerButtonRight.flip()
                 elif self.__UIContainerButtonBottom.is_hover():
                     self.__UIContainerButtonBottom.switch()
-                    self.__UIContainerButtonBottom.flip(False,True)
+                    self.__UIContainerButtonBottom.flip()
                 elif self.deleteMode is True and block_get_click is not None:
                     #查看当前位置是否有装饰物
                     decoration = self.MAP.find_decoration_on((block_get_click["x"],block_get_click["y"]))
@@ -198,7 +192,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                         self.MAP.remove_decoration(decoration)
                     else:
                         any_chara_replace = None
-                        for key,value in linpg.dicMerge(self.alliances_data,self.enemies_data).items():
+                        for key,value in linpg.merge_dict(self.alliances_data,self.enemies_data).items():
                             if value.x == block_get_click["x"] and value.y == block_get_click["y"]:
                                 any_chara_replace = key
                                 break
@@ -209,22 +203,22 @@ class MapEditor(linpg.AbstractBattleSystem):
                             elif any_chara_replace in self.enemies_data:
                                 self.enemies_data.pop(any_chara_replace)
                                 self.originalData["sangvisFerri"].pop(any_chara_replace)
-                elif linpg.isHover(self.UIButton["save"]) and self.object_to_put_down is None and not self.deleteMode:
+                elif linpg.is_hover(self.UIButton["save"]) and self.object_to_put_down is None and not self.deleteMode:
                     self.save_progress()
-                elif linpg.isHover(self.UIButton["back"]) and self.object_to_put_down is None and not self.deleteMode:
-                    if linpg.loadConfig(self.get_map_file_location()) == self.originalData:
+                elif linpg.is_hover(self.UIButton["back"]) and self.object_to_put_down is None and not self.deleteMode:
+                    if linpg.load_config(self.get_map_file_location()) == self.originalData:
                         self.stop()
                         break
                     else:
                         self.__no_save_warning.hidden = False
-                elif linpg.isHover(self.UIButton["delete"]) and self.object_to_put_down is None and not self.deleteMode:
+                elif linpg.is_hover(self.UIButton["delete"]) and self.object_to_put_down is None and not self.deleteMode:
                     self.object_to_put_down = None
                     self.data_to_edit = None
                     self.deleteMode = True
-                elif linpg.isHover(self.UIButton["reload"]) and self.object_to_put_down is None and not self.deleteMode:
-                    tempLocal_x,tempLocal_y = self.MAP.getPos()
+                elif linpg.is_hover(self.UIButton["reload"]) and self.object_to_put_down is None and not self.deleteMode:
+                    tempLocal_x,tempLocal_y = self.MAP.get_local_pos()
                     #读取地图数据
-                    mapFileData = linpg.loadConfig(self.get_map_file_location())
+                    mapFileData = linpg.load_config(self.get_map_file_location())
                     #初始化角色信息
                     self.__load_characters_data(mapFileData)
                     #加载地图
@@ -232,11 +226,11 @@ class MapEditor(linpg.AbstractBattleSystem):
                     del mapFileData
                     self.MAP.setPos(tempLocal_x,tempLocal_y)
                     #读取地图
-                    self.originalData = linpg.loadConfig(self.get_map_file_location())
+                    self.originalData = linpg.load_config(self.get_map_file_location())
                 else:
-                    if pygame.mouse.get_pressed()[0] and block_get_click is not None and self.object_to_put_down is not None and\
-                        not linpg.isHover(self.__UIContainerRight,local_x=self.__UIContainerButtonRight.right) and\
-                            not linpg.isHover(self.__UIContainerBottom,local_y=self.__UIContainerButtonBottom.bottom):
+                    if linpg.controller.get_event("confirm") and block_get_click is not None and self.object_to_put_down is not None and\
+                        not linpg.is_hover(self.__UIContainerRight,off_set_x=self.__UIContainerButtonRight.right) and\
+                            not linpg.is_hover(self.__UIContainerBottom,off_set_y=self.__UIContainerButtonBottom.bottom):
                         if self.object_to_put_down["type"] == "block":
                             self.originalData["map"][block_get_click["y"]][block_get_click["x"]] = self.object_to_put_down["id"]
                             self.MAP.update_block(block_get_click,self.object_to_put_down["id"])
@@ -258,7 +252,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                             self.MAP.load_decorations(self.originalData["decoration"])
                         elif self.object_to_put_down["type"] == "character" or self.object_to_put_down["type"] == "sangvisFerri":
                             any_chara_replace = None
-                            for key,value in linpg.dicMerge(self.alliances_data,self.enemies_data).items():
+                            for key,value in linpg.merge_dict(self.alliances_data,self.enemies_data).items():
                                 if value.x == block_get_click["x"] and value.y == block_get_click["y"]:
                                     any_chara_replace = key
                                     break
@@ -292,14 +286,14 @@ class MapEditor(linpg.AbstractBattleSystem):
                                 }
                                 self.enemies_data[nameTemp] = linpg.HostileCharacter(self.originalData["sangvisFerri"][nameTemp],self.DATABASE[self.originalData["sangvisFerri"][nameTemp]["type"]],"dev")
         #其他移动的检查
-        self._check_right_click_move(mouse_x,mouse_y)
+        self._check_right_click_move()
         self._check_jostick_events()
 
         #画出地图
         self._display_map(screen)
         if block_get_click is not None and\
-            not linpg.isHover(self.__UIContainerRight,local_x=self.__UIContainerButtonRight.right) and\
-                not linpg.isHover(self.__UIContainerBottom,local_y=self.__UIContainerButtonBottom.bottom):
+            not linpg.is_hover(self.__UIContainerRight,off_set_x=self.__UIContainerButtonRight.right) and\
+                not linpg.is_hover(self.__UIContainerBottom,off_set_y=self.__UIContainerButtonBottom.bottom):
             if self.deleteMode is True:
                 xTemp,yTemp = self.MAP.calPosInMap(block_get_click["x"],block_get_click["y"])
                 screen.blit(self.redBlock,(xTemp+self.MAP.block_width*0.1,yTemp))
@@ -310,11 +304,11 @@ class MapEditor(linpg.AbstractBattleSystem):
         #角色动画
         for key in self.alliances_data:
             self.alliances_data[key].draw(screen,self.MAP)
-            if self.object_to_put_down is None and pygame.mouse.get_pressed()[0] and self.alliances_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.alliances_data[key].y == int(mouse_y/self.greenBlock.get_height()):
+            if self.object_to_put_down is None and linpg.controller.get_event("confirm") and self.alliances_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.alliances_data[key].y == int(mouse_y/self.greenBlock.get_height()):
                 self.data_to_edit = self.alliances_data[key]
         for key in self.enemies_data:
             self.enemies_data[key].draw(screen,self.MAP)
-            if self.object_to_put_down is None and pygame.mouse.get_pressed()[0] and self.enemies_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.enemies_data[key].y == int(mouse_y/self.greenBlock.get_height()):
+            if self.object_to_put_down is None and linpg.controller.get_event("confirm") and self.enemies_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.enemies_data[key].y == int(mouse_y/self.greenBlock.get_height()):
                 self.data_to_edit = self.enemies_data[key]
 
         #展示设施
@@ -326,15 +320,15 @@ class MapEditor(linpg.AbstractBattleSystem):
             self.__UIContainerRight.display(screen,(self.__UIContainerButtonRight.right,0))
             self.__envImgContainer.display(screen,(self.__UIContainerButtonRight.right,0))
             self.__decorationsImgContainer.display(screen,(self.__UIContainerButtonRight.right,0))
-            if linpg.isHover(self.__button_select_block,local_x=self.__UIContainerButtonRight.right) and pygame.mouse.get_pressed()[0]:
+            if linpg.is_hover(self.__button_select_block,off_set_x=self.__UIContainerButtonRight.right) and linpg.controller.get_event("confirm"):
                 self.__envImgContainer.hidden = False
                 self.__decorationsImgContainer.hidden = True
-            if linpg.isHover(self.__button_select_decoration,local_x=self.__UIContainerButtonRight.right) and pygame.mouse.get_pressed()[0]:
+            if linpg.is_hover(self.__button_select_decoration,off_set_x=self.__UIContainerButtonRight.right) and linpg.controller.get_event("confirm"):
                 self.__envImgContainer.hidden = True
                 self.__decorationsImgContainer.hidden = False
             self.__button_select_block.display(screen,(self.__UIContainerButtonRight.right,0))
             self.__button_select_decoration.display(screen,(self.__UIContainerButtonRight.right,0))
-            if pygame.mouse.get_pressed()[0]:
+            if linpg.controller.get_event("confirm"):
                 if not self.__envImgContainer.hidden and self.__envImgContainer.current_hovered_item is not None:
                     self.object_to_put_down = {"type":"block","id":self.__envImgContainer.current_hovered_item}
                 elif not self.__decorationsImgContainer.hidden and self.__decorationsImgContainer.current_hovered_item is not None:
@@ -345,15 +339,15 @@ class MapEditor(linpg.AbstractBattleSystem):
             self.__UIContainerBottom.display(screen,(0,self.__UIContainerButtonBottom.bottom))
             self.__charactersImgContainer.display(screen,(0,self.__UIContainerButtonBottom.bottom))
             self.__sangvisFerrisImgContainer.display(screen,(0,self.__UIContainerButtonBottom.bottom))
-            if linpg.isHover(self.__button_select_character,local_y=self.__UIContainerButtonBottom.bottom) and pygame.mouse.get_pressed()[0]:
+            if linpg.is_hover(self.__button_select_character,off_set_y=self.__UIContainerButtonBottom.bottom) and linpg.controller.get_event("confirm"):
                 self.__charactersImgContainer.hidden = False
                 self.__sangvisFerrisImgContainer.hidden = True
-            if linpg.isHover(self.__button_select_sangvisFerri,local_y=self.__UIContainerButtonBottom.bottom) and pygame.mouse.get_pressed()[0]:
+            if linpg.is_hover(self.__button_select_sangvisFerri,off_set_y=self.__UIContainerButtonBottom.bottom) and linpg.controller.get_event("confirm"):
                 self.__charactersImgContainer.hidden = True
                 self.__sangvisFerrisImgContainer.hidden = False
             self.__button_select_character.display(screen,(0,self.__UIContainerButtonBottom.bottom))
             self.__button_select_sangvisFerri.display(screen,(0,self.__UIContainerButtonBottom.bottom))
-            if pygame.mouse.get_pressed()[0]:
+            if linpg.controller.get_event("confirm"):
                 if not self.__charactersImgContainer.hidden and self.__charactersImgContainer.current_hovered_item is not None:
                     self.object_to_put_down = {"type":"character","id":self.__charactersImgContainer.current_hovered_item}
                 elif not self.__sangvisFerrisImgContainer.hidden and self.__sangvisFerrisImgContainer.current_hovered_item is not None:
@@ -361,7 +355,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         
         #画出上方其他按钮
         for key in self.UIButton:
-            linpg.isHover(self.UIButton[key])
+            linpg.is_hover(self.UIButton[key])
             self.UIButton[key].draw(screen)
         
         #跟随鼠标显示即将被放下的物品
@@ -378,27 +372,27 @@ class MapEditor(linpg.AbstractBattleSystem):
         #显示即将被编辑的数据
         if self.data_to_edit is not None:
             screen.blits((
-                (linpg.fontRender("action points: "+str(self.data_to_edit.max_action_point),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8)),
-                (linpg.fontRender("attack range: "+str(self.data_to_edit.attack_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20)),
-                (linpg.fontRender("current bullets: "+str(self.data_to_edit.current_bullets),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*2)),
-                (linpg.fontRender("magazine capacity: "+str(self.data_to_edit.magazine_capacity),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*3)),
-                (linpg.fontRender("max hp: "+str(self.data_to_edit.max_hp),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*4)),
-                (linpg.fontRender("effective range: "+str(self.data_to_edit.effective_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*5)),
-                (linpg.fontRender("max damage: "+str(self.data_to_edit.max_damage),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*6)),
-                (linpg.fontRender("min damage: "+str(self.data_to_edit.min_damage),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*7)),
-                (linpg.fontRender("x: "+str(self.data_to_edit.x),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*8)),
-                (linpg.fontRender("y: "+str(self.data_to_edit.y),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*9)),
+                (linpg.render_font("action points: "+str(self.data_to_edit.max_action_point),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8)),
+                (linpg.render_font("attack range: "+str(self.data_to_edit.attack_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20)),
+                (linpg.render_font("current bullets: "+str(self.data_to_edit.current_bullets),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*2)),
+                (linpg.render_font("magazine capacity: "+str(self.data_to_edit.magazine_capacity),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*3)),
+                (linpg.render_font("max hp: "+str(self.data_to_edit.max_hp),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*4)),
+                (linpg.render_font("effective range: "+str(self.data_to_edit.effective_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*5)),
+                (linpg.render_font("max damage: "+str(self.data_to_edit.max_damage),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*6)),
+                (linpg.render_font("min damage: "+str(self.data_to_edit.min_damage),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*7)),
+                (linpg.render_font("x: "+str(self.data_to_edit.x),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*8)),
+                (linpg.render_font("y: "+str(self.data_to_edit.y),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*9)),
             ))
         #未保存离开时的警告
         self.__no_save_warning.draw(screen)
-        if pygame.mouse.get_pressed()[0] is True and self.__no_save_warning.button_hovered != "":
+        if linpg.controller.get_event("confirm") and self.__no_save_warning.item_hovered != "":
             #保存并离开
-            if self.__no_save_warning.button_hovered == "save":
+            if self.__no_save_warning.item_hovered == "save":
                 self.save_progress()
                 self.stop()
             #取消
-            elif self.__no_save_warning.button_hovered == "cancel":
+            elif self.__no_save_warning.item_hovered == "cancel":
                 self.__no_save_warning.hidden = True
             #不保存并离开
-            elif self.__no_save_warning.button_hovered == "dont_save":
+            elif self.__no_save_warning.item_hovered == "dont_save":
                 self.stop()

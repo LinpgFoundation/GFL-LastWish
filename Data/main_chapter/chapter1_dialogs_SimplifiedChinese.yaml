@@ -5,109 +5,6 @@ battle_info:
 - 能见度：0.78公里
 - 地点：临时据点以东约50公里
 description: 茫茫雪原之上，刺骨的寒风拂过我的脸颊。但至少，还有你们的陪伴
-dialog_during_battle:
-  initial_dialog:
-  - changePos:
-      x: 0
-      y: 0
-  - move:
-      gsh-18:
-        x: 8
-        y: 4
-      pp1901:
-        x: 8
-        y: 3
-  - dialoguebox_down:
-      content:
-      - 总算是摆脱铁血的追兵了
-      - 大家都没事吧
-      speaker: sv-98
-      speaker_icon: sv-98
-    dialoguebox_up: null
-  - dialoguebox_down:
-      content:
-      - 总算是摆脱铁血的追兵了
-      - 大家都没事吧
-      speaker: sv-98
-      speaker_icon: sv-98
-    dialoguebox_up:
-      content:
-      - 没事
-      speaker: 众人
-      speaker_icon: null
-  - direction:
-      asval: true
-  - idle: 1
-  - direction:
-      asval: false
-  - idle: 1
-  - dialoguebox_down:
-      content:
-      - sv-98，前方发现有铁血活动的痕迹
-      speaker: asval
-      speaker_icon: asval
-    dialoguebox_up: null
-  - changePos:
-      x: 30
-      y: 30
-  - idle: 1
-  - changePos:
-      x: 0
-      y: 0
-  - dialoguebox_down:
-      content:
-      - 该死...我已经没有弹药了
-      speaker: sv-98
-      speaker_icon: sv-98
-    dialoguebox_up: null
-  - dialoguebox_down:
-      content:
-      - 前方的铁血...好像在守着什么
-      speaker: pp1901
-      speaker_icon: pp1901
-    dialoguebox_up: null
-  - move:
-      sv-98:
-        x: 5
-        y: 12
-  - dialoguebox_down:
-      content:
-      - 远远看过去，好像是物资箱
-      speaker: gsh-18
-      speaker_icon: gsh-18
-    dialoguebox_up: null
-  - dialoguebox_down:
-      content:
-      - sv-98，上吧。我们会掩护你的。
-      speaker: asval
-      speaker_icon: asval
-    dialoguebox_up: null
-  - dialoguebox_down:
-      content:
-      - 那就拜托你们了...
-      - 各位，子弹上膛，准备战斗！
-      speaker: sv-98
-      speaker_icon: sv-98
-    dialoguebox_up: null
-  - dialoguebox_down:
-      content:
-      - 目前sv-98没有子弹，无法攻击
-      speaker: 提示
-      speaker_icon: null
-    dialoguebox_up: null
-  tutorial1:
-  - dialoguebox_down:
-      content:
-      - 各位，我拿到补给了！
-      speaker: sv-98
-      speaker_icon: sv-98
-    dialoguebox_up: null
-  - dialoguebox_down:
-      content:
-      - 请注意换弹
-      speaker: 提示
-      speaker_icon: null
-    dialoguebox_up: null
 dialogs:
   dialog_after_battle:
     head:
@@ -559,4 +456,133 @@ dialogs:
       last_dialog_id: 19
       narrator: asval
       next_dialog_id: null
+  dialog_during_battle:
+    head:
+      background_img: <transparent>
+      background_music: null
+      characters_img:
+      - sv-98.png
+      content:
+      - 总算是摆脱铁血的追兵了
+      - 大家都没事吧
+      last_dialog_id: null
+      narrator: sv-98
+      next_dialog_id:
+        target: initial_dialog_2
+        type: default
+    initial_dialog_2:
+      background_img: <transparent>
+      background_music: null
+      characters_img:
+      - sv-98.png<d>
+      content:
+      - 没事
+      last_dialog_id: head
+      narrator: 众人
+      next_dialog_id:
+        type: break
+    initial_dialog_3:
+      background_img: <transparent>
+      background_music: null
+      characters_img:
+      - asval.png
+      content:
+      - sv-98，前方发现有铁血活动的痕迹
+      last_dialog_id: null
+      narrator: asval
+      next_dialog_id:
+        type: break
+    initial_dialog_4:
+      background_img: <transparent>
+      background_music: null
+      characters_img:
+      - sv-98.png
+      content:
+      - 该死...我已经没有弹药了
+      last_dialog_id: null
+      narrator: sv-98
+      next_dialog_id:
+        target: initial_dialog_5
+        type: default
+    initial_dialog_5:
+      background_img: <transparent>
+      background_music: null
+      characters_img:
+      - pp1901.png
+      content:
+      - 前方的铁血...好像在守着什么
+      last_dialog_id: initial_dialog_4
+      narrator: pp1901
+      next_dialog_id:
+        target: initial_dialog_6
+        type: default
+    initial_dialog_6:
+      background_img: <transparent>
+      background_music: null
+      characters_img:
+      - gsh-18.png
+      content:
+      - 远远看过去，好像是物资箱
+      last_dialog_id: null
+      narrator: gsh-18
+      next_dialog_id:
+        target: initial_dialog_7
+        type: default
+    initial_dialog_7:
+      background_img: <transparent>
+      background_music: null
+      characters_img:
+      - asval.png
+      content:
+      - sv-98，上吧。我们会掩护你的。
+      last_dialog_id: initial_dialog_6
+      narrator: asval
+      next_dialog_id:
+        target: initial_dialog_8
+        type: default
+    initial_dialog_8:
+      background_img: <transparent>
+      background_music: null
+      characters_img:
+      - sv-98.png
+      content:
+      - 那就拜托你们了...
+      - 各位，子弹上膛，准备战斗！
+      last_dialog_id: initial_dialog_7
+      narrator: sv-98
+      next_dialog_id:
+        target: initial_dialog_9
+        type: default
+    initial_dialog_9:
+      background_img: <transparent>
+      background_music: null
+      characters_img: null
+      content:
+      - 目前sv-98没有子弹，无法攻击
+      last_dialog_id: initial_dialog_8
+      narrator: 提示
+      next_dialog_id:
+        type: break
+    tutorial1:
+      background_img: <transparent>
+      background_music: null
+      characters_img:
+      - sv-98.png
+      content:
+      - 各位，我拿到补给了！
+      last_dialog_id: null
+      narrator: sv-98
+      next_dialog_id:
+        target: tutorial2
+        type: default
+    tutorial2:
+      background_img: <transparent>
+      background_music: null
+      characters_img: null
+      content:
+      - 请注意换弹
+      last_dialog_id: tutorial1
+      narrator: 提示
+      next_dialog_id:
+        type: break
 title: 白色的希望
