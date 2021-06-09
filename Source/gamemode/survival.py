@@ -5,7 +5,7 @@ from .battleSystem import *
 class SurvivalBattleSystem(BattleSystem):
     def __init__(self):
         """data"""
-        super().__init__(None,None,None)
+        super().__init__()
         #用于检测是否有方向键被按到的字典
         self.__pressKeyToMoveMe = {"up":False,"down":False,"left":False,"right":False}
         self.window_x,self.window_y = linpg.display.get_size()

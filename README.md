@@ -1,3 +1,5 @@
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/Tigeia-Workshop/GirlsFrontLine-LastWish.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Tigeia-Workshop/GirlsFrontLine-LastWish/alerts/) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Tigeia-Workshop/GirlsFrontLine-LastWish.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Tigeia-Workshop/GirlsFrontLine-LastWish/context:python) ![GitHub all releases](https://img.shields.io/github/downloads/Tigeia-Workshop/GirlsFrontLine-LastWish/total) ![GitHub](https://img.shields.io/github/license/Tigeia-Workshop/GirlsFrontLine-LastWish) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Tigeia-Workshop/GirlsFrontLine-LastWish?include_prereleases) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/linpg)
+
 # :speech_balloon: Preamble / 前言
 
 Their stories may be forgotten by history, but what they have done will be remembered forever.

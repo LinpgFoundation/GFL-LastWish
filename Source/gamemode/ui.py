@@ -4,8 +4,8 @@ import glob
 import time
 from typing import Union
 # 第三方
-#import linpg
-from linpgdev import linpg
+import linpg
+#from linpgdev import linpg
 from collections import deque
 
 # 显示回合切换的UI
@@ -136,7 +136,7 @@ class WarningSystem:
         for i in range(len(self.__all_warnings)):
             try:
                 img_alpha = self.__all_warnings[i].get_alpha()
-            except BaseException:
+            except Exception:
                 break
             if img_alpha > 0:
                 screen.blit(self.__all_warnings[i],((screen.get_width()-self.__all_warnings[i].get_width())/2,(screen.get_height()-self.__all_warnings[i].get_height())/2+i*self.__all_warnings[i].get_height()*1.2))

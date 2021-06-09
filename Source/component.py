@@ -29,8 +29,12 @@ def dispaly_loading_screen(screen:linpg.ImageSurface, start:int, end:int, value:
 class Console(linpg.Console):
     def _check_command(self, conditions:list) -> None:
         if conditions[0] == "load":
-            if conditions[1] == "":
-                dialog()
+            if conditions[1] == "dialog":
+                dialog(linpg.display.screen_window, conditions[2], conditions[3], conditions[4], conditions[5])
+            elif conditions[1] == "battle":
+                battle(linpg.display.screen_window, conditions[2], conditions[3], conditions[4])
+            else:
+                self.txtOutput.append("Error, do not know what to load.")
         else:
             super()._check_command(conditions)
 

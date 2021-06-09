@@ -7,8 +7,6 @@ class MainMenu(linpg.AbstractSystem):
     def __init__(self, screen:linpg.ImageSurface):
         #初始化系统模块
         super().__init__()
-        #获取屏幕的尺寸
-        window_x,window_y = screen.get_size()
         #载入页面 - 渐入
         dispaly_loading_screen(screen,0,250,int(2*linpg.display.sfpsp))
         #检测继续按钮是否可用的参数
@@ -20,22 +18,25 @@ class MainMenu(linpg.AbstractSystem):
         #加载主菜单文字
         self.__reset_menu_text(screen.get_size())
         #数值初始化
-        self.cover_alpha:int = 0
         self.menu_type:int = 0
         self.chapter_select:list = []
         self.workshop_files:list = []
         self.workshop_files_text:list = []
         self.current_selected_workshop_project = None
         #关卡选择的封面
-        self.cover_img = linpg.load_img(r"Assets/image/covers/chapter1.png",screen.get_size())
+        self.__cover_img_surface = None
         #音效
         self.click_button_sound = linpg.load_sound(r"Assets/sound/ui/main_menu_click_button.ogg",linpg.get_setting("Sound","sound_effects")/100.0)
         self.hover_on_button_sound = linpg.load_sound(r"Assets/sound/ui/main_menu_hover_on_button.ogg",linpg.get_setting("Sound","sound_effects")/100.0)
         self.hover_sound_play_on = None
         self.last_hover_sound_play_on = None
         #加载主菜单背景
-        self.videoCapture = linpg.VedioSurface(
-            r"Assets/movie/SquadAR.mp4",window_x,window_y,True,True,(32,103),linpg.get_setting("Sound","background_music")/100.0
+        self.__background = linpg.VedioSurface(
+            r"Assets/movie/SquadAR.mp4",
+            screen.get_width(),screen.get_height(),
+            True,True,
+            (32,103),
+            linpg.get_setting("Sound","background_music")/100.0
             )
         #初始化返回菜单判定参数
         linpg.set_glob_value("BackToMainMenu",False)
@@ -52,7 +53,7 @@ class MainMenu(linpg.AbstractSystem):
         for path in glob.glob(r"Data/workshop/*"):
             try:
                 info_data = linpg.load_config(os.path.join(path,"info.yaml"))
-            except BaseException:
+            except Exception:
                 info_data = linpg.load_config(r"Data/info_example.yaml")
                 info_data["default_lang"] = linpg.get_setting("Language")
                 linpg.save_config(os.path.join(path,"info.yaml"),info_data)
@@ -158,7 +159,7 @@ class MainMenu(linpg.AbstractSystem):
         #创建文件夹
         os.makedirs(os.path.join("Data","workshop",fileName))
         #储存数据
-        info_data:dict = linpg.load_config("Data/info_example.yaml")
+        info_data:dict = linpg.load_config(r"Data/info_example.yaml")
         info_data["default_lang"] = linpg.get_setting("Language")
         linpg.save_config(os.path.join("Data","workshop",fileName,"info.yaml"),info_data)
     #创建新的对话文和地图文件
@@ -194,14 +195,14 @@ class MainMenu(linpg.AbstractSystem):
             large_image = LARGE_IMAGE,
             start = time.time()
             )
-        self.videoCapture.stop()
+        self.__background.stop()
         projectName = None if chapterType == "main_chapter" else self.current_selected_workshop_project
         dialog(screen, chapterType, chapterId, "dialog_before_battle", projectName)
         if not linpg.get_glob_value("BackToMainMenu"):
             battle(screen,chapterType,chapterId,projectName)
             if not linpg.get_glob_value("BackToMainMenu"):
                 dialog(screen, chapterType, chapterId, "dialog_after_battle", projectName)
-                linpg.if_get_set_value("BackToMainMenu",True,False)
+                linpg.if_get_set_glob_value("BackToMainMenu",True,False)
             else:
                 linpg.set_glob_value("BackToMainMenu",False)
         else:
@@ -210,8 +211,8 @@ class MainMenu(linpg.AbstractSystem):
         if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
     #继续章节
     def __continue_scene(self, screen:linpg.ImageSurface) -> None:
-        self.videoCapture.stop()
-        SAVE:dict = linpg.load_config("Save/save.yaml")
+        self.__background.stop()
+        SAVE:dict = linpg.load_config(r"Save/save.yaml")
         if RPC is not None: RPC.update(
             details = linpg.get_lang('General','main_chapter') if SAVE["chapter_type"] == "main_chapter" else linpg.get_lang('General','workshop'),
             state = self.__get_chapter_title(SAVE["chapter_type"],SAVE["chapter_id"]),
@@ -237,13 +238,13 @@ class MainMenu(linpg.AbstractSystem):
                 linpg.set_glob_value("BackToMainMenu",False)
         elif startPoint == "dialog_after_battle":
             dialog(screen, None, None, None)
-            linpg.if_get_set_value("BackToMainMenu",True,False)
+            linpg.if_get_set_glob_value("BackToMainMenu",True,False)
         self.__reset_menu()
         if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
     #更新主菜单的部分元素
     def __reset_menu(self) -> None:
-        self.videoCapture = self.videoCapture.copy()
-        self.videoCapture.start()
+        self.__background = self.__background.copy()
+        self.__background.start()
         #是否可以继续游戏了（save文件是否被创建）
         if os.path.exists("Save/save.yaml") and not self.continueButtonIsOn:
             self.main_menu_txt["menu_main"]["0_continue"] = linpg.load_dynamic_text(
@@ -301,23 +302,40 @@ class MainMenu(linpg.AbstractSystem):
     def __update_sound_volume(self) -> None:
         self.click_button_sound.set_volume(linpg.get_setting("Sound","sound_effects")/100.0)
         self.hover_on_button_sound.set_volume(linpg.get_setting("Sound","sound_effects")/100.0)
-        self.videoCapture.set_volume(linpg.get_setting("Sound","background_music")/100.0)
+        self.__background.set_volume(linpg.get_setting("Sound","background_music")/100.0)
+    #画出背景
+    def __draw_background(self, screen:linpg.ImageSurface) -> None:
+        #开始播放背景视频
+        if not self.__background.started: self.__background.start()
+        #处理封面的更替
+        cover_path:str = None
+        if self.menu_type == 1:
+            for i in range(len(self.chapter_select)-1):
+                if linpg.is_hover(self.chapter_select[i]):
+                    cover_path = linpg.load_config(r"Data/main_chapter/info.yaml", "cover_image")[i]
+                    break
+        if cover_path is not None:
+            if self.__cover_img_surface is None: 
+                self.__cover_img_surface = linpg.load_static_image(cover_path, (0,0), screen.get_width(), screen.get_height(), cover_path)
+                self.__cover_img_surface.set_alpha(10)
+            elif cover_path != self.__cover_img_surface.tag:
+                self.__cover_img_surface.update_image(cover_path)
+                self.__cover_img_surface.tag = cover_path
+            if self.__cover_img_surface is not None:
+                self.__cover_img_surface.add_alpha(5)
+        elif self.__cover_img_surface is not None:
+            if self.__cover_img_surface.get_alpha() > 10:
+                self.__cover_img_surface.subtract_alpha(5)
+            else:
+                self.__cover_img_surface = None
+        #背景视频
+        if self.__cover_img_surface is None or self.__cover_img_surface.get_alpha() < 255: self.__background.draw(screen)
+        #封面
+        if self.__cover_img_surface is not None: self.__cover_img_surface.draw(screen)
     #画出主菜单
     def draw(self, screen:linpg.ImageSurface) -> None:
-        #开始播放背景视频
-        if not self.videoCapture.started: self.videoCapture.start()
-        #背景视频
-        self.videoCapture.draw(screen)
-        #画出章节背景
-        if self.menu_type == 1 and linpg.is_hover(self.chapter_select[0]):
-            if self.cover_alpha < 255:
-                self.cover_alpha += 15
-        elif self.cover_alpha >= 0:
-            self.cover_alpha -= 15
-        #如果图片的透明度大于10则展示图片
-        if self.cover_alpha > 10:
-            self.cover_img.set_alpha(self.cover_alpha)
-            screen.blit(self.cover_img,(0,0))
+        #背景
+        self.__draw_background(screen)
         #菜单选项
         self.__draw_buttons(screen)
         #展示设置UI
@@ -360,7 +378,7 @@ class MainMenu(linpg.AbstractSystem):
                     pass
                 #退出
                 elif linpg.is_hover(self.main_menu_txt["menu_main"]["7_exit"]) and self.exit_confirm_menu.draw() == 0:
-                    self.videoCapture.stop()
+                    self.__background.stop()
                     self.stop()
                     if RPC is not None: RPC.close()
             #选择主线章节
@@ -453,10 +471,10 @@ class MainMenu(linpg.AbstractSystem):
                     for i in range(1,len(self.chapter_select)-1):
                         #章节选择
                         if linpg.is_hover(self.chapter_select[i]):
-                            self.videoCapture.stop()
+                            self.__background.stop()
                             mapEditor(screen,"workshop",i,self.current_selected_workshop_project)
-                            self.videoCapture = self.videoCapture.copy()
-                            self.videoCapture.start()
+                            self.__background = self.__background.copy()
+                            self.__background.start()
                             break
             #创意工坊-选择当前合集想要编辑对话的关卡
             elif self.menu_type == 8:
@@ -469,9 +487,9 @@ class MainMenu(linpg.AbstractSystem):
                     for i in range(1,len(self.chapter_select)-1):
                         #章节选择
                         if linpg.is_hover(self.chapter_select[i]):
-                            self.videoCapture.stop()
+                            self.__background.stop()
                             dialogEditor(screen,"workshop",i,"dialog_before_battle",self.current_selected_workshop_project)
-                            self.videoCapture = self.videoCapture.copy()
-                            self.videoCapture.start()
+                            self.__background = self.__background.copy()
+                            self.__background.start()
                             break
         ALPHA_BUILD_WARNING.draw(screen)
