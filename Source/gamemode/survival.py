@@ -11,11 +11,11 @@ class SurvivalBattleSystem(BattleSystem):
         self.window_x,self.window_y = linpg.display.get_size()
         self.DATABASE = linpg.loadCharacterData()
         self.original_UI_img = {
-            "green" : linpg.load_img("Assets/image/UI/range/green.png"),
-            "red" : linpg.load_img("Assets/image/UI/range/red.png"),
-            "yellow": linpg.load_img("Assets/image/UI/range/yellow.png"),
-            "blue": linpg.load_img("Assets/image/UI/range/blue.png"),
-            "orange": linpg.load_img("Assets/image/UI/range/orange.png"),
+            "green" : linpg.load.img("Assets/image/UI/range/green.png"),
+            "red" : linpg.load.img("Assets/image/UI/range/red.png"),
+            "yellow": linpg.load.img("Assets/image/UI/range/yellow.png"),
+            "blue": linpg.load.img("Assets/image/UI/range/blue.png"),
+            "orange": linpg.load.img("Assets/image/UI/range/orange.png"),
             "eyeImg": linpg.ProgressBarSurface("Assets/image/UI/eye_red.png","Assets/image/UI/eye_orange.png",0,0,0,0),
             "vigilanceImg": linpg.ProgressBarSurface("Assets/image/UI/vigilance_red.png","Assets/image/UI/vigilance_orange.png",0,0,0,0,"height"),
             "supplyBoard":linpg.load_dynamic_image("Assets/image/UI/score.png",((self.window_x-self.window_x/3)/2,-self.window_y/12),self.window_x/3,self.window_y/12),

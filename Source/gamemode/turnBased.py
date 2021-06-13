@@ -180,9 +180,13 @@ class TurnBasedBattleSystem(BattleSystem):
         #加载UI:
         #加载结束回合的图片
         self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.get_color_rbga("white"))
-        self.end_round_button = linpg.load_static_image("Assets/image/UI/end_round_button.png",(self.window_x*0.8,self.window_y*0.7),self.end_round_txt.get_width()*2,self.end_round_txt.get_height()*2.5)
+        self.end_round_button = linpg.load.static_image(
+            "Assets/image/UI/end_round_button.png",
+            (self.window_x*0.8, self.window_y*0.7),
+            (self.end_round_txt.get_width()*2, self.end_round_txt.get_height()*2.5)
+            )
         #加载子弹图片
-        #bullet_img = load_img("Assets/image/UI/bullet.png", get_block_width()/6, self.MAP.block_height/12)
+        #bullet_img = load.img("Assets/image/UI/bullet.png", get_block_width()/6, self.MAP.block_height/12)
         #加载显示获取到补给后的信息栏
         supply_board_width:int = int(self.window_x/3)
         supply_board_height:int = int(self.window_y/12)
@@ -198,11 +202,11 @@ class TurnBasedBattleSystem(BattleSystem):
         self.supply_board.stayingTime = 0
         #用于表示范围的方框图片
         self.range_ui_images = {
-            "green" : linpg.load_static_image(r"Assets/image/UI/range/green.png",(0,0)),
-            "red" : linpg.load_static_image(r"Assets/image/UI/range/red.png",(0,0)),
-            "yellow": linpg.load_static_image(r"Assets/image/UI/range/yellow.png",(0,0)),
-            "blue": linpg.load_static_image(r"Assets/image/UI/range/blue.png",(0,0)),
-            "orange": linpg.load_static_image(r"Assets/image/UI/range/orange.png",(0,0)),
+            "green" : linpg.load.static_image(r"Assets/image/UI/range/green.png",(0,0)),
+            "red" : linpg.load.static_image(r"Assets/image/UI/range/red.png",(0,0)),
+            "yellow": linpg.load.static_image(r"Assets/image/UI/range/yellow.png",(0,0)),
+            "blue": linpg.load.static_image(r"Assets/image/UI/range/blue.png",(0,0)),
+            "orange": linpg.load.static_image(r"Assets/image/UI/range/orange.png",(0,0)),
         }
         for key in self.range_ui_images:
             self.range_ui_images[key].set_width_with_size_locked(self.MAP.block_width*0.8)
@@ -320,11 +324,10 @@ class TurnBasedBattleSystem(BattleSystem):
         self.battleModeUiTxt = linpg.get_lang("Battle_UI")
         self.RoundSwitchUI = RoundSwitch(self.window_x,self.window_y,self.battleModeUiTxt)
         self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.get_color_rbga("white"))
-        self.end_round_button = linpg.load_static_image(
+        self.end_round_button = linpg.load.static_image(
             r"Assets/image/UI/end_round_button.png",
             (self.window_x*0.8, self.window_y*0.7),
-            self.end_round_txt.get_width()*2,
-            self.end_round_txt.get_height()*2.5
+            (self.end_round_txt.get_width()*2, self.end_round_txt.get_height()*2.5)
             )
         self.warnings_to_display = WarningSystem(int(screen.get_height()*0.03))
         self._DIALOG.updated_language(screen)
@@ -1220,7 +1223,7 @@ class TurnBasedBattleSystem(BattleSystem):
         self.__update_scene(screen)
         #展示暂停菜单
         if not self.pause_menu.hidden:
-            progress_saved_text = linpg.load_static_image(
+            progress_saved_text = linpg.load.static_image(
                 self.FONT.render(linpg.get_lang("Global","progress_has_been_saved"),linpg.get_antialias(),(255,255,255)),
                 (0,0)
                 )

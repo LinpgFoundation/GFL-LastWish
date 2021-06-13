@@ -4,18 +4,18 @@ import glob
 import time
 from typing import Union
 # 第三方
-import linpg
-#from linpgdev import linpg
+#import linpg
+from linpgdev import linpg
 from collections import deque
 
 # 显示回合切换的UI
 class RoundSwitch:
     def __init__(self, window_x:int, window_y:int, battleUiTxt:dict):
-        self.lineRedDown = linpg.load_img(r"Assets/image/UI/lineRed.png", (window_x, window_y/50))
+        self.lineRedDown = linpg.load.img(r"Assets/image/UI/lineRed.png", (window_x, window_y/50))
         self.lineRedUp = linpg.rotate_img(self.lineRedDown, 180)
-        self.lineGreenDown = linpg.load_img(r"Assets/image/UI/lineGreen.png", (window_x, window_y/50))
+        self.lineGreenDown = linpg.load.img(r"Assets/image/UI/lineGreen.png", (window_x, window_y/50))
         self.lineGreenUp = linpg.rotate_img(self.lineGreenDown, 180)
-        self.baseImg = linpg.load_img(r"Assets/image/UI/roundSwitchBase.png", (window_x, window_y/5))
+        self.baseImg = linpg.load.img(r"Assets/image/UI/roundSwitchBase.png", (window_x, window_y/5))
         self.baseImg.set_alpha(0)
         self.x = -window_x
         self.y = int((window_y - self.baseImg.get_height())/2)
@@ -148,7 +148,7 @@ class WarningSystem:
 class SelectMenu:
     def __init__(self):
         selectMenuTxtDic:dict = linpg.get_lang("SelectMenu")
-        self.selectButtonImg = linpg.load_img("Assets/image/UI/menu.png")
+        self.selectButtonImg = linpg.load.img("Assets/image/UI/menu.png")
         #攻击
         self.attackAP = linpg.AP_IS_NEEDED_TO_ATTACK
         self.attackTxt = selectMenuTxtDic["attack"]
@@ -269,16 +269,16 @@ class SelectMenu:
 #角色信息板
 class CharacterInfoBoard:
     def __init__(self, window_x:int, window_y:int, text_size:int=20):
-        self.boardImg = linpg.load_img("Assets/image/UI/score.png",(window_x/5,window_y/6))
+        self.boardImg = linpg.load.img("Assets/image/UI/score.png",(window_x/5,window_y/6))
         self.characterIconImages = {}
         all_icon_file_list = glob.glob(r'Assets/image/npc_icon/*.png')
         for i in range(len(all_icon_file_list)):
             img_name = all_icon_file_list[i].replace("Assets","").replace("image","").replace("npc_icon","").replace(".png","").replace("\\","").replace("/","")
-            self.characterIconImages[img_name] = linpg.smoothly_resize_img(linpg.load_img(all_icon_file_list[i]),(window_y*0.08,window_y*0.08))
+            self.characterIconImages[img_name] = linpg.smoothly_resize_img(linpg.load.img(all_icon_file_list[i]),(window_y*0.08,window_y*0.08))
         del all_icon_file_list
         self.text_size = text_size
         self.informationBoard = None
-        hp_empty_img = linpg.load_img("Assets/image/UI/hp_empty.png")
+        hp_empty_img = linpg.load.img("Assets/image/UI/hp_empty.png")
         self.hp_red = linpg.ProgressBarSurface("Assets/image/UI/hp_red.png",hp_empty_img,0,0,window_x/15,text_size)
         self.hp_green = linpg.ProgressBarSurface("Assets/image/UI/hp_green.png",hp_empty_img,0,0,window_x/15,text_size)
         self.action_point_blue = linpg.ProgressBarSurface("Assets/image/UI/action_point.png",hp_empty_img,0,0,window_x/15,text_size)
@@ -336,7 +336,7 @@ class ResultBoard:
         self.x = int(font_size*10)
         self.y = int(font_size*10)
         self.txt_x = int(font_size*12)
-        self.boardImg = linpg.load_img("Assets/image/UI/score.png",(font_size*16,font_size*32))
+        self.boardImg = linpg.load.img("Assets/image/UI/score.png",(font_size*16,font_size*32))
         self.total_kills = linpg.render_font(resultTxt["total_kills"]+": "+str(finalResult["total_kills"]),"white",font_size)
         self.total_time = linpg.render_font(resultTxt["total_time"]+": "+str(time.strftime('%M:%S',finalResult["total_time"])),"white",font_size)
         self.total_rounds_txt = linpg.render_font(resultTxt["total_rounds"]+": "+str(finalResult["total_rounds"]),"white",font_size)
@@ -359,11 +359,11 @@ class LoadingTitle:
     def __init__(self, window_x:int, window_y:int, numChapter_txt:str, chapterId:int, chapterTitle_txt:str, chapterDesc_txt:str):
         self.black_bg = linpg.get_single_color_surface("black")
         title_chapterNum = linpg.render_font(numChapter_txt.format(chapterId),"white",window_x/38)
-        self.title_chapterNum = linpg.load_static_image(title_chapterNum,((window_x-title_chapterNum.get_width())/2,window_y*0.37))
+        self.title_chapterNum = linpg.load.static_image(title_chapterNum,((window_x-title_chapterNum.get_width())/2,window_y*0.37))
         title_chapterName = linpg.render_font(chapterTitle_txt,"white",window_x/38)
-        self.title_chapterName = linpg.load_static_image(title_chapterName,((window_x-title_chapterName.get_width())/2,window_y*0.46))
+        self.title_chapterName = linpg.load.static_image(title_chapterName,((window_x-title_chapterName.get_width())/2,window_y*0.46))
         title_description = linpg.render_font(chapterDesc_txt,"white",window_x/76)
-        self.title_description = linpg.load_static_image(title_description,((window_x-title_description.get_width())/2,window_y*0.6))
+        self.title_description = linpg.load.static_image(title_description,((window_x-title_description.get_width())/2,window_y*0.6))
     def draw(self, screen:linpg.ImageSurface, alpha:int=255) -> None:
         self.title_chapterNum.set_alpha(alpha)
         self.title_chapterName.set_alpha(alpha)

@@ -17,7 +17,7 @@ GAMESTART:bool = True
 #游戏主进程
 if GAMESTART is True and __name__ == "__main__":
     #创建窗口
-    screen = linpg.display.init_screen()
+    screen = linpg.display.init()
     #窗口标题图标
     linpg.display.set_icon("Assets/image/UI/icon.png")
     linpg.display.set_caption(linpg.get_lang('General','game_title'))

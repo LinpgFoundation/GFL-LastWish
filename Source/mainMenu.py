@@ -39,7 +39,7 @@ class MainMenu(linpg.AbstractSystem):
             linpg.get_setting("Sound","background_music")/100.0
             )
         #初始化返回菜单判定参数
-        linpg.set_glob_value("BackToMainMenu",False)
+        linpg.global_value.set("BackToMainMenu",False)
         #载入页面 - 渐出
         dispaly_loading_screen(screen,250,0,int(-2*linpg.display.sfpsp))
         #设置Discord状态
@@ -198,15 +198,15 @@ class MainMenu(linpg.AbstractSystem):
         self.__background.stop()
         projectName = None if chapterType == "main_chapter" else self.current_selected_workshop_project
         dialog(screen, chapterType, chapterId, "dialog_before_battle", projectName)
-        if not linpg.get_glob_value("BackToMainMenu"):
+        if not linpg.global_value.get("BackToMainMenu"):
             battle(screen,chapterType,chapterId,projectName)
-            if not linpg.get_glob_value("BackToMainMenu"):
+            if not linpg.global_value.get("BackToMainMenu"):
                 dialog(screen, chapterType, chapterId, "dialog_after_battle", projectName)
-                linpg.if_get_set_glob_value("BackToMainMenu",True,False)
+                linpg.global_value.if_get_set("BackToMainMenu",True,False)
             else:
-                linpg.set_glob_value("BackToMainMenu",False)
+                linpg.global_value.set("BackToMainMenu",False)
         else:
-            linpg.set_glob_value("BackToMainMenu",False)
+            linpg.global_value.set("BackToMainMenu",False)
         self.__reset_menu()
         if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
     #继续章节
@@ -222,23 +222,23 @@ class MainMenu(linpg.AbstractSystem):
         startPoint = SAVE["type"]
         if startPoint == "dialog_before_battle":
             dialog(screen, None, None, None)
-            if not linpg.get_glob_value("BackToMainMenu"):
+            if not linpg.global_value.get("BackToMainMenu"):
                 battle(screen,SAVE["chapter_type"],SAVE["chapter_id"],SAVE["project_name"])
-                if not linpg.get_glob_value("BackToMainMenu"):
+                if not linpg.global_value.get("BackToMainMenu"):
                     dialog(screen, SAVE["chapter_type"], SAVE["chapter_id"], "dialog_after_battle", SAVE["project_name"])
                 else:
-                    linpg.set_glob_value("BackToMainMenu",False)
+                    linpg.global_value.set("BackToMainMenu",False)
             else:
-                linpg.set_glob_value("BackToMainMenu",False)
+                linpg.global_value.set("BackToMainMenu",False)
         elif startPoint == "battle":
             battle(screen, None, None)
-            if not linpg.get_glob_value("BackToMainMenu"):
+            if not linpg.global_value.get("BackToMainMenu"):
                 dialog(screen, SAVE["chapter_type"], SAVE["chapter_id"], "dialog_after_battle", SAVE["project_name"])
             else:
-                linpg.set_glob_value("BackToMainMenu",False)
+                linpg.global_value.set("BackToMainMenu",False)
         elif startPoint == "dialog_after_battle":
             dialog(screen, None, None, None)
-            linpg.if_get_set_glob_value("BackToMainMenu",True,False)
+            linpg.global_value.if_get_set("BackToMainMenu",True,False)
         self.__reset_menu()
         if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
     #更新主菜单的部分元素
@@ -316,7 +316,7 @@ class MainMenu(linpg.AbstractSystem):
                     break
         if cover_path is not None:
             if self.__cover_img_surface is None: 
-                self.__cover_img_surface = linpg.load_static_image(cover_path, (0,0), screen.get_width(), screen.get_height(), cover_path)
+                self.__cover_img_surface = linpg.load.static_image(cover_path, (0,0), screen.get_size(), cover_path)
                 self.__cover_img_surface.set_alpha(10)
             elif cover_path != self.__cover_img_surface.tag:
                 self.__cover_img_surface.update_image(cover_path)
