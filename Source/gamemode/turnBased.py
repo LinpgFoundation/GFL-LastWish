@@ -119,7 +119,7 @@ class TurnBasedBattleSystem(BattleSystem):
         )
         self.battleMode_info = DataTmp["battle_info"]
         #正在加载的gif动态图标
-        nowLoadingIcon = linpg.load_gif(
+        nowLoadingIcon = linpg.load.gif(
             r"Assets/image/UI/sv98_walking.gif",
             (self.window_x*0.7, self.window_y*0.83),
             (self.window_x*0.003*15, self.window_x*0.003*21)
@@ -173,13 +173,13 @@ class TurnBasedBattleSystem(BattleSystem):
         self._calculate_darkness()
         #开始加载关卡设定
         self.infoToDisplayDuringLoading.draw(screen)
-        now_loading = self.FONT.render(loading_info["now_loading_level"],linpg.get_antialias(),linpg.get_color_rbga("white"))
+        now_loading = self.FONT.render(loading_info["now_loading_level"],linpg.get_antialias(),linpg.Color.WHITE)
         screen.blit(now_loading,(self.window_x*0.75,self.window_y*0.9))
         nowLoadingIcon.draw(screen)
         linpg.display.flip()
         #加载UI:
         #加载结束回合的图片
-        self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.get_color_rbga("white"))
+        self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.Color.WHITE)
         self.end_round_button = linpg.load.static_image(
             "Assets/image/UI/end_round_button.png",
             (self.window_x*0.8, self.window_y*0.7),
@@ -191,12 +191,10 @@ class TurnBasedBattleSystem(BattleSystem):
         supply_board_width:int = int(self.window_x/3)
         supply_board_height:int = int(self.window_y/12)
         supply_board_x:int = int((self.window_x-supply_board_width)/2)
-        self.supply_board = linpg.load_movable_image(
-            "Assets/image/UI/score.png",
-            (supply_board_x,-supply_board_height),
-            (supply_board_x,0),
-            (0,int(self.window_y*0.005)),
-            supply_board_width, supply_board_height
+        self.supply_board = linpg.load.movable_image(
+            r"Assets/image/UI/score.png",
+            (supply_board_x, -supply_board_height), (supply_board_x, 0),
+            (0, int(self.window_y*0.005)), (supply_board_width, supply_board_height)
         )
         self.supply_board.items = []
         self.supply_board.stayingTime = 0
@@ -214,12 +212,13 @@ class TurnBasedBattleSystem(BattleSystem):
         self.characterInfoBoardUI = CharacterInfoBoard(self.window_x,self.window_y)
         #加载用于渲染电影效果的上下黑色帘幕
         black_curtain = linpg.new_surface((self.window_x,self.window_y*0.15)).convert()
-        black_curtain.fill(linpg.get_color_rbga("black"))
-        self.__up_black_curtain = linpg.load_movable_image(
-            black_curtain,(0,-black_curtain.get_height()),(0,0),(0,black_curtain.get_height()*0.05)
+        black_curtain.fill(linpg.Color.BLACK)
+        self.__up_black_curtain = linpg.load.movable_image(
+            black_curtain, (0, -black_curtain.get_height()), (0, 0), (0, int(black_curtain.get_height()*0.05))
         )
-        self.__down_black_curtain = linpg.load_movable_image(
-            black_curtain,(0,self.window_y),(0,self.window_y-black_curtain.get_height()),(0,black_curtain.get_height()*0.051)
+        self.__down_black_curtain = linpg.load.movable_image(
+            black_curtain, (0, self.window_y),
+            (0, int(self.window_y-black_curtain.get_height())), (0, int(black_curtain.get_height()*0.051))
         )
         """-----加载音效-----"""
         #行走的音效 -- 频道0
@@ -323,7 +322,7 @@ class TurnBasedBattleSystem(BattleSystem):
         self.selectMenuUI = SelectMenu()
         self.battleModeUiTxt = linpg.get_lang("Battle_UI")
         self.RoundSwitchUI = RoundSwitch(self.window_x,self.window_y,self.battleModeUiTxt)
-        self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.get_color_rbga("white"))
+        self.end_round_txt = self.FONT.render(linpg.get_lang("Battle_UI","endRound"),linpg.get_antialias(),linpg.Color.WHITE)
         self.end_round_button = linpg.load.static_image(
             r"Assets/image/UI/end_round_button.png",
             (self.window_x*0.8, self.window_y*0.7),
@@ -940,10 +939,10 @@ class TurnBasedBattleSystem(BattleSystem):
                         for each_enemy in self.enemiesGetAttack:
                             if self.enemiesGetAttack[each_enemy] == "near" and linpg.get_random_int(1,100) <= 95 or self.enemiesGetAttack[each_enemy] == "middle" and linpg.get_random_int(1,100) <= 80 or self.enemiesGetAttack[each_enemy] == "far" and linpg.get_random_int(1,100) <= 65:
                                 the_damage = self.characterInControl.attack(self.sangvisFerrisData[each_enemy])
-                                self.damage_do_to_characters[each_enemy] = self.FONT.render("-"+str(the_damage),linpg.get_antialias(),linpg.get_color_rbga("red"))
+                                self.damage_do_to_characters[each_enemy] = self.FONT.render("-"+str(the_damage),linpg.get_antialias(),linpg.Color.RED)
                                 self.sangvisFerrisData[each_enemy].alert(100)
                             else:
-                                self.damage_do_to_characters[each_enemy] = self.FONT.render("Miss",linpg.get_antialias(),linpg.get_color_rbga("red"))
+                                self.damage_do_to_characters[each_enemy] = self.FONT.render("Miss",linpg.get_antialias(),linpg.Color.RED)
                                 self.sangvisFerrisData[each_enemy].alert(50)
                     elif self.characterInControl.get_imgId("attack") == self.characterInControl.get_imgNum("attack")-1:
                         self.characterInControl.current_bullets -= 1
@@ -995,9 +994,9 @@ class TurnBasedBattleSystem(BattleSystem):
                             if not self.griffinCharactersData[self.current_instruction.target].is_alive(): self.resultInfo["times_characters_down"] += 1
                             #重新计算迷雾区域
                             self._calculate_darkness()
-                            self.damage_do_to_characters[self.current_instruction.target] = self.FONT.render("-"+str(the_damage),linpg.get_antialias(),linpg.get_color_rbga("red"))
+                            self.damage_do_to_characters[self.current_instruction.target] = self.FONT.render("-"+str(the_damage),linpg.get_antialias(),linpg.Color.RED)
                         else:
-                            self.damage_do_to_characters[self.current_instruction.target] = self.FONT.render("Miss",linpg.get_antialias(),linpg.get_color_rbga("red"))
+                            self.damage_do_to_characters[self.current_instruction.target] = self.FONT.render("Miss",linpg.get_antialias(),linpg.Color.RED)
                         self.current_instruction = None
             else:
                 self.enemyInControl.set_action()

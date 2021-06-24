@@ -18,7 +18,10 @@ class SurvivalBattleSystem(BattleSystem):
             "orange": linpg.load.img("Assets/image/UI/range/orange.png"),
             "eyeImg": linpg.ProgressBarSurface("Assets/image/UI/eye_red.png","Assets/image/UI/eye_orange.png",0,0,0,0),
             "vigilanceImg": linpg.ProgressBarSurface("Assets/image/UI/vigilance_red.png","Assets/image/UI/vigilance_orange.png",0,0,0,0,"height"),
-            "supplyBoard":linpg.load_dynamic_image("Assets/image/UI/score.png",((self.window_x-self.window_x/3)/2,-self.window_y/12),self.window_x/3,self.window_y/12),
+            "supplyBoard":linpg.load.dynamic_image(
+                r"Assets/image/UI/score.png",
+                ((self.window_x-self.window_x/3)/2,-self.window_y/12),(self.window_x/3,self.window_y/12)
+            ),
         }
         """init"""
         #shutil.copyfile("Data/chapter_map_example.yaml","Save/map1.yaml")
@@ -107,5 +110,5 @@ class SurvivalBattleSystem(BattleSystem):
         self._display_decoration(screen)
         pos_x,pos_y = self.MAP.calPosInMap(self.alliances["me"].x,self.alliances["me"].y)
         pos_x += linpg.display.get_width()/20
-        #pygame.draw.line(screen,linpg.get_color_rbga("red"),(pos_x,pos_y),(mouse_x,mouse_y),5)
+        #pygame.draw.line(screen,linpg.Color.RED,(pos_x,pos_y),(mouse_x,mouse_y),5)
         linpg.display.flip()

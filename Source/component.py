@@ -16,7 +16,7 @@ def dispaly_loading_screen(screen:linpg.ImageSurface, start:int, end:int, value:
     text2 = linpg.render_font(linpg.get_lang("title2"), "white", window_x/64)
     #主循环
     for i in range(start,end,value):
-        screen.fill(linpg.get_color_rbga("black"))
+        screen.fill(linpg.Color.BLACK)
         text1.set_alpha(i)
         text2.set_alpha(i)
         screen.blits(((text1,(window_x/64,window_y*0.9)),(text2,(window_x/64,window_y*0.9-window_x/32))))

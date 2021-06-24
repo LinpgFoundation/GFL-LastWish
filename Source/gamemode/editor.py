@@ -53,12 +53,13 @@ class MapEditor(linpg.AbstractBattleSystem):
             int((container_width-self.__button_select_block.get_width()-self.__button_select_decoration.get_width()-panding)/2)
             )
         self.__button_select_decoration.set_left(self.__button_select_block.right+panding)
-        self.__UIContainerRight = linpg.load_dynamic_image("Assets/image/UI/container.png",(0,0),container_width,container_height)
-        self.__UIContainerButtonRight = linpg.load_movable_image("Assets/image/UI/container_button.png",
-        (screen.get_width()-button_width,int((screen.get_height()-button_height)/2)),
-        (screen.get_width()-button_width-container_width,int((screen.get_height()-button_height)/2)),
-        (int(container_width/10),0),button_width,button_height
-        )
+        self.__UIContainerRight = linpg.load.dynamic_image(r"Assets/image/UI/container.png", (0,0), (container_width,container_height))
+        self.__UIContainerButtonRight = linpg.load.movable_image(
+            r"Assets/image/UI/container_button.png",
+            (int(screen.get_width()-button_width), int((screen.get_height()-button_height)/2)),
+            (int(screen.get_width()-button_width-container_width), int((screen.get_height()-button_height)/2)),
+            (int(container_width/10), 0), (button_width, button_height)
+            )
         self.__UIContainerRight.rotate(90)
         self.__UIContainerButtonRight.rotate(90)
         #加载背景图片
@@ -94,12 +95,12 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.__button_select_sangvisFerri = linpg.load.button_with_text_in_center(
             "Assets/image/UI/menu.png",linpg.get_lang("General","sangvis_ferri"),"black",font_size,(self.__button_select_character.get_width(),0),100
             )
-        self.__UIContainerBottom = linpg.load_dynamic_image("Assets/image/UI/container.png",(0,0),container_width,container_height)
-        self.__UIContainerButtonBottom = linpg.load_movable_image(
-            "Assets/image/UI/container_button.png",
-            ((container_width-button_width)/2,screen.get_height()-button_height),
-            ((container_width-button_width)/2,screen.get_height()-button_height-container_height),
-            (0,container_height/10),button_width,button_height
+        self.__UIContainerBottom = linpg.load.dynamic_image(r"Assets/image/UI/container.png", (0,0), (container_width,container_height))
+        self.__UIContainerButtonBottom = linpg.load.movable_image(
+            r"Assets/image/UI/container_button.png",
+            (int((container_width-button_width)/2), int(screen.get_height()-button_height)),
+            (int((container_width-button_width)/2), int(screen.get_height()-button_height-container_height)),
+            (0, int(container_height/10)), (button_width, button_height)
             )
         #加载所有友方的角色的图片文件
         self.__charactersImgContainer:object = linpg.SurfaceContainerWithScrollbar(

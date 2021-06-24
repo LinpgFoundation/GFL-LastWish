@@ -12,7 +12,7 @@ class DialogSystem(linpg.DialogSystem):
             linpg.save_config(os.path.join(self.folder_for_save_file,"global.yaml"),DataTmp)
 
 #对话系统
-def dialog(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> dict:
+def dialog(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> None:
     #加载闸门动画的图片素材
     LoadingImgAbove:linpg.ImageSurface = linpg.smoothly_resize_img(
         linpg.cope_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgAbove.png")), (screen.get_width()+4, screen.get_height()/1.7)
@@ -45,8 +45,6 @@ def dialog(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, 
         DIALOG.draw(screen)
         ALPHA_BUILD_WARNING.draw(screen)
         linpg.display.flip()
-    #返回玩家做出的选项
-    return DIALOG.dialog_options
 
 #对话编辑器
 def dialogEditor(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> None:
