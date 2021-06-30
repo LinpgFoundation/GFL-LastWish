@@ -25,7 +25,7 @@ class SurvivalBattleSystem(BattleSystem):
         }
         """init"""
         #shutil.copyfile("Data/chapter_map_example.yaml","Save/map1.yaml")
-        mapFileData = linpg.load_config("Save/map1.yaml")
+        mapFileData = linpg.config.load("Save/map1.yaml")
         SnowEnvImg = ["TileSnow01","TileSnow01ToStone01","TileSnow01ToStone02","TileSnow02","TileSnow02ToStone01","TileSnow02ToStone02"]
         block_y = 50
         block_x = 50
@@ -94,11 +94,11 @@ class SurvivalBattleSystem(BattleSystem):
     #把所有内容画到屏幕上
     def draw(self, screen:linpg.ImageSurface) -> None:
         for event in linpg.controller.events:
-            if event.type == linpg.KEY.DOWN:
-                if event.key == linpg.KEY.ESCAPE:
+            if event.type == linpg.key.DOWN:
+                if event.key == linpg.key.ESCAPE:
                     self.stop()
                 self._check_key_down(event)
-            elif event.type == linpg.KEY.UP:
+            elif event.type == linpg.key.UP:
                 self._check_key_up(event)
         #其他移动的检查
         self._check_right_click_move()
@@ -110,5 +110,5 @@ class SurvivalBattleSystem(BattleSystem):
         self._display_decoration(screen)
         pos_x,pos_y = self.MAP.calPosInMap(self.alliances["me"].x,self.alliances["me"].y)
         pos_x += linpg.display.get_width()/20
-        #pygame.draw.line(screen,linpg.Color.RED,(pos_x,pos_y),(mouse_x,mouse_y),5)
+        #pygame.draw.line(screen,linpg.color.RED,(pos_x,pos_y),(mouse_x,mouse_y),5)
         linpg.display.flip()

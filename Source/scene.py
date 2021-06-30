@@ -9,7 +9,7 @@ class DialogSystem(linpg.DialogSystem):
         #检查global.yaml配置文件
         if not os.path.exists(os.path.join(self.folder_for_save_file,"global.yaml")):
             DataTmp = {"chapter_unlocked":1}
-            linpg.save_config(os.path.join(self.folder_for_save_file,"global.yaml"),DataTmp)
+            linpg.config.save(os.path.join(self.folder_for_save_file,"global.yaml"),DataTmp)
 
 #对话系统
 def dialog(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> None:
@@ -51,9 +51,9 @@ def dialogEditor(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part
     #卸载音乐
     linpg.unload_all_music()
     #改变标题
-    linpg.display.set_caption("{0} ({1})".format(linpg.get_lang('General','game_title'),linpg.get_lang('General','dialog_editor')))
+    linpg.display.set_caption("{0} ({1})".format(linpg.lang.get_text('General','game_title'),linpg.lang.get_text('General','dialog_editor')))
     if RPC is not None:
-        RPC.update(details=linpg.get_lang("DiscordStatus","now_playing"),state=linpg.get_lang('General','dialog_editor'),large_image=LARGE_IMAGE)
+        RPC.update(details=linpg.lang.get_text("DiscordStatus","now_playing"),state=linpg.lang.get_text('General','dialog_editor'),large_image=LARGE_IMAGE)
     #加载对话
     DIALOG:object = linpg.DialogEditor()
     DIALOG.load(chapterType,chapterId,part,projectName)
@@ -63,8 +63,8 @@ def dialogEditor(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part
         ALPHA_BUILD_WARNING.draw(screen)
         linpg.display.flip()
     #改变标题回主菜单的样式
-    linpg.display.set_caption(linpg.get_lang('General','game_title'))
-    if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
+    linpg.display.set_caption(linpg.lang.get_text('General','game_title'))
+    if RPC is not None: RPC.update(state=linpg.lang.get_text("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
 
 #战斗系统
 def battle(screen:linpg.ImageSurface, chapterType:str, chapterId:int, projectName:str=None) -> dict:
@@ -91,14 +91,14 @@ def mapEditor(screen:linpg.ImageSurface, chapterType:str, chapterId:int, project
     MAP_EDITOR = MapEditor()
     MAP_EDITOR.load(screen, chapterType, chapterId, projectName)
     #改变标题
-    linpg.display.set_caption("{0} ({1})".format(linpg.get_lang('General','game_title'),linpg.get_lang('General','map_editor')))
+    linpg.display.set_caption("{0} ({1})".format(linpg.lang.get_text('General','game_title'),linpg.lang.get_text('General','map_editor')))
     if RPC is not None:
-        RPC.update(details=linpg.get_lang("DiscordStatus","now_playing"),state=linpg.get_lang('General','map_editor'),large_image=LARGE_IMAGE)
+        RPC.update(details=linpg.lang.get_text("DiscordStatus","now_playing"),state=linpg.lang.get_text('General','map_editor'),large_image=LARGE_IMAGE)
     #战斗系统主要loop
     while MAP_EDITOR.is_playing():
         MAP_EDITOR.draw(screen)
         ALPHA_BUILD_WARNING.draw(screen)
         linpg.display.flip()
     #改变标题回主菜单的样式
-    linpg.display.set_caption(linpg.get_lang('General','game_title'))
-    if RPC is not None: RPC.update(state=linpg.get_lang("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
+    linpg.display.set_caption(linpg.lang.get_text('General','game_title'))
+    if RPC is not None: RPC.update(state=linpg.lang.get_text("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)

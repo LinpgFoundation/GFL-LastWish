@@ -1,12 +1,10 @@
 # cython: language_level=3
-# python本体库
 import glob
 import time
-from typing import Union
-# 第三方
+import os
+from collections import deque
 #import linpg
 from linpgdev import linpg
-from collections import deque
 
 # 显示回合切换的UI
 class RoundSwitch:
@@ -32,7 +30,7 @@ class RoundSwitch:
     def draw(self, screen:linpg.ImageSurface, whose_round:str, total_rounds:int) -> bool:
         #如果“第N回合”的文字surface还没有初始化，则初始化该文字
         if self.now_total_rounds_surface is None:
-            self.now_total_rounds_surface = linpg.render_font(self.now_total_rounds_text.format(linpg.get_num_in_local_text(total_rounds)), "white",screen.get_width()/38)
+            self.now_total_rounds_surface = linpg.render_font(self.now_total_rounds_text.format(linpg.lang.get_num_in_local_text(total_rounds)), "white",screen.get_width()/38)
             self.now_total_rounds_surface.set_alpha(0)
         #如果UI底的alpha值在渐入阶段
         if self.baseAlphaUp:
@@ -122,7 +120,7 @@ class RoundSwitch:
 class WarningSystem:
     def __init__(self, font_size:int=30):
         self.__all_warnings:deque = deque()
-        self.__warnings_msg:dict = linpg.get_lang("Warnings")
+        self.__warnings_msg:dict = linpg.lang.get_text("Warnings")
         self.font_size:int = font_size
     #新增一个讯息
     def add(self, the_warning:str) -> None:
@@ -147,7 +145,7 @@ class WarningSystem:
 #角色行动选项菜单
 class SelectMenu:
     def __init__(self):
-        selectMenuTxtDic:dict = linpg.get_lang("SelectMenu")
+        selectMenuTxtDic:dict = linpg.lang.get_text("SelectMenu")
         self.selectButtonImg = linpg.load.img("Assets/image/UI/menu.png")
         #攻击
         self.attackAP = linpg.AP_IS_NEEDED_TO_ATTACK
@@ -176,7 +174,7 @@ class SelectMenu:
         #所有按钮
         self.allButton = None
     #初始化按钮
-    def initialButtons(self, fontSize:Union[int,float]) -> None:
+    def initialButtons(self, fontSize:linpg.int_f) -> None:
         selectButtonBase = linpg.resize_img(self.selectButtonImg, (round(fontSize*5), round(fontSize*2.6)))
         selectButtonBaseWidth = selectButtonBase.get_width()
         sizeBig = int(fontSize)
@@ -220,7 +218,7 @@ class SelectMenu:
         self.allButton["interact"].blit(txt_temp,((selectButtonBaseWidth-txt_temp.get_width())/2,txt_temp.get_height()*0.15))
         self.allButton["interact"].blit(txt_temp2,((selectButtonBaseWidth-txt_temp2.get_width())/2,txt_temp.get_height()*1.1))
     #将菜单按钮画出
-    def draw(self, screen:linpg.ImageSurface, fontSize:Union[int,float], location:dict, kind:str, friendsCanSave:list, thingsCanReact:list) -> str:
+    def draw(self, screen:linpg.ImageSurface, fontSize:linpg.int_f, location:dict, kind:str, friendsCanSave:list, thingsCanReact:list) -> str:
         #如果按钮没有初始化，则应该立刻初始化按钮
         if self.allButton is None: self.initialButtons(fontSize)
         buttonGetHover:str = ""
@@ -271,11 +269,8 @@ class CharacterInfoBoard:
     def __init__(self, window_x:int, window_y:int, text_size:int=20):
         self.boardImg = linpg.load.img("Assets/image/UI/score.png",(window_x/5,window_y/6))
         self.characterIconImages = {}
-        all_icon_file_list = glob.glob(r'Assets/image/npc_icon/*.png')
-        for i in range(len(all_icon_file_list)):
-            img_name = all_icon_file_list[i].replace("Assets","").replace("image","").replace("npc_icon","").replace(".png","").replace("\\","").replace("/","")
-            self.characterIconImages[img_name] = linpg.smoothly_resize_img(linpg.load.img(all_icon_file_list[i]),(window_y*0.08,window_y*0.08))
-        del all_icon_file_list
+        for img_path in glob.glob(r'Assets/image/npc_icon/*.png'):
+            self.characterIconImages[os.path.basename(img_path).replace(".png","")] = linpg.smoothly_resize_img(linpg.load.img(img_path),(window_y*0.08,window_y*0.08))
         self.text_size = text_size
         self.informationBoard = None
         hp_empty_img = linpg.load.img("Assets/image/UI/hp_empty.png")
@@ -332,7 +327,7 @@ class CharacterInfoBoard:
 #计分板
 class ResultBoard:
     def __init__(self, finalResult:dict, font_size:int, is_win:bool=True):
-        resultTxt:dict = linpg.get_lang("ResultBoard")
+        resultTxt:dict = linpg.lang.get_text("ResultBoard")
         self.x = int(font_size*10)
         self.y = int(font_size*10)
         self.txt_x = int(font_size*12)

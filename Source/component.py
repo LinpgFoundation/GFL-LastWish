@@ -5,18 +5,18 @@ from .scene import *
 def dispaly_loading_screen(screen:linpg.ImageSurface, start:int, end:int, value:int) -> None:
     window_x,window_y = screen.get_size()
     #获取健康游戏忠告
-    HealthyGamingAdvice = linpg.try_get_lang("HealthyGamingAdvice")
+    HealthyGamingAdvice = linpg.lang.try_to_get_text("HealthyGamingAdvice")
     if HealthyGamingAdvice == "HealthyGamingAdvice":
         HealthyGamingAdvice = []
     else:
         for i in range(len(HealthyGamingAdvice)):
             HealthyGamingAdvice[i] = linpg.render_font(HealthyGamingAdvice[i],"white",window_x/64)
     #其他载入页面需要的数据
-    text1 = linpg.render_font(linpg.get_lang("title1"), "white", window_x/64)
-    text2 = linpg.render_font(linpg.get_lang("title2"), "white", window_x/64)
+    text1 = linpg.render_font(linpg.lang.get_text("title1"), "white", window_x/64)
+    text2 = linpg.render_font(linpg.lang.get_text("title2"), "white", window_x/64)
     #主循环
     for i in range(start,end,value):
-        screen.fill(linpg.Color.BLACK)
+        screen.fill(linpg.color.BLACK)
         text1.set_alpha(i)
         text2.set_alpha(i)
         screen.blits(((text1,(window_x/64,window_y*0.9)),(text2,(window_x/64,window_y*0.9-window_x/32))))
@@ -34,7 +34,7 @@ class Console(linpg.Console):
             elif conditions[1] == "battle":
                 battle(linpg.display.screen_window, conditions[2], conditions[3], conditions[4])
             else:
-                self.txtOutput.append("Error, do not know what to load.")
+                self._txt_output.append("Error, do not know what to load.")
         else:
             super()._check_command(conditions)
 
