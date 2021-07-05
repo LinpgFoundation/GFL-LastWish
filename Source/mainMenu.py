@@ -26,8 +26,8 @@ class MainMenu(linpg.AbstractSystem):
         #关卡选择的封面
         self.__cover_img_surface = None
         #音效
-        self.click_button_sound = linpg.load_sound(r"Assets/sound/ui/main_menu_click_button.ogg",linpg.setting.get("Sound","sound_effects")/100.0)
-        self.hover_on_button_sound = linpg.load_sound(r"Assets/sound/ui/main_menu_hover_on_button.ogg",linpg.setting.get("Sound","sound_effects")/100.0)
+        self.click_button_sound = linpg.sound.load(r"Assets/sound/ui/main_menu_click_button.ogg",linpg.setting.get("Sound","sound_effects")/100.0)
+        self.hover_on_button_sound = linpg.sound.load(r"Assets/sound/ui/main_menu_hover_on_button.ogg",linpg.setting.get("Sound","sound_effects")/100.0)
         self.hover_sound_play_on = None
         self.last_hover_sound_play_on = None
         #加载主菜单背景
@@ -55,10 +55,10 @@ class MainMenu(linpg.AbstractSystem):
                 info_data = linpg.config.load(os.path.join(path,"info.yaml"))
             except Exception:
                 info_data = linpg.config.load(r"Data/info_example.yaml")
-                info_data["default_lang"] = linpg.setting.get("Language")
+                info_data["default_lang"] = linpg.setting.language
                 linpg.config.save(os.path.join(path,"info.yaml"),info_data)
             self.workshop_files_text.append(os.path.basename(path))
-            self.workshop_files.append(info_data["title"][linpg.setting.get("Language")])
+            self.workshop_files.append(info_data["title"][linpg.setting.language])
         self.workshop_files.append(linpg.lang.get_text("Global","back"))
         txt_location:int = int(screen_size[0]*2/3)
         txt_y:int = int((screen_size[1]-len(self.workshop_files)*linpg.get_standard_font_size("medium")*2)/2)
@@ -71,10 +71,10 @@ class MainMenu(linpg.AbstractSystem):
     def __get_chapter_title(self, chapterType:str, chapterId:int) -> str:
         #生成dialog文件的路径
         dialog_file_path:str = os.path.join(
-            "Data", chapterType, "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.get("Language"))
+            "Data", chapterType, "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.language)
         ) if chapterType == "main_chapter" else os.path.join(
             "Data", chapterType, self.current_selected_workshop_project,
-            "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.get("Language"))
+            "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.language)
             )
         chapter_title:str
         if os.path.exists(dialog_file_path):
@@ -157,19 +157,19 @@ class MainMenu(linpg.AbstractSystem):
         os.makedirs(os.path.join("Data","workshop",fileName))
         #储存数据
         info_data:dict = linpg.config.load(r"Data/info_example.yaml")
-        info_data["default_lang"] = linpg.setting.get("Language")
+        info_data["default_lang"] = linpg.setting.language
         linpg.config.save(os.path.join("Data","workshop",fileName,"info.yaml"),info_data)
     #创建新的对话文和地图文件
     def __create_new_chapter(self) -> None:
         chapterId:int = len(glob.glob(os.path.join(
-            "Data", "workshop", self.current_selected_workshop_project, "*_dialogs_{}.yaml".format(linpg.setting.get("Language"))
+            "Data", "workshop", self.current_selected_workshop_project, "*_dialogs_{}.yaml".format(linpg.setting.language)
             ))) + 1
         #复制视觉小说系统默认模板
         shutil.copyfile(
             "Data/chapter_dialogs_example.yaml",
             os.path.join(
                 "Data", "workshop", self.current_selected_workshop_project,
-                "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.get("Language"))
+                "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.language)
                 )
             )
         #复制战斗系统默认模板
@@ -376,7 +376,7 @@ class MainMenu(linpg.AbstractSystem):
                 elif linpg.is_hover(self.main_menu_txt["menu_main"]["6_developer_team"]):
                     pass
                 #退出
-                elif linpg.is_hover(self.main_menu_txt["menu_main"]["7_exit"]) and self.exit_confirm_menu.draw() == 0:
+                elif linpg.is_hover(self.main_menu_txt["menu_main"]["7_exit"]) and self.exit_confirm_menu.show() == 0:
                     self.__background.stop()
                     self.stop()
                     if RPC is not None: RPC.close()

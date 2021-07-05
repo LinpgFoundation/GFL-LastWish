@@ -3,8 +3,8 @@ import glob
 import time
 import os
 from collections import deque
-#import linpg
-from linpgdev import linpg
+import linpg
+#from linpgdev import linpg
 
 # 显示回合切换的UI
 class RoundSwitch:
@@ -146,7 +146,7 @@ class WarningSystem:
 class SelectMenu:
     def __init__(self):
         selectMenuTxtDic:dict = linpg.lang.get_text("SelectMenu")
-        self.selectButtonImg = linpg.load.img("Assets/image/UI/menu.png")
+        self.selectButtonImg = linpg.load.img(r"Assets/image/UI/menu.png")
         #攻击
         self.attackAP = linpg.AP_IS_NEEDED_TO_ATTACK
         self.attackTxt = selectMenuTxtDic["attack"]
@@ -267,17 +267,17 @@ class SelectMenu:
 #角色信息板
 class CharacterInfoBoard:
     def __init__(self, window_x:int, window_y:int, text_size:int=20):
-        self.boardImg = linpg.load.img("Assets/image/UI/score.png",(window_x/5,window_y/6))
+        self.boardImg = linpg.load.img(r"Assets/image/UI/score.png",(window_x/5,window_y/6))
         self.characterIconImages = {}
         for img_path in glob.glob(r'Assets/image/npc_icon/*.png'):
             self.characterIconImages[os.path.basename(img_path).replace(".png","")] = linpg.smoothly_resize_img(linpg.load.img(img_path),(window_y*0.08,window_y*0.08))
         self.text_size = text_size
         self.informationBoard = None
-        hp_empty_img = linpg.load.img("Assets/image/UI/hp_empty.png")
-        self.hp_red = linpg.ProgressBarSurface("Assets/image/UI/hp_red.png",hp_empty_img,0,0,window_x/15,text_size)
-        self.hp_green = linpg.ProgressBarSurface("Assets/image/UI/hp_green.png",hp_empty_img,0,0,window_x/15,text_size)
-        self.action_point_blue = linpg.ProgressBarSurface("Assets/image/UI/action_point.png",hp_empty_img,0,0,window_x/15,text_size)
-        self.bullets_number_brown = linpg.ProgressBarSurface("Assets/image/UI/bullets_number.png",hp_empty_img,0,0,window_x/15,text_size)
+        hp_empty_img = linpg.load.img(r"Assets/image/UI/hp_empty.png")
+        self.hp_red = linpg.ProgressBarSurface(r"Assets/image/UI/hp_red.png",hp_empty_img,0,0,window_x/15,text_size)
+        self.hp_green = linpg.ProgressBarSurface(r"Assets/image/UI/hp_green.png",hp_empty_img,0,0,window_x/15,text_size)
+        self.action_point_blue = linpg.ProgressBarSurface(r"Assets/image/UI/action_point.png",hp_empty_img,0,0,window_x/15,text_size)
+        self.bullets_number_brown = linpg.ProgressBarSurface(r"Assets/image/UI/bullets_number.png",hp_empty_img,0,0,window_x/15,text_size)
     #标记需要更新
     def update(self) -> None: self.informationBoard = None
     #更新信息板
@@ -354,11 +354,11 @@ class LoadingTitle:
     def __init__(self, window_x:int, window_y:int, numChapter_txt:str, chapterId:int, chapterTitle_txt:str, chapterDesc_txt:str):
         self.black_bg = linpg.get_single_color_surface("black")
         title_chapterNum = linpg.render_font(numChapter_txt.format(chapterId),"white",window_x/38)
-        self.title_chapterNum = linpg.load.static_image(title_chapterNum,((window_x-title_chapterNum.get_width())/2,window_y*0.37))
+        self.title_chapterNum = linpg.StaticImage(title_chapterNum, (window_x-title_chapterNum.get_width())/2, window_y*0.37)
         title_chapterName = linpg.render_font(chapterTitle_txt,"white",window_x/38)
-        self.title_chapterName = linpg.load.static_image(title_chapterName,((window_x-title_chapterName.get_width())/2,window_y*0.46))
+        self.title_chapterName = linpg.StaticImage(title_chapterName, (window_x-title_chapterName.get_width())/2, window_y*0.46)
         title_description = linpg.render_font(chapterDesc_txt,"white",window_x/76)
-        self.title_description = linpg.load.static_image(title_description,((window_x-title_description.get_width())/2,window_y*0.6))
+        self.title_description = linpg.StaticImage(title_description, (window_x-title_description.get_width())/2, window_y*0.6)
     def draw(self, screen:linpg.ImageSurface, alpha:int=255) -> None:
         self.title_chapterNum.set_alpha(alpha)
         self.title_chapterName.set_alpha(alpha)

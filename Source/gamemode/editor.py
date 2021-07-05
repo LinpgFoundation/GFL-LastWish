@@ -224,7 +224,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                     #加载地图
                     self._create_map(mapFileData)
                     del mapFileData
-                    self.MAP.setPos(tempLocal_x,tempLocal_y)
+                    self.MAP.set_local_pos(tempLocal_x, tempLocal_y)
                     #读取地图
                     self.originalData = linpg.config.load(self.get_map_file_location())
                 else:

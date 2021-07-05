@@ -26,7 +26,7 @@ def dialog(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, 
         screen.blit(LoadingImgBelow,(-2,screen.get_height()-LoadingImgBelow.get_height()/100*i))
         linpg.display.flip()
     #卸载音乐
-    linpg.unload_all_music()
+    linpg.media.unload()
     #初始化对话系统模块
     DIALOG:object = DialogSystem()
     if chapterType is not None:
@@ -49,7 +49,7 @@ def dialog(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, 
 #对话编辑器
 def dialogEditor(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> None:
     #卸载音乐
-    linpg.unload_all_music()
+    linpg.media.unload()
     #改变标题
     linpg.display.set_caption("{0} ({1})".format(linpg.lang.get_text('General','game_title'),linpg.lang.get_text('General','dialog_editor')))
     if RPC is not None:
@@ -69,7 +69,7 @@ def dialogEditor(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part
 #战斗系统
 def battle(screen:linpg.ImageSurface, chapterType:str, chapterId:int, projectName:str=None) -> dict:
     #卸载音乐
-    linpg.unload_all_music()
+    linpg.media.unload()
     BATTLE:object = TurnBasedBattleSystem()
     if chapterType is not None:
         BATTLE.new(screen, chapterType, chapterId, projectName)
@@ -81,13 +81,13 @@ def battle(screen:linpg.ImageSurface, chapterType:str, chapterId:int, projectNam
         ALPHA_BUILD_WARNING.draw(screen)
         linpg.display.flip()
     #暂停声效 - 尤其是环境声
-    linpg.unload_all_music()
+    linpg.media.unload()
     return BATTLE.resultInfo
 
 #地图编辑器
 def mapEditor(screen:linpg.ImageSurface, chapterType:str, chapterId:int, projectName:str=None) -> None:
     #卸载音乐
-    linpg.unload_all_music()
+    linpg.media.unload()
     MAP_EDITOR = MapEditor()
     MAP_EDITOR.load(screen, chapterType, chapterId, projectName)
     #改变标题
