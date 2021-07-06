@@ -11,18 +11,21 @@ class SurvivalBattleSystem(BattleSystem):
         self.window_x,self.window_y = linpg.display.get_size()
         self.DATABASE = linpg.loadCharacterData()
         self.original_UI_img = {
-            "green" : linpg.load_img("Assets/image/UI/range/green.png"),
-            "red" : linpg.load_img("Assets/image/UI/range/red.png"),
-            "yellow": linpg.load_img("Assets/image/UI/range/yellow.png"),
-            "blue": linpg.load_img("Assets/image/UI/range/blue.png"),
-            "orange": linpg.load_img("Assets/image/UI/range/orange.png"),
+            "green" : linpg.load.img("Assets/image/UI/range/green.png"),
+            "red" : linpg.load.img("Assets/image/UI/range/red.png"),
+            "yellow": linpg.load.img("Assets/image/UI/range/yellow.png"),
+            "blue": linpg.load.img("Assets/image/UI/range/blue.png"),
+            "orange": linpg.load.img("Assets/image/UI/range/orange.png"),
             "eyeImg": linpg.ProgressBarSurface("Assets/image/UI/eye_red.png","Assets/image/UI/eye_orange.png",0,0,0,0),
             "vigilanceImg": linpg.ProgressBarSurface("Assets/image/UI/vigilance_red.png","Assets/image/UI/vigilance_orange.png",0,0,0,0,"height"),
-            "supplyBoard":linpg.load_dynamic_image("Assets/image/UI/score.png",((self.window_x-self.window_x/3)/2,-self.window_y/12),self.window_x/3,self.window_y/12),
+            "supplyBoard":linpg.load.dynamic_image(
+                r"Assets/image/UI/score.png",
+                ((self.window_x-self.window_x/3)/2,-self.window_y/12),(self.window_x/3,self.window_y/12)
+            ),
         }
         """init"""
         #shutil.copyfile("Data/chapter_map_example.yaml","Save/map1.yaml")
-        mapFileData = linpg.load_config("Save/map1.yaml")
+        mapFileData = linpg.config.load("Save/map1.yaml")
         SnowEnvImg = ["TileSnow01","TileSnow01ToStone01","TileSnow01ToStone02","TileSnow02","TileSnow02ToStone01","TileSnow02ToStone02"]
         block_y = 50
         block_x = 50
@@ -91,11 +94,11 @@ class SurvivalBattleSystem(BattleSystem):
     #把所有内容画到屏幕上
     def draw(self, screen:linpg.ImageSurface) -> None:
         for event in linpg.controller.events:
-            if event.type == linpg.KEY.DOWN:
-                if event.key == linpg.KEY.ESCAPE:
+            if event.type == linpg.key.DOWN:
+                if event.key == linpg.key.ESCAPE:
                     self.stop()
                 self._check_key_down(event)
-            elif event.type == linpg.KEY.UP:
+            elif event.type == linpg.key.UP:
                 self._check_key_up(event)
         #其他移动的检查
         self._check_right_click_move()
@@ -107,5 +110,5 @@ class SurvivalBattleSystem(BattleSystem):
         self._display_decoration(screen)
         pos_x,pos_y = self.MAP.calPosInMap(self.alliances["me"].x,self.alliances["me"].y)
         pos_x += linpg.display.get_width()/20
-        #pygame.draw.line(screen,linpg.get_color_rbga("red"),(pos_x,pos_y),(mouse_x,mouse_y),5)
+        #pygame.draw.line(screen,linpg.color.RED,(pos_x,pos_y),(mouse_x,mouse_y),5)
         linpg.display.flip()
