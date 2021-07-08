@@ -165,8 +165,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.originalData = linpg.config.load(self.get_map_file_location())
     #将地图制作器的界面画到屏幕上
     def draw(self, screen:linpg.ImageSurface) -> None:
-        mouse_x,mouse_y = linpg.controller.get_mouse_pos()
-        block_get_click = self.MAP.calBlockInMap(mouse_x,mouse_y)
+        block_get_click = self.MAP.calBlockInMap(linpg.controller.mouse.pos)
         for event in linpg.controller.events:
             if event.type == linpg.key.DOWN:
                 if event.key == linpg.key.ESCAPE:
@@ -192,7 +191,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                         self.MAP.remove_decoration(decoration)
                     else:
                         any_chara_replace = None
-                        for key,value in linpg.merge_dict(self.alliances_data,self.enemies_data).items():
+                        for key,value in {**self.alliances_data, **self.enemies_data}.items():
                             if value.x == block_get_click["x"] and value.y == block_get_click["y"]:
                                 any_chara_replace = key
                                 break
@@ -252,7 +251,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                             self.MAP.load_decorations(self.originalData["decoration"])
                         elif self.object_to_put_down["type"] == "character" or self.object_to_put_down["type"] == "sangvisFerri":
                             any_chara_replace = None
-                            for key,value in linpg.merge_dict(self.alliances_data,self.enemies_data).items():
+                            for key,value in {**self.alliances_data, **self.enemies_data}.items():
                                 if value.x == block_get_click["x"] and value.y == block_get_click["y"]:
                                     any_chara_replace = key
                                     break
@@ -304,11 +303,11 @@ class MapEditor(linpg.AbstractBattleSystem):
         #角色动画
         for key in self.alliances_data:
             self.alliances_data[key].draw(screen,self.MAP)
-            if self.object_to_put_down is None and linpg.controller.get_event("confirm") and self.alliances_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.alliances_data[key].y == int(mouse_y/self.greenBlock.get_height()):
+            if self.object_to_put_down is None and linpg.controller.get_event("confirm") and self.alliances_data[key].x == int(linpg.controller.mouse.x/self.greenBlock.get_width()) and self.alliances_data[key].y == int(linpg.controller.mouse.y/self.greenBlock.get_height()):
                 self.data_to_edit = self.alliances_data[key]
         for key in self.enemies_data:
             self.enemies_data[key].draw(screen,self.MAP)
-            if self.object_to_put_down is None and linpg.controller.get_event("confirm") and self.enemies_data[key].x == int(mouse_x/self.greenBlock.get_width()) and self.enemies_data[key].y == int(mouse_y/self.greenBlock.get_height()):
+            if self.object_to_put_down is None and linpg.controller.get_event("confirm") and self.enemies_data[key].x == int(linpg.controller.mouse.x/self.greenBlock.get_width()) and self.enemies_data[key].y == int(linpg.controller.mouse.y/self.greenBlock.get_height()):
                 self.data_to_edit = self.enemies_data[key]
 
         #展示设施
@@ -361,13 +360,13 @@ class MapEditor(linpg.AbstractBattleSystem):
         #跟随鼠标显示即将被放下的物品
         if self.object_to_put_down is not None:
             if self.object_to_put_down["type"] == "block":
-                screen.blit(self.__envImgContainer.get(self.object_to_put_down["id"]),(mouse_x,mouse_y))
+                screen.blit(self.__envImgContainer.get(self.object_to_put_down["id"]), linpg.controller.mouse.pos)
             elif self.object_to_put_down["type"] == "decoration":
-                screen.blit(self.__decorationsImgContainer.get(self.object_to_put_down["id"]),(mouse_x,mouse_y))
+                screen.blit(self.__decorationsImgContainer.get(self.object_to_put_down["id"]), linpg.controller.mouse.pos)
             elif self.object_to_put_down["type"] == "character":
-                screen.blit(self.__charactersImgContainer.get(self.object_to_put_down["id"]),(mouse_x,mouse_y))
+                screen.blit(self.__charactersImgContainer.get(self.object_to_put_down["id"]), linpg.controller.mouse.pos)
             elif self.object_to_put_down["type"] == "sangvisFerri":
-                screen.blit(self.__sangvisFerrisImgContainer.get(self.object_to_put_down["id"]),(mouse_x,mouse_y))
+                screen.blit(self.__sangvisFerrisImgContainer.get(self.object_to_put_down["id"]), linpg.controller.mouse.pos)
         
         #显示即将被编辑的数据
         if self.data_to_edit is not None:

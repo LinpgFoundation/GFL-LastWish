@@ -26,8 +26,8 @@ class MainMenu(linpg.AbstractSystem):
         #关卡选择的封面
         self.__cover_img_surface = None
         #音效
-        self.click_button_sound = linpg.sound.load(r"Assets/sound/ui/main_menu_click_button.ogg",linpg.setting.get("Sound","sound_effects")/100.0)
-        self.hover_on_button_sound = linpg.sound.load(r"Assets/sound/ui/main_menu_hover_on_button.ogg",linpg.setting.get("Sound","sound_effects")/100.0)
+        self.click_button_sound = linpg.sound.load(r"Assets/sound/ui/main_menu_click_button.ogg",linpg.media.volume.effects/100.0)
+        self.hover_on_button_sound = linpg.sound.load(r"Assets/sound/ui/main_menu_hover_on_button.ogg",linpg.media.volume.effects/100.0)
         self.hover_sound_play_on = None
         self.last_hover_sound_play_on = None
         #加载主菜单背景
@@ -36,7 +36,7 @@ class MainMenu(linpg.AbstractSystem):
             screen.get_width(),screen.get_height(),
             True,True,
             (32,103),
-            linpg.setting.get("Sound","background_music")/100.0
+            linpg.media.volume.background_music/100.0
             )
         #初始化返回菜单判定参数
         linpg.global_value.set("BackToMainMenu",False)
@@ -299,9 +299,9 @@ class MainMenu(linpg.AbstractSystem):
             self.__reload_chapter_select_list(screen.get_size(), "workshop")
     #更新音量
     def __update_sound_volume(self) -> None:
-        self.click_button_sound.set_volume(linpg.setting.get("Sound","sound_effects")/100.0)
-        self.hover_on_button_sound.set_volume(linpg.setting.get("Sound","sound_effects")/100.0)
-        self.__background.set_volume(linpg.setting.get("Sound","background_music")/100.0)
+        self.click_button_sound.set_volume(linpg.media.volume.effects/100.0)
+        self.hover_on_button_sound.set_volume(linpg.media.volume.effects/100.0)
+        self.__background.set_volume(linpg.media.volume.background_music/100.0)
     #画出背景
     def __draw_background(self, screen:linpg.ImageSurface) -> None:
         #开始播放背景视频

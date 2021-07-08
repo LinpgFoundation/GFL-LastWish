@@ -3,8 +3,8 @@ import glob
 import time
 import os
 from collections import deque
-import linpg
-#from linpgdev import linpg
+#import linpg
+from linpgdev import linpg
 
 # 显示回合切换的UI
 class RoundSwitch:

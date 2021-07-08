@@ -227,7 +227,7 @@ class TurnBasedBattleSystem(BattleSystem):
         #更新所有音效的音量
         self.__update_sound_volume()
         #攻击的音效 -- 频道2
-        self.attackingSounds = linpg.AttackingSoundManager(linpg.setting.get("Sound","sound_effects"),2)
+        self.attackingSounds = linpg.AttackingSoundManager(linpg.media.volume.effects,2)
         #切换回合时的UI
         self.RoundSwitchUI = RoundSwitch(self.window_x,self.window_y,self.battleModeUiTxt)
         #关卡背景介绍信息文字
@@ -245,8 +245,9 @@ class TurnBasedBattleSystem(BattleSystem):
                     screen.blit(temp_secode,(self.window_x/20+self.battleMode_info[i].get_width(),self.window_y*0.75+self.battleMode_info[i].get_height()*1.2))
             linpg.display.flip()
     #返回需要保存数据
-    def _get_data_need_to_save(self) -> dict: return linpg.merge_dict(
-        self.get_data_of_parent_game_system(),{
+    def _get_data_need_to_save(self) -> dict: return {
+        **self.get_data_of_parent_game_system(),
+        **{
             "type": "battle",
             "griffin": self.griffinCharactersData,
             "sangvisFerri": self.sangvisFerrisData,
@@ -256,7 +257,7 @@ class TurnBasedBattleSystem(BattleSystem):
             "resultInfo": self.resultInfo,
             "timeStamp": time.strftime(":%S", time.localtime())
             }
-        )
+        }
     """画面"""
     #新增需要在屏幕上画出的物品
     def __add_on_screen_object(self, image:linpg.ImageSurface, weight:int=-1, pos:linpg.pos_liked=linpg.Origin, offSet:linpg.pos_liked=linpg.Origin) -> None:
@@ -311,9 +312,9 @@ class TurnBasedBattleSystem(BattleSystem):
                 if not find_one: self.whose_round = "result_win"
     #更新音量
     def __update_sound_volume(self) -> None:
-        self.footstep_sounds.set_volume(linpg.setting.get("Sound","sound_effects")/100)
-        self.environment_sound.set_volume(linpg.setting.get("Sound","sound_environment")/100.0)
-        self.set_bgm_volume(linpg.setting.get("Sound","background_music")/100.0)
+        self.footstep_sounds.set_volume(linpg.media.volume.effects/100)
+        self.environment_sound.set_volume(linpg.media.volume.environment/100.0)
+        self.set_bgm_volume(linpg.media.volume.background_music/100.0)
     #更新语言
     def updated_language(self, screen) -> None:
         super().updated_language()
@@ -1008,7 +1009,7 @@ class TurnBasedBattleSystem(BattleSystem):
 
         """↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓角色动画展示区↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓"""
         rightClickCharacterAlphaDeduct = True
-        for key,value in linpg.merge_dict(self.griffinCharactersData,self.sangvisFerrisData).items():
+        for key,value in {**self.griffinCharactersData, **self.sangvisFerrisData}.items():
             #如果天亮的双方都可以看见/天黑，但是是友方角色/天黑，但是是敌方角色在可观测的范围内 -- 则画出角色
             if value.faction == "character" or value.faction == "sangvisFerri" and self.MAP.inLightArea(value):
                 if self.__if_draw_range is True and linpg.controller.mouse.get_pressed(2):
