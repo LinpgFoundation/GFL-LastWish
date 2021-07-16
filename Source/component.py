@@ -2,28 +2,28 @@
 from .scene import *
 
 #blit载入页面
-def dispaly_loading_screen(screen:linpg.ImageSurface, start:int, end:int, value:int) -> None:
-    window_x,window_y = screen.get_size()
+def get_loading_screen() -> linpg.ImageSurface:
+    window_x,window_y = linpg.display.get_size()
+    font_size:int = int(window_x/64)
+    surface_t = linpg.new_surface((window_x,window_y)).convert()
+    surface_t.fill(linpg.color.BLACK)
     #获取健康游戏忠告
     HealthyGamingAdvice = linpg.lang.try_to_get_text("HealthyGamingAdvice")
     if HealthyGamingAdvice == "HealthyGamingAdvice":
         HealthyGamingAdvice = []
     else:
         for i in range(len(HealthyGamingAdvice)):
-            HealthyGamingAdvice[i] = linpg.render_font(HealthyGamingAdvice[i],"white",window_x/64)
+            HealthyGamingAdvice[i] = linpg.font.render(HealthyGamingAdvice[i],"white",font_size)
     #其他载入页面需要的数据
-    text1 = linpg.render_font(linpg.lang.get_text("title1"), "white", window_x/64)
-    text2 = linpg.render_font(linpg.lang.get_text("title2"), "white", window_x/64)
-    #主循环
-    for i in range(start,end,value):
-        screen.fill(linpg.color.BLACK)
-        text1.set_alpha(i)
-        text2.set_alpha(i)
-        screen.blits(((text1,(window_x/64,window_y*0.9)),(text2,(window_x/64,window_y*0.9-window_x/32))))
-        for a in range(len(HealthyGamingAdvice)):
-            HealthyGamingAdvice[a].set_alpha(i)
-            screen.blit(HealthyGamingAdvice[a],(window_x-window_x/32-HealthyGamingAdvice[a].get_width(),window_y*0.9-window_x/64*a*1.5))
-        linpg.display.flip()
+    text1 = linpg.font.render(linpg.lang.get_text("title1"), "white", font_size)
+    text2 = linpg.font.render(linpg.lang.get_text("title2"), "white", font_size)
+    #画到暂时的帘幕上
+    surface_t.blits(((text1,(font_size,window_y*0.9)),(text2,(font_size,window_y*0.9-window_x/32))))
+    index:int = 0
+    for item_t in HealthyGamingAdvice:
+        surface_t.blit(item_t,(window_x-window_x/32-item_t.get_width(),window_y*0.9-font_size*index*1.5))
+        index += 1
+    return surface_t
 
 #控制台
 class Console(linpg.Console):

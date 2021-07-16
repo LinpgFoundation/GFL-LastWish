@@ -14,11 +14,11 @@ class DialogSystem(linpg.DialogSystem):
 #对话系统
 def dialog(screen:linpg.ImageSurface, chapterType:str, chapterId:int, part:str, projectName:str=None) -> None:
     #加载闸门动画的图片素材
-    LoadingImgAbove:linpg.ImageSurface = linpg.smoothly_resize_img(
-        linpg.cope_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgAbove.png")), (screen.get_width()+4, screen.get_height()/1.7)
+    LoadingImgAbove:linpg.ImageSurface = linpg.transform.resize(
+        linpg.transform.crop_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgAbove.png")), (screen.get_width()+4, screen.get_height()/1.7)
         )
-    LoadingImgBelow:linpg.ImageSurface = linpg.smoothly_resize_img(
-        linpg.cope_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgBelow.png")), (screen.get_width()+4, screen.get_height()/2.05)
+    LoadingImgBelow:linpg.ImageSurface = linpg.transform.resize(
+        linpg.transform.crop_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgBelow.png")), (screen.get_width()+4, screen.get_height()/2.05)
     )
     #开始加载-闸门关闭的效果
     for i in range(101):

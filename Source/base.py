@@ -27,11 +27,11 @@ PATCH:int = version_info["patch"]
 del version_info
 
 #设置引擎的标准文字大小
-linpg.set_standard_font_size(int(linpg.display.get_width()/40),"medium")
+linpg.font.set_global_font("medium", int(linpg.display.get_width()/40))
 
 #alpha构建警告
 ALPHA_BUILD_WARNING = linpg.TextSurface(
-    linpg.render_font(linpg.lang.get_text("alpha_build_warning"),"white",linpg.get_standard_font_size("medium")/2),0,0
+    linpg.font.render_global_font("medium", linpg.lang.get_text("alpha_build_warning"), "white"), 0, 0
     )
 ALPHA_BUILD_WARNING.set_centerx(linpg.display.get_width()/2)
 ALPHA_BUILD_WARNING.set_bottom(linpg.display.get_height()-ALPHA_BUILD_WARNING.get_height())

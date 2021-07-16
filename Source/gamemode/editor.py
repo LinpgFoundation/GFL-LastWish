@@ -109,7 +109,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             img_name = os.path.basename(imgPath)
             self.__charactersImgContainer.set(
                 img_name,
-                linpg.cope_bounding(linpg.load.img(os.path.join(imgPath, "wait", "{}_wait_0.png".format(img_name)), (None, container_height*1.5)))
+                linpg.transform.crop_bounding(linpg.load.img(os.path.join(imgPath, "wait", "{}_wait_0.png".format(img_name)), (None, container_height*1.5)))
                 )
         self.__charactersImgContainer.set_scroll_bar_pos("bottom")
         self.__charactersImgContainer.hidden = False
@@ -122,7 +122,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             img_name = os.path.basename(imgPath)
             self.__sangvisFerrisImgContainer.set(
                 img_name,
-                linpg.cope_bounding(linpg.load.img(os.path.join(imgPath, "wait", "{}_wait_0.png".format(img_name)), (None, container_height*1.5)))
+                linpg.transform.crop_bounding(linpg.load.img(os.path.join(imgPath, "wait", "{}_wait_0.png".format(img_name)), (None, container_height*1.5)))
                 )
         self.__sangvisFerrisImgContainer.set_scroll_bar_pos("bottom")
         self.__sangvisFerrisImgContainer.hidden = True
@@ -130,7 +130,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         #绿色方块/方块标准
         self.greenBlock = linpg.load.img("Assets/image/UI/range/green.png",(self.MAP.block_width*0.8,None))
         self.greenBlock.set_alpha(150)
-        self.redBlock = linpg.load_img("Assets/image/UI/range/red.png",(self.MAP.block_width*0.8,None))
+        self.redBlock = linpg.load.img("Assets/image/UI/range/red.png",(self.MAP.block_width*0.8,None))
         self.redBlock.set_alpha(150)
         self.deleteMode:bool = False
         self.object_to_put_down = None
@@ -158,7 +158,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.UI_local_x = 0
         self.UI_local_y = 0
         #未保存离开时的警告
-        self.__no_save_warning = linpg.converter.generate_ui(linpg.get_raw_deault_ui("leave_without_saving_warning"))
+        self.__no_save_warning = linpg.ui.generate_deault("leave_without_saving_warning")
         #用于储存即将发下的物品的具体参数
         self.data_to_edit = None
         #读取地图原始文件
@@ -328,10 +328,10 @@ class MapEditor(linpg.AbstractBattleSystem):
             self.__button_select_block.display(screen,(self.__UIContainerButtonRight.right,0))
             self.__button_select_decoration.display(screen,(self.__UIContainerButtonRight.right,0))
             if linpg.controller.get_event("confirm"):
-                if not self.__envImgContainer.hidden and self.__envImgContainer.current_hovered_item is not None:
-                    self.object_to_put_down = {"type":"block","id":self.__envImgContainer.current_hovered_item}
-                elif not self.__decorationsImgContainer.hidden and self.__decorationsImgContainer.current_hovered_item is not None:
-                    self.object_to_put_down = {"type":"decoration","id":self.__decorationsImgContainer.current_hovered_item}
+                if not self.__envImgContainer.hidden and self.__envImgContainer.item_being_hovered is not None:
+                    self.object_to_put_down = {"type":"block","id":self.__envImgContainer.item_being_hovered}
+                elif not self.__decorationsImgContainer.hidden and self.__decorationsImgContainer.item_being_hovered is not None:
+                    self.object_to_put_down = {"type":"decoration","id":self.__decorationsImgContainer.item_being_hovered}
         #画出下方容器的UI
         self.__UIContainerButtonBottom.draw(screen)
         if self.__UIContainerButtonBottom.bottom < screen.get_height():
@@ -347,10 +347,10 @@ class MapEditor(linpg.AbstractBattleSystem):
             self.__button_select_character.display(screen,(0,self.__UIContainerButtonBottom.bottom))
             self.__button_select_sangvisFerri.display(screen,(0,self.__UIContainerButtonBottom.bottom))
             if linpg.controller.get_event("confirm"):
-                if not self.__charactersImgContainer.hidden and self.__charactersImgContainer.current_hovered_item is not None:
-                    self.object_to_put_down = {"type":"character","id":self.__charactersImgContainer.current_hovered_item}
-                elif not self.__sangvisFerrisImgContainer.hidden and self.__sangvisFerrisImgContainer.current_hovered_item is not None:
-                    self.object_to_put_down = {"type":"sangvisFerri","id":self.__sangvisFerrisImgContainer.current_hovered_item}
+                if not self.__charactersImgContainer.hidden and self.__charactersImgContainer.item_being_hovered is not None:
+                    self.object_to_put_down = {"type":"character","id":self.__charactersImgContainer.item_being_hovered}
+                elif not self.__sangvisFerrisImgContainer.hidden and self.__sangvisFerrisImgContainer.item_being_hovered is not None:
+                    self.object_to_put_down = {"type":"sangvisFerri","id":self.__sangvisFerrisImgContainer.item_being_hovered}
         
         #画出上方其他按钮
         for key in self.UIButton:
@@ -371,27 +371,27 @@ class MapEditor(linpg.AbstractBattleSystem):
         #显示即将被编辑的数据
         if self.data_to_edit is not None:
             screen.blits((
-                (linpg.render_font("action points: "+str(self.data_to_edit.max_action_point),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8)),
-                (linpg.render_font("attack range: "+str(self.data_to_edit.attack_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20)),
-                (linpg.render_font("current bullets: "+str(self.data_to_edit.current_bullets),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*2)),
-                (linpg.render_font("magazine capacity: "+str(self.data_to_edit.magazine_capacity),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*3)),
-                (linpg.render_font("max hp: "+str(self.data_to_edit.max_hp),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*4)),
-                (linpg.render_font("effective range: "+str(self.data_to_edit.effective_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*5)),
-                (linpg.render_font("max damage: "+str(self.data_to_edit.max_damage),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*6)),
-                (linpg.render_font("min damage: "+str(self.data_to_edit.min_damage),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*7)),
-                (linpg.render_font("x: "+str(self.data_to_edit.x),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*8)),
-                (linpg.render_font("y: "+str(self.data_to_edit.y),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*9)),
+                (linpg.font.render("action points: "+str(self.data_to_edit.max_action_point),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8)),
+                (linpg.font.render("attack range: "+str(self.data_to_edit.attack_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20)),
+                (linpg.font.render("current bullets: "+str(self.data_to_edit.current_bullets),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*2)),
+                (linpg.font.render("magazine capacity: "+str(self.data_to_edit.magazine_capacity),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*3)),
+                (linpg.font.render("max hp: "+str(self.data_to_edit.max_hp),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*4)),
+                (linpg.font.render("effective range: "+str(self.data_to_edit.effective_range),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*5)),
+                (linpg.font.render("max damage: "+str(self.data_to_edit.max_damage),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*6)),
+                (linpg.font.render("min damage: "+str(self.data_to_edit.min_damage),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*7)),
+                (linpg.font.render("x: "+str(self.data_to_edit.x),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*8)),
+                (linpg.font.render("y: "+str(self.data_to_edit.y),"black",15),(screen.get_width()*0.91,screen.get_height()*0.8+20*9)),
             ))
         #未保存离开时的警告
         self.__no_save_warning.draw(screen)
-        if linpg.controller.get_event("confirm") and self.__no_save_warning.item_hovered != "":
+        if linpg.controller.get_event("confirm") and self.__no_save_warning.item_being_hovered != "":
             #保存并离开
-            if self.__no_save_warning.item_hovered == "save":
+            if self.__no_save_warning.item_being_hovered == "save":
                 self.save_progress()
                 self.stop()
             #取消
-            elif self.__no_save_warning.item_hovered == "cancel":
+            elif self.__no_save_warning.item_being_hovered == "cancel":
                 self.__no_save_warning.hidden = True
             #不保存并离开
-            elif self.__no_save_warning.item_hovered == "dont_save":
+            elif self.__no_save_warning.item_being_hovered == "dont_save":
                 self.stop()
