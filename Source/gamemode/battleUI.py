@@ -1,10 +1,12 @@
 # cython: language_level=3
-import glob
 import time
-import os
 from collections import deque
-#import linpg
-from linpgdev import linpg
+from editor import *
+
+__all__ = [
+    "linpg", "glob", "os", "MapEditor", "time", "deque",
+    "RoundSwitch", "WarningSystem", "WarningSystem", "SelectMenu", "CharacterInfoBoard", "ResultBoard", "LoadingTitle"
+    ]
 
 # 显示回合切换的UI
 class RoundSwitch:
@@ -269,7 +271,7 @@ class CharacterInfoBoard:
     def __init__(self, window_x:int, window_y:int, text_size:int=20):
         self.boardImg = linpg.load.img(r"Assets/image/UI/score.png",(window_x/5,window_y/6))
         self.characterIconImages = {}
-        for img_path in glob.glob(r'Assets/image/npc_icon/*.png'):
+        for img_path in glob(r'Assets/image/npc_icon/*.png'):
             self.characterIconImages[os.path.basename(img_path).replace(".png","")] = linpg.transform.resize(linpg.load.img(img_path),(window_y*0.08,window_y*0.08))
         self.text_size = text_size
         self.informationBoard = None

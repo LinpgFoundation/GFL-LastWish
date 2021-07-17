@@ -1,5 +1,10 @@
 # cython: language_level=3
-from .ui import *
+import os
+from glob import glob
+#import linpg
+from linpgdev import linpg
+
+__all__ = ["linpg", "glob", "os", "MapEditor"]
 
 #地图编辑器系统
 class MapEditor(linpg.AbstractBattleSystem):
@@ -65,7 +70,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.__envImgContainer:object = linpg.SurfaceContainerWithScrollbar(
             None, int(container_width*0.075), int(screen.get_height()*0.1), int(container_width*0.85), int(screen.get_height()*0.85), "vertical"
             )
-        for imgPath in glob.glob(r'Assets/image/environment/block/*.png'):
+        for imgPath in glob(r'Assets/image/environment/block/*.png'):
             self.__envImgContainer.set(os.path.basename(imgPath).replace(".png",""),linpg.load.img(imgPath,(self.MAP.block_width/3,None)))
         self.__envImgContainer.set_item_per_line(4)
         self.__envImgContainer.set_scroll_bar_pos("right")
@@ -75,7 +80,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.__decorationsImgContainer:object = linpg.SurfaceContainerWithScrollbar(
             None, int(container_width*0.075), int(screen.get_height()*0.1), int(container_width*0.85), int(screen.get_height()*0.85), "vertical"
             )
-        for imgPath in glob.glob(r'Assets/image/environment/decoration/*.png'):
+        for imgPath in glob(r'Assets/image/environment/decoration/*.png'):
             self.__decorationsImgContainer.set(os.path.basename(imgPath).replace(".png",""),linpg.load.img(imgPath,(self.MAP.block_width/3,None)))
         self.__decorationsImgContainer.set_item_per_line(4)
         self.__decorationsImgContainer.set_scroll_bar_pos("right")
@@ -105,7 +110,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.__charactersImgContainer:object = linpg.SurfaceContainerWithScrollbar(
             None, container_width*0.025, container_height*0.2, container_width*0.95, container_height*0.7, "horizontal"
             )
-        for imgPath in glob.glob(r'Assets/image/character/*'):
+        for imgPath in glob(r'Assets/image/character/*'):
             img_name = os.path.basename(imgPath)
             self.__charactersImgContainer.set(
                 img_name,
@@ -118,7 +123,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.__sangvisFerrisImgContainer:object = linpg.SurfaceContainerWithScrollbar(
             None, container_width*0.025, container_height*0.2, container_width*0.95, container_height*0.7, "horizontal"
             )
-        for imgPath in glob.glob(r'Assets/image/sangvisFerri/*'):
+        for imgPath in glob(r'Assets/image/sangvisFerri/*'):
             img_name = os.path.basename(imgPath)
             self.__sangvisFerrisImgContainer.set(
                 img_name,

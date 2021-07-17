@@ -1,6 +1,12 @@
 # cython: language_level=3
 from .towerDefense import *
 
+__all__ = [
+    "linpg", "glob", "os", "MapEditor", "time", "deque",
+    "RoundSwitch", "WarningSystem", "WarningSystem", "SelectMenu", "CharacterInfoBoard", "ResultBoard", "LoadingTitle",
+    "BattleSystem", "SurvivalBattleSystem", "TowerDefenseBattleSystem", "TurnBasedBattleSystem"
+    ]
+
 #回合制游戏战斗系统
 class TurnBasedBattleSystem(BattleSystem):
     def __init__(self):
@@ -224,7 +230,7 @@ class TurnBasedBattleSystem(BattleSystem):
         """-----加载音效-----"""
         #行走的音效 -- 频道0
         self.footstep_sounds = linpg.SoundManagement(0)
-        for walkingSoundPath in glob.glob(r'Assets/sound/snow/*.wav'):
+        for walkingSoundPath in glob(r'Assets/sound/snow/*.wav'):
             self.footstep_sounds.add(walkingSoundPath)
         #更新所有音效的音量
         self.__update_sound_volume()

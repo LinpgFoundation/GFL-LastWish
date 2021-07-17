@@ -48,7 +48,7 @@ class MainMenu(linpg.AbstractSystem):
         self.workshop_files_text.clear()
         #是否需要显示“新增”选项
         if createMode: self.workshop_files.append(self.main_menu_txt["other"]["new_project"])
-        for path in glob.glob(r"Data/workshop/*"):
+        for path in glob(r"Data/workshop/*"):
             try:
                 info_data = linpg.config.load(os.path.join(path,"info.yaml"))
             except Exception:
@@ -88,7 +88,7 @@ class MainMenu(linpg.AbstractSystem):
         #是否需要显示“新增”选项
         if createMode: self.chapter_select.append(self.main_menu_txt["other"]["new_chapter"])
         #历遍路径下的所有章节文件
-        for path in glob.glob(
+        for path in glob(
             os.path.join("Data",chapterType,"*_map.yaml") if chapterType == "main_chapter" \
             else os.path.join("Data",chapterType,self.current_selected_workshop_project,"*_map.yaml")
             ): self.chapter_select.append(self.__get_chapter_title(chapterType,self.__find_chapter_id(path)))
@@ -159,7 +159,7 @@ class MainMenu(linpg.AbstractSystem):
         linpg.config.save(os.path.join("Data","workshop",fileName,"info.yaml"),info_data)
     #创建新的对话文和地图文件
     def __create_new_chapter(self) -> None:
-        chapterId:int = len(glob.glob(os.path.join(
+        chapterId:int = len(glob(os.path.join(
             "Data", "workshop", self.current_selected_workshop_project, "*_dialogs_{}.yaml".format(linpg.setting.language)
             ))) + 1
         #复制视觉小说系统默认模板
@@ -236,9 +236,13 @@ class MainMenu(linpg.AbstractSystem):
             linpg.global_value.if_get_set("BackToMainMenu",True,False)
         self.__reset_menu()
         if RPC is not None: RPC.update(state=linpg.lang.get_text("DiscordStatus","staying_at_main_menu"),large_image=LARGE_IMAGE)
+    #重置背景
+    def __restart_background(self) -> None:
+        self.__background.restart()
+        self.updated_volume()
     #更新主菜单的部分元素
     def __reset_menu(self) -> None:
-        self.__background.restart()
+        self.__restart_background()
         #是否可以继续游戏了（save文件是否被创建）
         if os.path.exists("Save/save.yaml") and not self.continueButtonIsOn:
             self.main_menu_txt["menu_main"]["0_continue"] = linpg.load_dynamic_text(
@@ -296,6 +300,11 @@ class MainMenu(linpg.AbstractSystem):
         elif self.menu_type == 6:
             self.__reload_workshop_files_list(screen.get_size(), False)
             self.__reload_chapter_select_list(screen.get_size(), "workshop")
+    #更新音量
+    def updated_volume(self) -> None:
+        self.click_button_sound.set_volume(linpg.media.volume.effects/100.0)
+        self.hover_on_button_sound.set_volume(linpg.media.volume.effects/100.0)
+        self.__background.set_volume(linpg.media.volume.background_music/100.0)
     #画出背景
     def __draw_background(self, screen:linpg.ImageSurface) -> None:
         #处理封面的更替
@@ -333,9 +342,7 @@ class MainMenu(linpg.AbstractSystem):
         linpg.option_menu.draw(screen)
         #更新音量
         if linpg.option_menu.need_update["volume"] is True:
-            self.click_button_sound.set_volume(linpg.media.volume.effects/100.0)
-            self.hover_on_button_sound.set_volume(linpg.media.volume.effects/100.0)
-            self.__background.set_volume(linpg.media.volume.background_music/100.0)
+            self.updated_volume()
         #更新语言
         if linpg.option_menu.need_update["language"] is True or self.language_need_update() is True:
             self.updated_language(screen)
@@ -466,7 +473,7 @@ class MainMenu(linpg.AbstractSystem):
                         if linpg.is_hover(self.chapter_select[i]):
                             self.__background.stop()
                             mapEditor(screen,"workshop",i,self.current_selected_workshop_project)
-                            self.__background.restart()
+                            self.__restart_background()
                             break
             #创意工坊-选择当前合集想要编辑对话的关卡
             elif self.menu_type == 8:
@@ -481,7 +488,7 @@ class MainMenu(linpg.AbstractSystem):
                         if linpg.is_hover(self.chapter_select[i]):
                             self.__background.stop()
                             dialogEditor(screen,"workshop",i,"dialog_before_battle",self.current_selected_workshop_project)
-                            self.__background.restart()
+                            self.__restart_background()
                             break
         ALPHA_BUILD_WARNING.draw(screen)
         if self.loading_screen is not None:
