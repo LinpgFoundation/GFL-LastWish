@@ -1,8 +1,9 @@
 import os
 from glob import glob
 
-# import linpg
-from linpgdev import linpg
+import linpg
+
+# from linpgdev import linpg
 
 __all__ = ["linpg", "os", "glob", "RPC", "ALPHA_BUILD_WARNING", "LARGE_IMAGE"]
 
@@ -40,13 +41,7 @@ linpg.font.set_global_font("medium", int(linpg.display.get_width() / 40))
 
 # alpha构建警告
 ALPHA_BUILD_WARNING = linpg.TextSurface(
-    linpg.font.render(
-        linpg.lang.get_text("alpha_build_warning"),
-        "white",
-        int(linpg.display.get_width() / 80),
-    ),
-    0,
-    0,
+    linpg.font.render(linpg.lang.get_text("alpha_build_warning"), "white", int(linpg.display.get_width() / 80)), 0, 0
 )
 ALPHA_BUILD_WARNING.set_centerx(linpg.display.get_width() / 2)
 ALPHA_BUILD_WARNING.set_bottom(linpg.display.get_height() - ALPHA_BUILD_WARNING.get_height())

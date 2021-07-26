@@ -104,10 +104,7 @@ class RoundSwitch:
                 (self.baseImg, (0, self.y)),
                 (
                     self.now_total_rounds_surface,
-                    (
-                        screen.get_width() / 2 - self.now_total_rounds_surface.get_width(),
-                        self.y + screen.get_width() / 36,
-                    ),
+                    (screen.get_width() / 2 - self.now_total_rounds_surface.get_width(), self.y + screen.get_width() / 36),
                 ),
             )
         )
@@ -116,10 +113,7 @@ class RoundSwitch:
                 (
                     (self.lineRedUp, (abs(self.x), self.y)),
                     (self.lineRedDown, (self.x, self.y2)),
-                    (
-                        self.enemy_round_txt_surface,
-                        (screen.get_width() / 2, self.y + screen.get_width() / 18),
-                    ),
+                    (self.enemy_round_txt_surface, (screen.get_width() / 2, self.y + screen.get_width() / 18)),
                 )
             )
         elif whose_round == "sangvisFerrisToPlayer":
@@ -127,10 +121,7 @@ class RoundSwitch:
                 (
                     (self.lineGreenUp, (abs(self.x), self.y)),
                     (self.lineGreenDown, (self.x, self.y2)),
-                    (
-                        self.your_round_txt_surface,
-                        (screen.get_width() / 2, self.y + screen.get_width() / 18),
-                    ),
+                    (self.your_round_txt_surface, (screen.get_width() / 2, self.y + screen.get_width() / 18)),
                 )
             )
         # 如果UI展示还未完成，返回False
@@ -225,103 +216,55 @@ class SelectMenu:
         txt_temp = linpg.font.render(self.attackTxt, "black", sizeBig)
         txt_temp2 = linpg.font.render(self.attackAPTxt, "black", sizeSmall)
         self.allButton["attack"].blit(
-            txt_temp,
-            (
-                (selectButtonBaseWidth - txt_temp.get_width()) / 2,
-                txt_temp.get_height() * 0.15,
-            ),
+            txt_temp, ((selectButtonBaseWidth - txt_temp.get_width()) / 2, txt_temp.get_height() * 0.15)
         )
         self.allButton["attack"].blit(
-            txt_temp2,
-            (
-                (selectButtonBaseWidth - txt_temp2.get_width()) / 2,
-                txt_temp.get_height() * 1.1,
-            ),
+            txt_temp2, ((selectButtonBaseWidth - txt_temp2.get_width()) / 2, txt_temp.get_height() * 1.1)
         )
         # 移动按钮
         txt_temp = linpg.font.render(self.moveTxt, "black", sizeBig)
         txt_temp2 = linpg.font.render(self.moveAPTxt, "black", sizeSmall)
         self.allButton["move"].blit(
-            txt_temp,
-            (
-                (selectButtonBaseWidth - txt_temp.get_width()) / 2,
-                txt_temp.get_height() * 0.15,
-            ),
+            txt_temp, ((selectButtonBaseWidth - txt_temp.get_width()) / 2, txt_temp.get_height() * 0.15)
         )
         self.allButton["move"].blit(
-            txt_temp2,
-            (
-                (selectButtonBaseWidth - txt_temp2.get_width()) / 2,
-                txt_temp.get_height() * 1.1,
-            ),
+            txt_temp2, ((selectButtonBaseWidth - txt_temp2.get_width()) / 2, txt_temp.get_height() * 1.1)
         )
         # 换弹按钮
         txt_temp = linpg.font.render(self.reloadTxt, "black", sizeBig)
         txt_temp2 = linpg.font.render(self.reloadAPTxt, "black", sizeSmall)
         self.allButton["reload"].blit(
-            txt_temp,
-            (
-                (selectButtonBaseWidth - txt_temp.get_width()) / 2,
-                txt_temp.get_height() * 0.15,
-            ),
+            txt_temp, ((selectButtonBaseWidth - txt_temp.get_width()) / 2, txt_temp.get_height() * 0.15)
         )
         self.allButton["reload"].blit(
-            txt_temp2,
-            (
-                (selectButtonBaseWidth - txt_temp2.get_width()) / 2,
-                txt_temp.get_height() * 1.1,
-            ),
+            txt_temp2, ((selectButtonBaseWidth - txt_temp2.get_width()) / 2, txt_temp.get_height() * 1.1)
         )
         # 技能按钮
         txt_temp = linpg.font.render(self.skillTxt, "black", sizeBig)
         txt_temp2 = linpg.font.render(self.skillAPTxt, "black", sizeSmall)
         self.allButton["skill"].blit(
-            txt_temp,
-            (
-                (selectButtonBaseWidth - txt_temp.get_width()) / 2,
-                txt_temp.get_height() * 0.15,
-            ),
+            txt_temp, ((selectButtonBaseWidth - txt_temp.get_width()) / 2, txt_temp.get_height() * 0.15)
         )
         self.allButton["skill"].blit(
-            txt_temp2,
-            (
-                (selectButtonBaseWidth - txt_temp2.get_width()) / 2,
-                txt_temp.get_height() * 1.1,
-            ),
+            txt_temp2, ((selectButtonBaseWidth - txt_temp2.get_width()) / 2, txt_temp.get_height() * 1.1)
         )
         # 救助按钮
         txt_temp = linpg.font.render(self.rescueTxt, "black", sizeBig)
         txt_temp2 = linpg.font.render(self.rescueAPTxt, "black", sizeSmall)
         self.allButton["rescue"].blit(
-            txt_temp,
-            (
-                (selectButtonBaseWidth - txt_temp.get_width()) / 2,
-                txt_temp.get_height() * 0.15,
-            ),
+            txt_temp, ((selectButtonBaseWidth - txt_temp.get_width()) / 2, txt_temp.get_height() * 0.15)
         )
         self.allButton["rescue"].blit(
-            txt_temp2,
-            (
-                (selectButtonBaseWidth - txt_temp2.get_width()) / 2,
-                txt_temp.get_height() * 1.1,
-            ),
+            txt_temp2, ((selectButtonBaseWidth - txt_temp2.get_width()) / 2, txt_temp.get_height() * 1.1)
         )
         # 互动按钮
         txt_temp = linpg.font.render(self.interactTxt, "black", sizeBig)
         txt_temp2 = linpg.font.render(self.interactAPTxt, "black", sizeSmall)
         self.allButton["interact"].blit(
-            txt_temp,
-            (
-                (selectButtonBaseWidth - txt_temp.get_width()) / 2,
-                txt_temp.get_height() * 0.15,
-            ),
+            txt_temp, ((selectButtonBaseWidth - txt_temp.get_width()) / 2, txt_temp.get_height() * 0.15)
         )
         self.allButton["interact"].blit(
-            txt_temp2,
-            (
-                (selectButtonBaseWidth - txt_temp2.get_width()) / 2,
-                txt_temp.get_height() * 1.1,
-            ),
+            txt_temp2, ((selectButtonBaseWidth - txt_temp2.get_width()) / 2, txt_temp.get_height() * 1.1)
         )
 
     # 将菜单按钮画出
@@ -395,28 +338,13 @@ class CharacterInfoBoard:
         hp_empty_img = linpg.load.img(r"Assets/image/UI/hp_empty.png")
         self.hp_red = linpg.ProgressBarSurface(r"Assets/image/UI/hp_red.png", hp_empty_img, 0, 0, window_x / 15, text_size)
         self.hp_green = linpg.ProgressBarSurface(
-            r"Assets/image/UI/hp_green.png",
-            hp_empty_img,
-            0,
-            0,
-            window_x / 15,
-            text_size,
+            r"Assets/image/UI/hp_green.png", hp_empty_img, 0, 0, window_x / 15, text_size
         )
         self.action_point_blue = linpg.ProgressBarSurface(
-            r"Assets/image/UI/action_point.png",
-            hp_empty_img,
-            0,
-            0,
-            window_x / 15,
-            text_size,
+            r"Assets/image/UI/action_point.png", hp_empty_img, 0, 0, window_x / 15, text_size
         )
         self.bullets_number_brown = linpg.ProgressBarSurface(
-            r"Assets/image/UI/bullets_number.png",
-            hp_empty_img,
-            0,
-            0,
-            window_x / 15,
-            text_size,
+            r"Assets/image/UI/bullets_number.png", hp_empty_img, 0, 0, window_x / 15, text_size
         )
 
     # 标记需要更新
@@ -432,21 +360,15 @@ class CharacterInfoBoard:
         # 加载所需的文字
         tcgc_hp1 = linpg.font.render("HP: ", "white", fontSize)
         tcgc_hp2 = linpg.font.render(
-            str(theCharacterData.current_hp) + "/" + str(theCharacterData.max_hp),
-            "black",
-            fontSize,
+            str(theCharacterData.current_hp) + "/" + str(theCharacterData.max_hp), "black", fontSize
         )
         tcgc_action_point1 = linpg.font.render("AP: ", "white", fontSize)
         tcgc_action_point2 = linpg.font.render(
-            str(theCharacterData.current_action_point) + "/" + str(theCharacterData.max_action_point),
-            "black",
-            fontSize,
+            str(theCharacterData.current_action_point) + "/" + str(theCharacterData.max_action_point), "black", fontSize
         )
         tcgc_bullets_situation1 = linpg.font.render("BP: ", "white", fontSize)
         tcgc_bullets_situation2 = linpg.font.render(
-            str(theCharacterData.current_bullets) + "/" + str(theCharacterData.bullets_carried),
-            "black",
-            fontSize,
+            str(theCharacterData.current_bullets) + "/" + str(theCharacterData.bullets_carried), "black", fontSize
         )
         # 先画出hp,ap和bp的文字
         temp_posX = self.characterIconImages[theCharacterData.type].get_width() * 2
@@ -470,11 +392,7 @@ class CharacterInfoBoard:
         linpg.display_in_center(tcgc_hp2, self.hp_green, temp_posX, temp_posY, self.informationBoard)
         self.action_point_blue.draw(self.informationBoard)
         linpg.display_in_center(
-            tcgc_action_point2,
-            self.action_point_blue,
-            temp_posX,
-            temp_posY + self.text_size * 1.5,
-            self.informationBoard,
+            tcgc_action_point2, self.action_point_blue, temp_posX, temp_posY + self.text_size * 1.5, self.informationBoard
         )
         self.bullets_number_brown.draw(self.informationBoard)
         linpg.display_in_center(
@@ -503,24 +421,16 @@ class ResultBoard:
         self.txt_x = int(font_size * 12)
         self.boardImg = linpg.load.img("Assets/image/UI/score.png", (font_size * 16, font_size * 32))
         self.total_kills = linpg.font.render(
-            resultTxt["total_kills"] + ": " + str(finalResult["total_kills"]),
-            "white",
-            font_size,
+            resultTxt["total_kills"] + ": " + str(finalResult["total_kills"]), "white", font_size
         )
         self.total_time = linpg.font.render(
-            resultTxt["total_time"] + ": " + str(time.strftime("%M:%S", finalResult["total_time"])),
-            "white",
-            font_size,
+            resultTxt["total_time"] + ": " + str(time.strftime("%M:%S", finalResult["total_time"])), "white", font_size
         )
         self.total_rounds_txt = linpg.font.render(
-            resultTxt["total_rounds"] + ": " + str(finalResult["total_rounds"]),
-            "white",
-            font_size,
+            resultTxt["total_rounds"] + ": " + str(finalResult["total_rounds"]), "white", font_size
         )
         self.characters_down = linpg.font.render(
-            resultTxt["characters_down"] + ": " + str(finalResult["times_characters_down"]),
-            "white",
-            font_size,
+            resultTxt["characters_down"] + ": " + str(finalResult["times_characters_down"]), "white", font_size
         )
         self.player_rate = linpg.font.render(resultTxt["rank"] + ": " + "A", "white", font_size)
         self.pressKeyContinue = (
@@ -546,13 +456,7 @@ class ResultBoard:
 # 章节标题(在加载时显示)
 class LoadingTitle:
     def __init__(
-        self,
-        window_x: int,
-        window_y: int,
-        numChapter_txt: str,
-        chapterId: int,
-        chapterTitle_txt: str,
-        chapterDesc_txt: str,
+        self, window_x: int, window_y: int, numChapter_txt: str, chapterId: int, chapterTitle_txt: str, chapterDesc_txt: str
     ):
         # 黑色Void帘幕
         black_surface_t = linpg.new_surface(linpg.display.get_size()).convert()
@@ -560,21 +464,15 @@ class LoadingTitle:
         self.black_bg = linpg.StaticImage(black_surface_t, 0, 0, black_surface_t.get_width(), black_surface_t.get_height())
         title_chapterNum = linpg.font.render(numChapter_txt.format(chapterId), "white", window_x / 38)
         self.title_chapterNum = linpg.StaticImage(
-            title_chapterNum,
-            (window_x - title_chapterNum.get_width()) / 2,
-            window_y * 0.37,
+            title_chapterNum, (window_x - title_chapterNum.get_width()) / 2, window_y * 0.37
         )
         title_chapterName = linpg.font.render(chapterTitle_txt, "white", window_x / 38)
         self.title_chapterName = linpg.StaticImage(
-            title_chapterName,
-            (window_x - title_chapterName.get_width()) / 2,
-            window_y * 0.46,
+            title_chapterName, (window_x - title_chapterName.get_width()) / 2, window_y * 0.46
         )
         title_description = linpg.font.render(chapterDesc_txt, "white", window_x / 76)
         self.title_description = linpg.StaticImage(
-            title_description,
-            (window_x - title_description.get_width()) / 2,
-            window_y * 0.6,
+            title_description, (window_x - title_description.get_width()) / 2, window_y * 0.6
         )
 
     def draw(self, screen: linpg.ImageSurface, alpha: int = 255) -> None:

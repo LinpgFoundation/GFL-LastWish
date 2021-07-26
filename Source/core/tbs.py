@@ -493,7 +493,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             skill_target = None
             if self.alliances_data[characterName].type == "gsh-18":
                 for character in self.alliances_data:
-                    if self.alliances_data[character].on_pos(pos_click):
+                    if linpg.pos.is_same(linpg.pos.int(self.alliances_data[character]), linpg.pos.int(pos_click)):
                         skill_target = character
                         break
             elif (
@@ -502,7 +502,10 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 or self.alliances_data[characterName].type == "sv-98"
             ):
                 for enemies in self.enemies_data:
-                    if self.enemies_data[enemies].on_pos(pos_click) and self.enemies_data[enemies].current_hp > 0:
+                    if (
+                        linpg.pos.is_same(linpg.pos.int(self.enemies_data[enemies]), linpg.pos.int(pos_click))
+                        and self.enemies_data[enemies].current_hp > 0
+                    ):
                         skill_target = enemies
                         break
             return skill_target
@@ -729,13 +732,10 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 self.range_ui_images[area].set_pos(xTemp + self.MAP.block_width * 0.1, yTemp)
                 self.range_ui_images[area].draw(screen)
 
-        # 获取鼠标坐标
-        mouse_x, mouse_y = linpg.controller.mouse.pos
-
         # 玩家回合
         if self.whose_round == "player":
             if linpg.controller.get_event("confirm"):
-                block_get_click = self.MAP.calBlockInMap(mouse_x, mouse_y)
+                block_get_click = self.MAP.calBlockInMap()
                 # 如果点击了回合结束的按钮
                 if linpg.is_hover(self.end_round_button) and self.__is_waiting is True:
                     self.whose_round = "playerToSangvisFerris"
@@ -859,7 +859,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 elif block_get_click is not None:
                     for key in self.alliances_data:
                         if (
-                            self.alliances_data[key].on_pos(block_get_click)
+                            linpg.pos.is_same(linpg.pos.int(self.alliances_data[key]), linpg.pos.int(block_get_click))
                             and self.__is_waiting is True
                             and not self.alliances_data[key].dying
                             and self.__if_draw_range is not False
@@ -904,7 +904,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                         self.screen_to_move_y = self.window_y * 0.8 - tempY
             # 显示攻击/移动/技能范围
             if not self.__if_draw_range and self.characterGetClick is not None:
-                block_get_click = self.MAP.calBlockInMap(mouse_x, mouse_y)
+                block_get_click = self.MAP.calBlockInMap()
                 # 显示移动范围
                 if self.action_choice == "move":
                     self.areaDrawColorBlock["green"].clear()
@@ -1077,7 +1077,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                         self.areaDrawColorBlock["green"] = skill_range["near"]
                         self.areaDrawColorBlock["blue"] = skill_range["middle"]
                         self.areaDrawColorBlock["yellow"] = skill_range["far"]
-                        block_get_click = self.MAP.calBlockInMap(mouse_x, mouse_y)
+                        block_get_click = self.MAP.calBlockInMap()
                         if block_get_click is not None:
                             the_skill_cover_area = []
                             for area in skill_range:
@@ -1263,7 +1263,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                 elif self.action_choice == "attack":
                     # 根据敌我坐标判断是否需要反转角色
                     if self.characterInControl.get_imgId("attack") == 0:
-                        block_get_click = self.MAP.calBlockInMap(mouse_x, mouse_y)
+                        block_get_click = self.MAP.calBlockInMap()
                         if block_get_click is not None:
                             self.characterInControl.set_flip_based_on_pos(block_get_click)
                         self.characterInControl.play_sound("attack")
@@ -1377,7 +1377,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             # 如果天亮的双方都可以看见/天黑，但是是友方角色/天黑，但是是敌方角色在可观测的范围内 -- 则画出角色
             if value.faction == "character" or value.faction == "sangvisFerri" and self.MAP.inLightArea(value):
                 if self.__if_draw_range is True and linpg.controller.mouse.get_pressed(2):
-                    block_get_click = self.MAP.calBlockInMap(mouse_x, mouse_y)
+                    block_get_click = self.MAP.calBlockInMap()
                     if block_get_click is not None and block_get_click["x"] == value.x and block_get_click["y"] == value.y:
                         rightClickCharacterAlphaDeduct = False
                         if self.rightClickCharacterAlpha is None:

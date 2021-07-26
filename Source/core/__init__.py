@@ -3,6 +3,7 @@ from .dialog import DialogSystem
 from .editor import MapEditor
 from .tbs import TurnBasedBattleSystem
 
+
 class GamemodeManager:
     def __init__(self) -> None:
         # 储存闸门动画的图片素材
@@ -57,7 +58,7 @@ class GamemodeManager:
 
     # 对话编辑器
     def dialogEditor(
-        self,screen: linpg.ImageSurface, chapterType: str, chapterId: int, part: str, projectName: str = None
+        self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, part: str, projectName: str = None
     ) -> None:
         self.VEDIO_BACKGROUND.stop()
         # 卸载音乐

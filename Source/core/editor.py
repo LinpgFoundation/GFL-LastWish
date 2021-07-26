@@ -289,7 +289,7 @@ class MapEditor(linpg.AbstractBattleSystem):
 
     # 将地图制作器的界面画到屏幕上
     def draw(self, screen: linpg.ImageSurface) -> None:
-        block_get_click = self.MAP.calBlockInMap(linpg.controller.mouse.pos)
+        block_get_click = self.MAP.calBlockInMap()
         for event in linpg.controller.events:
             if event.type == linpg.key.DOWN:
                 if event.key == linpg.key.ESCAPE:

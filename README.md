@@ -120,6 +120,20 @@ https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish
 
 
 
+# 📢 Credits / 特别鸣谢
+
+[自贡芒果Channel](https://space.bilibili.com/115351260) - 授权了主菜单页面的使用
+
+<img src="Assets\image\screenshot\credits_zgmg.png"/>
+
+
+
+[命运の乐章](https://space.bilibili.com/8453668) - 授于了制作组在该游戏中暂时地使用其制作的GMV作为过场动画的权利
+
+<img src="Assets\image\screenshot\credits_mydyz.png"/>
+
+
+
 # :memo: License / 版权说明
 
 This game's codes are distributed under the **[GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**, which means you can use our codes for commercial purposes as long as you are following the **[GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**. However, all images and music used in this game are from third parties, and secondary distribution or commercialization without the authorization of the corresponding creators is strictly prohibited. Also, Tigeia Workshop (the developer of this game and Linpg engine) is not responsible for any disputes and damages caused by neither this game nor Linpg Engine.
