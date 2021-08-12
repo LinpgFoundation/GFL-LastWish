@@ -1,3 +1,4 @@
+from typing import Iterable
 from .ui import (
     CharacterInfoBoard,
     LoadingTitle,
@@ -13,9 +14,10 @@ from .ui import (
 
 
 # 回合制游戏战斗系统
-class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
+class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleForGameSystem):
     def __init__(self):
-        super().__init__()
+        linpg.AbstractBattleSystem.__init__(self)
+        linpg.PauseMenuModuleForGameSystem.__init__(self)
         # 被选中的角色
         self.characterGetClick = None
         self.enemiesGetAttack: dict = {}
@@ -75,8 +77,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         self.friendsCanSave: list = []
         # 是否从存档中加载的数据-默认否
         self.__load_from_save: bool = False
-        # 暂停菜单
-        self.pause_menu = linpg.PauseMenu()
+        # 启用暂停菜单
+        self._enable_pause_menu()
         # 每次需要更新的物品
         self.__items_to_blit: list = []
         self.__max_item_weight: int = 0
@@ -280,7 +282,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         for walkingSoundPath in glob(r"Assets/sound/snow/*.wav"):
             self.footstep_sounds.add(walkingSoundPath)
         # 更新所有音效的音量
-        self.__update_sound_volume()
+        self._update_sound_volume()
         # 攻击的音效 -- 频道2
         self.attackingSounds = linpg.AttackingSoundManager(linpg.media.volume.effects, 2)
         # 切换回合时的UI
@@ -301,7 +303,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     ),
                 )
                 if i == 1:
-                    temp_secode = self.FONT.render(time.strftime(":%S", time.localtime()), linpg.color.WHITE)
+                    temp_secode = self.FONT.render_with_bounding(time.strftime(":%S", time.localtime()), linpg.color.WHITE)
                     temp_secode.set_alpha(a)
                     screen.blit(
                         temp_secode,
@@ -334,8 +336,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         self,
         image: linpg.ImageSurface,
         weight: int = -1,
-        pos: linpg.pos_liked = linpg.pos.ORIGIN,
-        offSet: linpg.pos_liked = linpg.pos.ORIGIN,
+        pos: Iterable = linpg.pos.ORIGIN,
+        offSet: Iterable = linpg.pos.ORIGIN,
     ) -> None:
         if weight < 0:
             self.__max_item_weight += 1
@@ -398,15 +400,15 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     self.whose_round = "result_win"
 
     # 更新音量
-    def __update_sound_volume(self) -> None:
+    def _update_sound_volume(self) -> None:
         self.footstep_sounds.set_volume(linpg.media.volume.effects / 100)
         self.environment_sound.set_volume(linpg.media.volume.environment / 100.0)
         self.set_bgm_volume(linpg.media.volume.background_music / 100.0)
 
     # 更新语言
-    def updated_language(self, screen) -> None:
+    def updated_language(self, screen:linpg.ImageSurface) -> None:
         super().updated_language()
-        self.pause_menu.initialize(screen)
+        self._initialize_pause_menu()
         self.selectMenuUI = SelectMenu()
         self.battleModeUiTxt = linpg.lang.get_text("Battle_UI")
         self.RoundSwitchUI = RoundSwitch(self.window_x, self.window_y, self.battleModeUiTxt)
@@ -684,7 +686,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     )
                 # 玩家输入按键判定
                 if linpg.controller.get_event("back"):
-                    self.pause_menu.hidden = False
+                    self._show_pause_menu(screen)
             else:
                 self.dialog_parameters = None
                 self.dialog_key = None
@@ -707,7 +709,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
         for event in linpg.controller.events:
             if event.type == linpg.key.DOWN:
                 if event.key == linpg.key.ESCAPE and self.characterGetClick is None:
-                    self.pause_menu.hidden = False
+                    self._show_pause_menu(screen)
                 if event.key == linpg.key.ESCAPE and self.__is_waiting is True:
                     self.__if_draw_range = True
                     self.characterGetClick = None
@@ -1620,7 +1622,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
                     ),
                 )
                 if i == 1:
-                    temp_secode = self.FONT.render(time.strftime(":%S", time.localtime()), linpg.color.WHITE)
+                    temp_secode = self.FONT.render_with_bounding(time.strftime(":%S", time.localtime()), linpg.color.WHITE)
                     temp_secode.set_alpha(self.txt_alpha)
                     screen.blit(
                         temp_secode,
@@ -1632,47 +1634,3 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem):
             self.txt_alpha -= 5
         # 刷新画面
         self.__update_scene(screen)
-        # 展示暂停菜单
-        if not self.pause_menu.hidden:
-            progress_saved_text = linpg.StaticImage(
-                self.FONT.render(
-                    linpg.lang.get_text("Global", "progress_has_been_saved"),
-                    linpg.color.WHITE,
-                ),
-                0,
-                0,
-            )
-            progress_saved_text.set_alpha(0)
-            progress_saved_text.set_center(screen.get_width() / 2, screen.get_height() / 2)
-            while not self.pause_menu.hidden:
-                linpg.display.flip()
-                self.pause_menu.draw(screen)
-                result = self.pause_menu.get_button_clicked()
-                if result == "resume":
-                    linpg.option_menu.hidden = True
-                    self.pause_menu.hidden = True
-                elif result == "save":
-                    self.save_progress()
-                    progress_saved_text.set_alpha(255)
-                elif result == "option_menu":
-                    linpg.option_menu.hidden = False
-                elif result == "back_to_mainMenu":
-                    linpg.option_menu.hidden = True
-                    linpg.media.unload()
-                    progress_saved_text.set_alpha(0)
-                    self.pause_menu.hidden = True
-                    linpg.global_value.set("BackToMainMenu", True)
-                    self.stop()
-                # 展示设置UI
-                linpg.option_menu.draw(screen)
-                # 更新音量
-                if linpg.option_menu.need_update["volume"] is True:
-                    self.__update_sound_volume()
-                # 更新语言
-                if linpg.option_menu.need_update["language"] is True:
-                    self.updated_language(screen)
-                # 显示进度已保存的文字
-                progress_saved_text.draw(screen)
-                progress_saved_text.subtract_alpha(5)
-            del progress_saved_text
-            self.pause_menu.screenshot = None

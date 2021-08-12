@@ -396,20 +396,14 @@ class MainMenu(linpg.AbstractSystem):
         txt_y = (screen_size[1] - len(self.main_menu_txt["menu_workshop_choice"]) * font_size) / 2
         for key, txt in self.main_menu_txt["menu_workshop_choice"].items():
             self.main_menu_txt["menu_workshop_choice"][key] = linpg.load.dynamic_text(
-                txt,
-                linpg.color.WHITE,
-                (txt_location, txt_y),
-                linpg.font.get_global_font_size("medium"),
+                txt, linpg.color.WHITE, (txt_location, txt_y), linpg.font.get_global_font_size("medium")
             )
             txt_y += font_size
         # 加载退出确认消息框
         self.exit_confirm_menu = linpg.Message(
-            self.main_menu_txt["other"]["tip"],
-            self.main_menu_txt["other"]["exit_confirm"],
-            (
-                self.main_menu_txt["other"]["confirm"],
-                self.main_menu_txt["other"]["deny"],
-            ),
+            linpg.lang.get_text("Global", "tip"),
+            linpg.lang.get_text("LeavingWithoutSavingWarning", "exit_confirm"),
+            (linpg.lang.get_text("Global", "yes"), linpg.lang.get_text("Global", "no")),
             True,
             return_button=1,
             escape_button=1,

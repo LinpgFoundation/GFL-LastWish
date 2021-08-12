@@ -281,7 +281,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.UI_local_x = 0
         self.UI_local_y = 0
         # 未保存离开时的警告
-        self.__no_save_warning = linpg.ui.generate_deault("leave_without_saving_warning")
+        self.__no_save_warning = linpg.ui.generate("leave_without_saving_warning")
         # 用于储存即将发下的物品的具体参数
         self.data_to_edit = None
         # 读取地图原始文件
