@@ -1,6 +1,8 @@
 # GirlsFrontLine-LastWish 少女前线-遗愿
 
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/Tigeia-Workshop/GirlsFrontLine-LastWish.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Tigeia-Workshop/GirlsFrontLine-LastWish/alerts/) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Tigeia-Workshop/GirlsFrontLine-LastWish.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Tigeia-Workshop/GirlsFrontLine-LastWish/context:python) ![GitHub all releases](https://img.shields.io/github/downloads/Tigeia-Workshop/GirlsFrontLine-LastWish/total) ![GitHub](https://img.shields.io/github/license/Tigeia-Workshop/GirlsFrontLine-LastWish) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Tigeia-Workshop/GirlsFrontLine-LastWish?include_prereleases) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/linpg)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/TigeiaWorkshop/GirlsFrontLine-LastWish.svg?style=for-the-badge&logo=appveyor?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/TigeiaWorkshop/GirlsFrontLine-LastWish/alerts/) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/TigeiaWorkshop/GirlsFrontLine-LastWish.svg?style=for-the-badge&logo=appveyor?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/TigeiaWorkshop/GirlsFrontLine-LastWish/context:python) ![GitHub all releases](https://img.shields.io/github/downloads/TigeiaWorkshop/GirlsFrontLine-LastWish/total?style=for-the-badge&logo=appveyor) ![GitHub](https://img.shields.io/github/license/TigeiaWorkshop/GirlsFrontLine-LastWish?style=for-the-badge&logo=appveyor)
+
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/TigeiaWorkshop/GirlsFrontLine-LastWish?include_prereleases&style=for-the-badge) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/linpg?style=for-the-badge&logo=appveyor) ![pypresence](https://img.shields.io/badge/using-pypresence-00bb88.svg?style=for-the-badge&logo=discord&logoWidth=20)
 
 
 
@@ -50,11 +52,11 @@ Their stories may be forgotten by history, but what they have done will be remem
 | Linpg引擎初期重构完成，开始游戏本体的迁徙工作 | The reconfiguration of Linpg Engine was finished | 2020.6      |
 | 游戏本体迁徙工作基本完成                      | The migrations completed                         | 2020.8      |
 | 游戏进行小范围测试                            | Small-scale testing                              | 2021.3      |
-| 第1至4章发布                                  | The first to fourth chapter releases.            | 2021.6      |
-| 第5至8章发布                                  | The fifth to eighth chapter releases.            | 2021.9      |
-| 第9至11章发布                                 | The ninth to eleventh chapter releases.          | 2021.11     |
-| 最终章发布                                    | Final chapter releases                           | 2021.12     |
-| 第一个DLC发布                                 | First DLC releases                               | 2022 spring |
+| 第1至4章发布                                  | The first to fourth chapter releases.            | 2021.10     |
+| 第5至8章发布                                  | The fifth to eighth chapter releases.            | 2021.12     |
+| 第9至11章发布                                 | The ninth to eleventh chapter releases.          | 2022 spring |
+| 最终章发布                                    | Final chapter releases                           | 2022 spring |
+| 第一个DLC发布                                 | First DLC releases                               | 2022 Summer |
 
 
 
@@ -68,7 +70,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 ##### * You have to install the latest version of Linpg Engine!
 
-##### * For more information about Linpg Engine, please visit https://github.com/Tigeia-Workshop/linpg.
+##### * For more information about Linpg Engine, please visit https://github.com/TigeiaWorkshop/linpg.
 
 
 
@@ -76,7 +78,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 | Type             | 类型     | Minimum / 最低要求                        | Recommended / 推荐配置                    |
 | ---------------- | -------- | ----------------------------------------- | ----------------------------------------- |
-| Operating System | 操作系统 | Windows®7/Vista/XP, MacOS, Ubuntu         | Windows®10                                |
+| Operating System | 操作系统 | Windows®10, MacOS, Ubuntu                 | Same as left                              |
 | CPU              | 处理器   | Intel® or AMD 1.2 GHz processor or better | Intel® or AMD 2.8 GHz processor or better |
 | Memory           | 内存     | 8 GB RAM                                  | 16GB RAM                                  |
 | Graphics Cards   | 显卡     | Any Nvidia or AMD Graphics Cards          | Same as left                              |
@@ -98,25 +100,11 @@ This branch holds the latest version that is available to the public. While this
 
 目前可以运行的最新版本，可能在修复了部分现有的bug的同时，又带有新增的bug。 推荐开发人员使用
 
-### * in-process:
-
-**DON'T USE THIS BRANCH!** This branch contains a version that is currently unfinished and cannot run on any system.
-
-还未完成，无法运行的版本，请勿使用
-
-### * exp:
-
-**DON'T USE THIS BRANCH!**  This branch contains a version that is still in the experimental stage.
-
-实验版本，包含了部分仍在试验阶段的内容，请勿使用
-
-*: These branches may not be available to the public.
-
 
 
 # :books: How to contribute / 如何贡献代码
 
-See **[CONTRIBUTING.md](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/CONTRIBUTING.md)**
+See **[CONTRIBUTING.md](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/CONTRIBUTING.md)**
 
 
 
@@ -128,12 +116,28 @@ https://discord.gg/3wz6bs5jvu
 
 # :open_book: ​Wiki / 维基百科
 
-https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish
+https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish
+
+
+
+# 📢 Credits / 特别鸣谢
+
+[自贡芒果Channel](https://space.bilibili.com/115351260) - 授权了主菜单页面的使用
+
+<img src="Assets\image\screenshot\credits_zgmg.png"/>
+
+
+
+[命运の乐章](https://space.bilibili.com/8453668) - 授于了制作组在该游戏中暂时地使用其制作的GMV作为过场动画的权利
+
+<img src="Assets\image\screenshot\credits_mydyz.png"/>
 
 
 
 # :memo: License / 版权说明
 
-This game's codes are distributed under the **[GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**, which means you can use our codes for commercial purposes as long as you are following the **[GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**. However, all images and music used in this game are from third parties, and secondary distribution or commercialization without the authorization of the corresponding creators is strictly prohibited. Also, Tigeia Workshop (the developer of this game and Linpg engine) is not responsible for any disputes and damages caused by neither this game nor Linpg Engine.
+This game's codes are distributed under the **[GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**, which means you can use our codes for commercial purposes as long as you are following the **[GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**. However, all images and music used in this game are from third parties, and secondary distribution or commercialization without the authorization of the corresponding creators is strictly prohibited. Also, Tigeia Workshop (the developer of this game and Linpg engine) is not responsible for any disputes and damages caused by neither this game nor Linpg Engine.
 
-本游戏的代码将采用 **[GPL-3.0 License](https://github.com/Tigeia-Workshop/GirlsFrontLine-LastWish/blob/master/LICENSE)** 进行分发，这意味着你可以商用我们的代码。然而，需要注意的是，本游戏用到的所有图片和音乐素材均来自第三方，严禁在没有对应创作者授权的情况下进行二次发布或者商用。同时，因使用该游戏或者linpg导致的任何形式的冲突（比如但不仅限法律冲突，经济冲突等）与缇吉娅工坊（本游戏和Linpg引擎的开发者）无关。
+**Note:** To fight back UW Bothell's controversial admission system for the CSSE program, any CSSE students and professors from the UW Bothell campus are prohibited from using anything from this repository without permission from the Tigeia Workshop development team. If you are a student or professor from UW Bothell and would like to know more about this requirement, feel free to reach out to the Tigeia Workshop development team by sending an email. This requirement does not apply to students and professors from Tacoma and Seattle campuses, as well as Non-CSSE students and professors from UW Bothell.
+
+本游戏的代码将采用 [GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE) 进行分发，这意味着你可以商用我们的代码。然而，需要注意的是，本游戏用到的所有图片和音乐素材均来自第三方，严禁在没有对应创作者授权的情况下进行二次发布或者商用。同时，因使用该游戏或者linpg导致的任何形式的冲突（比如但不仅限法律冲突，经济冲突等）与缇吉娅工坊（本游戏和Linpg引擎的开发者）无关。

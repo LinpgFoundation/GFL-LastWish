@@ -41,12 +41,8 @@ MainMenu:
   menu_workshop_choice:
     0_play: 游玩
   other:
-    confirm: 是
-    deny: 否
-    exit_confirm: 你确认要退出游戏吗？
     new_chapter: 新建章节
     new_project: 新建项目
-    tip: 提示
 MapEditor:
   block: 方块
   decoration: 装饰物

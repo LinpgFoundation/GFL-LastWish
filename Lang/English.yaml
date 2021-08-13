@@ -36,12 +36,8 @@ MainMenu:
   menu_workshop_choice:
     0_play: Play
   other:
-    confirm: 'Yes'
-    deny: 'No'
-    exit_confirm: Are you sure you want to quit the game?
     new_chapter: Create New Chapter
     new_project: Create New Project
-    tip: Tip
 MapEditor:
   block: Block
   decoration: Decoration
@@ -73,4 +69,4 @@ Warnings:
 alpha_build_warning: 'Alpha Build: Far From Finish'
 title1: 'Warning: All content is still in development and does not represent final
   results'
-title2: Presents by Tigeia-Workshop
+title2: Presents by TigeiaWorkshop
