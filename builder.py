@@ -25,7 +25,7 @@ if input("Do you want to generate a package for the game(Y/n):") == "Y":
         os.system("pyinstaller --noconsole main.spec")
 
     # 移除移除的缓存文件
-    folders_need_remove: tuple[str] = ("build", "logs", "__pycache__")
+    folders_need_remove: tuple[str] = ("build", "logs", "__pycache__", "Source_pyd")
     for folder_p in folders_need_remove:
         if os.path.exists(folder_p):
             shutil.rmtree(folder_p)

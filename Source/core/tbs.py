@@ -406,7 +406,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         self.set_bgm_volume(linpg.media.volume.background_music / 100.0)
 
     # 更新语言
-    def updated_language(self, screen:linpg.ImageSurface) -> None:
+    def updated_language(self, screen: linpg.ImageSurface) -> None:
         super().updated_language()
         self._initialize_pause_menu()
         self.selectMenuUI = SelectMenu()
