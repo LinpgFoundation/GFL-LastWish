@@ -1,4 +1,4 @@
-blocks:
+Blocks:
   LowTileDirt01:
     canPassThrough: true
   LowTileDirtToStoneTransition01:
@@ -437,3 +437,211 @@ blocks:
     canPassThrough: true
   TileWood04:
     canPassThrough: true
+Contributors:
+  mainMenu:
+  - DIZZYs WALLPAPERS
+  sound:
+  - 影之光
+Decorations:
+  Desert_big_cactus_02: obstacle
+  Desert_big_cactus_03: obstacle
+  Desert_big_cactus_04: obstacle
+  Desert_big_flower_01: other
+  Desert_small_Agave_Cactus_01: other
+  Desert_small_Agave_Cactus_02: other
+  Desert_small_Agave_Cactus_03: other
+  Desert_small_Agave_Cactus_04: other
+  Desert_small_Bush_01: tree
+  Desert_small_Bush_02: tree
+  Desert_small_Cactus_02: obstacle
+  Desert_small_Cactus_03: obstacle
+  Desert_small_Cactus_04: obstacle
+  Desert_small_Cactus_05: obstacle
+  Desert_small_Cactus_06: obstacle
+  Desert_small_Cactus_07: obstacle
+  Desert_small_Cactus_09: obstacle
+  Desert_small_Cactus_10: obstacle
+  Desert_small_Cactus_11: obstacle
+  Desert_small_Cactus_12: obstacle
+  Desert_small_Cactus_13: obstacle
+  Desert_small_Cactus_14: obstacle
+  Desert_small_Cactus_15: obstacle
+  Desert_small_Flower_01: other
+  Desert_small_Flower_02: other
+  Desert_small_Flower_03: other
+  Desert_small_Flower_04: other
+  Forest_big_cypress_01: tree
+  Forest_big_cypress_02: tree
+  Forest_big_cypress_03: tree
+  Forest_big_stone_01: obstacle
+  Forest_big_stone_02: obstacle
+  Forest_big_tree_leaf_01: tree
+  Forest_big_tree_needle_03: tree
+  Forest_big_tree_needle_04: tree
+  Forest_deadBush3: other
+  Forest_deadTree1: other
+  Forest_deadTree2: other
+  Forest_deadTree4: other
+  Forest_deadbush5: other
+  Forest_small_bush_01: tree
+  Forest_small_bush_02: tree
+  Forest_small_clover_01: other
+  Forest_small_clover_02: other
+  Forest_small_clover_03: other
+  Forest_small_fern_01: other
+  Forest_small_fern_02: other
+  Forest_small_flower_01: other
+  Forest_small_flower_02: other
+  Forest_small_flower_03: other
+  Forest_small_grass_01: other
+  Forest_small_grass_02: other
+  Forest_small_grass_03: other
+  Forest_small_grass_04: other
+  Forest_small_grass_05: other
+  Forest_small_grass_06: other
+  Forest_small_grass_07: other
+  Forest_small_grass_08: other
+  Forest_small_mushroom_01: other
+  Forest_small_mushroom_02: other
+  Forest_small_mushroom_03: other
+  Forest_small_mushroom_04: other
+  Forest_small_tree_log_01: obstacle
+  Forest_small_tree_log_02: obstacle
+  Forest_small_tree_log_03: obstacle
+  Forest_small_tree_stump_01: obstacle
+  Forest_small_tree_stump_02: obstacle
+  Forest_small_tree_stump_03: obstacle
+  bamboo1: tree
+  bamboo2: tree
+  bamboo3: tree
+  bamboo4: tree
+  bamboo5: tree
+  bamboo6: tree
+  bamboo7: tree
+  bamboo8: tree
+  chest: chest
+  desert_skull_01: obstacle
+  desert_skull_02: obstacle
+  desert_skull_03: obstacle
+  forest_berrybush: tree
+  forest_bush4: other
+  forest_bush5: other
+  reed1: other
+  reed2: other
+  reed3: other
+  reed4: other
+  reed5: other
+  reed6: other
+  reed7: other
+  reed8: other
+  stone1: obstacle
+  stone2: obstacle
+  stone3: obstacle
+  waterbuds: other
+  waterplant0: other
+  waterplant1: other
+  waterplant2: other
+  waterplant3: other
+  waterplant4: other
+  waterplant5: other
+  waterplant6: other
+Npc:
+  aa12:
+  - aa12.png
+  - aa12_hurt.png
+  asval:
+  - asval.png
+  - asval_hurt.png
+  contender:
+  - contender.png
+  - contender_hurt.png
+  fnfnc:
+  - fnfnc.png
+  - fnfnc_hurt.png
+  g11:
+  - g11.png
+  - g11_hurt.png
+  g36:
+  - g36.png
+  - g36_hurt.png
+  g41:
+  - g41.png
+  - g41_hurt.png
+  grizzly:
+  - grizzly.png
+  - grizzly_hurt.png
+  gsh-18:
+  - gsh-18.png
+  - gsh-18_hurt.png
+  helianthus:
+  - helianthus_1.png
+  - helianthus_2.png
+  - helianthus_3.png
+  - helianthus_4.png
+  hk416:
+  - hk416.png
+  - hk416_hurt.png
+  k:
+  - k.png
+  kalina:
+  - kalina_0.png
+  - kalina_1.png
+  - kalina_2.png
+  - kalina_3.png
+  - kalina_4.png
+  - kalina_5.png
+  - kalina_6.png
+  - kalina_7.png
+  - kalina_8.png
+  kp31:
+  - kp31.png
+  - kp31_hurt.png
+  kryuger:
+  - kryuger.png
+  lewis:
+  - lewis.png
+  - lewis_hurt.png
+  m14:
+  - m14.png
+  - m14_hurt.png
+  m1903:
+  - m1903.png
+  - m1903_hurt.png
+  m1928a1:
+  - m1928a1.png
+  - m1928a1_hurt.png
+  mg4:
+  - mg4.png
+  - mg4_hurt.png
+  negev:
+  - negev.png
+  - negev_hurt.png
+  nyto:
+  - nyto.png
+  pp1901:
+  - pp1901.png
+  - pp1901_hurt.png
+  saiga12:
+  - saiga12.png
+  - saiga12_hurt.png
+  sat8:
+  - sat8.png
+  - sat8_hurt.png
+  sr3mp:
+  - sr3mp.png
+  - sr3mp_hurt.png
+  sv-98:
+  - sv-98.png
+  - sv-98_hurt.png
+  ump45:
+  - ump45.png
+  - ump45_hurt.png
+  ump9:
+  - ump9.png
+  - ump9_hurt.png
+  wa2000:
+  - wa2000.png
+  - wa2000_hurt.png
+  welrod:
+  - welrod.png
+  - welrod_hurt.png

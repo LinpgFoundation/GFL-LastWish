@@ -98,9 +98,7 @@ class MainMenu(linpg.AbstractSystem):
             try:
                 info_data = linpg.config.load(os.path.join(path, "info.yaml"))
             except Exception:
-                info_data = linpg.config.load(r"Data/info_example.yaml")
-                info_data["default_lang"] = linpg.setting.language
-                linpg.config.save(os.path.join(path, "info.yaml"), info_data)
+                linpg.create_new_project(path, "yaml")
             self.workshop_files_text.append(os.path.basename(path))
             self.workshop_files.append(info_data["title"][linpg.setting.language])
         self.workshop_files.append(linpg.lang.get_text("Global", "back"))
@@ -228,12 +226,8 @@ class MainMenu(linpg.AbstractSystem):
         while os.path.exists(os.path.join("Data", "workshop", fileName)):
             fileName = "{0} ({1})".format(fileDefaultName, avoidDuplicateId)
             avoidDuplicateId += 1
-        # 创建文件夹
-        os.makedirs(os.path.join("Data", "workshop", fileName))
-        # 储存数据
-        info_data: dict = linpg.config.load(r"Data/info_example.yaml")
-        info_data["default_lang"] = linpg.setting.language
-        linpg.config.save(os.path.join("Data", "workshop", fileName, "info.yaml"), info_data)
+        # 创建项目模板
+        linpg.create_new_project(os.path.join("Data", "workshop", fileName), "yaml")
 
     # 创建新的对话文和地图文件
     def __create_new_chapter(self) -> None:
