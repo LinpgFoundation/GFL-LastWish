@@ -1,9 +1,11 @@
 import os
 from glob import glob
 
-import linpg
-
-# from linpgdev import linpg
+if os.path.exists("dev.key"):
+    from linpgdev import linpg
+    linpg.setting.set_developer_mode(True)
+else:
+    import linpg
 
 __all__ = ["linpg", "os", "glob", "RPC", "ALPHA_BUILD_WARNING", "LARGE_IMAGE"]
 

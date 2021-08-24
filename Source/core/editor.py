@@ -27,7 +27,7 @@ class MapEditor(linpg.AbstractBattleSystem):
     ) -> None:
         self._initialize(chapterType, chapterId, projectName)
         self.folder_for_save_file, self.name_for_save_file = os.path.split(self.get_map_file_location())
-        self.decorations_setting = linpg.config.load("Data/decorations.yaml", "decorations")
+        self.decorations_setting = linpg.config.load("Data/database.yaml", "decorations")
         # 载入地图数据
         mapFileData: dict = linpg.config.load(self.get_map_file_location())
         # 初始化角色信息
@@ -60,7 +60,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         panding: int = int(screen.get_height() * 0.01)
         font_size: int = int(button_width / 3)
         self.__button_select_block = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("MapEditor", "block"),
             "black",
             font_size,
@@ -68,7 +68,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             100,
         )
         self.__button_select_decoration = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("MapEditor", "decoration"),
             "black",
             font_size,
@@ -88,12 +88,12 @@ class MapEditor(linpg.AbstractBattleSystem):
         )
         self.__button_select_decoration.set_left(self.__button_select_block.right + panding)
         self.__UIContainerRight = linpg.load.dynamic_image(
-            r"Assets/image/UI/container.png",
+            "<!ui>container.png",
             (0, 0),
             (container_width, container_height),
         )
         self.__UIContainerButtonRight = linpg.load.movable_image(
-            r"Assets/image/UI/container_button.png",
+            "<!ui>container_button.png",
             (
                 int(screen.get_width() - button_width),
                 int((screen.get_height() - button_height) / 2),
@@ -151,7 +151,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         panding = int(screen.get_height() * 0.01)
         font_size = int(button_height / 2)
         self.__button_select_character = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("General", "griffin_Kryuger"),
             "black",
             font_size,
@@ -159,7 +159,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             100,
         )
         self.__button_select_sangvisFerri = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("General", "sangvis_ferri"),
             "black",
             font_size,
@@ -167,12 +167,12 @@ class MapEditor(linpg.AbstractBattleSystem):
             100,
         )
         self.__UIContainerBottom = linpg.load.dynamic_image(
-            r"Assets/image/UI/container.png",
+            "<!ui>container.png",
             (0, 0),
             (container_width, container_height),
         )
         self.__UIContainerButtonBottom = linpg.load.movable_image(
-            r"Assets/image/UI/container_button.png",
+            "<!ui>container_button.png",
             (
                 int((container_width - button_width) / 2),
                 int(screen.get_height() - button_height),
@@ -243,7 +243,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         UI_y = int(screen.get_height() * 0.02)
         font_size = int(self.MAP.block_width * 0.2)
         self.UIButton["save"] = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("Global", "save"),
             "black",
             font_size,
@@ -252,7 +252,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         )
         UI_x += self.UIButton["save"].get_width() + font_size
         self.UIButton["back"] = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("Global", "back"),
             "black",
             font_size,
@@ -261,7 +261,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         )
         UI_x += self.UIButton["back"].get_width() + font_size
         self.UIButton["delete"] = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("Global", "delete"),
             "black",
             font_size,
@@ -270,7 +270,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         )
         UI_x += self.UIButton["delete"].get_width() + font_size
         self.UIButton["reload"] = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("Global", "reload_file"),
             "black",
             font_size,

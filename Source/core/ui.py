@@ -170,7 +170,7 @@ class WarningSystem:
 class SelectMenu:
     def __init__(self):
         selectMenuTxtDic: dict = linpg.lang.get_text("SelectMenu")
-        self.selectButtonImg = linpg.load.img(r"Assets/image/UI/menu.png")
+        self.selectButtonImg = linpg.load.img("<!ui>button.png")
         # 攻击
         self.attackAP = linpg.AP_IS_NEEDED_TO_ATTACK
         self.attackTxt = selectMenuTxtDic["attack"]
