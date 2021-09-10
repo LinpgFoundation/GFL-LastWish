@@ -116,7 +116,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             int(screen.get_height() * 0.85),
             "vertical",
         )
-        for imgPath in glob(r"Assets/image/environment/block/*.png"):
+        for imgPath in glob(os.path.join(linpg.ASSET.get_internal_environment_image_path("block"), "*.png")):
             self.__envImgContainer.set(
                 os.path.basename(imgPath).replace(".png", ""),
                 linpg.load.img(imgPath, (self.MAP.block_width / 3, None)),
@@ -134,7 +134,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             int(screen.get_height() * 0.85),
             "vertical",
         )
-        for imgPath in glob(r"Assets/image/environment/decoration/*.png"):
+        for imgPath in glob(os.path.join(linpg.ASSET.get_internal_environment_image_path("decoration"), "*.png")):
             self.__decorationsImgContainer.set(
                 os.path.basename(imgPath).replace(".png", ""),
                 linpg.load.img(imgPath, (self.MAP.block_width / 3, None)),

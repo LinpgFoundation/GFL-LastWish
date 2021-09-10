@@ -3,6 +3,7 @@ from glob import glob
 
 if os.path.exists("dev.key"):
     from linpgdev import linpg
+
     linpg.setting.set_developer_mode(True)
 else:
     import linpg
