@@ -1213,11 +1213,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                         # 检测是不是站在补给上
                         decoration = self.MAP.find_decoration_on(self.characterInControl.get_pos())
                         if decoration is not None and decoration.type == "chest":
-                            if (
-                                decoration.whitelist is None
-                                or self.characterGetClick == decoration.whitelist
-                                or self.characterGetClick in decoration.whitelist
-                            ):
+                            if self.characterGetClick in decoration.whitelist:
                                 # 清空储存列表
                                 self.supply_board.items.clear()
                                 # 将物品按照类型放入列表
@@ -1249,8 +1245,6 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                             dialog_to_check = self._dialog_dictionary["move"][name_from_by_pos]
                             if (
                                 "whitelist" not in dialog_to_check
-                                or dialog_to_check["whitelist"] is None
-                                or self.characterGetClick == dialog_to_check["whitelist"]
                                 or self.characterGetClick in dialog_to_check["whitelist"]
                             ):
                                 self.dialog_key = dialog_to_check["dialog_key"]
