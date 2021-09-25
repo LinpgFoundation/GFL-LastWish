@@ -1243,10 +1243,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                         name_from_by_pos = str(self.characterInControl.x) + "-" + str(self.characterInControl.y)
                         if "move" in self._dialog_dictionary and name_from_by_pos in self._dialog_dictionary["move"]:
                             dialog_to_check = self._dialog_dictionary["move"][name_from_by_pos]
-                            if (
-                                "whitelist" not in dialog_to_check
-                                or self.characterGetClick in dialog_to_check["whitelist"]
-                            ):
+                            if "whitelist" not in dialog_to_check or self.characterGetClick in dialog_to_check["whitelist"]:
                                 self.dialog_key = dialog_to_check["dialog_key"]
                                 self.__is_battle_mode = False
                                 # 如果对话不重复，则删除（默认不重复）
