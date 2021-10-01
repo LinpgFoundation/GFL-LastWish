@@ -137,9 +137,9 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         self.FONT = linpg.font.create(self.window_x / 76)
         # 加载按钮的文字
         self.selectMenuUI = SelectMenu()
-        self.battleModeUiTxt = linpg.lang.get_text("Battle_UI")
+        self.battleModeUiTxt = linpg.lang.get_texts("Battle_UI")
         self.warnings_to_display = WarningSystem(int(screen.get_height() * 0.03))
-        loading_info = linpg.lang.get_text("LoadingTxt")
+        loading_info = linpg.lang.get_texts("LoadingTxt")
         # 加载剧情
         DataTmp = linpg.config.load(self._DIALOG.get_dialog_file_location())
         # 如果暂时没有翻译
@@ -410,7 +410,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         super().updated_language()
         self._initialize_pause_menu()
         self.selectMenuUI = SelectMenu()
-        self.battleModeUiTxt = linpg.lang.get_text("Battle_UI")
+        self.battleModeUiTxt = linpg.lang.get_texts("Battle_UI")
         self.RoundSwitchUI = RoundSwitch(self.window_x, self.window_y, self.battleModeUiTxt)
         self.end_round_txt = self.FONT.render(linpg.lang.get_text("Battle_UI", "endRound"), linpg.color.WHITE)
         self.end_round_button = linpg.load.static_image(

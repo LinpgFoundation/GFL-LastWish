@@ -18,6 +18,13 @@ General:
   map_editor: Map Editor
   sangvis_ferri: Sangvis Ferri
   workshop: Workshop
+LinpgVersionIncorrect:
+  continue_button: Continue, I know what I am doing
+  exit_button: No, I want to exit
+  message: The recommended version of Linpg for this building is {0}. However, Linpg
+    {1} is detected. Using an incompatible version of Linpg may result in crashing
+    and file damage, even when using a newer version of Linpg than the recommended
+    one. Do you want to continue?
 LoadingTxt:
   now_loading: Loading...
   now_loading_characters: Loading characters' data...

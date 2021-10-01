@@ -132,7 +132,7 @@ class RoundSwitch:
 class WarningSystem:
     def __init__(self, font_size: int = 30):
         self.__all_warnings: deque = deque()
-        self.__warnings_msg: dict = linpg.lang.get_text("Warnings")
+        self.__warnings_msg: dict = linpg.lang.get_texts("Warnings")
         self.font_size: int = font_size
 
     # 新增一个讯息
@@ -169,7 +169,7 @@ class WarningSystem:
 # 角色行动选项菜单
 class SelectMenu:
     def __init__(self):
-        selectMenuTxtDic: dict = linpg.lang.get_text("SelectMenu")
+        selectMenuTxtDic: dict = linpg.lang.get_texts("SelectMenu")
         self.selectButtonImg = linpg.load.img("<!ui>button.png")
         # 攻击
         self.attackAP = linpg.AP_IS_NEEDED_TO_ATTACK
@@ -415,7 +415,7 @@ class CharacterInfoBoard:
 # 计分板
 class ResultBoard:
     def __init__(self, finalResult: dict, font_size: int, is_win: bool = True):
-        resultTxt: dict = linpg.lang.get_text("ResultBoard")
+        resultTxt: dict = linpg.lang.get_texts("ResultBoard")
         self.x = int(font_size * 10)
         self.y = int(font_size * 10)
         self.txt_x = int(font_size * 12)

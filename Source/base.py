@@ -8,6 +8,21 @@ if os.path.exists("dev.key"):
 else:
     import linpg
 
+# 加载版本信息
+version_info: dict = linpg.config.load("Data/version.yaml")
+
+if not linpg.info.ensure_linpg_version("==", version_info["recommended_linpg_revision"], version_info["recommended_linpg_patch"]):
+    warn_y = linpg.Message(
+        linpg.lang.get_text("Global", "warning"),
+        linpg.lang.get_text("LinpgVersionIncorrect", "message").format("3.{0}.{1}".format(version_info["recommended_linpg_revision"], version_info["recommended_linpg_patch"]),linpg.info.current_version),
+        (linpg.lang.get_text("LinpgVersionIncorrect", "exit_button"), linpg.lang.get_text("LinpgVersionIncorrect", "continue_button")),
+        error=True,
+        return_button=0,
+        escape_button=0
+    )
+    if warn_y.show() == 0:
+        linpg.display.quit()
+
 __all__ = ["linpg", "os", "glob", "RPC", "ALPHA_BUILD_WARNING", "LARGE_IMAGE"]
 
 # 本游戏的客户端ID
@@ -31,13 +46,6 @@ else:
         )
     except Exception:
         RPC = None
-
-# 加载版本信息
-version_info: dict = linpg.config.load("Data/version.yaml")
-VERSION: int = version_info["version"]
-REVISION: int = version_info["revision"]
-PATCH: int = version_info["patch"]
-del version_info
 
 # 设置引擎的标准文字大小
 linpg.font.set_global_font("medium", int(linpg.display.get_width() / 40))

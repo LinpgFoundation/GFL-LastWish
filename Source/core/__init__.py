@@ -9,7 +9,7 @@ class GamemodeManager:
         # 储存闸门动画的图片素材
         self.__GateImgAbove: linpg.ImageSurface = None
         self.__GateImgBelow: linpg.ImageSurface = None
-        self.VEDIO_BACKGROUND = None
+        self.VIDEO_BACKGROUND = None
 
     # 画出加载ui
     def draw_loading_chapter_ui(self, screen: linpg.ImageSurface, percent: int) -> None:
@@ -36,7 +36,7 @@ class GamemodeManager:
         # 开始加载-闸门关闭的效果
         for i in range(101):
             self.draw_loading_chapter_ui(screen, i)
-        self.VEDIO_BACKGROUND.stop()
+        self.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
         # 初始化对话系统模块
@@ -60,7 +60,7 @@ class GamemodeManager:
     def dialogEditor(
         self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, part: str, projectName: str = None
     ) -> None:
-        self.VEDIO_BACKGROUND.stop()
+        self.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
         # 改变标题
@@ -88,7 +88,7 @@ class GamemodeManager:
 
     # 战斗系统
     def battle(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: str = None) -> dict:
-        self.VEDIO_BACKGROUND.stop()
+        self.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
         BATTLE: object = TurnBasedBattleSystem()
@@ -107,7 +107,7 @@ class GamemodeManager:
 
     # 地图编辑器
     def mapEditor(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: str = None) -> None:
-        self.VEDIO_BACKGROUND.stop()
+        self.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
         MAP_EDITOR = MapEditor()
