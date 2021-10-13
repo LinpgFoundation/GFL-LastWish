@@ -11,14 +11,22 @@ else:
 # 加载版本信息
 version_info: dict = linpg.config.load("Data/version.yaml")
 
-if not linpg.info.ensure_linpg_version("==", version_info["recommended_linpg_revision"], version_info["recommended_linpg_patch"]):
+if not linpg.info.ensure_linpg_version(
+    "==", version_info["recommended_linpg_revision"], version_info["recommended_linpg_patch"]
+):
     warn_y = linpg.Message(
         linpg.lang.get_text("Global", "warning"),
-        linpg.lang.get_text("LinpgVersionIncorrect", "message").format("3.{0}.{1}".format(version_info["recommended_linpg_revision"], version_info["recommended_linpg_patch"]),linpg.info.current_version),
-        (linpg.lang.get_text("LinpgVersionIncorrect", "exit_button"), linpg.lang.get_text("LinpgVersionIncorrect", "continue_button")),
+        linpg.lang.get_text("LinpgVersionIncorrect", "message").format(
+            "3.{0}.{1}".format(version_info["recommended_linpg_revision"], version_info["recommended_linpg_patch"]),
+            linpg.info.current_version,
+        ),
+        (
+            linpg.lang.get_text("LinpgVersionIncorrect", "exit_button"),
+            linpg.lang.get_text("LinpgVersionIncorrect", "continue_button"),
+        ),
         error=True,
         return_button=0,
-        escape_button=0
+        escape_button=0,
     )
     if warn_y.show() == 0:
         linpg.display.quit()

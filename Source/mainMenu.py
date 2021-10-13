@@ -12,7 +12,7 @@ class MainMenu(linpg.AbstractSystem):
         """生成加载页面"""
         index: int = 0
         font_size: int = int(screen.get_width() / 64)
-        self.loading_screen: linpg.ImageSurface = linpg.new_surface(screen.get_size()).convert()
+        self.loading_screen: linpg.ImageSurface = linpg.new_surface(screen.get_size())
         self.loading_screen.fill(linpg.color.BLACK)
         # 获取健康游戏忠告
         HealthyGamingAdvice = []

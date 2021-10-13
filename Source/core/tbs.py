@@ -252,11 +252,11 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             "orange": linpg.load.static_image(r"Assets/image/UI/range/orange.png", (0, 0)),
         }
         for key in self.range_ui_images:
-            self.range_ui_images[key].set_width_with_size_locked(self.MAP.block_width * 0.8)
+            self.range_ui_images[key].set_width_with_original_image_size_locked(self.MAP.block_width * 0.8)
         # 角色信息UI管理
         self.characterInfoBoardUI = CharacterInfoBoard(self.window_x, self.window_y)
         # 加载用于渲染电影效果的上下黑色帘幕
-        black_curtain = linpg.new_surface((self.window_x, self.window_y * 0.15)).convert()
+        black_curtain = linpg.new_surface((self.window_x, self.window_y * 0.15))
         black_curtain.fill(linpg.color.BLACK)
         self.__up_black_curtain = linpg.MovableImage(
             black_curtain,
@@ -1583,7 +1583,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             )
             # 根据block尺寸重新加载对应尺寸的UI
             for key in self.range_ui_images:
-                self.range_ui_images[key].set_width_with_size_locked(self.MAP.block_width * 0.8)
+                self.range_ui_images[key].set_width_with_original_image_size_locked(self.MAP.block_width * 0.8)
             self.selectMenuUI.allButton = None
         # 画出地图
         self._display_map(screen)

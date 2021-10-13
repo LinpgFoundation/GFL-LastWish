@@ -459,7 +459,7 @@ class LoadingTitle:
         self, window_x: int, window_y: int, numChapter_txt: str, chapterId: int, chapterTitle_txt: str, chapterDesc_txt: str
     ):
         # 黑色Void帘幕
-        black_surface_t = linpg.new_surface(linpg.display.get_size()).convert()
+        black_surface_t = linpg.new_surface(linpg.display.get_size())
         black_surface_t.fill(linpg.color.BLACK)
         self.black_bg = linpg.StaticImage(black_surface_t, 0, 0, black_surface_t.get_width(), black_surface_t.get_height())
         title_chapterNum = linpg.font.render(numChapter_txt.format(chapterId), "white", window_x / 38)

@@ -18,16 +18,9 @@ class MapEditor(linpg.AbstractBattleSystem):
             pass
 
     # 初始化
-    def load(
-        self,
-        screen: linpg.ImageSurface,
-        chapterType: str,
-        chapterId: int,
-        projectName: str = None,
-    ) -> None:
+    def load(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: str = None) -> None:
         self._initialize(chapterType, chapterId, projectName)
         self.folder_for_save_file, self.name_for_save_file = os.path.split(self.get_map_file_location())
-        self.decorations_setting = linpg.config.load("Data/database.yaml", "decorations")
         # 载入地图数据
         mapFileData: dict = linpg.config.load(self.get_map_file_location())
         # 初始化角色信息
@@ -303,10 +296,10 @@ class MapEditor(linpg.AbstractBattleSystem):
                 # 上下滚轮-放大和缩小地图
                 if self.__UIContainerButtonRight.is_hover():
                     self.__UIContainerButtonRight.switch()
-                    self.__UIContainerButtonRight.flip()
+                    self.__UIContainerButtonRight.flip(True)
                 elif self.__UIContainerButtonBottom.is_hover():
                     self.__UIContainerButtonBottom.switch()
-                    self.__UIContainerButtonBottom.flip()
+                    self.__UIContainerButtonBottom.flip(False, True)
                 elif self.deleteMode is True and block_get_click is not None:
                     # 查看当前位置是否有装饰物
                     decoration = self.MAP.find_decoration_on((block_get_click["x"], block_get_click["y"]))
@@ -378,7 +371,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                             # 如果发现有冲突的装饰物
                             if decoration is not None:
                                 self.MAP.remove_decoration(decoration)
-                            decorationType = self.decorations_setting[self.object_to_put_down["id"]]
+                            decorationType = linpg.DataBase.get("Decorations")[self.object_to_put_down["id"]]
                             if decorationType not in self.originalData["decoration"]:
                                 self.originalData["decoration"][decorationType] = {}
                             the_id = 0
