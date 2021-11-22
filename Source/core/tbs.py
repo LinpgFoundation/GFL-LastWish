@@ -336,8 +336,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         self,
         image: linpg.ImageSurface,
         weight: int = -1,
-        pos: Iterable = linpg.pos.ORIGIN,
-        offSet: Iterable = linpg.pos.ORIGIN,
+        pos: Iterable = linpg.ORIGIN,
+        offSet: Iterable = linpg.ORIGIN,
     ) -> None:
         if weight < 0:
             self.__max_item_weight += 1
@@ -406,7 +406,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         self.set_bgm_volume(linpg.media.volume.background_music / 100.0)
 
     # 更新语言
-    def updated_language(self, screen: linpg.ImageSurface) -> None:
+    def updated_language(self) -> None:
         super().updated_language()
         self._initialize_pause_menu()
         self.selectMenuUI = SelectMenu()
@@ -418,8 +418,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             (self.window_x * 0.8, self.window_y * 0.7),
             (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 2.5),
         )
-        self.warnings_to_display = WarningSystem(int(screen.get_height() * 0.03))
-        self._DIALOG.updated_language(screen)
+        self.warnings_to_display.updated_language()
+        self._DIALOG.updated_language()
 
     # 警告某个角色周围的敌人
     def __alert_enemy_around(self, name: str, value: int = 10) -> None:

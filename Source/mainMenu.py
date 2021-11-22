@@ -44,7 +44,7 @@ class MainMenu(linpg.AbstractSystem):
         for index in range(0, 250, int(2 * linpg.display.sfpsp)):
             screen.fill(linpg.color.BLACK)
             self.loading_screen.set_alpha(index)
-            screen.blit(self.loading_screen, linpg.pos.ORIGIN)
+            screen.blit(self.loading_screen, linpg.ORIGIN)
             linpg.display.flip()
         # 检测继续按钮是否可用的参数
         self.continueButtonIsOn: bool = False
@@ -294,12 +294,14 @@ class MainMenu(linpg.AbstractSystem):
 
     # 继续章节
     def __continue_scene(self, screen: linpg.ImageSurface) -> None:
-        SAVE: dict = linpg.config.load(r"Save/save.yaml")
+        SAVE: dict = dict(linpg.config.load("Save/save.yaml"))
         if RPC is not None:
             RPC.update(
-                details=linpg.lang.get_text("General", "main_chapter")
-                if SAVE["chapter_type"] == "main_chapter"
-                else linpg.lang.get_text("General", "workshop"),
+                details=(
+                    linpg.lang.get_text("General", "main_chapter")
+                    if SAVE["chapter_type"] == "main_chapter"
+                    else linpg.lang.get_text("General", "workshop")
+                ),
                 state=self.__get_chapter_title(SAVE["chapter_type"], SAVE["chapter_id"]),
                 large_image=LARGE_IMAGE,
                 start=get_current_time(),
@@ -464,7 +466,7 @@ class MainMenu(linpg.AbstractSystem):
         # 展示控制台
         console.draw(screen)
         # 判断按键
-        if linpg.controller.get_event("confirm") is True and linpg.option_menu.hidden is True:
+        if linpg.controller.get_event("confirm") is True and linpg.option_menu.is_hidden():
             self.click_button_sound.play()
             # 主菜单
             if self.menu_type == 0:
@@ -487,7 +489,7 @@ class MainMenu(linpg.AbstractSystem):
                     pass
                 # 设置
                 elif linpg.is_hover(self.main_menu_txt["menu_main"]["5_setting"]):
-                    linpg.option_menu.hidden = False
+                    linpg.option_menu.set_visible(True)
                 # 制作组
                 elif linpg.is_hover(self.main_menu_txt["menu_main"]["6_developer_team"]):
                     pass
@@ -613,4 +615,4 @@ class MainMenu(linpg.AbstractSystem):
                 self.loading_screen = None
             else:
                 self.loading_screen.set_alpha(max(0, alpha_t - int(5 * linpg.display.sfpsp)))
-                screen.blit(self.loading_screen, linpg.pos.ORIGIN)
+                screen.blit(self.loading_screen, linpg.ORIGIN)

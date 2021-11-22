@@ -135,6 +135,11 @@ class WarningSystem:
         self.__warnings_msg: dict = linpg.lang.get_texts("Warnings")
         self.font_size: int = font_size
 
+    # 更新语言
+    def updated_language(self):
+        self.__warnings_msg: dict = linpg.lang.get_texts("Warnings")
+        self.clear()
+
     # 新增一个讯息
     def add(self, the_warning: str) -> None:
         if len(self.__all_warnings) >= 5:

@@ -76,13 +76,13 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 # :computer: System Requirements / 系统需求
 
-| Type             | 类型     | Minimum / 最低要求                        | Recommended / 推荐配置                    |
-| ---------------- | -------- | ----------------------------------------- | ----------------------------------------- |
-| Operating System | 操作系统 | Windows®10, MacOS, Ubuntu                 | Same as left                              |
-| CPU              | 处理器   | Intel® or AMD 1.2 GHz processor or better | Intel® or AMD 2.8 GHz processor or better |
-| Memory           | 内存     | 8 GB RAM                                  | 16GB RAM                                  |
-| Graphics Cards   | 显卡     | Any Nvidia or AMD Graphics Cards          | Same as left                              |
-| Storage          | 硬盘空间 | 1.5 GB                                    | 2 GB                                      |
+| Type             | 类型     | Minimum / 最低要求                      | Recommended / 推荐配置               |
+| ---------------- | -------- | --------------------------------------- | ------------------------------------ |
+| Operating System | 操作系统 | Windows® 10, MacOS 11, Ubuntu 20.04 LTS | Windows® 11, MacOS12, Ubuntu 21      |
+| CPU              | 处理器   | any Intel® or AMD 2+ GHz processor      | Intel® or AMD 3+ GHz processor       |
+| Memory           | 内存     | 8 GB RAM                                | 16GB RAM                             |
+| Graphics Cards   | 显卡     | GTX 960 or AMD RX 560 XT                | GTX 1060 or AMD RX 5600 XT           |
+| Storage          | 硬盘空间 | 1.5 GB of free hard drive space         | 2 GB of free solid-state drive space |
 
 
 

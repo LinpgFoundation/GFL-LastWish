@@ -1,7 +1,5 @@
 from shutil import move as MOVE
 from subprocess import check_call
-
-import pkg_resources
 from linpgtoolkit import Builder
 
 # 编译游戏本体
@@ -14,14 +12,8 @@ Builder.delete_file_if_exist(r"src")
 
 # 确认是否想要打包
 if input("Do you want to generate a package for the game(Y/n):") == "Y":
-
-    # 检测pyinstaller是否需要升级
-    # check_call(["python", "-m", "pip", "install", "--upgrade", "pyinstaller"])
-
     # 更新所有第三方库
-    check_call(
-        ["pip", "install", "--upgrade", " ".join([dist.project_name for dist in pkg_resources.working_set])], shell=True
-    )
+    Builder.update_all_site_packages()
 
     # 删除dist文件夹
     Builder.delete_file_if_exist("dist")

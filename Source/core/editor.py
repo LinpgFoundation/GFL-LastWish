@@ -116,7 +116,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             )
         self.__envImgContainer.set_item_per_line(4)
         self.__envImgContainer.set_scroll_bar_pos("right")
-        self.__envImgContainer.hidden = False
+        self.__envImgContainer.set_visible(True)
         self.__envImgContainer.distance_between_item = panding
         # 加载所有的装饰品
         self.__decorationsImgContainer: object = linpg.SurfaceContainerWithScrollbar(
@@ -134,7 +134,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             )
         self.__decorationsImgContainer.set_item_per_line(4)
         self.__decorationsImgContainer.set_scroll_bar_pos("right")
-        self.__decorationsImgContainer.hidden = True
+        self.__decorationsImgContainer.set_visible(False)
         self.__decorationsImgContainer.distance_between_item = panding
         """加载下方的界面"""
         container_width = int(screen.get_width() * 0.8)
@@ -198,7 +198,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                 ),
             )
         self.__charactersImgContainer.set_scroll_bar_pos("bottom")
-        self.__charactersImgContainer.hidden = False
+        self.__charactersImgContainer.set_visible(True)
         self.__charactersImgContainer.distance_between_item = panding
         # 加载所有敌对角色的图片文件
         self.__sangvisFerrisImgContainer: object = linpg.SurfaceContainerWithScrollbar(
@@ -221,7 +221,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                 ),
             )
         self.__sangvisFerrisImgContainer.set_scroll_bar_pos("bottom")
-        self.__sangvisFerrisImgContainer.hidden = True
+        self.__sangvisFerrisImgContainer.set_visible(False)
         self.__sangvisFerrisImgContainer.distance_between_item = panding
         # 绿色方块/方块标准
         self.greenBlock = linpg.load.img("Assets/image/UI/range/green.png", (self.MAP.block_width * 0.8, None))
@@ -329,7 +329,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                         self.stop()
                         break
                     else:
-                        self.__no_save_warning.hidden = False
+                        self.__no_save_warning.set_visible(True)
                 elif linpg.is_hover(self.UIButton["delete"]) and self.object_to_put_down is None and not self.deleteMode:
                     self.object_to_put_down = None
                     self.data_to_edit = None
@@ -495,8 +495,8 @@ class MapEditor(linpg.AbstractBattleSystem):
                 )
                 and linpg.controller.get_event("confirm")
             ):
-                self.__envImgContainer.hidden = False
-                self.__decorationsImgContainer.hidden = True
+                self.__envImgContainer.set_visible(True)
+                self.__decorationsImgContainer.set_visible(False)
             if (
                 linpg.is_hover(
                     self.__button_select_decoration,
@@ -504,18 +504,18 @@ class MapEditor(linpg.AbstractBattleSystem):
                 )
                 and linpg.controller.get_event("confirm")
             ):
-                self.__envImgContainer.hidden = True
-                self.__decorationsImgContainer.hidden = False
+                self.__envImgContainer.set_visible(False)
+                self.__decorationsImgContainer.set_visible(True)
             self.__button_select_block.display(screen, (self.__UIContainerButtonRight.right, 0))
             self.__button_select_decoration.display(screen, (self.__UIContainerButtonRight.right, 0))
             if linpg.controller.get_event("confirm"):
-                if not self.__envImgContainer.hidden and self.__envImgContainer.item_being_hovered is not None:
+                if self.__envImgContainer.is_visible() and self.__envImgContainer.item_being_hovered is not None:
                     self.object_to_put_down = {
                         "type": "block",
                         "id": self.__envImgContainer.item_being_hovered,
                     }
                 elif (
-                    not self.__decorationsImgContainer.hidden
+                    self.__decorationsImgContainer.is_visible()
                     and self.__decorationsImgContainer.item_being_hovered is not None
                 ):
                     self.object_to_put_down = {
@@ -535,8 +535,8 @@ class MapEditor(linpg.AbstractBattleSystem):
                 )
                 and linpg.controller.get_event("confirm")
             ):
-                self.__charactersImgContainer.hidden = False
-                self.__sangvisFerrisImgContainer.hidden = True
+                self.__charactersImgContainer.set_visible(True)
+                self.__sangvisFerrisImgContainer.set_visible(False)
             if (
                 linpg.is_hover(
                     self.__button_select_sangvisFerri,
@@ -544,18 +544,21 @@ class MapEditor(linpg.AbstractBattleSystem):
                 )
                 and linpg.controller.get_event("confirm")
             ):
-                self.__charactersImgContainer.hidden = True
-                self.__sangvisFerrisImgContainer.hidden = False
+                self.__charactersImgContainer.set_visible(False)
+                self.__sangvisFerrisImgContainer.set_visible(True)
             self.__button_select_character.display(screen, (0, self.__UIContainerButtonBottom.bottom))
             self.__button_select_sangvisFerri.display(screen, (0, self.__UIContainerButtonBottom.bottom))
             if linpg.controller.get_event("confirm"):
-                if not self.__charactersImgContainer.hidden and self.__charactersImgContainer.item_being_hovered is not None:
+                if (
+                    self.__charactersImgContainer.is_visible()
+                    and self.__charactersImgContainer.item_being_hovered is not None
+                ):
                     self.object_to_put_down = {
                         "type": "character",
                         "id": self.__charactersImgContainer.item_being_hovered,
                     }
                 elif (
-                    not self.__sangvisFerrisImgContainer.hidden
+                    self.__sangvisFerrisImgContainer.is_visible()
                     and self.__sangvisFerrisImgContainer.item_being_hovered is not None
                 ):
                     self.object_to_put_down = {
@@ -674,7 +677,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                 self.stop()
             # 取消
             elif self.__no_save_warning.item_being_hovered == "cancel":
-                self.__no_save_warning.hidden = True
+                self.__no_save_warning.set_visible(False)
             # 不保存并离开
             elif self.__no_save_warning.item_being_hovered == "dont_save":
                 self.stop()
