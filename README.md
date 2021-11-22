@@ -76,13 +76,21 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 # :computer: System Requirements / 系统需求
 
-| Type             | 类型     | Minimum / 最低要求                      | Recommended / 推荐配置               |
-| ---------------- | -------- | --------------------------------------- | ------------------------------------ |
-| Operating System | 操作系统 | Windows® 10, MacOS 11, Ubuntu 20.04 LTS | Windows® 11, MacOS12, Ubuntu 21      |
-| CPU              | 处理器   | any Intel® or AMD 2+ GHz processor      | Intel® or AMD 3+ GHz processor       |
-| Memory           | 内存     | 8 GB RAM                                | 16GB RAM                             |
-| Graphics Cards   | 显卡     | GTX 960 or AMD RX 560 XT                | GTX 1060 or AMD RX 5600 XT           |
-| Storage          | 硬盘空间 | 1.5 GB of free hard drive space         | 2 GB of free solid-state drive space |
+| Type             | 类型     | Minimum / 最低要求                                        | Recommended / 推荐配置               |
+| ---------------- | -------- | --------------------------------------------------------- | ------------------------------------ |
+| Operating System | 操作系统 | Windows® 10, Ubuntu 20.04 LTS                             | Windows® 11, Ubuntu 21               |
+| CPU              | 处理器   | any Intel® AMD 2+ GHz processor or AMD 2.5+ GHz processor | Intel® or AMD 3+ GHz processor       |
+| Memory           | 内存     | 8 GB RAM                                                  | 16GB RAM                             |
+| Graphics Cards   | 显卡     | GTX 960 or AMD RX 580 XT                                  | GTX 1060 or AMD RX 5800 XT           |
+| Storage          | 硬盘空间 | 1.5 GB of free hard drive space                           | 2 GB of free solid-state drive space |
+
+***Q: Why are the requirements for AMD users slightly high?***
+
+A: Due to global chip shortage (for both CPU and GPU), none of the developers in our development team are able to acquire one (without selling their organs or blood). As a result, we are not able to provide any hardware optimization for AMD hardware. If you want to donate or sell AMD hardware at a low price, don't hesitate to get in touch with us.
+
+***Q: Why is macOS not supported?***
+
+A: Again, none of the developers in our development team has a device that can run Mac OS, so we cannot run testing on Mac OS. We assume the game "may" run just fine, but we cannot guarantee the stability due to a lack of testing.
 
 
 
