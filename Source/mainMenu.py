@@ -74,7 +74,9 @@ class MainMenu(linpg.AbstractSystem):
         self.hover_sound_play_on = None
         self.last_hover_sound_play_on = None
         # 加载主菜单背景
-        gamemode.VIDEO_BACKGROUND = linpg.VideoSurface(r"Assets/movie/SquadAR.mp4", True, True, (935, 3105))
+        gamemode.VIDEO_BACKGROUND = linpg.VideoSurface(
+            r"Assets/movie/SquadAR.mp4", True, not linpg.setting.developer_mode, (935, 3105)
+        )
         gamemode.VIDEO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
         # 初始化返回菜单判定参数
         linpg.global_value.set("BackToMainMenu", False)

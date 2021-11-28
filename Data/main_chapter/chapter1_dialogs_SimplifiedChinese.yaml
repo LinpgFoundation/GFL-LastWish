@@ -17,9 +17,9 @@ dialogs:
       last_dialog_id: null
       narrator: null
       next_dialog_id:
-        target: 1
+        target: id_001
         type: default
-    1:
+    id_001:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -30,9 +30,9 @@ dialogs:
       last_dialog_id: head
       narrator: K
       next_dialog_id:
-        target: 2
+        target: id_002
         type: default
-    2:
+    id_002:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -44,9 +44,9 @@ dialogs:
       last_dialog_id: 1
       narrator: 我
       next_dialog_id:
-        target: 3
+        target: id_003
         type: default
-    3:
+    id_003:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -58,9 +58,9 @@ dialogs:
       last_dialog_id: 2
       narrator: K
       next_dialog_id:
-        target: 4
+        target: id_004
         type: default
-    4:
+    id_004:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -71,9 +71,9 @@ dialogs:
       last_dialog_id: 3
       narrator: 我
       next_dialog_id:
-        target: 5
+        target: id_005
         type: default
-    5:
+    id_005:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -85,9 +85,9 @@ dialogs:
       last_dialog_id: 4
       narrator: K
       next_dialog_id:
-        target: 6
+        target: id_006
         type: default
-    6:
+    id_006:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -98,9 +98,9 @@ dialogs:
       last_dialog_id: 5
       narrator: 我
       next_dialog_id:
-        target: 7
+        target: id_007
         type: default
-    7:
+    id_007:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -111,9 +111,9 @@ dialogs:
       last_dialog_id: 6
       narrator: K
       next_dialog_id:
-        target: 8
+        target: id_008
         type: default
-    8:
+    id_008:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -123,9 +123,9 @@ dialogs:
       last_dialog_id: 7
       narrator: null
       next_dialog_id:
-        target: 9
+        target: id_009
         type: default
-    9:
+    id_009:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -135,9 +135,9 @@ dialogs:
       last_dialog_id: 8
       narrator: 我
       next_dialog_id:
-        target: 10
+        target: id_010
         type: default
-    10:
+    id_010:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -147,9 +147,9 @@ dialogs:
       last_dialog_id: 9
       narrator: 格林娜
       next_dialog_id:
-        target: 11
+        target: id_011
         type: default
-    11:
+    id_011:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -159,9 +159,9 @@ dialogs:
       last_dialog_id: 10
       narrator: 我
       next_dialog_id:
-        target: 12
+        target: id_012
         type: default
-    12:
+    id_012:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -171,9 +171,9 @@ dialogs:
       last_dialog_id: 11
       narrator: 格林娜
       next_dialog_id:
-        target: 13
+        target: id_013
         type: default
-    13:
+    id_013:
       background_img: research.jpg
       background_music: null
       characters_img:
@@ -183,9 +183,9 @@ dialogs:
       last_dialog_id: 12
       narrator: 我
       next_dialog_id:
-        target: 14
+        target: id_014
         type: default
-    14:
+    id_014:
       background_img: SlumpingFluid.mp4
       background_music: null
       characters_img: null
@@ -206,9 +206,9 @@ dialogs:
       last_dialog_id: null
       narrator: null
       next_dialog_id:
-        target: 1
+        target: id_001
         type: default
-    1:
+    id_001:
       background_img: null
       background_music: null
       characters_img: null
@@ -217,9 +217,9 @@ dialogs:
       last_dialog_id: head
       narrator: null
       next_dialog_id:
-        target: 2
+        target: id_002
         type: default
-    2:
+    id_002:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
@@ -230,9 +230,9 @@ dialogs:
       last_dialog_id: 1
       narrator: 格林娜
       next_dialog_id:
-        target: 3
+        target: id_003
         type: default
-    3:
+    id_003:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
@@ -243,9 +243,9 @@ dialogs:
       last_dialog_id: 2
       narrator: 我
       next_dialog_id:
-        target: 4
+        target: id_004
         type: default
-    4:
+    id_004:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
@@ -257,10 +257,10 @@ dialogs:
       narrator: 格林娜
       next_dialog_id:
         target:
-        - id: 5
+        - id: id_005
           txt: 最后发出呼救的坐标在哪？
         type: option
-    5:
+    id_005:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
@@ -271,9 +271,9 @@ dialogs:
       last_dialog_id: 4
       narrator: 格林娜
       next_dialog_id:
-        target: 6
+        target: id_006
         type: default
-    6:
+    id_006:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
@@ -283,9 +283,9 @@ dialogs:
       last_dialog_id: 5
       narrator: 我
       next_dialog_id:
-        target: 7
+        target: id_007
         type: default
-    7:
+    id_007:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
@@ -297,9 +297,9 @@ dialogs:
       last_dialog_id: 6
       narrator: 格林娜
       next_dialog_id:
-        target: 8
+        target: id_008
         type: default
-    8:
+    id_008:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
@@ -310,9 +310,9 @@ dialogs:
       last_dialog_id: 7
       narrator: 我
       next_dialog_id:
-        target: 9
+        target: id_009
         type: default
-    9:
+    id_009:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
@@ -323,9 +323,9 @@ dialogs:
       last_dialog_id: 8
       narrator: 格林娜
       next_dialog_id:
-        target: 10
+        target: id_010
         type: default
-    10:
+    id_010:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
@@ -335,9 +335,9 @@ dialogs:
       last_dialog_id: 9
       narrator: 我
       next_dialog_id:
-        target: 11
+        target: id_011
         type: default
-    11:
+    id_011:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
@@ -347,9 +347,9 @@ dialogs:
       last_dialog_id: 10
       narrator: 格林娜
       next_dialog_id:
-        target: 12
+        target: id_012
         type: default
-    12:
+    id_012:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
@@ -359,9 +359,9 @@ dialogs:
       last_dialog_id: 11
       narrator: 我
       next_dialog_id:
-        target: 13
+        target: id_013
         type: default
-    13:
+    id_013:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img:
@@ -371,9 +371,9 @@ dialogs:
       last_dialog_id: 12
       narrator: 格林娜
       next_dialog_id:
-        target: 14
+        target: id_014
         type: default
-    14:
+    id_014:
       background_img: research.jpg
       background_music: BGM_Boss_1.ogg
       characters_img: null
@@ -383,9 +383,9 @@ dialogs:
       last_dialog_id: 13
       narrator: null
       next_dialog_id:
-        target: 15
+        target: id_015
         type: changeScene
-    15:
+    id_015:
       background_img: snowfield.jpg
       background_music: BGM_Brain_1.ogg
       characters_img: null
@@ -394,9 +394,9 @@ dialogs:
       last_dialog_id: null
       narrator: null
       next_dialog_id:
-        target: 16
+        target: id_016
         type: default
-    16:
+    id_016:
       background_img: snowfield.jpg
       background_music: BGM_Brain_1.ogg
       characters_img:
@@ -406,9 +406,9 @@ dialogs:
       last_dialog_id: 15
       narrator: sv-98
       next_dialog_id:
-        target: 17
+        target: id_017
         type: default
-    17:
+    id_017:
       background_img: snowfield.jpg
       background_music: BGM_Brain_1.ogg
       characters_img:
@@ -419,9 +419,9 @@ dialogs:
       last_dialog_id: 16
       narrator: asval
       next_dialog_id:
-        target: 18
+        target: id_018
         type: default
-    18:
+    id_018:
       background_img: snowfield.jpg
       background_music: BGM_Brain_1.ogg
       characters_img:
@@ -432,9 +432,9 @@ dialogs:
       last_dialog_id: 17
       narrator: asval
       next_dialog_id:
-        target: 19
+        target: id_019
         type: default
-    19:
+    id_019:
       background_img: snowfield.jpg
       background_music: BGM_Brain_1.ogg
       characters_img:
@@ -444,9 +444,9 @@ dialogs:
       last_dialog_id: 18
       narrator: 众人
       next_dialog_id:
-        target: 20
+        target: id_020
         type: default
-    20:
+    id_020:
       background_img: snowfield.jpg
       background_music: BGM_Brain_1.ogg
       characters_img:
