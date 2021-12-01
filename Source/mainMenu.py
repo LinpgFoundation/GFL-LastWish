@@ -12,15 +12,13 @@ class MainMenu(linpg.AbstractSystem):
         """生成加载页面"""
         index: int = 0
         font_size: int = int(screen.get_width() / 64)
-        self.loading_screen: linpg.ImageSurface = linpg.new_surface(screen.get_size()).convert()
+        self.loading_screen: linpg.ImageSurface = linpg.new_surface(screen.get_size())
         self.loading_screen.fill(linpg.color.BLACK)
         # 获取健康游戏忠告
-        HealthyGamingAdvice = linpg.lang.try_to_get_text("HealthyGamingAdvice")
-        if HealthyGamingAdvice == "HealthyGamingAdvice":
-            HealthyGamingAdvice = []
-        else:
-            for index in range(len(HealthyGamingAdvice)):
-                HealthyGamingAdvice[index] = linpg.font.render(HealthyGamingAdvice[index], "white", font_size)
+        HealthyGamingAdvice = []
+        if linpg.lang.has_key("HealthyGamingAdvice"):
+            for text_t in linpg.lang.get_texts("HealthyGamingAdvice"):
+                HealthyGamingAdvice.append(linpg.font.render(text_t, "white", font_size))
         # 其他载入页面需要的数据
         text1 = linpg.font.render(linpg.lang.get_text("title1"), "white", font_size)
         text2 = linpg.font.render(linpg.lang.get_text("title2"), "white", font_size)
@@ -46,7 +44,7 @@ class MainMenu(linpg.AbstractSystem):
         for index in range(0, 250, int(2 * linpg.display.sfpsp)):
             screen.fill(linpg.color.BLACK)
             self.loading_screen.set_alpha(index)
-            screen.blit(self.loading_screen, linpg.pos.ORIGIN)
+            screen.blit(self.loading_screen, linpg.ORIGIN)
             linpg.display.flip()
         # 检测继续按钮是否可用的参数
         self.continueButtonIsOn: bool = False
@@ -76,8 +74,10 @@ class MainMenu(linpg.AbstractSystem):
         self.hover_sound_play_on = None
         self.last_hover_sound_play_on = None
         # 加载主菜单背景
-        gamemode.VEDIO_BACKGROUND = linpg.VedioSurface(r"Assets/movie/SquadAR.mp4", True, True, (935, 3105))
-        gamemode.VEDIO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
+        gamemode.VIDEO_BACKGROUND = linpg.VideoSurface(
+            r"Assets/movie/SquadAR.mp4", True, not linpg.setting.developer_mode, (935, 3105)
+        )
+        gamemode.VIDEO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
         # 初始化返回菜单判定参数
         linpg.global_value.set("BackToMainMenu", False)
         # 设置Discord状态
@@ -98,9 +98,7 @@ class MainMenu(linpg.AbstractSystem):
             try:
                 info_data = linpg.config.load(os.path.join(path, "info.yaml"))
             except Exception:
-                info_data = linpg.config.load(r"Data/info_example.yaml")
-                info_data["default_lang"] = linpg.setting.language
-                linpg.config.save(os.path.join(path, "info.yaml"), info_data)
+                linpg.create_new_project(path, "yaml")
             self.workshop_files_text.append(os.path.basename(path))
             self.workshop_files.append(info_data["title"][linpg.setting.language])
         self.workshop_files.append(linpg.lang.get_text("Global", "back"))
@@ -228,12 +226,8 @@ class MainMenu(linpg.AbstractSystem):
         while os.path.exists(os.path.join("Data", "workshop", fileName)):
             fileName = "{0} ({1})".format(fileDefaultName, avoidDuplicateId)
             avoidDuplicateId += 1
-        # 创建文件夹
-        os.makedirs(os.path.join("Data", "workshop", fileName))
-        # 储存数据
-        info_data: dict = linpg.config.load(r"Data/info_example.yaml")
-        info_data["default_lang"] = linpg.setting.language
-        linpg.config.save(os.path.join("Data", "workshop", fileName, "info.yaml"), info_data)
+        # 创建项目模板
+        linpg.create_new_project(os.path.join("Data", "workshop", fileName), "yaml")
 
     # 创建新的对话文和地图文件
     def __create_new_chapter(self) -> None:
@@ -302,12 +296,14 @@ class MainMenu(linpg.AbstractSystem):
 
     # 继续章节
     def __continue_scene(self, screen: linpg.ImageSurface) -> None:
-        SAVE: dict = linpg.config.load(r"Save/save.yaml")
+        SAVE: dict = dict(linpg.config.load("Save/save.yaml"))
         if RPC is not None:
             RPC.update(
-                details=linpg.lang.get_text("General", "main_chapter")
-                if SAVE["chapter_type"] == "main_chapter"
-                else linpg.lang.get_text("General", "workshop"),
+                details=(
+                    linpg.lang.get_text("General", "main_chapter")
+                    if SAVE["chapter_type"] == "main_chapter"
+                    else linpg.lang.get_text("General", "workshop")
+                ),
                 state=self.__get_chapter_title(SAVE["chapter_type"], SAVE["chapter_id"]),
                 large_image=LARGE_IMAGE,
                 start=get_current_time(),
@@ -345,7 +341,7 @@ class MainMenu(linpg.AbstractSystem):
 
     # 重置背景
     def __restart_background(self) -> None:
-        gamemode.VEDIO_BACKGROUND.restart()
+        gamemode.VIDEO_BACKGROUND.restart()
         self.updated_volume()
 
     # 更新主菜单的部分元素
@@ -354,7 +350,7 @@ class MainMenu(linpg.AbstractSystem):
         # 是否可以继续游戏了（save文件是否被创建）
         if os.path.exists("Save/save.yaml") and not self.continueButtonIsOn:
             self.main_menu_txt["menu_main"]["0_continue"] = linpg.load.dynamic_text(
-                linpg.lang.get_text("MainMenu", "menu_main")["0_continue"],
+                linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
                 linpg.color.WHITE,
                 self.main_menu_txt["menu_main"]["0_continue"].get_pos(),
                 linpg.font.get_global_font_size("medium"),
@@ -362,7 +358,7 @@ class MainMenu(linpg.AbstractSystem):
             self.continueButtonIsOn = True
         elif not os.path.exists("Save/save.yaml") and self.continueButtonIsOn is True:
             self.main_menu_txt["menu_main"]["0_continue"] = linpg.load.dynamic_text(
-                linpg.lang.get_text("MainMenu", "menu_main")["0_continue"],
+                linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
                 linpg.color.GRAY,
                 self.main_menu_txt["menu_main"]["0_continue"].get_pos(),
                 linpg.font.get_global_font_size("medium"),
@@ -371,7 +367,7 @@ class MainMenu(linpg.AbstractSystem):
 
     # 重新加载主菜单文字
     def __reset_menu_text(self, screen_size: tuple) -> None:
-        self.main_menu_txt = linpg.lang.get_text("MainMenu")
+        self.main_menu_txt = linpg.lang.get_texts("MainMenu")
         # 当前不可用的菜单选项
         disabled_option = ["6_developer_team", "2_dlc", "4_collection"]
         if not os.path.exists("Save/save.yaml"):
@@ -400,11 +396,11 @@ class MainMenu(linpg.AbstractSystem):
             )
             txt_y += font_size
         # 加载退出确认消息框
-        self.exit_confirm_menu = linpg.Message(
+        self.exit_confirm_menu: linpg.Message = linpg.Message(
             linpg.lang.get_text("Global", "tip"),
             linpg.lang.get_text("LeavingWithoutSavingWarning", "exit_confirm"),
             (linpg.lang.get_text("Global", "yes"), linpg.lang.get_text("Global", "no")),
-            True,
+            info=True,
             return_button=1,
             escape_button=1,
         )
@@ -423,7 +419,7 @@ class MainMenu(linpg.AbstractSystem):
     def updated_volume(self) -> None:
         self.click_button_sound.set_volume(linpg.media.volume.effects / 100.0)
         self.hover_on_button_sound.set_volume(linpg.media.volume.effects / 100.0)
-        gamemode.VEDIO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
+        gamemode.VIDEO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
 
     # 画出背景
     def __draw_background(self, screen: linpg.ImageSurface) -> None:
@@ -450,7 +446,7 @@ class MainMenu(linpg.AbstractSystem):
                 self.__cover_img_surface = None
         # 背景视频
         if self.__cover_img_surface is None or self.__cover_img_surface.get_alpha() < 255:
-            gamemode.VEDIO_BACKGROUND.draw(screen)
+            gamemode.VIDEO_BACKGROUND.draw(screen)
         # 封面
         if self.__cover_img_surface is not None:
             self.__cover_img_surface.draw(screen)
@@ -472,7 +468,7 @@ class MainMenu(linpg.AbstractSystem):
         # 展示控制台
         console.draw(screen)
         # 判断按键
-        if linpg.controller.get_event("confirm") is True and linpg.option_menu.hidden is True:
+        if linpg.controller.get_event("confirm") is True and linpg.option_menu.is_hidden():
             self.click_button_sound.play()
             # 主菜单
             if self.menu_type == 0:
@@ -495,13 +491,13 @@ class MainMenu(linpg.AbstractSystem):
                     pass
                 # 设置
                 elif linpg.is_hover(self.main_menu_txt["menu_main"]["5_setting"]):
-                    linpg.option_menu.hidden = False
+                    linpg.option_menu.set_visible(True)
                 # 制作组
                 elif linpg.is_hover(self.main_menu_txt["menu_main"]["6_developer_team"]):
                     pass
                 # 退出
                 elif linpg.is_hover(self.main_menu_txt["menu_main"]["7_exit"]) and self.exit_confirm_menu.show() == 0:
-                    gamemode.VEDIO_BACKGROUND.stop()
+                    gamemode.VIDEO_BACKGROUND.stop()
                     self.stop()
                     if RPC is not None:
                         RPC.close()
@@ -621,4 +617,4 @@ class MainMenu(linpg.AbstractSystem):
                 self.loading_screen = None
             else:
                 self.loading_screen.set_alpha(max(0, alpha_t - int(5 * linpg.display.sfpsp)))
-                screen.blit(self.loading_screen, linpg.pos.ORIGIN)
+                screen.blit(self.loading_screen, linpg.ORIGIN)

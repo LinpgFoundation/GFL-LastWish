@@ -76,13 +76,21 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 # :computer: System Requirements / 系统需求
 
-| Type             | 类型     | Minimum / 最低要求                        | Recommended / 推荐配置                    |
-| ---------------- | -------- | ----------------------------------------- | ----------------------------------------- |
-| Operating System | 操作系统 | Windows®10, MacOS, Ubuntu                 | Same as left                              |
-| CPU              | 处理器   | Intel® or AMD 1.2 GHz processor or better | Intel® or AMD 2.8 GHz processor or better |
-| Memory           | 内存     | 8 GB RAM                                  | 16GB RAM                                  |
-| Graphics Cards   | 显卡     | Any Nvidia or AMD Graphics Cards          | Same as left                              |
-| Storage          | 硬盘空间 | 1.5 GB                                    | 2 GB                                      |
+| Type             | 类型     | Minimum / 最低要求                                        | Recommended / 推荐配置               |
+| ---------------- | -------- | --------------------------------------------------------- | ------------------------------------ |
+| Operating System | 操作系统 | Windows® 10, Ubuntu 20.04 LTS                             | Windows® 11, Ubuntu 21               |
+| CPU              | 处理器   | any Intel® AMD 2+ GHz processor or AMD 2.5+ GHz processor | Intel® or AMD 3+ GHz processor       |
+| Memory           | 内存     | 8 GB RAM                                                  | 16GB RAM                             |
+| Graphics Cards   | 显卡     | GTX 960 or AMD RX 580 XT                                  | GTX 1060 or AMD RX 5800 XT           |
+| Storage          | 硬盘空间 | 1.5 GB of free hard drive space                           | 2 GB of free solid-state drive space |
+
+***Q: Why are the requirements for AMD users slightly high?***
+
+A: Due to global chip shortage (for both CPU and GPU), none of the developers in our development team are able to acquire one (without selling their organs or blood). As a result, we are not able to provide any hardware optimization for AMD hardware. If you want to donate or sell AMD hardware at a low price, don't hesitate to get in touch with us.
+
+***Q: Why is macOS not supported?***
+
+A: Again, none of the developers in our development team has a device that can run Mac OS, so we cannot run testing on Mac OS. We assume the game "may" run just fine, but we cannot guarantee the stability due to a lack of testing.
 
 
 
@@ -137,7 +145,5 @@ https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish
 # :memo: License / 版权说明
 
 This game's codes are distributed under the **[GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**, which means you can use our codes for commercial purposes as long as you are following the **[GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**. However, all images and music used in this game are from third parties, and secondary distribution or commercialization without the authorization of the corresponding creators is strictly prohibited. Also, Tigeia Workshop (the developer of this game and Linpg engine) is not responsible for any disputes and damages caused by neither this game nor Linpg Engine.
-
-**Note:** To fight back UW Bothell's controversial admission system for the CSSE program, any CSSE students and professors from the UW Bothell campus are prohibited from using anything from this repository without permission from the Tigeia Workshop development team. If you are a student or professor from UW Bothell and would like to know more about this requirement, feel free to reach out to the Tigeia Workshop development team by sending an email. This requirement does not apply to students and professors from Tacoma and Seattle campuses, as well as Non-CSSE students and professors from UW Bothell.
 
 本游戏的代码将采用 [GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE) 进行分发，这意味着你可以商用我们的代码。然而，需要注意的是，本游戏用到的所有图片和音乐素材均来自第三方，严禁在没有对应创作者授权的情况下进行二次发布或者商用。同时，因使用该游戏或者linpg导致的任何形式的冲突（比如但不仅限法律冲突，经济冲突等）与缇吉娅工坊（本游戏和Linpg引擎的开发者）无关。

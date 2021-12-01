@@ -18,16 +18,9 @@ class MapEditor(linpg.AbstractBattleSystem):
             pass
 
     # 初始化
-    def load(
-        self,
-        screen: linpg.ImageSurface,
-        chapterType: str,
-        chapterId: int,
-        projectName: str = None,
-    ) -> None:
+    def load(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: str = None) -> None:
         self._initialize(chapterType, chapterId, projectName)
         self.folder_for_save_file, self.name_for_save_file = os.path.split(self.get_map_file_location())
-        self.decorations_setting = linpg.config.load("Data/decorations.yaml", "decorations")
         # 载入地图数据
         mapFileData: dict = linpg.config.load(self.get_map_file_location())
         # 初始化角色信息
@@ -60,7 +53,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         panding: int = int(screen.get_height() * 0.01)
         font_size: int = int(button_width / 3)
         self.__button_select_block = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("MapEditor", "block"),
             "black",
             font_size,
@@ -68,7 +61,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             100,
         )
         self.__button_select_decoration = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("MapEditor", "decoration"),
             "black",
             font_size,
@@ -88,12 +81,12 @@ class MapEditor(linpg.AbstractBattleSystem):
         )
         self.__button_select_decoration.set_left(self.__button_select_block.right + panding)
         self.__UIContainerRight = linpg.load.dynamic_image(
-            r"Assets/image/UI/container.png",
+            "<!ui>container.png",
             (0, 0),
             (container_width, container_height),
         )
         self.__UIContainerButtonRight = linpg.load.movable_image(
-            r"Assets/image/UI/container_button.png",
+            "<!ui>container_button.png",
             (
                 int(screen.get_width() - button_width),
                 int((screen.get_height() - button_height) / 2),
@@ -116,14 +109,14 @@ class MapEditor(linpg.AbstractBattleSystem):
             int(screen.get_height() * 0.85),
             "vertical",
         )
-        for imgPath in glob(r"Assets/image/environment/block/*.png"):
+        for imgPath in glob(os.path.join(linpg.ASSET.get_internal_environment_image_path("block"), "*.png")):
             self.__envImgContainer.set(
                 os.path.basename(imgPath).replace(".png", ""),
                 linpg.load.img(imgPath, (self.MAP.block_width / 3, None)),
             )
         self.__envImgContainer.set_item_per_line(4)
         self.__envImgContainer.set_scroll_bar_pos("right")
-        self.__envImgContainer.hidden = False
+        self.__envImgContainer.set_visible(True)
         self.__envImgContainer.distance_between_item = panding
         # 加载所有的装饰品
         self.__decorationsImgContainer: object = linpg.SurfaceContainerWithScrollbar(
@@ -134,14 +127,14 @@ class MapEditor(linpg.AbstractBattleSystem):
             int(screen.get_height() * 0.85),
             "vertical",
         )
-        for imgPath in glob(r"Assets/image/environment/decoration/*.png"):
+        for imgPath in glob(os.path.join(linpg.ASSET.get_internal_environment_image_path("decoration"), "*.png")):
             self.__decorationsImgContainer.set(
                 os.path.basename(imgPath).replace(".png", ""),
                 linpg.load.img(imgPath, (self.MAP.block_width / 3, None)),
             )
         self.__decorationsImgContainer.set_item_per_line(4)
         self.__decorationsImgContainer.set_scroll_bar_pos("right")
-        self.__decorationsImgContainer.hidden = True
+        self.__decorationsImgContainer.set_visible(False)
         self.__decorationsImgContainer.distance_between_item = panding
         """加载下方的界面"""
         container_width = int(screen.get_width() * 0.8)
@@ -151,7 +144,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         panding = int(screen.get_height() * 0.01)
         font_size = int(button_height / 2)
         self.__button_select_character = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("General", "griffin_Kryuger"),
             "black",
             font_size,
@@ -159,7 +152,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             100,
         )
         self.__button_select_sangvisFerri = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("General", "sangvis_ferri"),
             "black",
             font_size,
@@ -167,12 +160,12 @@ class MapEditor(linpg.AbstractBattleSystem):
             100,
         )
         self.__UIContainerBottom = linpg.load.dynamic_image(
-            r"Assets/image/UI/container.png",
+            "<!ui>container.png",
             (0, 0),
             (container_width, container_height),
         )
         self.__UIContainerButtonBottom = linpg.load.movable_image(
-            r"Assets/image/UI/container_button.png",
+            "<!ui>container_button.png",
             (
                 int((container_width - button_width) / 2),
                 int(screen.get_height() - button_height),
@@ -205,7 +198,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                 ),
             )
         self.__charactersImgContainer.set_scroll_bar_pos("bottom")
-        self.__charactersImgContainer.hidden = False
+        self.__charactersImgContainer.set_visible(True)
         self.__charactersImgContainer.distance_between_item = panding
         # 加载所有敌对角色的图片文件
         self.__sangvisFerrisImgContainer: object = linpg.SurfaceContainerWithScrollbar(
@@ -228,7 +221,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                 ),
             )
         self.__sangvisFerrisImgContainer.set_scroll_bar_pos("bottom")
-        self.__sangvisFerrisImgContainer.hidden = True
+        self.__sangvisFerrisImgContainer.set_visible(False)
         self.__sangvisFerrisImgContainer.distance_between_item = panding
         # 绿色方块/方块标准
         self.greenBlock = linpg.load.img("Assets/image/UI/range/green.png", (self.MAP.block_width * 0.8, None))
@@ -243,7 +236,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         UI_y = int(screen.get_height() * 0.02)
         font_size = int(self.MAP.block_width * 0.2)
         self.UIButton["save"] = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("Global", "save"),
             "black",
             font_size,
@@ -252,7 +245,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         )
         UI_x += self.UIButton["save"].get_width() + font_size
         self.UIButton["back"] = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("Global", "back"),
             "black",
             font_size,
@@ -261,7 +254,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         )
         UI_x += self.UIButton["back"].get_width() + font_size
         self.UIButton["delete"] = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("Global", "delete"),
             "black",
             font_size,
@@ -270,7 +263,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         )
         UI_x += self.UIButton["delete"].get_width() + font_size
         self.UIButton["reload"] = linpg.load.button_with_text_in_center(
-            "Assets/image/UI/menu.png",
+            "<!ui>button.png",
             linpg.lang.get_text("Global", "reload_file"),
             "black",
             font_size,
@@ -303,10 +296,10 @@ class MapEditor(linpg.AbstractBattleSystem):
                 # 上下滚轮-放大和缩小地图
                 if self.__UIContainerButtonRight.is_hover():
                     self.__UIContainerButtonRight.switch()
-                    self.__UIContainerButtonRight.flip()
+                    self.__UIContainerButtonRight.flip(True)
                 elif self.__UIContainerButtonBottom.is_hover():
                     self.__UIContainerButtonBottom.switch()
-                    self.__UIContainerButtonBottom.flip()
+                    self.__UIContainerButtonBottom.flip(False, True)
                 elif self.deleteMode is True and block_get_click is not None:
                     # 查看当前位置是否有装饰物
                     decoration = self.MAP.find_decoration_on((block_get_click["x"], block_get_click["y"]))
@@ -336,7 +329,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                         self.stop()
                         break
                     else:
-                        self.__no_save_warning.hidden = False
+                        self.__no_save_warning.set_visible(True)
                 elif linpg.is_hover(self.UIButton["delete"]) and self.object_to_put_down is None and not self.deleteMode:
                     self.object_to_put_down = None
                     self.data_to_edit = None
@@ -378,7 +371,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                             # 如果发现有冲突的装饰物
                             if decoration is not None:
                                 self.MAP.remove_decoration(decoration)
-                            decorationType = self.decorations_setting[self.object_to_put_down["id"]]
+                            decorationType = linpg.DataBase.get("Decorations")[self.object_to_put_down["id"]]
                             if decorationType not in self.originalData["decoration"]:
                                 self.originalData["decoration"][decorationType] = {}
                             the_id = 0
@@ -502,8 +495,8 @@ class MapEditor(linpg.AbstractBattleSystem):
                 )
                 and linpg.controller.get_event("confirm")
             ):
-                self.__envImgContainer.hidden = False
-                self.__decorationsImgContainer.hidden = True
+                self.__envImgContainer.set_visible(True)
+                self.__decorationsImgContainer.set_visible(False)
             if (
                 linpg.is_hover(
                     self.__button_select_decoration,
@@ -511,18 +504,18 @@ class MapEditor(linpg.AbstractBattleSystem):
                 )
                 and linpg.controller.get_event("confirm")
             ):
-                self.__envImgContainer.hidden = True
-                self.__decorationsImgContainer.hidden = False
+                self.__envImgContainer.set_visible(False)
+                self.__decorationsImgContainer.set_visible(True)
             self.__button_select_block.display(screen, (self.__UIContainerButtonRight.right, 0))
             self.__button_select_decoration.display(screen, (self.__UIContainerButtonRight.right, 0))
             if linpg.controller.get_event("confirm"):
-                if not self.__envImgContainer.hidden and self.__envImgContainer.item_being_hovered is not None:
+                if self.__envImgContainer.is_visible() and self.__envImgContainer.item_being_hovered is not None:
                     self.object_to_put_down = {
                         "type": "block",
                         "id": self.__envImgContainer.item_being_hovered,
                     }
                 elif (
-                    not self.__decorationsImgContainer.hidden
+                    self.__decorationsImgContainer.is_visible()
                     and self.__decorationsImgContainer.item_being_hovered is not None
                 ):
                     self.object_to_put_down = {
@@ -542,8 +535,8 @@ class MapEditor(linpg.AbstractBattleSystem):
                 )
                 and linpg.controller.get_event("confirm")
             ):
-                self.__charactersImgContainer.hidden = False
-                self.__sangvisFerrisImgContainer.hidden = True
+                self.__charactersImgContainer.set_visible(True)
+                self.__sangvisFerrisImgContainer.set_visible(False)
             if (
                 linpg.is_hover(
                     self.__button_select_sangvisFerri,
@@ -551,18 +544,21 @@ class MapEditor(linpg.AbstractBattleSystem):
                 )
                 and linpg.controller.get_event("confirm")
             ):
-                self.__charactersImgContainer.hidden = True
-                self.__sangvisFerrisImgContainer.hidden = False
+                self.__charactersImgContainer.set_visible(False)
+                self.__sangvisFerrisImgContainer.set_visible(True)
             self.__button_select_character.display(screen, (0, self.__UIContainerButtonBottom.bottom))
             self.__button_select_sangvisFerri.display(screen, (0, self.__UIContainerButtonBottom.bottom))
             if linpg.controller.get_event("confirm"):
-                if not self.__charactersImgContainer.hidden and self.__charactersImgContainer.item_being_hovered is not None:
+                if (
+                    self.__charactersImgContainer.is_visible()
+                    and self.__charactersImgContainer.item_being_hovered is not None
+                ):
                     self.object_to_put_down = {
                         "type": "character",
                         "id": self.__charactersImgContainer.item_being_hovered,
                     }
                 elif (
-                    not self.__sangvisFerrisImgContainer.hidden
+                    self.__sangvisFerrisImgContainer.is_visible()
                     and self.__sangvisFerrisImgContainer.item_being_hovered is not None
                 ):
                     self.object_to_put_down = {
@@ -681,7 +677,7 @@ class MapEditor(linpg.AbstractBattleSystem):
                 self.stop()
             # 取消
             elif self.__no_save_warning.item_being_hovered == "cancel":
-                self.__no_save_warning.hidden = True
+                self.__no_save_warning.set_visible(False)
             # 不保存并离开
             elif self.__no_save_warning.item_being_hovered == "dont_save":
                 self.stop()

@@ -8,57 +8,7 @@ description: The description of the chapter, will be displayed during the loadin
   screen
 dialog_during_battle: null
 dialogs:
-  dialog_after_battle:
-    head:
-      background_img: null
-      background_music: null
-      characters_img: null
-      content:
-      - Put Content Here
-      last_dialog_id: null
-      narrator: Name
-      next_dialog_id:
-        target: 1
-        type: default
-    1:
-      background_img: null
-      background_music: null
-      characters_img: null
-      content:
-      - Put Content Here
-      last_dialog_id: head
-      narrator: Name
-      next_dialog_id: null
-  dialog_before_battle:
-    head:
-      background_img: null
-      background_music: null
-      characters_img: null
-      content:
-      - Put Content Here
-      last_dialog_id: null
-      narrator: Name
-      next_dialog_id:
-        target: 1
-        type: default
-    1:
-      background_img: null
-      background_music: null
-      characters_img: null
-      content:
-      - Put Content Here
-      last_dialog_id: head
-      narrator: Name
-      next_dialog_id: null
-  dialog_during_battle:
-    head:
-      background_img: <transparent>
-      background_music: null
-      characters_img: null
-      content:
-      - ''
-      last_dialog_id: null
-      narrator: Name
-      next_dialog_id:
-        type: break
+  dialog_after_battle: {}
+  dialog_before_battle: {}
+  dialog_during_battle: {}
 title: The title of this chapter

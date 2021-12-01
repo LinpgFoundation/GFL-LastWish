@@ -132,8 +132,13 @@ class RoundSwitch:
 class WarningSystem:
     def __init__(self, font_size: int = 30):
         self.__all_warnings: deque = deque()
-        self.__warnings_msg: dict = linpg.lang.get_text("Warnings")
+        self.__warnings_msg: dict = linpg.lang.get_texts("Warnings")
         self.font_size: int = font_size
+
+    # 更新语言
+    def updated_language(self):
+        self.__warnings_msg: dict = linpg.lang.get_texts("Warnings")
+        self.clear()
 
     # 新增一个讯息
     def add(self, the_warning: str) -> None:
@@ -167,105 +172,39 @@ class WarningSystem:
 
 
 # 角色行动选项菜单
-class SelectMenu:
-    def __init__(self):
-        selectMenuTxtDic: dict = linpg.lang.get_text("SelectMenu")
-        self.selectButtonImg = linpg.load.img(r"Assets/image/UI/menu.png")
-        # 攻击
-        self.attackAP = linpg.AP_IS_NEEDED_TO_ATTACK
-        self.attackTxt = selectMenuTxtDic["attack"]
-        self.attackAPTxt = str(self.attackAP) + " AP"
-        # 移动
-        self.moveAP = linpg.AP_IS_NEEDED_TO_MOVE_ONE_BLOCK
-        self.moveTxt = selectMenuTxtDic["move"]
-        self.moveAPTxt = str(self.moveAP) + "N AP"
-        # 换弹
-        self.reloadAP = 5
-        self.reloadTxt = selectMenuTxtDic["reload"]
-        self.reloadAPTxt = str(self.reloadAP) + " AP"
-        # 技能
-        self.skillAP = 8
-        self.skillTxt = selectMenuTxtDic["skill"]
-        self.skillAPTxt = str(self.skillAP) + " AP"
-        # 救助
-        self.rescueAP = 8
-        self.rescueTxt = selectMenuTxtDic["rescue"]
-        self.rescueAPTxt = str(self.rescueAP) + " AP"
-        # 互动
-        self.interactAP = 2
-        self.interactTxt = selectMenuTxtDic["interact"]
-        self.interactAPTxt = str(self.interactAP) + " AP"
-        # 所有按钮
-        self.allButton = None
+class SelectMenu(linpg.GameObjectsDictContainer):
+    def __init__(self) -> None:
+        super().__init__(None, 0, 0, 0, 0)
+        self.selectButtonImg = linpg.load.img("<!ui>button.png")
+        self._update(
+            {
+                # 攻击
+                "attack": {
+                    "button": None,
+                    "ap": linpg.AP_IS_NEEDED_TO_ATTACK,
+                    "ap_text": str(linpg.AP_IS_NEEDED_TO_ATTACK) + " AP",
+                },
+                # 移动
+                "move": {
+                    "button": None,
+                    "ap": linpg.AP_IS_NEEDED_TO_MOVE_ONE_BLOCK,
+                    "ap_text": str(linpg.AP_IS_NEEDED_TO_MOVE_ONE_BLOCK) + "N AP",
+                },
+                # 换弹
+                "reload": {"button": None, "ap": 5, "ap_text": "5 AP"},
+                # 技能
+                "skill": {"button": None, "ap": 8, "ap_text": "8 AP"},
+                # 救援
+                "rescue": {"button": None, "ap": 8, "ap_text": "8 AP"},
+                # 互动
+                "interact": {"button": None, "ap": 2, "ap_text": "2 AP"},
+            }
+        )
+        self.__need_update: bool = True
+        self.set_visible(False)
 
-    # 初始化按钮
-    def initialButtons(self, fontSize: linpg.int_f) -> None:
-        selectButtonBase = linpg.transform.resize(self.selectButtonImg, (round(fontSize * 5), round(fontSize * 2.6)))
-        selectButtonBaseWidth = selectButtonBase.get_width()
-        sizeBig = int(fontSize)
-        sizeSmall = int(fontSize * 0.75)
-        self.allButton = {
-            "attack": selectButtonBase.copy(),
-            "move": selectButtonBase.copy(),
-            "reload": selectButtonBase.copy(),
-            "skill": selectButtonBase.copy(),
-            "rescue": selectButtonBase.copy(),
-            "interact": selectButtonBase.copy(),
-        }
-        # 攻击按钮
-        txt_temp = linpg.font.render(self.attackTxt, "black", sizeBig)
-        txt_temp2 = linpg.font.render(self.attackAPTxt, "black", sizeSmall)
-        self.allButton["attack"].blit(
-            txt_temp, ((selectButtonBaseWidth - txt_temp.get_width()) / 2, txt_temp.get_height() * 0.15)
-        )
-        self.allButton["attack"].blit(
-            txt_temp2, ((selectButtonBaseWidth - txt_temp2.get_width()) / 2, txt_temp.get_height() * 1.1)
-        )
-        # 移动按钮
-        txt_temp = linpg.font.render(self.moveTxt, "black", sizeBig)
-        txt_temp2 = linpg.font.render(self.moveAPTxt, "black", sizeSmall)
-        self.allButton["move"].blit(
-            txt_temp, ((selectButtonBaseWidth - txt_temp.get_width()) / 2, txt_temp.get_height() * 0.15)
-        )
-        self.allButton["move"].blit(
-            txt_temp2, ((selectButtonBaseWidth - txt_temp2.get_width()) / 2, txt_temp.get_height() * 1.1)
-        )
-        # 换弹按钮
-        txt_temp = linpg.font.render(self.reloadTxt, "black", sizeBig)
-        txt_temp2 = linpg.font.render(self.reloadAPTxt, "black", sizeSmall)
-        self.allButton["reload"].blit(
-            txt_temp, ((selectButtonBaseWidth - txt_temp.get_width()) / 2, txt_temp.get_height() * 0.15)
-        )
-        self.allButton["reload"].blit(
-            txt_temp2, ((selectButtonBaseWidth - txt_temp2.get_width()) / 2, txt_temp.get_height() * 1.1)
-        )
-        # 技能按钮
-        txt_temp = linpg.font.render(self.skillTxt, "black", sizeBig)
-        txt_temp2 = linpg.font.render(self.skillAPTxt, "black", sizeSmall)
-        self.allButton["skill"].blit(
-            txt_temp, ((selectButtonBaseWidth - txt_temp.get_width()) / 2, txt_temp.get_height() * 0.15)
-        )
-        self.allButton["skill"].blit(
-            txt_temp2, ((selectButtonBaseWidth - txt_temp2.get_width()) / 2, txt_temp.get_height() * 1.1)
-        )
-        # 救助按钮
-        txt_temp = linpg.font.render(self.rescueTxt, "black", sizeBig)
-        txt_temp2 = linpg.font.render(self.rescueAPTxt, "black", sizeSmall)
-        self.allButton["rescue"].blit(
-            txt_temp, ((selectButtonBaseWidth - txt_temp.get_width()) / 2, txt_temp.get_height() * 0.15)
-        )
-        self.allButton["rescue"].blit(
-            txt_temp2, ((selectButtonBaseWidth - txt_temp2.get_width()) / 2, txt_temp.get_height() * 1.1)
-        )
-        # 互动按钮
-        txt_temp = linpg.font.render(self.interactTxt, "black", sizeBig)
-        txt_temp2 = linpg.font.render(self.interactAPTxt, "black", sizeSmall)
-        self.allButton["interact"].blit(
-            txt_temp, ((selectButtonBaseWidth - txt_temp.get_width()) / 2, txt_temp.get_height() * 0.15)
-        )
-        self.allButton["interact"].blit(
-            txt_temp2, ((selectButtonBaseWidth - txt_temp2.get_width()) / 2, txt_temp.get_height() * 1.1)
-        )
+    def update(self) -> None:
+        self.__need_update = True
 
     # 将菜单按钮画出
     def draw(
@@ -277,51 +216,69 @@ class SelectMenu:
         friendsCanSave: list,
         thingsCanReact: list,
     ) -> str:
-        # 如果按钮没有初始化，则应该立刻初始化按钮
-        if self.allButton is None:
-            self.initialButtons(fontSize)
-        buttonGetHover: str = ""
-        selectButtonBaseWidth = round(fontSize * 5)
-        # 攻击按钮 - 左
-        txt_tempX = location["xStart"] - selectButtonBaseWidth * 0.6
-        txt_tempY = location["yStart"]
-        if linpg.is_hover(self.allButton["attack"], (txt_tempX, txt_tempY)):
-            buttonGetHover = "attack"
-        screen.blit(self.allButton["attack"], (txt_tempX, txt_tempY))
-        # 移动按钮 - 右
-        txt_tempX = location["xEnd"] - selectButtonBaseWidth * 0.4
-        # txt_tempY 与攻击按钮一致
-        if linpg.is_hover(self.allButton["move"], (txt_tempX, txt_tempY)):
-            buttonGetHover = "move"
-        screen.blit(self.allButton["move"], (txt_tempX, txt_tempY))
-        # 换弹按钮 - 下
-        txt_tempX = location["xStart"] + selectButtonBaseWidth * 0.5
-        txt_tempY = location["yEnd"] - selectButtonBaseWidth * 0.25
-        if linpg.is_hover(self.allButton["reload"], (txt_tempX, txt_tempY)):
-            buttonGetHover = "reload"
-        screen.blit(self.allButton["reload"], (txt_tempX, txt_tempY))
-        # 技能按钮 - 上
-        if kind != "HOC":
-            # txt_tempX与换弹按钮一致
-            txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
-            if linpg.is_hover(self.allButton["skill"], (txt_tempX, txt_tempY)):
-                buttonGetHover = "skill"
-            screen.blit(self.allButton["skill"], (txt_tempX, txt_tempY))
-        # 救助队友
-        if len(friendsCanSave) > 0:
+        self._item_being_hovered = None
+        if self.is_visible():
+            # 如果按钮没有初始化，则应该立刻初始化按钮
+            if self.__need_update is True:
+                selectButtonBase = linpg.transform.resize(self.selectButtonImg, (round(fontSize * 5), round(fontSize * 2.6)))
+                big_font_size: int = int(fontSize)
+                small_font_size: int = int(fontSize * 0.75)
+                selectMenuTxtDict: dict = linpg.lang.get_texts("SelectMenu")
+                panding: int = int(fontSize / 10)
+                for key in self.keys():
+                    button_data_t = self.get(key)
+                    button_data_t["button"] = selectButtonBase.copy()
+                    txt_temp = linpg.font.render(selectMenuTxtDict[key], "black", big_font_size)
+                    txt_temp2 = linpg.font.render(button_data_t["ap_text"], "black", small_font_size)
+                    top: int = int(
+                        (selectButtonBase.get_height() - txt_temp.get_height() - txt_temp2.get_height() - panding) / 2
+                    )
+                    button_data_t["button"].blit(txt_temp, ((selectButtonBase.get_width() - txt_temp.get_width()) / 2, top))
+                    button_data_t["button"].blit(
+                        txt_temp2,
+                        ((selectButtonBase.get_width() - txt_temp2.get_width()) / 2, top + panding + txt_temp.get_height()),
+                    )
+                self.__need_update = False
+            selectButtonBaseWidth = round(fontSize * 5)
+            # 攻击按钮 - 左
             txt_tempX = location["xStart"] - selectButtonBaseWidth * 0.6
-            txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
-            if linpg.is_hover(self.allButton["rescue"], (txt_tempX, txt_tempY)):
-                buttonGetHover = "rescue"
-            screen.blit(self.allButton["rescue"], (txt_tempX, txt_tempY))
-        # 互动
-        if len(thingsCanReact) > 0:
+            txt_tempY = location["yStart"]
+            if linpg.is_hover(self.get("attack")["button"], (txt_tempX, txt_tempY)):
+                self._item_being_hovered = "attack"
+            screen.blit(self.get("attack")["button"], (txt_tempX, txt_tempY))
+            # 移动按钮 - 右
             txt_tempX = location["xEnd"] - selectButtonBaseWidth * 0.4
-            txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
-            if linpg.is_hover(self.allButton["interact"], (txt_tempX, txt_tempY)):
-                buttonGetHover = "interact"
-            screen.blit(self.allButton["interact"], (txt_tempX, txt_tempY))
-        return buttonGetHover
+            # txt_tempY 与攻击按钮一致
+            if linpg.is_hover(self.get("move")["button"], (txt_tempX, txt_tempY)):
+                self._item_being_hovered = "move"
+            screen.blit(self.get("move")["button"], (txt_tempX, txt_tempY))
+            # 换弹按钮 - 下
+            txt_tempX = location["xStart"] + selectButtonBaseWidth * 0.5
+            txt_tempY = location["yEnd"] - selectButtonBaseWidth * 0.25
+            if linpg.is_hover(self.get("reload")["button"], (txt_tempX, txt_tempY)):
+                self._item_being_hovered = "reload"
+            screen.blit(self.get("reload")["button"], (txt_tempX, txt_tempY))
+            # 技能按钮 - 上
+            if kind != "HOC":
+                # txt_tempX与换弹按钮一致
+                txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
+                if linpg.is_hover(self.get("skill")["button"], (txt_tempX, txt_tempY)):
+                    self._item_being_hovered = "skill"
+                screen.blit(self.get("skill")["button"], (txt_tempX, txt_tempY))
+            # 救助队友
+            if len(friendsCanSave) > 0:
+                txt_tempX = location["xStart"] - selectButtonBaseWidth * 0.6
+                txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
+                if linpg.is_hover(self.get("rescue")["button"], (txt_tempX, txt_tempY)):
+                    self._item_being_hovered = "rescue"
+                screen.blit(self.get("rescue")["button"], (txt_tempX, txt_tempY))
+            # 互动
+            if len(thingsCanReact) > 0:
+                txt_tempX = location["xEnd"] - selectButtonBaseWidth * 0.4
+                txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
+                if linpg.is_hover(self.get("interact")["button"], (txt_tempX, txt_tempY)):
+                    self._item_being_hovered = "interact"
+                screen.blit(self.get("interact")["button"], (txt_tempX, txt_tempY))
 
 
 # 角色信息板
@@ -415,7 +372,7 @@ class CharacterInfoBoard:
 # 计分板
 class ResultBoard:
     def __init__(self, finalResult: dict, font_size: int, is_win: bool = True):
-        resultTxt: dict = linpg.lang.get_text("ResultBoard")
+        resultTxt: dict = linpg.lang.get_texts("ResultBoard")
         self.x = int(font_size * 10)
         self.y = int(font_size * 10)
         self.txt_x = int(font_size * 12)
@@ -459,7 +416,7 @@ class LoadingTitle:
         self, window_x: int, window_y: int, numChapter_txt: str, chapterId: int, chapterTitle_txt: str, chapterDesc_txt: str
     ):
         # 黑色Void帘幕
-        black_surface_t = linpg.new_surface(linpg.display.get_size()).convert()
+        black_surface_t = linpg.new_surface(linpg.display.get_size())
         black_surface_t.fill(linpg.color.BLACK)
         self.black_bg = linpg.StaticImage(black_surface_t, 0, 0, black_surface_t.get_width(), black_surface_t.get_height())
         title_chapterNum = linpg.font.render(numChapter_txt.format(chapterId), "white", window_x / 38)

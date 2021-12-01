@@ -8,3 +8,4 @@ Source_pyd/
 dist/
 crash_reports/
 test.py
+dev.key

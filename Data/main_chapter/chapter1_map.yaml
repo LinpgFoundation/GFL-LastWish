@@ -1,5 +1,5 @@
-atNight: false
-backgroundImage: snowfield.jpg
+atNight: true
+background_image: snowfield.jpg
 background_music: Combat_02_RemnantFantasyPackage_Synari.ogg
 character:
   asval:

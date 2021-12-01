@@ -1,5 +1,5 @@
 atNight: false
-backgroundImage: snowfield.jpg
+background_image: snowfield.jpg
 background_music: Combat_02_RemnantFantasyPackage_Synari.ogg
 character:
   sv-98:
