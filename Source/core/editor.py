@@ -294,10 +294,10 @@ class MapEditor(linpg.AbstractBattleSystem):
                 self._check_key_up(event)
             elif event.type == linpg.MOUSE_BUTTON_DOWN:
                 # 上下滚轮-放大和缩小地图
-                if self.__UIContainerButtonRight.is_hover():
+                if self.__UIContainerButtonRight.is_hovered():
                     self.__UIContainerButtonRight.switch()
                     self.__UIContainerButtonRight.flip(True)
-                elif self.__UIContainerButtonBottom.is_hover():
+                elif self.__UIContainerButtonBottom.is_hovered():
                     self.__UIContainerButtonBottom.switch()
                     self.__UIContainerButtonBottom.flip(False, True)
                 elif self.deleteMode is True and block_get_click is not None:
@@ -322,19 +322,19 @@ class MapEditor(linpg.AbstractBattleSystem):
                             elif any_chara_replace in self.enemies_data:
                                 self.enemies_data.pop(any_chara_replace)
                                 self.originalData["sangvisFerri"].pop(any_chara_replace)
-                elif linpg.is_hover(self.UIButton["save"]) and self.object_to_put_down is None and not self.deleteMode:
+                elif self.UIButton["save"].is_hovered() and self.object_to_put_down is None and not self.deleteMode:
                     self.save_progress()
-                elif linpg.is_hover(self.UIButton["back"]) and self.object_to_put_down is None and not self.deleteMode:
+                elif self.UIButton["back"].is_hovered() and self.object_to_put_down is None and not self.deleteMode:
                     if linpg.config.load(self.get_map_file_location()) == self.originalData:
                         self.stop()
                         break
                     else:
                         self.__no_save_warning.set_visible(True)
-                elif linpg.is_hover(self.UIButton["delete"]) and self.object_to_put_down is None and not self.deleteMode:
+                elif self.UIButton["delete"].is_hovered() and self.object_to_put_down is None and not self.deleteMode:
                     self.object_to_put_down = None
                     self.data_to_edit = None
                     self.deleteMode = True
-                elif linpg.is_hover(self.UIButton["reload"]) and self.object_to_put_down is None and not self.deleteMode:
+                elif self.UIButton["reload"].is_hovered() and self.object_to_put_down is None and not self.deleteMode:
                     tempLocal_x, tempLocal_y = self.MAP.get_local_pos()
                     # 读取地图数据
                     mapFileData = linpg.config.load(self.get_map_file_location())
@@ -351,14 +351,8 @@ class MapEditor(linpg.AbstractBattleSystem):
                         linpg.controller.get_event("confirm")
                         and block_get_click is not None
                         and self.object_to_put_down is not None
-                        and not linpg.is_hover(
-                            self.__UIContainerRight,
-                            off_set_x=self.__UIContainerButtonRight.right,
-                        )
-                        and not linpg.is_hover(
-                            self.__UIContainerBottom,
-                            off_set_y=self.__UIContainerButtonBottom.bottom,
-                        )
+                        and not self.__UIContainerRight.is_hovered((self.__UIContainerButtonRight.right, 0))
+                        and not self.__UIContainerBottom.is_hovered((self.__UIContainerButtonBottom.bottom, 0))
                     ):
                         if self.object_to_put_down["type"] == "block":
                             self.originalData["map"][block_get_click["y"]][block_get_click["x"]] = self.object_to_put_down[
@@ -446,11 +440,8 @@ class MapEditor(linpg.AbstractBattleSystem):
         self._display_map(screen)
         if (
             block_get_click is not None
-            and not linpg.is_hover(self.__UIContainerRight, off_set_x=self.__UIContainerButtonRight.right)
-            and not linpg.is_hover(
-                self.__UIContainerBottom,
-                off_set_y=self.__UIContainerButtonBottom.bottom,
-            )
+            and not self.__UIContainerRight.is_hovered((self.__UIContainerButtonRight.right, 0))
+            and not self.__UIContainerBottom.is_hovered((self.__UIContainerButtonBottom.bottom, 0))
         ):
             if self.deleteMode is True:
                 xTemp, yTemp = self.MAP.calPosInMap(block_get_click["x"], block_get_click["y"])
@@ -488,22 +479,14 @@ class MapEditor(linpg.AbstractBattleSystem):
             self.__UIContainerRight.display(screen, (self.__UIContainerButtonRight.right, 0))
             self.__envImgContainer.display(screen, (self.__UIContainerButtonRight.right, 0))
             self.__decorationsImgContainer.display(screen, (self.__UIContainerButtonRight.right, 0))
-            if (
-                linpg.is_hover(
-                    self.__button_select_block,
-                    off_set_x=self.__UIContainerButtonRight.right,
-                )
-                and linpg.controller.get_event("confirm")
-            ):
+            if self.__button_select_block.is_hovered(
+                (self.__UIContainerButtonRight.right, 0)
+            ) and linpg.controller.get_event("confirm"):
                 self.__envImgContainer.set_visible(True)
                 self.__decorationsImgContainer.set_visible(False)
-            if (
-                linpg.is_hover(
-                    self.__button_select_decoration,
-                    off_set_x=self.__UIContainerButtonRight.right,
-                )
-                and linpg.controller.get_event("confirm")
-            ):
+            if self.__button_select_decoration.is_hovered(
+                (self.__UIContainerButtonRight.right, 0)
+            ) and linpg.controller.get_event("confirm"):
                 self.__envImgContainer.set_visible(False)
                 self.__decorationsImgContainer.set_visible(True)
             self.__button_select_block.display(screen, (self.__UIContainerButtonRight.right, 0))
@@ -528,22 +511,14 @@ class MapEditor(linpg.AbstractBattleSystem):
             self.__UIContainerBottom.display(screen, (0, self.__UIContainerButtonBottom.bottom))
             self.__charactersImgContainer.display(screen, (0, self.__UIContainerButtonBottom.bottom))
             self.__sangvisFerrisImgContainer.display(screen, (0, self.__UIContainerButtonBottom.bottom))
-            if (
-                linpg.is_hover(
-                    self.__button_select_character,
-                    off_set_y=self.__UIContainerButtonBottom.bottom,
-                )
-                and linpg.controller.get_event("confirm")
-            ):
+            if self.__button_select_character.is_hovered(
+                (self.__UIContainerButtonBottom.bottom, 0)
+            ) and linpg.controller.get_event("confirm"):
                 self.__charactersImgContainer.set_visible(True)
                 self.__sangvisFerrisImgContainer.set_visible(False)
-            if (
-                linpg.is_hover(
-                    self.__button_select_sangvisFerri,
-                    off_set_y=self.__UIContainerButtonBottom.bottom,
-                )
-                and linpg.controller.get_event("confirm")
-            ):
+            if self.__button_select_sangvisFerri.is_hovered(
+                (self.__UIContainerButtonBottom.bottom, 0)
+            ) and linpg.controller.get_event("confirm"):
                 self.__charactersImgContainer.set_visible(False)
                 self.__sangvisFerrisImgContainer.set_visible(True)
             self.__button_select_character.display(screen, (0, self.__UIContainerButtonBottom.bottom))
@@ -568,7 +543,7 @@ class MapEditor(linpg.AbstractBattleSystem):
 
         # 画出上方其他按钮
         for key in self.UIButton:
-            linpg.is_hover(self.UIButton[key])
+            self.UIButton[key].is_hovered()
             self.UIButton[key].draw(screen)
 
         # 跟随鼠标显示即将被放下的物品
@@ -596,75 +571,49 @@ class MapEditor(linpg.AbstractBattleSystem):
 
         # 显示即将被编辑的数据
         if self.data_to_edit is not None:
+            pos_x_temp: int = int(screen.get_width() * 0.91)
+            pos_y_temp: int = int(screen.get_height() * 0.8)
             screen.blits(
                 (
                     (
-                        linpg.font.render(
-                            "action points: " + str(self.data_to_edit.max_action_point),
-                            "black",
-                            15,
-                        ),
-                        (screen.get_width() * 0.91, screen.get_height() * 0.8),
+                        linpg.font.render("action points: " + str(self.data_to_edit.max_action_point), "black", 15),
+                        (pos_x_temp, pos_y_temp),
                     ),
                     (
-                        linpg.font.render(
-                            "attack range: " + str(self.data_to_edit.attack_range),
-                            "black",
-                            15,
-                        ),
-                        (screen.get_width() * 0.91, screen.get_height() * 0.8 + 20),
+                        linpg.font.render("attack range: " + str(self.data_to_edit.attack_range), "black", 15),
+                        (pos_x_temp, pos_y_temp + 20),
                     ),
                     (
-                        linpg.font.render(
-                            "current bullets: " + str(self.data_to_edit.current_bullets),
-                            "black",
-                            15,
-                        ),
-                        (screen.get_width() * 0.91, screen.get_height() * 0.8 + 20 * 2),
+                        linpg.font.render("current bullets: " + str(self.data_to_edit.current_bullets), "black", 15),
+                        (pos_x_temp, pos_y_temp + 20 * 2),
                     ),
                     (
-                        linpg.font.render(
-                            "magazine capacity: " + str(self.data_to_edit.magazine_capacity),
-                            "black",
-                            15,
-                        ),
-                        (screen.get_width() * 0.91, screen.get_height() * 0.8 + 20 * 3),
+                        linpg.font.render("magazine capacity: " + str(self.data_to_edit.magazine_capacity), "black", 15),
+                        (pos_x_temp, pos_y_temp + 20 * 3),
                     ),
                     (
                         linpg.font.render("max hp: " + str(self.data_to_edit.max_hp), "black", 15),
-                        (screen.get_width() * 0.91, screen.get_height() * 0.8 + 20 * 4),
+                        (pos_x_temp, pos_y_temp + 20 * 4),
                     ),
                     (
-                        linpg.font.render(
-                            "effective range: " + str(self.data_to_edit.effective_range),
-                            "black",
-                            15,
-                        ),
-                        (screen.get_width() * 0.91, screen.get_height() * 0.8 + 20 * 5),
+                        linpg.font.render("effective range: " + str(self.data_to_edit.effective_range), "black", 15),
+                        (pos_x_temp, pos_y_temp + 20 * 5),
                     ),
                     (
-                        linpg.font.render(
-                            "max damage: " + str(self.data_to_edit.max_damage),
-                            "black",
-                            15,
-                        ),
-                        (screen.get_width() * 0.91, screen.get_height() * 0.8 + 20 * 6),
+                        linpg.font.render("max damage: " + str(self.data_to_edit.max_damage), "black", 15),
+                        (pos_x_temp, pos_y_temp + 20 * 6),
                     ),
                     (
-                        linpg.font.render(
-                            "min damage: " + str(self.data_to_edit.min_damage),
-                            "black",
-                            15,
-                        ),
-                        (screen.get_width() * 0.91, screen.get_height() * 0.8 + 20 * 7),
+                        linpg.font.render("min damage: " + str(self.data_to_edit.min_damage), "black", 15),
+                        (pos_x_temp, pos_y_temp + 20 * 7),
                     ),
                     (
                         linpg.font.render("x: " + str(self.data_to_edit.x), "black", 15),
-                        (screen.get_width() * 0.91, screen.get_height() * 0.8 + 20 * 8),
+                        (pos_x_temp, pos_y_temp + 20 * 8),
                     ),
                     (
                         linpg.font.render("y: " + str(self.data_to_edit.y), "black", 15),
-                        (screen.get_width() * 0.91, screen.get_height() * 0.8 + 20 * 9),
+                        (pos_x_temp, pos_y_temp + 20 * 9),
                     ),
                 )
             )

@@ -136,7 +136,7 @@ class WarningSystem:
         self.font_size: int = font_size
 
     # 更新语言
-    def updated_language(self):
+    def update_language(self):
         self.__warnings_msg: dict = linpg.lang.get_texts("Warnings")
         self.clear()
 
@@ -243,40 +243,40 @@ class SelectMenu(linpg.GameObjectsDictContainer):
             # 攻击按钮 - 左
             txt_tempX = location["xStart"] - selectButtonBaseWidth * 0.6
             txt_tempY = location["yStart"]
-            if linpg.is_hover(self.get("attack")["button"], (txt_tempX, txt_tempY)):
+            if linpg.is_hovering(self.get("attack")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "attack"
             screen.blit(self.get("attack")["button"], (txt_tempX, txt_tempY))
             # 移动按钮 - 右
             txt_tempX = location["xEnd"] - selectButtonBaseWidth * 0.4
             # txt_tempY 与攻击按钮一致
-            if linpg.is_hover(self.get("move")["button"], (txt_tempX, txt_tempY)):
+            if linpg.is_hovering(self.get("move")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "move"
             screen.blit(self.get("move")["button"], (txt_tempX, txt_tempY))
             # 换弹按钮 - 下
             txt_tempX = location["xStart"] + selectButtonBaseWidth * 0.5
             txt_tempY = location["yEnd"] - selectButtonBaseWidth * 0.25
-            if linpg.is_hover(self.get("reload")["button"], (txt_tempX, txt_tempY)):
+            if linpg.is_hovering(self.get("reload")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "reload"
             screen.blit(self.get("reload")["button"], (txt_tempX, txt_tempY))
             # 技能按钮 - 上
             if kind != "HOC":
                 # txt_tempX与换弹按钮一致
                 txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
-                if linpg.is_hover(self.get("skill")["button"], (txt_tempX, txt_tempY)):
+                if linpg.is_hovering(self.get("skill")["button"], (txt_tempX, txt_tempY)):
                     self._item_being_hovered = "skill"
                 screen.blit(self.get("skill")["button"], (txt_tempX, txt_tempY))
             # 救助队友
             if len(friendsCanSave) > 0:
                 txt_tempX = location["xStart"] - selectButtonBaseWidth * 0.6
                 txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
-                if linpg.is_hover(self.get("rescue")["button"], (txt_tempX, txt_tempY)):
+                if linpg.is_hovering(self.get("rescue")["button"], (txt_tempX, txt_tempY)):
                     self._item_being_hovered = "rescue"
                 screen.blit(self.get("rescue")["button"], (txt_tempX, txt_tempY))
             # 互动
             if len(thingsCanReact) > 0:
                 txt_tempX = location["xEnd"] - selectButtonBaseWidth * 0.4
                 txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
-                if linpg.is_hover(self.get("interact")["button"], (txt_tempX, txt_tempY)):
+                if linpg.is_hovering(self.get("interact")["button"], (txt_tempX, txt_tempY)):
                     self._item_being_hovered = "interact"
                 screen.blit(self.get("interact")["button"], (txt_tempX, txt_tempY))
 

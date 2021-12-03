@@ -79,7 +79,10 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         self._enable_pause_menu()
         # 每次需要更新的物品
         self.__items_to_blit: list = []
+        # 物品比重
         self.__max_item_weight: int = 0
+        # 结束回合的图片
+        self.__end_round_button: linpg.StaticImage = None
 
     """Quick Reference"""
     # 正在控制的角色
@@ -221,7 +224,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         # 加载UI:
         # 加载结束回合的图片
         self.end_round_txt = self.FONT.render(linpg.lang.get_text("Battle_UI", "endRound"), linpg.color.WHITE)
-        self.end_round_button = linpg.load.static_image(
+        self.__end_round_button = linpg.load.static_image(
             r"Assets/image/UI/end_round_button.png",
             (self.window_x * 0.8, self.window_y * 0.7),
             (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 2.5),
@@ -404,19 +407,19 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         self.set_bgm_volume(linpg.media.volume.background_music / 100.0)
 
     # 更新语言
-    def updated_language(self) -> None:
-        super().updated_language()
+    def update_language(self) -> None:
+        super().update_language()
         self._initialize_pause_menu()
         self.selectMenuUI.update()
         self.battleModeUiTxt = linpg.lang.get_texts("Battle_UI")
         self.RoundSwitchUI = RoundSwitch(self.window_x, self.window_y, self.battleModeUiTxt)
         self.end_round_txt = self.FONT.render(linpg.lang.get_text("Battle_UI", "endRound"), linpg.color.WHITE)
-        self.end_round_button = linpg.load.static_image(
+        self.__end_round_button = linpg.load.static_image(
             r"Assets/image/UI/end_round_button.png",
             (self.window_x * 0.8, self.window_y * 0.7),
             (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 2.5),
         )
-        self.warnings_to_display.updated_language()
+        self.warnings_to_display.update_language()
         self._DIALOG.updated_language()
 
     # 警告某个角色周围的敌人
@@ -737,7 +740,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             if linpg.controller.get_event("confirm"):
                 block_get_click = self.MAP.calBlockInMap()
                 # 如果点击了回合结束的按钮
-                if linpg.is_hover(self.end_round_button) and self.__is_waiting is True:
+                if self.__end_round_button.is_hovered() and self.__is_waiting is True:
                     self.whose_round = "playerToSangvisFerris"
                     self.characterGetClick = None
                     self.__if_draw_range = True
@@ -1520,14 +1523,14 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
 
         if self.whose_round == "player":
             # 加载结束回合的按钮
-            self.__add_on_screen_object(self.end_round_button)
+            self.__add_on_screen_object(self.__end_round_button)
             self.__add_on_screen_object(
                 self.end_round_txt,
                 -1,
-                self.end_round_button.pos,
+                self.__end_round_button.pos,
                 (
-                    self.end_round_button.get_width() * 0.35,
-                    (self.end_round_button.get_height() - self.FONT.size) / 2.3,
+                    self.__end_round_button.get_width() * 0.35,
+                    (self.__end_round_button.get_height() - self.FONT.size) / 2.3,
                 ),
             )
 
