@@ -115,7 +115,7 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
             ifDisplayMove = True
             self.alliances["me"].set_flip(False)
         if ifDisplayMove:
-            if self.alliances["me"].get_action() != "move":
+            if self.alliances["me"].action != "move":
                 self.alliances["me"].set_action("move")
             if self.pos_last != (
                 int(self.alliances["me"].x),
@@ -127,7 +127,7 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
                     int(self.alliances["me"].y),
                 )
         else:
-            if self.alliances["me"].get_action() != "wait":
+            if self.alliances["me"].action != "wait":
                 self.alliances["me"].set_action("wait")
 
     # 根据本地坐标移动屏幕

@@ -90,7 +90,7 @@ A: Due to global chip shortage (for both CPU and GPU), none of the developers in
 
 ***Q: Why is macOS not supported?***
 
-A: Again, none of the developers in our development team has a device that can run Mac OS, so we cannot run testing on Mac OS. We assume the game "may" run just fine, but we cannot guarantee the stability due to a lack of testing.
+A: Again, none of the developers in our development team has a device that can run Mac OS, so we cannot run any testing on Mac OS. We assume the game "may" run just fine, but we cannot guarantee the stability due to a lack of testing.
 
 
 
@@ -104,7 +104,7 @@ This branch holds the current stable version.
 
 ### dev:
 
-This branch holds the latest version that is available to the public. While this version may contain patches that fix identified problems, it may also have unknown or known new bugs that may cause harm to your system or projects. This version is typically recommended for experienced developers.
+This branch holds the latest version that is available to the public. While this version may contain patches that fix identified problems, it may also intoduece unknown or known new bugs that may cause harm to your system or projects. This version is typically recommended for experienced developers.
 
 目前可以运行的最新版本，可能在修复了部分现有的bug的同时，又带有新增的bug。 推荐开发人员使用
 
@@ -144,6 +144,6 @@ https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish
 
 # :memo: License / 版权说明
 
-This game's codes are distributed under the **[GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**, which means you can use our codes for commercial purposes as long as you are following the **[GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**. However, all images and music used in this game are from third parties, and secondary distribution or commercialization without the authorization of the corresponding creators is strictly prohibited. Also, Tigeia Workshop (the developer of this game and Linpg engine) is not responsible for any disputes and damages caused by neither this game nor Linpg Engine.
+This game's (python) codes are distributed under the [**GPL-3.0 License**](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE), which means you can use them for commercial purposes as long as you follow the [**GPL-3.0 License**](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE). However, all other digital contents that are used in this game, including but not limited to images, music, and videos, are authorized or contributed by third parties, and secondary distribution or commercialization without the authorization of the corresponding creators is strictly prohibited. Tigeia Workshop (the developer of this game and the Linpg engine) is also not responsible for any disputes and damages caused by the usage of neither this game nor the Linpg Engine.
 
-本游戏的代码将采用 [GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE) 进行分发，这意味着你可以商用我们的代码。然而，需要注意的是，本游戏用到的所有图片和音乐素材均来自第三方，严禁在没有对应创作者授权的情况下进行二次发布或者商用。同时，因使用该游戏或者linpg导致的任何形式的冲突（比如但不仅限法律冲突，经济冲突等）与缇吉娅工坊（本游戏和Linpg引擎的开发者）无关。
+本游戏的代码将采用 **[GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE)** 进行分发，这意味着你可以商用本游戏的代码只要你完全遵守 **[GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE)**。然而，需要注意的是，本游戏用到的所有其他数字媒体素材，包含但不仅限于图片，音乐，视频，均来自第三方授权或者贡献，严禁在没有对应创作者授权的情况下进行二次发布或者使用。同时，因使用该游戏或者linpg导致的任何形式的冲突（比如但不仅限法律冲突，经济冲突等）与缇吉娅工坊（本游戏和Linpg引擎的开发者）无关。一切缇吉娅工坊发布的非英文版本条款仅供参考，应以英文版本为准。所有法律冲突应在美国华盛顿州的法庭进行友善地商议。

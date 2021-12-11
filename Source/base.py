@@ -18,7 +18,7 @@ if not linpg.info.ensure_linpg_version(
         linpg.lang.get_text("Global", "warning"),
         linpg.lang.get_text("LinpgVersionIncorrect", "message").format(
             "3.{0}.{1}".format(version_info["recommended_linpg_revision"], version_info["recommended_linpg_patch"]),
-            linpg.info.current_version,
+            linpg.info.get_current_version(),
         ),
         (
             linpg.lang.get_text("LinpgVersionIncorrect", "exit_button"),
@@ -37,11 +37,8 @@ __all__ = ["linpg", "os", "glob", "RPC", "ALPHA_BUILD_WARNING", "LARGE_IMAGE"]
 _CLIENT_ID: int = 831417008734208011
 LARGE_IMAGE: str = "test"
 # discord接口
-RPC: object
 # 如果不想要展示Discord的Rich Presence
-if linpg.setting.try_get("DiscordRichPresence") is False:
-    RPC = None
-else:
+if linpg.setting.try_get("DiscordRichPresence") is True:
     # 尝试连接Discord
     try:
         from pypresence import Presence
@@ -54,6 +51,8 @@ else:
         )
     except Exception:
         RPC = None
+else:
+    RPC = None
 
 # 设置引擎的标准文字大小
 linpg.font.set_global_font("medium", int(linpg.display.get_width() / 40))

@@ -108,8 +108,6 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             self.resultInfo = DataTmp["resultInfo"]
         else:
             raise Exception('Error: Cannot load the data from the "save.yaml" file because the file type does not match')
-        # 因为地图模块已被加载，只需加载图片即可
-        self.MAP.load_env_img((round(screen.get_width() / 10), round(screen.get_height() / 10)))
         self.__load_from_save = True
         self.__process_data(screen)
 
@@ -172,7 +170,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             linpg.display.flip()
         # 开始加载地图场景
         self.infoToDisplayDuringLoading.draw(screen)
-        now_loading = self.FONT.render(loading_info["now_loading_map"], linpg.color.WHITE)
+        now_loading = self.FONT.render(loading_info["now_loading_level"], linpg.color.WHITE)
         screen.blit(now_loading, (self.window_x * 0.75, self.window_y * 0.9))
         nowLoadingIcon.draw(screen)
         linpg.display.flip()
@@ -193,7 +191,6 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         self._dialog_dictionary = DataTmp["dialogs"]["dictionary"]
         self._dialog_data = DataTmp["dialogs"]["data"]
         if not self.__load_from_save:
-            self._create_map(DataTmp)
             # 加载对应角色所需的图片
             self._initial_characters_loader(DataTmp["character"], DataTmp["sangvisFerri"])
             # 查看是否有战斗开始前的对话
@@ -213,14 +210,16 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             screen.blit(now_loading, (self.window_x * 0.75, self.window_y * 0.9))
             nowLoadingIcon.draw(screen)
             linpg.display.flip()
-        # 计算光亮区域 并初始化地图
-        self._calculate_darkness()
         # 开始加载关卡设定
         self.infoToDisplayDuringLoading.draw(screen)
-        now_loading = self.FONT.render(loading_info["now_loading_level"], linpg.color.WHITE)
+        now_loading = self.FONT.render(loading_info["now_loading_map"], linpg.color.WHITE)
         screen.blit(now_loading, (self.window_x * 0.75, self.window_y * 0.9))
         nowLoadingIcon.draw(screen)
         linpg.display.flip()
+        # 加载地图
+        self._create_map(DataTmp)
+        # 计算光亮区域 并初始化地图
+        self._calculate_darkness()
         # 加载UI:
         # 加载结束回合的图片
         self.end_round_txt = self.FONT.render(linpg.lang.get_text("Battle_UI", "endRound"), linpg.color.WHITE)
@@ -317,18 +316,21 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
 
     # 返回需要保存数据
     def _get_data_need_to_save(self) -> dict:
-        return {
-            **self.get_data_of_parent_game_system(),
-            **{
-                "type": "battle",
-                "griffin": self.alliances_data,
-                "sangvisFerri": self.enemies_data,
-                "MAP": self.MAP,
-                "dialog_key": self.dialog_key,
-                "dialog_parameters": self.dialog_parameters,
-                "resultInfo": self.resultInfo,
-                "timeStamp": time.strftime(":%S", time.localtime()),
-            },
+        alliances_data: dict = {}
+        for key in self.alliances_data:
+            alliances_data[key] = self.alliances_data[key].to_dict()
+        enemies_data: dict = {}
+        for key in self.enemies_data:
+            enemies_data[key] = self.enemies_data[key].to_dict()
+        return self.get_data_of_parent_game_system() | {
+            "type": "battle",
+            "griffin": alliances_data,
+            "sangvisFerri": enemies_data,
+            "MAP": self.MAP.to_dict(),
+            "dialog_key": self.dialog_key,
+            "dialog_parameters": self.dialog_parameters,
+            "resultInfo": self.resultInfo,
+            "timeStamp": time.strftime(":%S", time.localtime()),
         }
 
     """画面"""
@@ -370,7 +372,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         # 如果不允许失去任何一位同伴
         if "allow_any_one_die" not in self.mission_objectives or not self.mission_objectives["allow_any_one_die"]:
             for character in self.alliances_data:
-                if not isinstance(self.alliances_data[character].dying, bool) and self.alliances_data[character].dying == 0:
+                if self.alliances_data[character].is_dead():
                     self.whose_round = "result_fail"
                     break
         """检测胜利条件"""
@@ -460,8 +462,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                             self.enemies_data[every_chara].alert(100)
                     # 让倒地的角色更接近死亡
                     for every_chara in self.alliances_data:
-                        if self.alliances_data[every_chara].dying is not False:
-                            self.alliances_data[every_chara].dying -= 1
+                        if self.alliances_data[every_chara].is_dying():
+                            self.alliances_data[every_chara].get_closer_to_death()
                     # 现在是铁血的回合！
                     self.whose_round = "sangvisFerris"
                 elif self.whose_round == "sangvisFerrisToPlayer":
@@ -496,7 +498,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             skill_target = None
             if self.alliances_data[characterName].type == "gsh-18":
                 for character in self.alliances_data:
-                    if linpg.pos.is_same(linpg.pos.int(self.alliances_data[character]), linpg.pos.int(pos_click)):
+                    if linpg.coordinates.is_same(self.alliances_data[character], pos_click):
                         skill_target = character
                         break
             elif (
@@ -506,7 +508,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             ):
                 for enemies in self.enemies_data:
                     if (
-                        linpg.pos.is_same(linpg.pos.int(self.enemies_data[enemies]), linpg.pos.int(pos_click))
+                        linpg.coordinates.is_same(self.enemies_data[enemies], pos_click)
                         and self.enemies_data[enemies].current_hp > 0
                     ):
                         skill_target = enemies
@@ -518,8 +520,6 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                     (self.alliances_data[skill_target].max_hp - self.alliances_data[skill_target].current_hp) * 0.3
                 )
                 self.alliances_data[skill_target].heal(healed_hp)
-                if not self.alliances_data[skill_target].dying:
-                    self.alliances_data[skill_target].dying = False
                 damage_do_to_character[skill_target] = linpg.font.render("+" + str(healed_hp), "green", 25)
             elif (
                 self.alliances_data[characterName].type == "asval"
@@ -530,7 +530,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                     self.alliances_data[characterName].min_damage,
                     self.alliances_data[characterName].max_damage,
                 )
-                self.enemies_data[skill_target].decreaseHp(the_damage)
+                self.enemies_data[skill_target].injury(the_damage)
                 damage_do_to_character[skill_target] = linpg.font.render("-" + str(the_damage), "red", 25)
             return damage_do_to_character
 
@@ -868,9 +868,9 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 elif block_get_click is not None:
                     for key in self.alliances_data:
                         if (
-                            linpg.pos.is_same(linpg.pos.int(self.alliances_data[key]), linpg.pos.int(block_get_click))
+                            linpg.coordinates.is_same(self.alliances_data[key], block_get_click)
                             and self.__is_waiting is True
-                            and not self.alliances_data[key].dying
+                            and self.alliances_data[key].is_alive()
                             and self.__if_draw_range is not False
                         ):
                             self.screen_to_move_x = None
@@ -884,7 +884,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                             self.friendsCanSave = [
                                 key2
                                 for key2 in self.alliances_data
-                                if self.alliances_data[key2].dying is not False
+                                if self.alliances_data[key2].is_dying()
                                 and self.alliances_data[key].near(self.alliances_data[key2])
                             ]
                             self.thingsCanReact.clear()
@@ -959,17 +959,17 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                                 block_get_click["y"],
                             ) in attacking_range[area]:
                                 for y in range(
-                                    block_get_click["y"] - self.characterInControl.attack_range + 1,
-                                    block_get_click["y"] + self.characterInControl.attack_range,
+                                    block_get_click["y"] - self.characterInControl.attack_coverage + 1,
+                                    block_get_click["y"] + self.characterInControl.attack_coverage,
                                 ):
                                     if y < block_get_click["y"]:
                                         for x in range(
                                             block_get_click["x"]
-                                            - self.characterInControl.attack_range
+                                            - self.characterInControl.attack_coverage
                                             - (y - block_get_click["y"])
                                             + 1,
                                             block_get_click["x"]
-                                            + self.characterInControl.attack_range
+                                            + self.characterInControl.attack_coverage
                                             + (y - block_get_click["y"]),
                                         ):
                                             if self.MAP.ifBlockCanPassThrough({"x": x, "y": y}):
@@ -977,11 +977,11 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                                     else:
                                         for x in range(
                                             block_get_click["x"]
-                                            - self.characterInControl.attack_range
+                                            - self.characterInControl.attack_coverage
                                             + (y - block_get_click["y"])
                                             + 1,
                                             block_get_click["x"]
-                                            + self.characterInControl.attack_range
+                                            + self.characterInControl.attack_coverage
                                             - (y - block_get_click["y"]),
                                         ):
                                             if self.MAP.ifBlockCanPassThrough({"x": x, "y": y}):
@@ -1095,17 +1095,17 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                                     block_get_click["y"],
                                 ] in skill_range[area]:
                                     for y in range(
-                                        block_get_click["y"] - self.characterInControl.skill_cover_range,
-                                        block_get_click["y"] + self.characterInControl.skill_cover_range,
+                                        block_get_click["y"] - self.characterInControl.skill_coverage,
+                                        block_get_click["y"] + self.characterInControl.skill_coverage,
                                     ):
                                         if y < block_get_click["y"]:
                                             for x in range(
                                                 block_get_click["x"]
-                                                - self.characterInControl.skill_cover_range
+                                                - self.characterInControl.skill_coverage
                                                 - (y - block_get_click["y"])
                                                 + 1,
                                                 block_get_click["x"]
-                                                + self.characterInControl.skill_cover_range
+                                                + self.characterInControl.skill_coverage
                                                 + (y - block_get_click["y"]),
                                             ):
                                                 if (
@@ -1117,11 +1117,11 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                                         else:
                                             for x in range(
                                                 block_get_click["x"]
-                                                - self.characterInControl.skill_cover_range
+                                                - self.characterInControl.skill_coverage
                                                 + (y - block_get_click["y"])
                                                 + 1,
                                                 block_get_click["x"]
-                                                + self.characterInControl.skill_cover_range
+                                                + self.characterInControl.skill_coverage
                                                 - (y - block_get_click["y"]),
                                             ):
                                                 if (
@@ -1148,7 +1148,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                             self.__if_draw_range = True
                 # 换弹
                 elif self.action_choice == "reload":
-                    bullets_to_add = self.characterInControl.magazine_capacity - self.characterInControl.current_bullets
+                    bullets_to_add = self.characterInControl.is_reload_needed()
                     # 需要换弹
                     if bullets_to_add > 0:
                         # 如果角色有换弹动画，则播放角色的换弹动画
@@ -1156,14 +1156,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                             self.characterInControl.set_action("reload", False)
                         # 扣去对应的行动值
                         self.characterInControl.try_reduce_action_point(5)
-                        # 当所剩子弹足够换弹的时候
-                        if bullets_to_add <= self.characterInControl.bullets_carried:
-                            self.characterInControl.bullets_carried -= bullets_to_add
-                            self.characterInControl.current_bullets += bullets_to_add
-                        # 当所剩子弹不足以换弹的时候
-                        else:
-                            self.characterInControl.current_bullets += self.characterInControl.bullets_carried
-                            self.characterInControl.bullets_carried = 0
+                        # 换弹
+                        self.characterInControl.reload_magazine()
                         self.__is_waiting = True
                         self.characterGetClick = None
                         self.action_choice = None
@@ -1226,7 +1220,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                                 # 将物品按照类型放入列表
                                 for itemType, itemData in decoration.items.items():
                                     if itemType == "bullet":
-                                        self.characterInControl.bullets_carried += itemData
+                                        self.characterInControl.add_bullets_carried(itemData)
                                         self.supply_board.items.append(
                                             self.FONT.render(
                                                 self.battleModeUiTxt["getBullets"] + ": " + str(itemData),
@@ -1289,7 +1283,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                                 self.damage_do_to_characters[each_enemy] = self.FONT.render("Miss", linpg.color.RED)
                                 self.enemies_data[each_enemy].alert(50)
                     elif self.characterInControl.get_imgId("attack") == self.characterInControl.get_imgNum("attack") - 1:
-                        self.characterInControl.current_bullets -= 1
+                        self.characterInControl.subtract_current_bullets()
                         self.__is_waiting = True
                         self.characterGetClick = None
                         self.action_choice = None
