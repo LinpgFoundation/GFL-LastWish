@@ -87,7 +87,7 @@ class GamemodeManager:
             RPC.update(state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"), large_image=LARGE_IMAGE)
 
     # 战斗系统
-    def battle(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: str = None) -> dict:
+    def battle(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: str = None) -> None:
         self.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
@@ -103,7 +103,6 @@ class GamemodeManager:
             linpg.display.flip()
         # 暂停声效 - 尤其是环境声
         linpg.media.unload()
-        return BATTLE.resultInfo
 
     # 地图编辑器
     def mapEditor(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: str = None) -> None:

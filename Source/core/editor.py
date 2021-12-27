@@ -1,18 +1,17 @@
 from .ui import linpg, os, glob
-
+from copy import deepcopy
 
 # 地图编辑器系统
 class MapEditor(linpg.AbstractBattleSystem):
+
     # 返回需要保存数据
     def _get_data_need_to_save(self) -> dict:
-        return self.originalData
+        return self.originalData | self._MAP.get_map_in_dict()
 
     # 加载角色的数据
     def __load_characters_data(self, mapFileData: dict) -> None:
-        # 生成进程
-        self._initial_characters_loader(mapFileData["character"], mapFileData["sangvisFerri"], "dev")
-        # 加载角色信息
-        self._start_characters_loader()
+        # 生成进程并开始加载角色信息
+        self._start_loading_characters(mapFileData["character"], mapFileData["sangvisFerri"], "dev")
         # 类似多线程的join，待完善
         while self._is_characters_loader_alive():
             pass
@@ -26,8 +25,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         # 初始化角色信息
         self.__load_characters_data(mapFileData)
         # 初始化地图
-        self.MAP = mapFileData["map"]
-        if self.MAP is None or len(self.MAP) == 0:
+        if "map" not in mapFileData or mapFileData["map"] is None or len(mapFileData["map"]) == 0:
             SnowEnvImg = [
                 "TileSnow01",
                 "TileSnow01ToStone01",
@@ -42,7 +40,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             mapFileData["map"] = default_map
             linpg.config.save(self.get_map_file_location(), mapFileData)
         # 加载地图
-        self._create_map(mapFileData)
+        self._initialize_map(mapFileData)
         del mapFileData
         """加载右侧的界面"""
         # 加载容器图片
@@ -112,7 +110,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         for imgPath in glob(os.path.join(linpg.ASSET.get_internal_environment_image_path("block"), "*.png")):
             self.__envImgContainer.set(
                 os.path.basename(imgPath).replace(".png", ""),
-                linpg.load.img(imgPath, (self.MAP.block_width / 3, None)),
+                linpg.load.img(imgPath, (self._MAP.block_width / 3, None)),
             )
         self.__envImgContainer.set_item_per_line(4)
         self.__envImgContainer.set_scroll_bar_pos("right")
@@ -130,7 +128,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         for imgPath in glob(os.path.join(linpg.ASSET.get_internal_environment_image_path("decoration"), "*.png")):
             self.__decorationsImgContainer.set(
                 os.path.basename(imgPath).replace(".png", ""),
-                linpg.load.img(imgPath, (self.MAP.block_width / 3, None)),
+                linpg.load.img(imgPath, (self._MAP.block_width / 3, None)),
             )
         self.__decorationsImgContainer.set_item_per_line(4)
         self.__decorationsImgContainer.set_scroll_bar_pos("right")
@@ -224,17 +222,17 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.__sangvisFerrisImgContainer.set_visible(False)
         self.__sangvisFerrisImgContainer.distance_between_item = panding
         # 绿色方块/方块标准
-        self.greenBlock = linpg.load.img("Assets/image/UI/range/green.png", (self.MAP.block_width * 0.8, None))
+        self.greenBlock = linpg.load.img("Assets/image/UI/range/green.png", (self._MAP.block_width * 0.8, None))
         self.greenBlock.set_alpha(150)
-        self.redBlock = linpg.load.img("Assets/image/UI/range/red.png", (self.MAP.block_width * 0.8, None))
+        self.redBlock = linpg.load.img("Assets/image/UI/range/red.png", (self._MAP.block_width * 0.8, None))
         self.redBlock.set_alpha(150)
         self.deleteMode: bool = False
         self.object_to_put_down = None
         # UI按钮
         self.UIButton = {}
-        UI_x = self.MAP.block_width * 0.5
+        UI_x = self._MAP.block_width * 0.5
         UI_y = int(screen.get_height() * 0.02)
-        font_size = int(self.MAP.block_width * 0.2)
+        font_size = int(self._MAP.block_width * 0.2)
         self.UIButton["save"] = linpg.load.button_with_text_in_center(
             "<!ui>button.png",
             linpg.lang.get_text("Global", "save"),
@@ -279,10 +277,11 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.data_to_edit = None
         # 读取地图原始文件
         self.originalData = linpg.config.load(self.get_map_file_location())
+        del self.originalData["map"], self.originalData["decoration"]
 
     # 将地图制作器的界面画到屏幕上
     def draw(self, screen: linpg.ImageSurface) -> None:
-        block_get_click = self.MAP.calBlockInMap()
+        block_get_click = self._MAP.calBlockInMap()
         for event in linpg.controller.events:
             if event.type == linpg.key.DOWN:
                 if event.key == linpg.key.ESCAPE:
@@ -302,10 +301,10 @@ class MapEditor(linpg.AbstractBattleSystem):
                     self.__UIContainerButtonBottom.flip(False, True)
                 elif self.deleteMode is True and block_get_click is not None:
                     # 查看当前位置是否有装饰物
-                    decoration = self.MAP.find_decoration_on((block_get_click["x"], block_get_click["y"]))
+                    decoration = self._MAP.find_decoration_on((block_get_click["x"], block_get_click["y"]))
                     # 如果发现有冲突的装饰物
                     if decoration is not None:
-                        self.MAP.remove_decoration(decoration)
+                        self._MAP.remove_decoration(decoration)
                     else:
                         any_chara_replace = None
                         for key, value in {
@@ -335,17 +334,18 @@ class MapEditor(linpg.AbstractBattleSystem):
                     self.data_to_edit = None
                     self.deleteMode = True
                 elif self.UIButton["reload"].is_hovered() and self.object_to_put_down is None and not self.deleteMode:
-                    tempLocal_x, tempLocal_y = self.MAP.get_local_pos()
+                    tempLocal_x, tempLocal_y = self._MAP.get_local_pos()
                     # 读取地图数据
                     mapFileData = linpg.config.load(self.get_map_file_location())
                     # 初始化角色信息
                     self.__load_characters_data(mapFileData)
                     # 加载地图
-                    self._create_map(mapFileData)
+                    self._initialize_map(mapFileData)
                     del mapFileData
-                    self.MAP.set_local_pos(tempLocal_x, tempLocal_y)
+                    self._MAP.set_local_pos(tempLocal_x, tempLocal_y)
                     # 读取地图
                     self.originalData = linpg.config.load(self.get_map_file_location())
+                    del self.originalData["map"], self.originalData["decoration"]
                 else:
                     if (
                         linpg.controller.get_event("confirm")
@@ -355,34 +355,22 @@ class MapEditor(linpg.AbstractBattleSystem):
                         and not self.__UIContainerBottom.is_hovered((self.__UIContainerButtonBottom.bottom, 0))
                     ):
                         if self.object_to_put_down["type"] == "block":
-                            self.originalData["map"][block_get_click["y"]][block_get_click["x"]] = self.object_to_put_down[
-                                "id"
-                            ]
-                            self.MAP.update_block(block_get_click, self.object_to_put_down["id"])
+                            self._MAP.update_block(block_get_click, self.object_to_put_down["id"])
                         elif self.object_to_put_down["type"] == "decoration":
                             # 查看当前位置是否有装饰物
-                            decoration = self.MAP.find_decoration_on((block_get_click["x"], block_get_click["y"]))
+                            decoration = self._MAP.find_decoration_on((block_get_click["x"], block_get_click["y"]))
                             # 如果发现有冲突的装饰物
                             if decoration is not None:
-                                self.MAP.remove_decoration(decoration)
-                            decorationType = linpg.DataBase.get("Decorations")[self.object_to_put_down["id"]]
-                            if decorationType not in self.originalData["decoration"]:
-                                self.originalData["decoration"][decorationType] = {}
-                            the_id = 0
-                            while (
-                                self.object_to_put_down["id"] + "_" + str(the_id)
-                                in self.originalData["decoration"][decorationType]
-                            ):
-                                the_id += 1
-                            nameTemp = self.object_to_put_down["id"] + "_" + str(the_id)
-                            self.originalData["decoration"][decorationType][nameTemp] = {
-                                "image": self.object_to_put_down["id"],
-                                "x": block_get_click["x"],
-                                "y": block_get_click["y"],
-                            }
-                            if decorationType == "chest":
-                                self.originalData["decoration"][decorationType][nameTemp]["items"] = []
-                            self.MAP.load_decorations(self.originalData["decoration"])
+                                self._MAP.remove_decoration(decoration)
+                            self._MAP.add_decoration(
+                                {
+                                    "image": self.object_to_put_down["id"],
+                                    "x": block_get_click["x"],
+                                    "y": block_get_click["y"],
+                                },
+                                linpg.DataBase.get("Decorations")[self.object_to_put_down["id"]],
+                                "{0}_{1}".format(self.object_to_put_down["id"], self._MAP.count_decorations()),
+                            )
                         elif (
                             self.object_to_put_down["type"] == "character"
                             or self.object_to_put_down["type"] == "sangvisFerri"
@@ -407,30 +395,31 @@ class MapEditor(linpg.AbstractBattleSystem):
                                 while self.object_to_put_down["id"] + "_" + str(the_id) in self.alliances_data:
                                     the_id += 1
                                 nameTemp = self.object_to_put_down["id"] + "_" + str(the_id)
-                                self.originalData["character"][nameTemp] = {
-                                    "bullets_carried": 100,
-                                    "type": self.object_to_put_down["id"],
+                                self.originalData["character"][nameTemp] = deepcopy(
+                                    self.DATABASE[self.object_to_put_down["id"]]
+                                ) | {
                                     "x": block_get_click["x"],
                                     "y": block_get_click["y"],
+                                    "type": self.object_to_put_down["id"],
+                                    "bullets_carried": 100,
                                 }
                                 self.alliances_data[nameTemp] = linpg.FriendlyCharacter(
-                                    self.originalData["character"][nameTemp],
-                                    self.DATABASE[self.originalData["character"][nameTemp]["type"]],
-                                    "dev",
+                                    self.originalData["character"][nameTemp], "dev"
                                 )
                             elif self.object_to_put_down["type"] == "sangvisFerri":
                                 while self.object_to_put_down["id"] + "_" + str(the_id) in self.enemies_data:
                                     the_id += 1
                                 nameTemp = self.object_to_put_down["id"] + "_" + str(the_id)
-                                self.originalData["sangvisFerri"][nameTemp] = {
-                                    "type": self.object_to_put_down["id"],
+                                self.originalData["sangvisFerri"][nameTemp] = deepcopy(
+                                    self.DATABASE[self.object_to_put_down["id"]]
+                                ) | {
                                     "x": block_get_click["x"],
                                     "y": block_get_click["y"],
+                                    "type": self.object_to_put_down["id"],
+                                    "bullets_carried": 100,
                                 }
                                 self.enemies_data[nameTemp] = linpg.HostileCharacter(
-                                    self.originalData["sangvisFerri"][nameTemp],
-                                    self.DATABASE[self.originalData["sangvisFerri"][nameTemp]["type"]],
-                                    "dev",
+                                    self.originalData["sangvisFerri"][nameTemp], "dev"
                                 )
         # 其他移动的检查
         self._check_right_click_move()
@@ -444,15 +433,15 @@ class MapEditor(linpg.AbstractBattleSystem):
             and not self.__UIContainerBottom.is_hovered((self.__UIContainerButtonBottom.bottom, 0))
         ):
             if self.deleteMode is True:
-                xTemp, yTemp = self.MAP.calPosInMap(block_get_click["x"], block_get_click["y"])
-                screen.blit(self.redBlock, (xTemp + self.MAP.block_width * 0.1, yTemp))
+                xTemp, yTemp = self._MAP.calPosInMap(block_get_click["x"], block_get_click["y"])
+                screen.blit(self.redBlock, (xTemp + self._MAP.block_width * 0.1, yTemp))
             elif self.object_to_put_down is not None:
-                xTemp, yTemp = self.MAP.calPosInMap(block_get_click["x"], block_get_click["y"])
-                screen.blit(self.greenBlock, (xTemp + self.MAP.block_width * 0.1, yTemp))
+                xTemp, yTemp = self._MAP.calPosInMap(block_get_click["x"], block_get_click["y"])
+                screen.blit(self.greenBlock, (xTemp + self._MAP.block_width * 0.1, yTemp))
 
         # 角色动画
         for key in self.alliances_data:
-            self.alliances_data[key].draw(screen, self.MAP)
+            self.alliances_data[key].draw(screen, self._MAP)
             if (
                 self.object_to_put_down is None
                 and linpg.controller.get_event("confirm")
@@ -461,7 +450,7 @@ class MapEditor(linpg.AbstractBattleSystem):
             ):
                 self.data_to_edit = self.alliances_data[key]
         for key in self.enemies_data:
-            self.enemies_data[key].draw(screen, self.MAP)
+            self.enemies_data[key].draw(screen, self._MAP)
             if (
                 self.object_to_put_down is None
                 and linpg.controller.get_event("confirm")
@@ -511,19 +500,15 @@ class MapEditor(linpg.AbstractBattleSystem):
             self.__UIContainerBottom.display(screen, (0, self.__UIContainerButtonBottom.bottom))
             self.__charactersImgContainer.display(screen, (0, self.__UIContainerButtonBottom.bottom))
             self.__sangvisFerrisImgContainer.display(screen, (0, self.__UIContainerButtonBottom.bottom))
-            if self.__button_select_character.is_hovered(
-                (self.__UIContainerButtonBottom.bottom, 0)
-            ) and linpg.controller.get_event("confirm"):
-                self.__charactersImgContainer.set_visible(True)
-                self.__sangvisFerrisImgContainer.set_visible(False)
-            if self.__button_select_sangvisFerri.is_hovered(
-                (self.__UIContainerButtonBottom.bottom, 0)
-            ) and linpg.controller.get_event("confirm"):
-                self.__charactersImgContainer.set_visible(False)
-                self.__sangvisFerrisImgContainer.set_visible(True)
             self.__button_select_character.display(screen, (0, self.__UIContainerButtonBottom.bottom))
             self.__button_select_sangvisFerri.display(screen, (0, self.__UIContainerButtonBottom.bottom))
             if linpg.controller.get_event("confirm"):
+                if self.__button_select_character.is_hovered((0, self.__UIContainerButtonBottom.bottom)):
+                    self.__charactersImgContainer.set_visible(True)
+                    self.__sangvisFerrisImgContainer.set_visible(False)
+                if self.__button_select_sangvisFerri.is_hovered((0, self.__UIContainerButtonBottom.bottom)):
+                    self.__charactersImgContainer.set_visible(False)
+                    self.__sangvisFerrisImgContainer.set_visible(True)
                 if (
                     self.__charactersImgContainer.is_visible()
                     and self.__charactersImgContainer.item_being_hovered is not None

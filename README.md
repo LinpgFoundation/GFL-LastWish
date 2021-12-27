@@ -79,18 +79,30 @@ Their stories may be forgotten by history, but what they have done will be remem
 | Type             | 类型     | Minimum / 最低要求                                        | Recommended / 推荐配置               |
 | ---------------- | -------- | --------------------------------------------------------- | ------------------------------------ |
 | Operating System | 操作系统 | Windows® 10, Ubuntu 20.04 LTS                             | Windows® 11, Ubuntu 21               |
-| CPU              | 处理器   | any Intel® AMD 2+ GHz processor or AMD 2.5+ GHz processor | Intel® or AMD 3+ GHz processor       |
+| CPU              | 处理器   | any Intel® AMD 2.5+ GHz processor or AMD 3+ GHz processor | Intel® or AMD 3.5+ GHz processor     |
 | Memory           | 内存     | 8 GB RAM                                                  | 16GB RAM                             |
 | Graphics Cards   | 显卡     | GTX 960 or AMD RX 580 XT                                  | GTX 1060 or AMD RX 5800 XT           |
 | Storage          | 硬盘空间 | 1.5 GB of free hard drive space                           | 2 GB of free solid-state drive space |
 
-***Q: Why are the requirements for AMD users slightly high?***
+***Q: Why are the requirements for AMD users slightly higher?***
 
-A: Due to global chip shortage (for both CPU and GPU), none of the developers in our development team are able to acquire one (without selling their organs or blood). As a result, we are not able to provide any hardware optimization for AMD hardware. If you want to donate or sell AMD hardware at a low price, don't hesitate to get in touch with us.
+***问：为何AMD用户有更高的配置要求？***
+
+A: We are happy to see more competition in the chip manufacturing industry, and we genuinely hope that we can offer a better experience for our players who use either AMD CPU or GPU. However, due to the global chip shortage (for both CPU and GPU), none of the developers in our development team are able to acquire one (without selling their organs or blood). As a result, we cannot provide any hardware optimization for AMD products. If you are willing to **donate** or plan to sell any AMD hardware (CPU or GPU) **at a low price**, don't hesitate to get in touch with us.
+
+答：我们很高兴看到芯片制造业有更多的竞争的同时，也真诚地希望能为使用AMD CPU或GPU的玩家提供更好的游戏体验。然而，由于全球芯片短缺（包括CPU和显卡），我们开发团队并不能在不售卖器官或血的前提下获取任何型号的AMD显卡或CPU。因此，我们无法为AMD产品提供任何硬件层面的优化。如果你有意**捐赠**或计划以低价出售任何AMD硬件（CPU或GPU），请速与我们取得联系。
 
 ***Q: Why is macOS not supported?***
 
-A: Again, none of the developers in our development team has a device that can run Mac OS, so we cannot run any testing on Mac OS. We assume the game "may" run just fine, but we cannot guarantee the stability due to a lack of testing.
+***问：为何macOS并不支持***
+
+A: Again, none of the developers in our development team has a device that runs **Mac OS**, so we cannot run any testing to guarantee a pleasant experience for our players who use Mac products. We assume the game "may" run just fine, but we cannot ensure its stability due to a lack of testing. Again, if you are willing to **donate** or plan to sell any Mac product **at a low price**, don't hesitate to get in touch with us.
+
+答：同上，我们开发团队中没有任何一名开发人员拥有能够运行**Mac OS**的设备，所以我们无法进行任何测试，以保证使用Mac产品的玩家的游戏体验。虽然目前游戏在大部分情况下"可能 "运行良好，但由于缺乏测试，我们无法确保游戏运行的稳定性。如果你愿意**捐赠**或计划以低价出售任何Mac产品，请与我们取得联系。
+
+***Your little kindness can make a massive difference for our future.***
+
+***您小小的善意可以改变我们的未来。***
 
 
 

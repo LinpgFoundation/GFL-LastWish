@@ -61,14 +61,14 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
             [SnowEnvImg[linpg.get_random_int(0, len(SnowEnvImg) - 1)] for a in range(block_x)] for i in range(block_y)
         ]
         mapFileData["map"] = default_map
-        self.MAP = linpg.MapObject(
+        self._MAP = linpg.MapObject(
             mapFileData,
             round(linpg.display.get_width() / 10),
             round(linpg.display.get_height() / 10),
             True,
         )
         self.alliances = {"me": linpg.FriendlyCharacter(mapFileData["character"]["sv-98"], self.DATABASE["sv-98"])}
-        self.MAP.calculate_darkness(self.alliances)
+        self._MAP.calculate_darkness(self.alliances)
         self.pos_last = self.alliances["me"].get_pos()
 
     def _check_key_down(self, event: object) -> None:
@@ -121,7 +121,7 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
                 int(self.alliances["me"].x),
                 int(self.alliances["me"].y),
             ):
-                self.MAP.calculate_darkness(self.alliances)
+                self._MAP.calculate_darkness(self.alliances)
                 self.pos_last = (
                     int(self.alliances["me"].x),
                     int(self.alliances["me"].y),
@@ -132,20 +132,20 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
 
     # 根据本地坐标移动屏幕
     def _move_screen(self) -> None:
-        tempX, tempY = self.MAP.calPosInMap(self.alliances["me"].x, self.alliances["me"].y)
-        if tempX < self.window_x * 0.3 and self.MAP.get_local_x() <= 0:
+        tempX, tempY = self._MAP.calPosInMap(self.alliances["me"].x, self.alliances["me"].y)
+        if tempX < self.window_x * 0.3 and self._MAP.get_local_x() <= 0:
             self.screen_to_move_x = self.window_x * 0.3 - tempX
-        elif tempX > self.window_x * 0.7 and self.MAP.get_local_x() >= self.MAP.column * self.MAP.block_width * -1:
+        elif tempX > self.window_x * 0.7 and self._MAP.get_local_x() >= self._MAP.column * self._MAP.block_width * -1:
             self.screen_to_move_x = self.window_x * 0.7 - tempX
-        if tempY < self.window_y * 0.3 and self.MAP.get_local_y() <= 0:
+        if tempY < self.window_y * 0.3 and self._MAP.get_local_y() <= 0:
             self.screen_to_move_y = self.window_y * 0.3 - tempY
-        elif tempY > self.window_y * 0.7 and self.MAP.get_local_y() >= self.MAP.row * self.MAP.block_height * -1:
+        elif tempY > self.window_y * 0.7 and self._MAP.get_local_y() >= self._MAP.row * self._MAP.block_height * -1:
             self.screen_to_move_y = self.window_y * 0.7 - tempY
         super()._move_screen()
 
     # 展示场景装饰物
     def _display_decoration(self, screen: linpg.ImageSurface) -> None:
-        self.MAP.display_decoration(screen, self.alliances, {})
+        self._MAP.display_decoration(screen, self.alliances, {})
 
     # 把所有内容画到屏幕上
     def draw(self, screen: linpg.ImageSurface) -> None:
@@ -160,11 +160,11 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
         self._check_right_click_move()
         # 画出地图
         self._display_map(screen)
-        self.alliances["me"].draw(screen, self.MAP)
-        self.alliances["me"].drawUI(screen, self.original_UI_img, self.MAP)
+        self.alliances["me"].draw(screen, self._MAP)
+        self.alliances["me"].drawUI(screen, self.original_UI_img, self._MAP)
         # 展示设施
         self._display_decoration(screen)
-        pos_x, pos_y = self.MAP.calPosInMap(self.alliances["me"].x, self.alliances["me"].y)
+        pos_x, pos_y = self._MAP.calPosInMap(self.alliances["me"].x, self.alliances["me"].y)
         pos_x += linpg.display.get_width() / 20
         # pygame.draw.line(screen,linpg.color.RED,(pos_x,pos_y),(mouse_x,mouse_y),5)
         linpg.display.flip()
