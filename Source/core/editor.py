@@ -3,10 +3,13 @@ from copy import deepcopy
 
 # 地图编辑器系统
 class MapEditor(linpg.AbstractBattleSystem):
+    def __init__(self) -> None:
+        self.__originalData: dict = {}
+        super().__init__()
 
     # 返回需要保存数据
     def _get_data_need_to_save(self) -> dict:
-        return self.originalData | self._MAP.get_map_in_dict()
+        return self.__originalData | super()._get_data_need_to_save()
 
     # 加载角色的数据
     def __load_characters_data(self, mapFileData: dict) -> None:
@@ -100,7 +103,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.__UIContainerButtonRight.rotate(90)
         # 加载背景图片
         self.__envImgContainer: object = linpg.SurfaceContainerWithScrollbar(
-            None,
+            "<!null>",
             int(container_width * 0.075),
             int(screen.get_height() * 0.1),
             int(container_width * 0.85),
@@ -118,7 +121,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.__envImgContainer.distance_between_item = panding
         # 加载所有的装饰品
         self.__decorationsImgContainer: object = linpg.SurfaceContainerWithScrollbar(
-            None,
+            "<!null>",
             int(container_width * 0.075),
             int(screen.get_height() * 0.1),
             int(container_width * 0.85),
@@ -177,7 +180,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         )
         # 加载所有友方的角色的图片文件
         self.__charactersImgContainer: object = linpg.SurfaceContainerWithScrollbar(
-            None,
+            "<!null>",
             container_width * 0.025,
             container_height * 0.2,
             container_width * 0.95,
@@ -200,7 +203,7 @@ class MapEditor(linpg.AbstractBattleSystem):
         self.__charactersImgContainer.distance_between_item = panding
         # 加载所有敌对角色的图片文件
         self.__sangvisFerrisImgContainer: object = linpg.SurfaceContainerWithScrollbar(
-            None,
+            "<!null>",
             container_width * 0.025,
             container_height * 0.2,
             container_width * 0.95,
@@ -276,8 +279,9 @@ class MapEditor(linpg.AbstractBattleSystem):
         # 用于储存即将发下的物品的具体参数
         self.data_to_edit = None
         # 读取地图原始文件
-        self.originalData = linpg.config.load(self.get_map_file_location())
-        del self.originalData["map"], self.originalData["decoration"]
+        self.__originalData = linpg.config.load(self.get_map_file_location())
+        del self.__originalData["map"], self.__originalData["decoration"]
+        del self.__originalData["character"], self.__originalData["sangvisFerri"]
 
     # 将地图制作器的界面画到屏幕上
     def draw(self, screen: linpg.ImageSurface) -> None:
@@ -308,23 +312,21 @@ class MapEditor(linpg.AbstractBattleSystem):
                     else:
                         any_chara_replace = None
                         for key, value in {
-                            **self.alliances_data,
-                            **self.enemies_data,
+                            **self._alliances_data,
+                            **self._enemies_data,
                         }.items():
                             if value.x == block_get_click["x"] and value.y == block_get_click["y"]:
                                 any_chara_replace = key
                                 break
                         if any_chara_replace is not None:
-                            if any_chara_replace in self.alliances_data:
-                                self.alliances_data.pop(any_chara_replace)
-                                self.originalData["character"].pop(any_chara_replace)
-                            elif any_chara_replace in self.enemies_data:
-                                self.enemies_data.pop(any_chara_replace)
-                                self.originalData["sangvisFerri"].pop(any_chara_replace)
+                            if any_chara_replace in self._alliances_data:
+                                self._alliances_data.pop(any_chara_replace)
+                            elif any_chara_replace in self._enemies_data:
+                                self._enemies_data.pop(any_chara_replace)
                 elif self.UIButton["save"].is_hovered() and self.object_to_put_down is None and not self.deleteMode:
                     self.save_progress()
                 elif self.UIButton["back"].is_hovered() and self.object_to_put_down is None and not self.deleteMode:
-                    if linpg.config.load(self.get_map_file_location()) == self.originalData:
+                    if linpg.config.load(self.get_map_file_location()) == self.__originalData:
                         self.stop()
                         break
                     else:
@@ -344,8 +346,9 @@ class MapEditor(linpg.AbstractBattleSystem):
                     del mapFileData
                     self._MAP.set_local_pos(tempLocal_x, tempLocal_y)
                     # 读取地图
-                    self.originalData = linpg.config.load(self.get_map_file_location())
-                    del self.originalData["map"], self.originalData["decoration"]
+                    self.__originalData = linpg.config.load(self.get_map_file_location())
+                    del self.__originalData["map"], self.__originalData["decoration"]
+                    del self.__originalData["character"], self.__originalData["sangvisFerri"]
                 else:
                     if (
                         linpg.controller.get_event("confirm")
@@ -377,49 +380,45 @@ class MapEditor(linpg.AbstractBattleSystem):
                         ):
                             any_chara_replace = None
                             for key, value in {
-                                **self.alliances_data,
-                                **self.enemies_data,
+                                **self._alliances_data,
+                                **self._enemies_data,
                             }.items():
                                 if value.x == block_get_click["x"] and value.y == block_get_click["y"]:
                                     any_chara_replace = key
                                     break
                             if any_chara_replace is not None:
-                                if any_chara_replace in self.alliances_data:
-                                    self.alliances_data.pop(any_chara_replace)
-                                    self.originalData["character"].pop(any_chara_replace)
-                                elif any_chara_replace in self.enemies_data:
-                                    self.enemies_data.pop(any_chara_replace)
-                                    self.originalData["sangvisFerri"].pop(any_chara_replace)
+                                if any_chara_replace in self._alliances_data:
+                                    self._alliances_data.pop(any_chara_replace)
+                                elif any_chara_replace in self._enemies_data:
+                                    self._enemies_data.pop(any_chara_replace)
                             the_id = 0
                             if self.object_to_put_down["type"] == "character":
-                                while self.object_to_put_down["id"] + "_" + str(the_id) in self.alliances_data:
+                                while self.object_to_put_down["id"] + "_" + str(the_id) in self._alliances_data:
                                     the_id += 1
                                 nameTemp = self.object_to_put_down["id"] + "_" + str(the_id)
-                                self.originalData["character"][nameTemp] = deepcopy(
-                                    self.DATABASE[self.object_to_put_down["id"]]
-                                ) | {
-                                    "x": block_get_click["x"],
-                                    "y": block_get_click["y"],
-                                    "type": self.object_to_put_down["id"],
-                                    "bullets_carried": 100,
-                                }
-                                self.alliances_data[nameTemp] = linpg.FriendlyCharacter(
-                                    self.originalData["character"][nameTemp], "dev"
+                                self._alliances_data[nameTemp] = linpg.FriendlyCharacter(
+                                    deepcopy(linpg.CHARACTER_DATABASE[self.object_to_put_down["id"]])
+                                    | {
+                                        "x": block_get_click["x"],
+                                        "y": block_get_click["y"],
+                                        "type": self.object_to_put_down["id"],
+                                        "bullets_carried": 100,
+                                    },
+                                    "dev",
                                 )
                             elif self.object_to_put_down["type"] == "sangvisFerri":
-                                while self.object_to_put_down["id"] + "_" + str(the_id) in self.enemies_data:
+                                while self.object_to_put_down["id"] + "_" + str(the_id) in self._enemies_data:
                                     the_id += 1
                                 nameTemp = self.object_to_put_down["id"] + "_" + str(the_id)
-                                self.originalData["sangvisFerri"][nameTemp] = deepcopy(
-                                    self.DATABASE[self.object_to_put_down["id"]]
-                                ) | {
-                                    "x": block_get_click["x"],
-                                    "y": block_get_click["y"],
-                                    "type": self.object_to_put_down["id"],
-                                    "bullets_carried": 100,
-                                }
-                                self.enemies_data[nameTemp] = linpg.HostileCharacter(
-                                    self.originalData["sangvisFerri"][nameTemp], "dev"
+                                self._enemies_data[nameTemp] = linpg.HostileCharacter(
+                                    deepcopy(linpg.CHARACTER_DATABASE[self.object_to_put_down["id"]])
+                                    | {
+                                        "x": block_get_click["x"],
+                                        "y": block_get_click["y"],
+                                        "type": self.object_to_put_down["id"],
+                                        "bullets_carried": 100,
+                                    },
+                                    "dev",
                                 )
         # 其他移动的检查
         self._check_right_click_move()
@@ -440,24 +439,24 @@ class MapEditor(linpg.AbstractBattleSystem):
                 screen.blit(self.greenBlock, (xTemp + self._MAP.block_width * 0.1, yTemp))
 
         # 角色动画
-        for key in self.alliances_data:
-            self.alliances_data[key].draw(screen, self._MAP)
+        for key in self._alliances_data:
+            self._alliances_data[key].draw(screen, self._MAP)
             if (
                 self.object_to_put_down is None
                 and linpg.controller.get_event("confirm")
-                and self.alliances_data[key].x == int(linpg.controller.mouse.x / self.greenBlock.get_width())
-                and self.alliances_data[key].y == int(linpg.controller.mouse.y / self.greenBlock.get_height())
+                and self._alliances_data[key].x == int(linpg.controller.mouse.x / self.greenBlock.get_width())
+                and self._alliances_data[key].y == int(linpg.controller.mouse.y / self.greenBlock.get_height())
             ):
-                self.data_to_edit = self.alliances_data[key]
-        for key in self.enemies_data:
-            self.enemies_data[key].draw(screen, self._MAP)
+                self.data_to_edit = self._alliances_data[key]
+        for key in self._enemies_data:
+            self._enemies_data[key].draw(screen, self._MAP)
             if (
                 self.object_to_put_down is None
                 and linpg.controller.get_event("confirm")
-                and self.enemies_data[key].x == int(linpg.controller.mouse.x / self.greenBlock.get_width())
-                and self.enemies_data[key].y == int(linpg.controller.mouse.y / self.greenBlock.get_height())
+                and self._enemies_data[key].x == int(linpg.controller.mouse.x / self.greenBlock.get_width())
+                and self._enemies_data[key].y == int(linpg.controller.mouse.y / self.greenBlock.get_height())
             ):
-                self.data_to_edit = self.enemies_data[key]
+                self.data_to_edit = self._enemies_data[key]
 
         # 展示设施
         self._display_decoration(screen)

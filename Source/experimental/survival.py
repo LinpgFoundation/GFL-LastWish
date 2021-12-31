@@ -14,7 +14,6 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
             "right": False,
         }
         self.window_x, self.window_y = linpg.display.get_size()
-        self.DATABASE = linpg.loadCharacterData()
         self.original_UI_img = {
             "green": linpg.load.img("Assets/image/UI/range/green.png"),
             "red": linpg.load.img("Assets/image/UI/range/red.png"),
@@ -67,7 +66,9 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
             round(linpg.display.get_height() / 10),
             True,
         )
-        self.alliances = {"me": linpg.FriendlyCharacter(mapFileData["character"]["sv-98"], self.DATABASE["sv-98"])}
+        self.alliances = {
+            "me": linpg.FriendlyCharacter(mapFileData["character"]["sv-98"], linpg.CHARACTER_DATABASE["sv-98"])
+        }
         self._MAP.calculate_darkness(self.alliances)
         self.pos_last = self.alliances["me"].get_pos()
 
@@ -134,13 +135,13 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
     def _move_screen(self) -> None:
         tempX, tempY = self._MAP.calPosInMap(self.alliances["me"].x, self.alliances["me"].y)
         if tempX < self.window_x * 0.3 and self._MAP.get_local_x() <= 0:
-            self.screen_to_move_x = self.window_x * 0.3 - tempX
+            self._screen_to_move_x = self.window_x * 0.3 - tempX
         elif tempX > self.window_x * 0.7 and self._MAP.get_local_x() >= self._MAP.column * self._MAP.block_width * -1:
-            self.screen_to_move_x = self.window_x * 0.7 - tempX
+            self._screen_to_move_x = self.window_x * 0.7 - tempX
         if tempY < self.window_y * 0.3 and self._MAP.get_local_y() <= 0:
-            self.screen_to_move_y = self.window_y * 0.3 - tempY
+            self._screen_to_move_y = self.window_y * 0.3 - tempY
         elif tempY > self.window_y * 0.7 and self._MAP.get_local_y() >= self._MAP.row * self._MAP.block_height * -1:
-            self.screen_to_move_y = self.window_y * 0.7 - tempY
+            self._screen_to_move_y = self.window_y * 0.7 - tempY
         super()._move_screen()
 
     # 展示场景装饰物

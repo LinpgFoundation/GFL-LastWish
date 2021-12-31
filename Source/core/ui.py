@@ -2,6 +2,25 @@ import time
 from collections import deque
 from ..base import *
 
+# 中心展示模块1：接受两个item和item2的x和y，将item1展示在item2的中心位置,但不展示item2：
+def display_in_center(
+    item1: linpg.ImageSurface,
+    item2: linpg.ImageSurface,
+    x: int,
+    y: int,
+    screen: linpg.ImageSurface,
+    off_set_x: int = 0,
+    off_set_y: int = 0,
+) -> None:
+    screen.blit(
+        item1,
+        (
+            x + (item2.get_width() - item1.get_width()) / 2 + off_set_x,
+            y + (item2.get_height() - item1.get_height()) / 2 + off_set_y,
+        ),
+    )
+
+
 # 显示回合切换的UI
 class RoundSwitch:
     def __init__(self, window_x: int, window_y: int, battleUiTxt: dict):
@@ -346,13 +365,13 @@ class CharacterInfoBoard:
         self.bullets_number_brown.set_percentage(theCharacterData.current_bullets / theCharacterData.magazine_capacity)
         # 画出
         self.hp_green.draw(self.informationBoard)
-        linpg.display_in_center(tcgc_hp2, self.hp_green, temp_posX, temp_posY, self.informationBoard)
+        display_in_center(tcgc_hp2, self.hp_green, temp_posX, temp_posY, self.informationBoard)
         self.action_point_blue.draw(self.informationBoard)
-        linpg.display_in_center(
+        display_in_center(
             tcgc_action_point2, self.action_point_blue, temp_posX, temp_posY + self.text_size * 1.5, self.informationBoard
         )
         self.bullets_number_brown.draw(self.informationBoard)
-        linpg.display_in_center(
+        display_in_center(
             tcgc_bullets_situation2,
             self.bullets_number_brown,
             temp_posX,
@@ -440,3 +459,19 @@ class LoadingTitle:
         self.title_chapterNum.draw(screen)
         self.title_chapterName.draw(screen)
         self.title_description.draw(screen)
+
+# 需要被打印的物品
+class ItemNeedBlit(linpg.GameObject2point5d):
+    def __init__(self, image: object, weight: int, pos: tuple, offSet: tuple):
+        super().__init__(pos[0], pos[1], weight)
+        self.image = image
+        self.offSet = offSet
+
+    def draw(self, surface: linpg.ImageSurface) -> None:
+        if isinstance(self.image, linpg.ImageSurface):
+            surface.blit(self.image, linpg.coordinates.add(self.pos, self.offSet))
+        else:
+            try:
+                self.image.display(surface, self.offSet)
+            except Exception:
+                self.image.draw(surface)

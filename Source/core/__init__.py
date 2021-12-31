@@ -1,5 +1,4 @@
 from ..base import *
-from .dialog import DialogSystem
 from .editor import MapEditor
 from .tbs import TurnBasedBattleSystem
 
@@ -40,7 +39,7 @@ class GamemodeManager:
         # 卸载音乐
         linpg.media.unload()
         # 初始化对话系统模块
-        DIALOG: object = DialogSystem()
+        DIALOG: object = linpg.DialogSystem()
         if chapterType is not None:
             DIALOG.new(chapterType, chapterId, part, projectName)
         else:

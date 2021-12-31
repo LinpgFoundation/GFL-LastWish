@@ -1,5 +1,4 @@
 2b14:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -13,13 +12,13 @@
     - 2
   kind: HOC
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 aa12:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -33,13 +32,13 @@ aa12:
     - 2
   kind: SG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 aegis:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -53,11 +52,11 @@ aegis:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 aegis_ga:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -71,11 +70,11 @@ aegis_ga:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 aegis_swap:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -89,11 +88,11 @@ aegis_swap:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 asval:
-  action_point: 15
   attack_coverage: 1
   effective_range:
     far:
@@ -107,6 +106,7 @@ asval:
     - 3
   kind: AR
   magazine_capacity: 20
+  max_action_point: 15
   max_damage: 350
   max_hp: 1450
   min_damage: 250
@@ -119,7 +119,6 @@ asval:
     - 1
     - 3
 brute:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -133,11 +132,11 @@ brute:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 contender:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -151,13 +150,13 @@ contender:
     - 2
   kind: HG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 dinergate:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -171,11 +170,11 @@ dinergate:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 dragoon:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -189,11 +188,11 @@ dragoon:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 dragoon_swap:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -207,11 +206,11 @@ dragoon_swap:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 fnfnc:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -225,13 +224,13 @@ fnfnc:
     - 2
   kind: AR
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 g11:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -245,13 +244,13 @@ g11:
     - 2
   kind: AR
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 g36:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -265,13 +264,13 @@ g36:
     - 2
   kind: AR
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 g41:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -285,13 +284,13 @@ g41:
     - 2
   kind: AR
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 golyat:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -305,11 +304,11 @@ golyat:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 golyatplus:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -323,11 +322,11 @@ golyatplus:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 grizzly:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -341,13 +340,13 @@ grizzly:
     - 2
   kind: HG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 gsh-18:
-  action_point: 12
   attack_coverage: 1
   effective_range:
     far:
@@ -361,6 +360,7 @@ gsh-18:
     - 2
   kind: HG
   magazine_capacity: 18
+  max_action_point: 12
   max_damage: 150
   max_hp: 950
   min_damage: 100
@@ -370,7 +370,6 @@ gsh-18:
     - 1
     - 6
 guard:
-  action_point: 20
   attack_coverage: 1
   effective_range:
     near:
@@ -378,11 +377,11 @@ guard:
     - 5
   kind: HG
   magazine_capacity: 20
+  max_action_point: 20
   max_damage: 100
   max_hp: 800
   min_damage: 50
 guard_swap:
-  action_point: 20
   attack_coverage: 1
   effective_range:
     near:
@@ -390,11 +389,11 @@ guard_swap:
     - 6
   kind: HG
   magazine_capacity: 20
+  max_action_point: 20
   max_damage: 150
   max_hp: 1000
   min_damage: 100
 hk416:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -408,13 +407,13 @@ hk416:
     - 2
   kind: AR
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 jaeger:
-  action_point: 20
   attack_coverage: 1
   effective_range:
     far:
@@ -428,11 +427,11 @@ jaeger:
     - 3
   kind: RF
   magazine_capacity: 20
+  max_action_point: 20
   max_damage: 500
   max_hp: 200
   min_damage: 450
 jaeger_swap:
-  action_point: 20
   attack_coverage: 1
   effective_range:
     far:
@@ -446,11 +445,11 @@ jaeger_swap:
     - 4
   kind: RF
   magazine_capacity: 20
+  max_action_point: 20
   max_damage: 600
   max_hp: 200
   min_damage: 400
 jaguar:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -464,11 +463,11 @@ jaguar:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 jupiter:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -482,11 +481,11 @@ jupiter:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 kp31:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -500,13 +499,13 @@ kp31:
     - 2
   kind: SMG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 lewis:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -520,13 +519,13 @@ lewis:
     - 2
   kind: MG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 m14:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -540,13 +539,13 @@ m14:
     - 2
   kind: RF
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 m1903:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -560,13 +559,13 @@ m1903:
     - 2
   kind: RF
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 m1928a1:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -580,13 +579,13 @@ m1928a1:
     - 2
   kind: SMG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 manticore:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -600,11 +599,11 @@ manticore:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 mg4:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -618,13 +617,13 @@ mg4:
     - 2
   kind: MG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 negev:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -638,13 +637,13 @@ negev:
     - 2
   kind: MG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 nemeum:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -658,11 +657,11 @@ nemeum:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 pp1901:
-  action_point: 15
   attack_coverage: 2
   effective_range:
     far:
@@ -676,6 +675,7 @@ pp1901:
     - 1
   kind: SMG
   magazine_capacity: 30
+  max_action_point: 15
   max_damage: 200
   max_hp: 1730
   min_damage: 150
@@ -691,7 +691,6 @@ pp1901:
     - 1
     - 3
 prowler:
-  action_point: 10
   attack_coverage: 1
   effective_range:
     middle:
@@ -702,11 +701,11 @@ prowler:
     - 4
   kind: SMG
   magazine_capacity: 20
+  max_action_point: 10
   max_damage: 200
   max_hp: 250
   min_damage: 100
 prowler_swap:
-  action_point: 10
   attack_coverage: 1
   effective_range:
     far:
@@ -720,11 +719,11 @@ prowler_swap:
     - 4
   kind: SMG
   magazine_capacity: 20
+  max_action_point: 10
   max_damage: 300
   max_hp: 250
   min_damage: 200
 ripper:
-  action_point: 10
   attack_coverage: 1
   effective_range:
     middle:
@@ -735,11 +734,11 @@ ripper:
     - 4
   kind: SMG
   magazine_capacity: 20
+  max_action_point: 10
   max_damage: 400
   max_hp: 400
   min_damage: 300
 saiga12:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -753,13 +752,13 @@ saiga12:
     - 2
   kind: SG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 sat8:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -773,13 +772,13 @@ sat8:
     - 2
   kind: SG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 scouts:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -793,11 +792,11 @@ scouts:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 sr3mp:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -811,13 +810,13 @@ sr3mp:
     - 2
   kind: SMG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 sv-98:
-  action_point: 10
   attack_coverage: 1
   effective_range:
     far:
@@ -831,6 +830,7 @@ sv-98:
     - 3
   kind: RF
   magazine_capacity: 10
+  max_action_point: 10
   max_damage: 650
   max_hp: 600
   min_damage: 400
@@ -843,7 +843,6 @@ sv-98:
     - 1
     - 5
 tarantula:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -857,11 +856,11 @@ tarantula:
     - 2
   kind: null
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
 ump45:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -875,13 +874,13 @@ ump45:
     - 2
   kind: SMG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 ump9:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -895,13 +894,13 @@ ump9:
     - 2
   kind: SMG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 vespid:
-  action_point: 15
   attack_coverage: 1
   effective_range:
     far:
@@ -915,11 +914,11 @@ vespid:
     - 4
   kind: AR
   magazine_capacity: 20
+  max_action_point: 15
   max_damage: 450
   max_hp: 350
   min_damage: 400
 wa2000:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -933,13 +932,13 @@ wa2000:
     - 2
   kind: RF
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
 welrod:
-  action_point: 1
   attack_coverage: 1
   effective_range:
     far:
@@ -953,8 +952,9 @@ welrod:
     - 2
   kind: HG
   magazine_capacity: 1
+  max_action_point: 1
   max_damage: 1
   max_hp: 1
   min_damage: 1
-  skill_coverage: null
-  skill_effective_range: null
+  skill_coverage: 1
+  skill_effective_range: {}
