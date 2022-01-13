@@ -51,7 +51,9 @@ class MainMenu(linpg.AbstractSystem):
         # 主菜单文字
         self.main_menu_txt: dict = None
         # 退出确认窗口
-        self.exit_confirm_menu: linpg.Message = None
+        self.exit_confirm_menu: linpg.ConfirmMessageWindow = linpg.ConfirmMessageWindow(
+            linpg.lang.get_text("Global", "tip"), linpg.lang.get_text("LeavingWithoutSavingWarning", "exit_confirm")
+        )
         # 加载主菜单文字
         self.__reset_menu_text(screen.get_size())
         # 数值初始化
@@ -64,28 +66,23 @@ class MainMenu(linpg.AbstractSystem):
         self.__cover_img_surface = None
         # 音效
         self.click_button_sound = linpg.sound.load(
-            r"Assets/sound/ui/main_menu_click_button.ogg",
-            linpg.media.volume.effects / 100.0,
+            r"Assets/sound/ui/main_menu_click_button.ogg", linpg.media.volume.effects / 100.0
         )
         self.hover_on_button_sound = linpg.sound.load(
-            r"Assets/sound/ui/main_menu_hover_on_button.ogg",
-            linpg.media.volume.effects / 100.0,
+            r"Assets/sound/ui/main_menu_hover_on_button.ogg", linpg.media.volume.effects / 100.0
         )
         self.hover_sound_play_on = None
         self.last_hover_sound_play_on = None
         # 加载主菜单背景
         gamemode.VIDEO_BACKGROUND = linpg.VideoSurface(
-            r"Assets/movie/SquadAR.mp4", True, not linpg.setting.developer_mode, (935, 3105)
+            r"Assets/movie/SquadAR.mp4", True, not linpg.setting.developer_mode, (935, 3105), cache_key="into"
         )
         gamemode.VIDEO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
         # 初始化返回菜单判定参数
         linpg.global_value.set("BackToMainMenu", False)
         # 设置Discord状态
         if RPC is not None:
-            RPC.update(
-                state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"),
-                large_image=LARGE_IMAGE,
-            )
+            RPC.update(state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"), large_image=LARGE_IMAGE)
 
     # 当前在Data/workshop文件夹中可以读取的文件夹的名字（font的形式）
     def __reload_workshop_files_list(self, screen_size: tuple, createMode: bool = False) -> None:
@@ -106,10 +103,7 @@ class MainMenu(linpg.AbstractSystem):
         txt_y: int = int((screen_size[1] - len(self.workshop_files) * linpg.font.get_global_font_size("medium") * 2) / 2)
         for i in range(len(self.workshop_files)):
             self.workshop_files[i] = linpg.load.dynamic_text(
-                self.workshop_files[i],
-                linpg.color.WHITE,
-                (txt_location, txt_y),
-                linpg.font.get_global_font_size("medium"),
+                self.workshop_files[i], linpg.color.WHITE, (txt_location, txt_y), linpg.font.get_global_font_size("medium")
             )
             txt_y += linpg.font.get_global_font_size("medium") * 2
 
@@ -134,9 +128,7 @@ class MainMenu(linpg.AbstractSystem):
         if os.path.exists(dialog_file_path):
             dialog_data = linpg.config.load(dialog_file_path)
             # 如果dialog文件中有title，则读取
-            chapter_title = (
-                dialog_data["title"] if "title" in dialog_data else linpg.lang.get_text("Global", "no_translation")
-            )
+            chapter_title = dialog_data["title"] if "title" in dialog_data else linpg.lang.get_text("Global", "no_translation")
         else:
             chapter_title = linpg.lang.get_text("Global", "no_translation")
         return "{0}: {1}".format(
@@ -314,9 +306,7 @@ class MainMenu(linpg.AbstractSystem):
             if not linpg.global_value.get("BackToMainMenu"):
                 gamemode.battle(screen, SAVE["chapter_type"], SAVE["chapter_id"], SAVE["project_name"])
                 if not linpg.global_value.get("BackToMainMenu"):
-                    gamemode.dialog(
-                        screen, SAVE["chapter_type"], SAVE["chapter_id"], "dialog_after_battle", SAVE["project_name"]
-                    )
+                    gamemode.dialog(screen, SAVE["chapter_type"], SAVE["chapter_id"], "dialog_after_battle", SAVE["project_name"])
                 else:
                     linpg.global_value.set("BackToMainMenu", False)
             else:
@@ -324,9 +314,7 @@ class MainMenu(linpg.AbstractSystem):
         elif startPoint == "battle":
             gamemode.battle(screen, None, None)
             if not linpg.global_value.get("BackToMainMenu"):
-                gamemode.dialog(
-                    screen, SAVE["chapter_type"], SAVE["chapter_id"], "dialog_after_battle", SAVE["project_name"]
-                )
+                gamemode.dialog(screen, SAVE["chapter_type"], SAVE["chapter_id"], "dialog_after_battle", SAVE["project_name"])
             else:
                 linpg.global_value.set("BackToMainMenu", False)
         elif startPoint == "dialog_after_battle":
@@ -334,10 +322,7 @@ class MainMenu(linpg.AbstractSystem):
             linpg.global_value.if_get_set("BackToMainMenu", True, False)
         self.__reset_menu()
         if RPC is not None:
-            RPC.update(
-                state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"),
-                large_image=LARGE_IMAGE,
-            )
+            RPC.update(state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"), large_image=LARGE_IMAGE)
 
     # 重置背景
     def __restart_background(self) -> None:
@@ -395,15 +380,6 @@ class MainMenu(linpg.AbstractSystem):
                 txt, linpg.color.WHITE, (txt_location, txt_y), linpg.font.get_global_font_size("medium")
             )
             txt_y += font_size
-        # 加载退出确认消息框
-        self.exit_confirm_menu: linpg.Message = linpg.Message(
-            linpg.lang.get_text("Global", "tip"),
-            linpg.lang.get_text("LeavingWithoutSavingWarning", "exit_confirm"),
-            (linpg.lang.get_text("Global", "yes"), linpg.lang.get_text("Global", "no")),
-            info=True,
-            return_button=1,
-            escape_button=1,
-        )
 
     # 更新语言
     def update_language(self, screen: linpg.ImageSurface) -> None:
@@ -496,7 +472,10 @@ class MainMenu(linpg.AbstractSystem):
                 elif self.main_menu_txt["menu_main"]["6_developer_team"].is_hovered():
                     pass
                 # 退出
-                elif self.main_menu_txt["menu_main"]["7_exit"].is_hovered() and self.exit_confirm_menu.show() == 0:
+                elif (
+                    self.main_menu_txt["menu_main"]["7_exit"].is_hovered()
+                    and self.exit_confirm_menu.show() == linpg.ConfirmMessageWindow.YES()
+                ):
                     gamemode.VIDEO_BACKGROUND.stop()
                     self.stop()
                     if RPC is not None:

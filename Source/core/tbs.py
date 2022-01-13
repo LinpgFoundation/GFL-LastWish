@@ -381,8 +381,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                     pass
             # 检测是否特定敌人已经被消灭
             elif (
-                isinstance(self.mission_objectives["target"], str)
-                and self.mission_objectives["target"] not in self._enemies_data
+                isinstance(self.mission_objectives["target"], str) and self.mission_objectives["target"] not in self._enemies_data
             ):
                 self.whose_round = "result_win"
             # 检测是否所有给定的目标都已经被歼灭
@@ -663,9 +662,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 # 调整窗口位置
                 elif "changePos" in currentDialog and currentDialog["changePos"] is not None:
                     if self._screen_to_move_x is None or self._screen_to_move_y is None:
-                        tempX, tempY = self._MAP.calPosInMap(
-                            currentDialog["changePos"]["x"], currentDialog["changePos"]["y"]
-                        )
+                        tempX, tempY = self._MAP.calPosInMap(currentDialog["changePos"]["x"], currentDialog["changePos"]["y"])
                         self._screen_to_move_x = int(screen.get_width() / 2 - tempX)
                         self._screen_to_move_y = int(screen.get_height() / 2 - tempY)
                     if self._screen_to_move_x == 0 and self._screen_to_move_y == 0:
@@ -895,18 +892,12 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 if self._screen_to_move_x is None:
                     if tempX < self.window_x * 0.2 and self._MAP.get_local_x() <= 0:
                         self._screen_to_move_x = int(self.window_x * 0.2 - tempX)
-                    elif (
-                        tempX > self.window_x * 0.8
-                        and self._MAP.get_local_x() >= self._MAP.column * self._MAP.block_width * -1
-                    ):
+                    elif tempX > self.window_x * 0.8 and self._MAP.get_local_x() >= self._MAP.column * self._MAP.block_width * -1:
                         self._screen_to_move_x = int(self.window_x * 0.8 - tempX)
                 if self._screen_to_move_y is None:
                     if tempY < self.window_y * 0.2 and self._MAP.get_local_y() <= 0:
                         self._screen_to_move_y = int(self.window_y * 0.2 - tempY)
-                    elif (
-                        tempY > self.window_y * 0.8
-                        and self._MAP.get_local_y() >= self._MAP.row * self._MAP.block_height * -1
-                    ):
+                    elif tempY > self.window_y * 0.8 and self._MAP.get_local_y() >= self._MAP.row * self._MAP.block_height * -1:
                         self._screen_to_move_y = int(self.window_y * 0.8 - tempY)
             # 显示攻击/移动/技能范围
             if not self.__if_draw_range and self.characterGetClick is not None:
@@ -1287,12 +1278,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 elif self.action_choice == "skill":
                     if self.characterInControl.get_imgId("skill") == self.characterInControl.get_imgNum("skill") - 2:
                         self.__damage_do_to_characters = self.__skill(
-                            self.characterGetClick,
-                            None,
-                            None,
-                            "react",
-                            self.skill_target,
-                            self.__damage_do_to_characters,
+                            self.characterGetClick, None, None, "react", self.skill_target, self.__damage_do_to_characters
                         )
                     elif self.characterInControl.get_imgId("skill") == self.characterInControl.get_imgNum("skill") - 1:
                         self._calculate_darkness()
@@ -1306,10 +1292,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             if self.enemy_instructions is None:
                 # 生成决定
                 self.enemy_instructions = self.enemyInControl.make_decision(
-                    self._MAP,
-                    self._alliances_data,
-                    self._enemies_data,
-                    self.the_characters_detected_last_round,
+                    self._MAP, self._alliances_data, self._enemies_data, self.the_characters_detected_last_round
                 )
             if not len(self.enemy_instructions) == 0 or self.current_instruction is not None:
                 # 获取需要执行的指令
@@ -1504,10 +1487,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 self.__add_on_screen_object(
                     self.supply_board.items[i],
                     -1,
-                    (
-                        start_point,
-                        (self.supply_board.get_height() - self.supply_board.items[i].get_height()) / 2,
-                    ),
+                    (start_point, (self.supply_board.get_height() - self.supply_board.items[i].get_height()) / 2),
                     (0, self.supply_board.y),
                 )
                 start_point += self.supply_board.items[i].get_width() * 1.25
@@ -1519,10 +1499,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 self.end_round_txt,
                 -1,
                 self.__end_round_button.pos,
-                (
-                    self.__end_round_button.get_width() * 0.35,
-                    (self.__end_round_button.get_height() - self.FONT.size) / 2.3,
-                ),
+                (self.__end_round_button.get_width() * 0.35, (self.__end_round_button.get_height() - self.FONT.size) / 2.3),
             )
 
         # 显示警告
@@ -1550,12 +1527,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                         linpg.media.unload()
                         chapter_info: dict = self.get_data_of_parent_game_system()
                         self.__init__()
-                        self.new(
-                            screen,
-                            chapter_info["chapter_type"],
-                            chapter_info["chapter_id"],
-                            chapter_info["project_name"],
-                        )
+                        self.new(screen, chapter_info["chapter_type"], chapter_info["chapter_id"], chapter_info["project_name"])
                         break
                     elif event.key == linpg.key.BACKSPACE:
                         linpg.media.unload()
@@ -1576,8 +1548,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             elif self.__zoomIntoBe > self.__zoomIn:
                 self.__zoomIn += 10
             self._MAP.changePerBlockSize(
-                self._standard_block_width * self.__zoomIn / 100,
-                self._standard_block_height * self.__zoomIn / 100,
+                self._standard_block_width * self.__zoomIn / 100, self._standard_block_height * self.__zoomIn / 100
             )
             # 根据block尺寸重新加载对应尺寸的UI
             for key in self.range_ui_images:
@@ -1605,10 +1576,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 self.battleMode_info[i].set_alpha(self.txt_alpha)
                 screen.blit(
                     self.battleMode_info[i],
-                    (
-                        self.window_x / 20,
-                        self.window_y * 0.75 + self.battleMode_info[i].get_height() * 1.2 * i,
-                    ),
+                    (self.window_x / 20, self.window_y * 0.75 + self.battleMode_info[i].get_height() * 1.2 * i),
                 )
                 if i == 1:
                     temp_secode = self.FONT.render_with_bounding(time.strftime(":%S", time.localtime()), linpg.color.WHITE)

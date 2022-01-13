@@ -249,9 +249,7 @@ class SelectMenu(linpg.GameObjectsDictContainer):
                     button_data_t["button"] = selectButtonBase.copy()
                     txt_temp = linpg.font.render(selectMenuTxtDict[key], "black", big_font_size)
                     txt_temp2 = linpg.font.render(button_data_t["ap_text"], "black", small_font_size)
-                    top: int = int(
-                        (selectButtonBase.get_height() - txt_temp.get_height() - txt_temp2.get_height() - panding) / 2
-                    )
+                    top: int = int((selectButtonBase.get_height() - txt_temp.get_height() - txt_temp2.get_height() - panding) / 2)
                     button_data_t["button"].blit(txt_temp, ((selectButtonBase.get_width() - txt_temp.get_width()) / 2, top))
                     button_data_t["button"].blit(
                         txt_temp2,
@@ -313,9 +311,7 @@ class CharacterInfoBoard:
         self.informationBoard = None
         hp_empty_img = linpg.load.img(r"Assets/image/UI/hp_empty.png")
         self.hp_red = linpg.ProgressBarSurface(r"Assets/image/UI/hp_red.png", hp_empty_img, 0, 0, window_x / 15, text_size)
-        self.hp_green = linpg.ProgressBarSurface(
-            r"Assets/image/UI/hp_green.png", hp_empty_img, 0, 0, window_x / 15, text_size
-        )
+        self.hp_green = linpg.ProgressBarSurface(r"Assets/image/UI/hp_green.png", hp_empty_img, 0, 0, window_x / 15, text_size)
         self.action_point_blue = linpg.ProgressBarSurface(
             r"Assets/image/UI/action_point.png", hp_empty_img, 0, 0, window_x / 15, text_size
         )
@@ -335,9 +331,7 @@ class CharacterInfoBoard:
         self.informationBoard.blit(self.characterIconImages[theCharacterData.type], (padding, padding))
         # 加载所需的文字
         tcgc_hp1 = linpg.font.render("HP: ", "white", fontSize)
-        tcgc_hp2 = linpg.font.render(
-            str(theCharacterData.current_hp) + "/" + str(theCharacterData.max_hp), "black", fontSize
-        )
+        tcgc_hp2 = linpg.font.render(str(theCharacterData.current_hp) + "/" + str(theCharacterData.max_hp), "black", fontSize)
         tcgc_action_point1 = linpg.font.render("AP: ", "white", fontSize)
         tcgc_action_point2 = linpg.font.render(
             str(theCharacterData.current_action_point) + "/" + str(theCharacterData.max_action_point), "black", fontSize
@@ -459,6 +453,7 @@ class LoadingTitle:
         self.title_chapterNum.draw(screen)
         self.title_chapterName.draw(screen)
         self.title_description.draw(screen)
+
 
 # 需要被打印的物品
 class ItemNeedBlit(linpg.GameObject2point5d):

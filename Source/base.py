@@ -11,25 +11,8 @@ else:
 # 加载版本信息
 version_info: dict = linpg.config.load("Data/version.yaml")
 
-if not linpg.info.ensure_linpg_version(
-    "==", version_info["recommended_linpg_revision"], version_info["recommended_linpg_patch"]
-):
-    warn_y = linpg.Message(
-        linpg.lang.get_text("Global", "warning"),
-        linpg.lang.get_text("LinpgVersionIncorrect", "message").format(
-            "3.{0}.{1}".format(version_info["recommended_linpg_revision"], version_info["recommended_linpg_patch"]),
-            linpg.info.get_current_version(),
-        ),
-        (
-            linpg.lang.get_text("LinpgVersionIncorrect", "exit_button"),
-            linpg.lang.get_text("LinpgVersionIncorrect", "continue_button"),
-        ),
-        error=True,
-        return_button=0,
-        escape_button=0,
-    )
-    if warn_y.show() == 0:
-        linpg.display.quit()
+# 确认linpg的版本是推荐版本
+linpg.LinpgVersionChecker("==", version_info["recommended_linpg_revision"], version_info["recommended_linpg_patch"])
 
 __all__ = ["linpg", "os", "glob", "RPC", "ALPHA_BUILD_WARNING", "LARGE_IMAGE"]
 
@@ -58,7 +41,7 @@ else:
 linpg.font.set_global_font("medium", int(linpg.display.get_width() / 40))
 
 # alpha构建警告
-ALPHA_BUILD_WARNING = linpg.load.text(
+ALPHA_BUILD_WARNING = linpg.load.static_text(
     linpg.lang.get_text("alpha_build_warning"), "white", (0, 0), int(linpg.display.get_width() / 80)
 )
 ALPHA_BUILD_WARNING.set_centerx(linpg.display.get_width() / 2)

@@ -29,9 +29,7 @@ class GamemodeManager:
         linpg.display.flip()
 
     # 对话系统
-    def dialog(
-        self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, part: str, projectName: str = None
-    ) -> None:
+    def dialog(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, part: str, projectName: str = None) -> None:
         # 开始加载-闸门关闭的效果
         for i in range(101):
             self.draw_loading_chapter_ui(screen, i)

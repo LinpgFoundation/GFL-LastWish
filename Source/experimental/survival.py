@@ -56,9 +56,7 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
         ]
         block_y = 50
         block_x = 50
-        default_map = [
-            [SnowEnvImg[linpg.get_random_int(0, len(SnowEnvImg) - 1)] for a in range(block_x)] for i in range(block_y)
-        ]
+        default_map = [[SnowEnvImg[linpg.get_random_int(0, len(SnowEnvImg) - 1)] for a in range(block_x)] for i in range(block_y)]
         mapFileData["map"] = default_map
         self._MAP = linpg.MapObject(
             mapFileData,
@@ -66,9 +64,7 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
             round(linpg.display.get_height() / 10),
             True,
         )
-        self.alliances = {
-            "me": linpg.FriendlyCharacter(mapFileData["character"]["sv-98"], linpg.CHARACTER_DATABASE["sv-98"])
-        }
+        self.alliances = {"me": linpg.FriendlyCharacter(mapFileData["character"]["sv-98"], linpg.CHARACTER_DATABASE["sv-98"])}
         self._MAP.calculate_darkness(self.alliances)
         self.pos_last = self.alliances["me"].get_pos()
 
