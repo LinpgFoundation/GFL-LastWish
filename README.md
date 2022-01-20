@@ -51,12 +51,31 @@ Their stories may be forgotten by history, but what they have done will be remem
 | Linpg引擎开始初期重构（即第三代）             | The reconfiguration of Linpg Engine started      | 2020.4      |
 | Linpg引擎初期重构完成，开始游戏本体的迁徙工作 | The reconfiguration of Linpg Engine was finished | 2020.6      |
 | 游戏本体迁徙工作基本完成                      | The migrations completed                         | 2020.8      |
-| 游戏进行小范围测试                            | Small-scale testing                              | 2021.3      |
-| 第1至4章发布                                  | The first to fourth chapter releases.            | 2021.10     |
-| 第5至8章发布                                  | The fifth to eighth chapter releases.            | 2021.12     |
-| 第9至11章发布                                 | The ninth to eleventh chapter releases.          | 2022 spring |
-| 最终章发布                                    | Final chapter releases                           | 2022 spring |
-| 第一个DLC发布                                 | First DLC releases                               | 2022 Summer |
+| 游戏进行小范围测试                            | Small-scale testing                              | 2022.9      |
+| 第1至4章发布                                  | The first to fourth chapter releases.            | 2022.10     |
+| 第5至8章发布                                  | The fifth to eighth chapter releases.            | 2022.12     |
+| 第9至11章发布                                 | The ninth to eleventh chapter releases.          | 2023 spring |
+| 最终章发布                                    | Final chapter releases                           | 2023 spring |
+| 第一个DLC发布                                 | First DLC releases                               | 2023 Summer |
+
+
+
+# :memo: Chapters / 游戏章节
+
+| Index | 名称             | Name                                     | Expected release date / 预计发布时间 | Status / 状态 |
+| ----- | ---------------- | ---------------------------------------- | ------------------------------------ | ------------- |
+| 1     | 雪色的希望       | A wish likes snow                        | 2022.9                               | :hammer:      |
+| 2     | 迷离之下         | Beneath somke (Provisional)              | 2022.9                               | :hammer:      |
+| 3     | 琴弦之上         | Above string (Provisional)               | 2022.10                              |               |
+| 4     | 魔盒（暂定）     | The magic box (Provisional)              | 2022.10                              |               |
+| 5     | 无人之防（暂定） | Make defence without dolls (Provisional) | 2022.11                              |               |
+| 6     | 机遇（暂定）     | The opportunity (Provisional)            | 2022.11                              |               |
+| 7     | 强敌（暂定）     | Formidable enemies (Provisional)         | 2022.12                              |               |
+| 8     | 极夜前的黎光     | Light before long night                  | 2022.12                              |               |
+| 9     | 星火             | Starburst                                | 2022.1                               |               |
+| 10    | 救星（暂定）     | The saviours (Provisional)               | 2022.1                               |               |
+| 11    | 拜托了，活下去！ | Please, stay alive!                      | 2022.1                               |               |
+| Final | 为了能看到的明天 | For a tomorrow that can be seen          | 2022.2                               |               |
 
 
 
@@ -78,7 +97,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 | Type             | 类型     | Minimum / 最低要求                                        | Recommended / 推荐配置               |
 | ---------------- | -------- | --------------------------------------------------------- | ------------------------------------ |
-| Operating System | 操作系统 | Windows® 10, Ubuntu 20.04 LTS                             | Windows® 11, Ubuntu 21               |
+| Operating System | 操作系统 | Windows® 10 64 bit, Ubuntu 20.04 LTS                      | Windows® 11, Ubuntu 21               |
 | CPU              | 处理器   | any Intel® AMD 2.5+ GHz processor or AMD 3+ GHz processor | Intel® or AMD 3.5+ GHz processor     |
 | Memory           | 内存     | 8 GB RAM                                                  | 16GB RAM                             |
 | Graphics Cards   | 显卡     | GTX 960 or AMD RX 580 XT                                  | GTX 1060 or AMD RX 5800 XT           |
@@ -90,7 +109,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 A: We are happy to see more competition in the chip manufacturing industry, and we genuinely hope that we can offer a better experience for our players who use either AMD CPU or GPU. However, due to the global chip shortage (for both CPU and GPU), none of the developers in our development team are able to acquire one (without selling their organs or blood). As a result, we cannot provide any hardware optimization for AMD products. If you are willing to **donate** or plan to sell any AMD hardware (CPU or GPU) **at a low price**, don't hesitate to get in touch with us.
 
-答：我们很高兴看到芯片制造业有更多的竞争的同时，也真诚地希望能为使用AMD CPU或GPU的玩家提供更好的游戏体验。然而，由于全球芯片短缺（包括CPU和显卡），我们开发团队并不能在不售卖器官或血的前提下获取任何型号的AMD显卡或CPU。因此，我们无法为AMD产品提供任何硬件层面的优化。如果你有意**捐赠**或计划以低价出售任何AMD硬件（CPU或GPU），请速与我们取得联系。
+答：我们很高兴看到芯片制造业有更多的竞争的同时，也真诚地希望能为使用AMD CPU或GPU的玩家提供更好的游戏体验。然而，由于全球芯片短缺（包括CPU和显卡），我们开发团队并不能在不售卖器官的前提下获取任何型号的AMD显卡或CPU。因此，我们无法为AMD产品提供任何硬件层面的优化。如果你有意**捐赠**或计划以低价出售任何AMD硬件（CPU或GPU），请速与我们取得联系。
 
 ***Q: Why is macOS not supported?***
 

@@ -293,7 +293,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         self.RoundSwitchUI = RoundSwitch(self.window_x, self.window_y, self.battleModeUiTxt)
         # 关卡背景介绍信息文字
         for i in range(len(self.battleMode_info)):
-            self.battleMode_info[i] = self.FONT.render_with_bounding(self.battleMode_info[i], linpg.color.WHITE)
+            self.battleMode_info[i] = self.FONT.render(self.battleMode_info[i], linpg.color.WHITE, with_bounding=True)
         # 显示章节信息
         for a in range(0, 250, 2):
             self.infoToDisplayDuringLoading.draw(screen)
@@ -307,7 +307,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                     ),
                 )
                 if i == 1:
-                    temp_secode = self.FONT.render_with_bounding(time.strftime(":%S", time.localtime()), linpg.color.WHITE)
+                    temp_secode = self.FONT.render(time.strftime(":%S", time.localtime()), linpg.color.WHITE, with_bounding=True)
                     temp_secode.set_alpha(a)
                     screen.blit(
                         temp_secode,
@@ -1579,7 +1579,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                     (self.window_x / 20, self.window_y * 0.75 + self.battleMode_info[i].get_height() * 1.2 * i),
                 )
                 if i == 1:
-                    temp_secode = self.FONT.render_with_bounding(time.strftime(":%S", time.localtime()), linpg.color.WHITE)
+                    temp_secode = self.FONT.render(time.strftime(":%S", time.localtime()), linpg.color.WHITE, with_bounding=True)
                     temp_secode.set_alpha(self.txt_alpha)
                     screen.blit(
                         temp_secode,

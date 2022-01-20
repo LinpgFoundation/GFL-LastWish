@@ -102,7 +102,7 @@ class MainMenu(linpg.AbstractSystem):
         txt_location: int = int(screen_size[0] * 2 / 3)
         txt_y: int = int((screen_size[1] - len(self.workshop_files) * linpg.font.get_global_font_size("medium") * 2) / 2)
         for i in range(len(self.workshop_files)):
-            self.workshop_files[i] = linpg.load.dynamic_text(
+            self.workshop_files[i] = linpg.load.resize_when_hovered_text(
                 self.workshop_files[i], linpg.color.WHITE, (txt_location, txt_y), linpg.font.get_global_font_size("medium")
             )
             txt_y += linpg.font.get_global_font_size("medium") * 2
@@ -157,7 +157,7 @@ class MainMenu(linpg.AbstractSystem):
         txt_x: int = int(screen_size[0] * 2 / 3)
         # 将菜单列表中的文字转换成文字surface
         for i in range(len(self.chapter_select)):
-            self.chapter_select[i] = linpg.load.dynamic_text(
+            self.chapter_select[i] = linpg.load.resize_when_hovered_text(
                 self.chapter_select[i], linpg.color.WHITE, (txt_x, txt_y), linpg.font.get_global_font_size("medium")
             )
             txt_y += linpg.font.get_global_font_size("medium") * 2
@@ -334,7 +334,7 @@ class MainMenu(linpg.AbstractSystem):
         self.__restart_background()
         # 是否可以继续游戏了（save文件是否被创建）
         if os.path.exists("Save/save.yaml") and not self.continueButtonIsOn:
-            self.main_menu_txt["menu_main"]["0_continue"] = linpg.load.dynamic_text(
+            self.main_menu_txt["menu_main"]["0_continue"] = linpg.load.resize_when_hovered_text(
                 linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
                 linpg.color.WHITE,
                 self.main_menu_txt["menu_main"]["0_continue"].get_pos(),
@@ -342,7 +342,7 @@ class MainMenu(linpg.AbstractSystem):
             )
             self.continueButtonIsOn = True
         elif not os.path.exists("Save/save.yaml") and self.continueButtonIsOn is True:
-            self.main_menu_txt["menu_main"]["0_continue"] = linpg.load.dynamic_text(
+            self.main_menu_txt["menu_main"]["0_continue"] = linpg.load.resize_when_hovered_text(
                 linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
                 linpg.color.GRAY,
                 self.main_menu_txt["menu_main"]["0_continue"].get_pos(),
@@ -366,7 +366,7 @@ class MainMenu(linpg.AbstractSystem):
         txt_y = (screen_size[1] - len(self.main_menu_txt["menu_main"]) * font_size) / 2
         for key, txt in self.main_menu_txt["menu_main"].items():
             color_of_text = linpg.color.WHITE if key not in disabled_option else linpg.color.GRAY
-            self.main_menu_txt["menu_main"][key] = linpg.load.dynamic_text(
+            self.main_menu_txt["menu_main"][key] = linpg.load.resize_when_hovered_text(
                 txt, color_of_text, (txt_location, txt_y), linpg.font.get_global_font_size("medium")
             )
             txt_y += font_size
@@ -376,7 +376,7 @@ class MainMenu(linpg.AbstractSystem):
         self.main_menu_txt["menu_workshop_choice"]["back"] = linpg.lang.get_text("Global", "back")
         txt_y = (screen_size[1] - len(self.main_menu_txt["menu_workshop_choice"]) * font_size) / 2
         for key, txt in self.main_menu_txt["menu_workshop_choice"].items():
-            self.main_menu_txt["menu_workshop_choice"][key] = linpg.load.dynamic_text(
+            self.main_menu_txt["menu_workshop_choice"][key] = linpg.load.resize_when_hovered_text(
                 txt, linpg.color.WHITE, (txt_location, txt_y), linpg.font.get_global_font_size("medium")
             )
             txt_y += font_size

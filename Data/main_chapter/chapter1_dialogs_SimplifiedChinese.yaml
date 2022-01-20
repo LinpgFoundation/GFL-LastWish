@@ -8,11 +8,11 @@ description: 茫茫雪原之上，刺骨的寒风拂过我的脸颊。但至少�
 dialogs:
   dialog_after_battle:
     head:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_5.png
-      content:
+      contents:
       - 滴......
       last_dialog_id: null
       narrator: null
@@ -20,12 +20,12 @@ dialogs:
         target: id_001
         type: default
     id_001:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_5.png<d>
       - k.png<c>
-      content:
+      contents:
       - 指挥官，按照计划，现在并不是我们的通讯时间
       last_dialog_id: head
       narrator: K
@@ -33,12 +33,12 @@ dialogs:
         target: id_002
         type: default
     id_002:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_5.png<d>
       - k<c>.png<d>
-      content:
+      contents:
       - 现在究竟是什么状况，我想你比我还要清楚。我的梯队已经溃散
       - 所以我想知道你所说的救援什么时候能够到达
       last_dialog_id: id_001
@@ -47,12 +47,12 @@ dialogs:
         target: id_003
         type: default
     id_003:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_5.png<d>
       - k.png<c>
-      content:
+      contents:
       - 我想你也该察觉到了，我所说的救援一直就在你们的身边
       - 但如果东西没有拿到，我是不会让它们出手的
       last_dialog_id: id_002
@@ -61,12 +61,12 @@ dialogs:
         target: id_004
         type: default
     id_004:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_5.png<d>
       - k.png<c><d>
-      content:
+      contents:
       - 那我想知道，为什么你们一开始提供的情报里，并没有提到丝毫关于铁血的事情
       last_dialog_id: id_003
       narrator: 我
@@ -74,12 +74,12 @@ dialogs:
         target: id_005
         type: default
     id_005:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_5.png<d>
       - k.png<c>
-      content:
+      contents:
       - 按道理来讲，铁血应该不知道这件事。但就目前的情况来看，
       - 我们的内部肯定有人把这份情报透露了出去
       last_dialog_id: id_004
@@ -88,12 +88,12 @@ dialogs:
         target: id_006
         type: default
     id_006:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_5.png<d>
       - k.png<c><d>
-      content:
+      contents:
       - 如果没有支援，我们的梯队很快就会支撑不住了，怎么可能会找得到你所要求的东西
       last_dialog_id: id_005
       narrator: 我
@@ -101,12 +101,12 @@ dialogs:
         target: id_007
         type: default
     id_007:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_5.png<d>
       - k.png<c>
-      content:
+      contents:
       - 那也没关系。既然你手下的人形只能做到支撑，那就继续支撑下去吧，其他的我会继续想办法的
       last_dialog_id: id_006
       narrator: K
@@ -114,11 +114,11 @@ dialogs:
         target: id_008
         type: default
     id_008:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_5.png<d>
-      content:
+      contents:
       - 通讯结束
       last_dialog_id: id_007
       narrator: null
@@ -126,11 +126,11 @@ dialogs:
         target: id_009
         type: default
     id_009:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_5.png<d>
-      content:
+      contents:
       - 该死，早知道一开始就不应接受这份委托。
       last_dialog_id: id_008
       narrator: 我
@@ -138,11 +138,11 @@ dialogs:
         target: id_010
         type: default
     id_010:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_8.png
-      content:
+      contents:
       - 这也不是您的错...
       last_dialog_id: id_009
       narrator: 格林娜
@@ -150,11 +150,11 @@ dialogs:
         target: id_011
         type: default
     id_011:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_8.png<d>
-      content:
+      contents:
       - 现在只希望，sv-98他们能够及时回来，之后再考虑其他的事情吧
       last_dialog_id: id_010
       narrator: 我
@@ -162,11 +162,11 @@ dialogs:
         target: id_012
         type: default
     id_012:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_5.png
-      content:
+      contents:
       - 那如果她们没办法回来呢
       last_dialog_id: id_011
       narrator: 格林娜
@@ -174,11 +174,11 @@ dialogs:
         target: id_013
         type: default
     id_013:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: null
-      characters_img:
+      character_images:
       - kalina_5.png<d>
-      content:
+      contents:
       - 那我就...没有其他的办法了...
       last_dialog_id: id_012
       narrator: 我
@@ -186,10 +186,10 @@ dialogs:
         target: id_014
         type: default
     id_014:
-      background_img: SlumpingFluid.mp4
+      background_image: SlumpingFluid.mp4
       background_music: null
-      characters_img: null
-      content:
+      character_images: null
+      contents:
       - 感谢试玩《少女前线-遗愿》，更多内容仍在研发当中，敬请期待
       last_dialog_id: id_013
       narrator: null
@@ -198,10 +198,10 @@ dialogs:
         type: cutscene
   dialog_before_battle:
     head:
-      background_img: null
+      background_image: null
       background_music: null
-      characters_img: null
-      content:
+      character_images: null
+      contents:
       - 在我的潜意识中，我曾担心过意外
       last_dialog_id: null
       narrator: null
@@ -209,10 +209,10 @@ dialogs:
         target: id_001
         type: default
     id_001:
-      background_img: null
+      background_image: null
       background_music: null
-      characters_img: null
-      content:
+      character_images: null
+      contents:
       - 然而我却没有想到，意外会来得如此之快
       last_dialog_id: head
       narrator: null
@@ -220,11 +220,11 @@ dialogs:
         target: id_002
         type: default
     id_002:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img:
+      character_images:
       - kalina_5.png
-      content:
+      contents:
       - 指挥官，铁血的攻势越来越猛烈了，再这样下去，仅存的梯队很快会被击溃
       - 是时候该下令开始执行标准的撤离程序了
       last_dialog_id: id_001
@@ -233,11 +233,11 @@ dialogs:
         target: id_003
         type: default
     id_003:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img:
+      character_images:
       - kalina_5.png<d>
-      content:
+      contents:
       - 还是没有一点关于她们的消息吗
       - 后勤第十小队...
       last_dialog_id: id_002
@@ -246,11 +246,11 @@ dialogs:
         target: id_004
         type: default
     id_004:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img:
+      character_images:
       - kalina_8.png
-      content:
+      contents:
       - 一直联系不上，也不知道发生了什么...真让人担心啊
       - 再这样拖下去，这里迟早会被铁血包围起来的
       last_dialog_id: id_003
@@ -258,14 +258,14 @@ dialogs:
       next_dialog_id:
         target:
         - id: id_005
-          txt: 最后发出呼救的坐标在哪？
+          text: 最后发出呼救的坐标在哪？
         type: option
     id_005:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img:
+      character_images:
       - kalina_5.png
-      content:
+      contents:
       - 在距离这里以东约50公里的某片平原上
       - 在13个小时之前落入铁血的控制范围内
       last_dialog_id: id_004
@@ -274,11 +274,11 @@ dialogs:
         target: id_006
         type: default
     id_006:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img:
+      character_images:
       - kalina_5.png<d>
-      content:
+      contents:
       - 能派一些人形前去搜索吗？
       last_dialog_id: id_005
       narrator: 我
@@ -286,11 +286,11 @@ dialogs:
         target: id_007
         type: default
     id_007:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img:
+      character_images:
       - kalina_8.png
-      content:
+      contents:
       - 目前还能行动的梯队目前全都分布在第一防线上
       - 别说突围了，能勉强挡住铁血的攻势已经是万幸了
       - 如果这时候再抽出人手，防线可能很快就会被铁血击溃
@@ -300,11 +300,11 @@ dialogs:
         target: id_008
         type: default
     id_008:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img:
+      character_images:
       - kalina_8.png<d>
-      content:
+      contents:
       - 该死，说好的支援呢
       - 而且这只是一座什么资源都没有的孤岛而已，为什么安全局会如此重视
       last_dialog_id: id_007
@@ -313,11 +313,11 @@ dialogs:
         target: id_009
         type: default
     id_009:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img:
+      character_images:
       - kalina_5.png
-      content:
+      contents:
       - 我也不是很清楚，委托中只提到这和安全局截取到的情报有关
       - 除此之外就没有透露更多信息了
       last_dialog_id: id_008
@@ -326,11 +326,11 @@ dialogs:
         target: id_010
         type: default
     id_010:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img:
+      character_images:
       - kalina_5.png<d>
-      content:
+      contents:
       - 格林娜
       last_dialog_id: id_009
       narrator: 我
@@ -338,11 +338,11 @@ dialogs:
         target: id_011
         type: default
     id_011:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img:
+      character_images:
       - kalina_3.png
-      content:
+      contents:
       - 是
       last_dialog_id: id_010
       narrator: 格林娜
@@ -350,11 +350,11 @@ dialogs:
         target: id_012
         type: default
     id_012:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img:
+      character_images:
       - kalina_3.png<d>
-      content:
+      contents:
       - 开始撤离程序吧，然后帮我接通K，我需要和他谈谈
       last_dialog_id: id_011
       narrator: 我
@@ -362,11 +362,11 @@ dialogs:
         target: id_013
         type: default
     id_013:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img:
+      character_images:
       - kalina_5.png
-      content:
+      contents:
       - 好的，我这就去
       last_dialog_id: id_012
       narrator: 格林娜
@@ -374,10 +374,10 @@ dialogs:
         target: id_014
         type: default
     id_014:
-      background_img: research.jpg
+      background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      characters_img: null
-      content:
+      character_images: null
+      contents:
       - 此时此刻，我的内心十分不安，sv-98她们能不能在撤离前赶回来是一件事
       - 但我总感觉这座岛上，有着格里芬甚至安全局自己都还不知道的谜团
       last_dialog_id: id_013
@@ -386,10 +386,10 @@ dialogs:
         target: id_015
         type: changeScene
     id_015:
-      background_img: snowfield.jpg
+      background_image: snowfield.jpg
       background_music: BGM_Brain_1.ogg
-      characters_img: null
-      content:
+      character_images: null
+      contents:
       - 24小时以前
       last_dialog_id: null
       narrator: null
@@ -397,11 +397,11 @@ dialogs:
         target: id_016
         type: default
     id_016:
-      background_img: snowfield.jpg
+      background_image: snowfield.jpg
       background_music: BGM_Brain_1.ogg
-      characters_img:
+      character_images:
       - sv-98.png
-      content:
+      contents:
       - asval，情况怎么样？
       last_dialog_id: id_015
       narrator: sv-98
@@ -409,12 +409,12 @@ dialogs:
         target: id_017
         type: default
     id_017:
-      background_img: snowfield.jpg
+      background_image: snowfield.jpg
       background_music: BGM_Brain_1.ogg
-      characters_img:
+      character_images:
       - asval.png
       - sv-98.png<d>
-      content:
+      contents:
       - 指挥官已经派直升机来接我们了，我们只需要清空地面上铁血火力，防止直升机降落时出现意外
       last_dialog_id: id_016
       narrator: asval
@@ -422,11 +422,11 @@ dialogs:
         target: id_018
         type: default
     id_018:
-      background_img: snowfield.jpg
+      background_image: snowfield.jpg
       background_music: BGM_Brain_1.ogg
-      characters_img:
+      character_images:
       - sv-98.png
-      content:
+      contents:
       - 大家再加把劲，只要我们在直升机到来前尽可能消灭当前区域内的铁血势力
       - 到时候我们就能安全撤离了。
       last_dialog_id: id_017
@@ -435,11 +435,11 @@ dialogs:
         target: id_019
         type: default
     id_019:
-      background_img: snowfield.jpg
+      background_image: snowfield.jpg
       background_music: BGM_Brain_1.ogg
-      characters_img:
+      character_images:
       - sv-98.png<d>
-      content:
+      contents:
       - 好！
       last_dialog_id: id_018
       narrator: 众人
@@ -447,22 +447,22 @@ dialogs:
         target: id_020
         type: default
     id_020:
-      background_img: snowfield.jpg
+      background_image: snowfield.jpg
       background_music: BGM_Brain_1.ogg
-      characters_img:
+      character_images:
       - sv-98.png
-      content:
+      contents:
       - 小声点！铁血又不是没长耳朵。
       last_dialog_id: id_019
       narrator: asval
       next_dialog_id: null
   dialog_during_battle:
     head:
-      background_img: <transparent>
+      background_image: <transparent>
       background_music: null
-      characters_img:
+      character_images:
       - sv-98.png
-      content:
+      contents:
       - 总算是摆脱铁血的追兵了
       - 大家都没事吧
       last_dialog_id: null
@@ -471,33 +471,33 @@ dialogs:
         target: initial_dialog_2
         type: default
     initial_dialog_2:
-      background_img: <transparent>
+      background_image: <transparent>
       background_music: null
-      characters_img:
+      character_images:
       - sv-98.png<d>
-      content:
+      contents:
       - 没事
       last_dialog_id: head
       narrator: 众人
       next_dialog_id:
         type: break
     initial_dialog_3:
-      background_img: <transparent>
+      background_image: <transparent>
       background_music: null
-      characters_img:
+      character_images:
       - asval.png
-      content:
+      contents:
       - sv-98，前方发现有铁血活动的痕迹
       last_dialog_id: null
       narrator: asval
       next_dialog_id:
         type: break
     initial_dialog_4:
-      background_img: <transparent>
+      background_image: <transparent>
       background_music: null
-      characters_img:
+      character_images:
       - sv-98.png
-      content:
+      contents:
       - 该死...我已经没有弹药了
       last_dialog_id: null
       narrator: sv-98
@@ -505,11 +505,11 @@ dialogs:
         target: initial_dialog_5
         type: default
     initial_dialog_5:
-      background_img: <transparent>
+      background_image: <transparent>
       background_music: null
-      characters_img:
+      character_images:
       - pp1901.png
-      content:
+      contents:
       - 前方的铁血...好像在守着什么
       last_dialog_id: initial_dialog_4
       narrator: pp1901
@@ -517,11 +517,11 @@ dialogs:
         target: initial_dialog_6
         type: default
     initial_dialog_6:
-      background_img: <transparent>
+      background_image: <transparent>
       background_music: null
-      characters_img:
+      character_images:
       - gsh-18.png
-      content:
+      contents:
       - 远远看过去，好像是物资箱
       last_dialog_id: null
       narrator: gsh-18
@@ -529,11 +529,11 @@ dialogs:
         target: initial_dialog_7
         type: default
     initial_dialog_7:
-      background_img: <transparent>
+      background_image: <transparent>
       background_music: null
-      characters_img:
+      character_images:
       - asval.png
-      content:
+      contents:
       - sv-98，上吧。我们会掩护你的。
       last_dialog_id: initial_dialog_6
       narrator: asval
@@ -541,11 +541,11 @@ dialogs:
         target: initial_dialog_8
         type: default
     initial_dialog_8:
-      background_img: <transparent>
+      background_image: <transparent>
       background_music: null
-      characters_img:
+      character_images:
       - sv-98.png
-      content:
+      contents:
       - 那就拜托你们了...
       - 各位，子弹上膛，准备战斗！
       last_dialog_id: initial_dialog_7
@@ -554,21 +554,21 @@ dialogs:
         target: initial_dialog_9
         type: default
     initial_dialog_9:
-      background_img: <transparent>
+      background_image: <transparent>
       background_music: null
-      characters_img: null
-      content:
+      character_images: null
+      contents:
       - 目前sv-98没有子弹，无法攻击
       last_dialog_id: initial_dialog_8
       narrator: 提示
       next_dialog_id:
         type: break
     tutorial1:
-      background_img: <transparent>
+      background_image: <transparent>
       background_music: null
-      characters_img:
+      character_images:
       - sv-98.png
-      content:
+      contents:
       - 各位，我拿到补给了！
       last_dialog_id: null
       narrator: sv-98
@@ -576,10 +576,10 @@ dialogs:
         target: tutorial2
         type: default
     tutorial2:
-      background_img: <transparent>
+      background_image: <transparent>
       background_music: null
-      characters_img: null
-      content:
+      character_images: null
+      contents:
       - 请注意换弹
       last_dialog_id: tutorial1
       narrator: 提示
