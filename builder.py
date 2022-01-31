@@ -1,15 +1,14 @@
+from os import path as PATH
 from shutil import move as MOVE
 from subprocess import check_call
-from linpg import Builder
 import pkg_resources
+from linpg import Builder
 
 # 编译游戏本体
-Builder.delete_file_if_exist(r"Source_pyd")
-Builder.delete_file_if_exist(r"src/Source/experimental")
+Builder.delete_file_if_exist(PATH.join("Source_pyd"))
+Builder.delete_file_if_exist(PATH.join("src"))
 Builder.compile("Source", ignore_key_words=("experimental",))
-Builder.delete_file_if_exist(r"src/Source/__init__.py")
-MOVE(r"src/Source", r"Source_pyd")
-Builder.delete_file_if_exist(r"src")
+Builder.delete_file_if_exist(PATH.join("src", "Source", "experimental"))
 
 # 确认是否想要打包
 if input("Do you want to generate a package for the game(Y/n):") == "Y":
@@ -26,6 +25,9 @@ if input("Do you want to generate a package for the game(Y/n):") == "Y":
         check_call(["pyinstaller", "main.spec"])
     else:
         check_call(["pyinstaller", "--noconsole", "main.spec"])
+
+    # 重命名文件
+    MOVE(PATH.join("dist", "main"), PATH.join("dist", "GirlsFrontLine-LastWish"))
 
     # 移除移除的缓存文件
     folders_need_remove: tuple[str] = ("build", "logs", "__pycache__", "Source_pyd")

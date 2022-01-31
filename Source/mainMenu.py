@@ -1,6 +1,6 @@
 from shutil import copyfile
 from time import time as get_current_time
-from .core import gamemode, console
+from .core import Gamemode, console
 from .base import *
 
 
@@ -15,10 +15,11 @@ class MainMenu(linpg.AbstractSystem):
         self.loading_screen: linpg.ImageSurface = linpg.new_surface(screen.get_size())
         self.loading_screen.fill(linpg.color.BLACK)
         # 获取健康游戏忠告
-        HealthyGamingAdvice = []
-        if linpg.lang.has_key("HealthyGamingAdvice"):
-            for text_t in linpg.lang.get_texts("HealthyGamingAdvice"):
-                HealthyGamingAdvice.append(linpg.font.render(text_t, "white", font_size))
+        HealthyGamingAdvice: list = (
+            [linpg.font.render(text_t, "white", font_size) for text_t in linpg.lang.get_texts("HealthyGamingAdvice")]
+            if linpg.lang.has_key("HealthyGamingAdvice")
+            else []
+        )
         # 其他载入页面需要的数据
         text1 = linpg.font.render(linpg.lang.get_text("title1"), "white", font_size)
         text2 = linpg.font.render(linpg.lang.get_text("title2"), "white", font_size)
@@ -49,7 +50,7 @@ class MainMenu(linpg.AbstractSystem):
         # 检测继续按钮是否可用的参数
         self.continueButtonIsOn: bool = False
         # 主菜单文字
-        self.main_menu_txt: dict = None
+        self.main_menu_txt: dict = {}
         # 退出确认窗口
         self.exit_confirm_menu: linpg.ConfirmMessageWindow = linpg.ConfirmMessageWindow(
             linpg.lang.get_text("Global", "tip"), linpg.lang.get_text("LeavingWithoutSavingWarning", "exit_confirm")
@@ -74,10 +75,10 @@ class MainMenu(linpg.AbstractSystem):
         self.hover_sound_play_on = None
         self.last_hover_sound_play_on = None
         # 加载主菜单背景
-        gamemode.VIDEO_BACKGROUND = linpg.VideoSurface(
+        Gamemode.VIDEO_BACKGROUND = linpg.VideoSurface(
             r"Assets/movie/SquadAR.mp4", True, not linpg.setting.developer_mode, (935, 3105), cache_key="into"
         )
-        gamemode.VIDEO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
+        Gamemode.VIDEO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
         # 初始化返回菜单判定参数
         linpg.global_value.set("BackToMainMenu", False)
         # 设置Discord状态
@@ -111,11 +112,7 @@ class MainMenu(linpg.AbstractSystem):
     def __get_chapter_title(self, chapterType: str, chapterId: int) -> str:
         # 生成dialog文件的路径
         dialog_file_path: str = (
-            os.path.join(
-                "Data",
-                chapterType,
-                "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.language),
-            )
+            os.path.join("Data", chapterType, "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.language))
             if chapterType == "main_chapter"
             else os.path.join(
                 "Data",
@@ -272,11 +269,11 @@ class MainMenu(linpg.AbstractSystem):
                 start=get_current_time(),
             )
         projectName = None if chapterType == "main_chapter" else self.current_selected_workshop_project
-        gamemode.dialog(screen, chapterType, chapterId, "dialog_before_battle", projectName)
+        Gamemode.dialog(screen, chapterType, chapterId, "dialog_before_battle", projectName)
         if not linpg.global_value.get("BackToMainMenu"):
-            gamemode.battle(screen, chapterType, chapterId, projectName)
+            Gamemode.battle(screen, chapterType, chapterId, projectName)
             if not linpg.global_value.get("BackToMainMenu"):
-                gamemode.dialog(screen, chapterType, chapterId, "dialog_after_battle", projectName)
+                Gamemode.dialog(screen, chapterType, chapterId, "dialog_after_battle", projectName)
                 linpg.global_value.if_get_set("BackToMainMenu", True, False)
             else:
                 linpg.global_value.set("BackToMainMenu", False)
@@ -302,23 +299,23 @@ class MainMenu(linpg.AbstractSystem):
             )
         startPoint = SAVE["type"]
         if startPoint == "dialog_before_battle":
-            gamemode.dialog(screen, None, None, None)
+            Gamemode.dialog(screen, None, 0, "")
             if not linpg.global_value.get("BackToMainMenu"):
-                gamemode.battle(screen, SAVE["chapter_type"], SAVE["chapter_id"], SAVE["project_name"])
+                Gamemode.battle(screen, SAVE["chapter_type"], SAVE["chapter_id"], SAVE["project_name"])
                 if not linpg.global_value.get("BackToMainMenu"):
-                    gamemode.dialog(screen, SAVE["chapter_type"], SAVE["chapter_id"], "dialog_after_battle", SAVE["project_name"])
+                    Gamemode.dialog(screen, SAVE["chapter_type"], SAVE["chapter_id"], "dialog_after_battle", SAVE["project_name"])
                 else:
                     linpg.global_value.set("BackToMainMenu", False)
             else:
                 linpg.global_value.set("BackToMainMenu", False)
         elif startPoint == "battle":
-            gamemode.battle(screen, None, None)
+            Gamemode.battle(screen, None, 0)
             if not linpg.global_value.get("BackToMainMenu"):
-                gamemode.dialog(screen, SAVE["chapter_type"], SAVE["chapter_id"], "dialog_after_battle", SAVE["project_name"])
+                Gamemode.dialog(screen, SAVE["chapter_type"], SAVE["chapter_id"], "dialog_after_battle", SAVE["project_name"])
             else:
                 linpg.global_value.set("BackToMainMenu", False)
         elif startPoint == "dialog_after_battle":
-            gamemode.dialog(screen, None, None, None)
+            Gamemode.dialog(screen, None, 0, "")
             linpg.global_value.if_get_set("BackToMainMenu", True, False)
         self.__reset_menu()
         if RPC is not None:
@@ -326,7 +323,7 @@ class MainMenu(linpg.AbstractSystem):
 
     # 重置背景
     def __restart_background(self) -> None:
-        gamemode.VIDEO_BACKGROUND.restart()
+        Gamemode.VIDEO_BACKGROUND.restart()
         self.updated_volume()
 
     # 更新主菜单的部分元素
@@ -395,7 +392,7 @@ class MainMenu(linpg.AbstractSystem):
     def updated_volume(self) -> None:
         self.click_button_sound.set_volume(linpg.media.volume.effects / 100.0)
         self.hover_on_button_sound.set_volume(linpg.media.volume.effects / 100.0)
-        gamemode.VIDEO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
+        Gamemode.VIDEO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
 
     # 画出背景
     def __draw_background(self, screen: linpg.ImageSurface) -> None:
@@ -422,7 +419,7 @@ class MainMenu(linpg.AbstractSystem):
                 self.__cover_img_surface = None
         # 背景视频
         if self.__cover_img_surface is None or self.__cover_img_surface.get_alpha() < 255:
-            gamemode.VIDEO_BACKGROUND.draw(screen)
+            Gamemode.VIDEO_BACKGROUND.draw(screen)
         # 封面
         if self.__cover_img_surface is not None:
             self.__cover_img_surface.draw(screen)
@@ -476,7 +473,7 @@ class MainMenu(linpg.AbstractSystem):
                     self.main_menu_txt["menu_main"]["7_exit"].is_hovered()
                     and self.exit_confirm_menu.show() == linpg.ConfirmMessageWindow.YES()
                 ):
-                    gamemode.VIDEO_BACKGROUND.stop()
+                    Gamemode.VIDEO_BACKGROUND.stop()
                     self.stop()
                     if RPC is not None:
                         RPC.close()
@@ -570,7 +567,7 @@ class MainMenu(linpg.AbstractSystem):
                     for i in range(1, len(self.chapter_select) - 1):
                         # 章节选择
                         if self.chapter_select[i].is_hovered():
-                            gamemode.mapEditor(screen, "workshop", i, self.current_selected_workshop_project)
+                            Gamemode.mapEditor(screen, "workshop", i, self.current_selected_workshop_project)
                             self.__restart_background()
                             break
             # 创意工坊-选择当前合集想要编辑对话的关卡
@@ -584,7 +581,7 @@ class MainMenu(linpg.AbstractSystem):
                     for i in range(1, len(self.chapter_select) - 1):
                         # 章节选择
                         if self.chapter_select[i].is_hovered():
-                            gamemode.dialogEditor(
+                            Gamemode.dialogEditor(
                                 screen, "workshop", i, "dialog_before_battle", self.current_selected_workshop_project
                             )
                             self.__restart_background()

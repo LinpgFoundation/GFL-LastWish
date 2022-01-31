@@ -840,6 +840,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                     self.__is_waiting = True
                     self.__if_draw_range = True
                     self.reset_areaDrawColorBlock()
+                    self._calculate_darkness()
                 elif (
                     self.action_choice == "interact"
                     and not self.__if_draw_range
