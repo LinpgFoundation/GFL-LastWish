@@ -15,11 +15,11 @@ class SurvivalBattleSystem(linpg.AbstractBattleSystem):
         }
         self.window_x, self.window_y = linpg.display.get_size()
         self.original_UI_img = {
-            "green": linpg.load.img("Assets/image/UI/range/green.png"),
-            "red": linpg.load.img("Assets/image/UI/range/red.png"),
-            "yellow": linpg.load.img("Assets/image/UI/range/yellow.png"),
-            "blue": linpg.load.img("Assets/image/UI/range/blue.png"),
-            "orange": linpg.load.img("Assets/image/UI/range/orange.png"),
+            "green": linpg.load.img("<!ui>range_green.png"),
+            "red": linpg.load.img("<!ui>range_red.png"),
+            "yellow": linpg.load.img("<!ui>range_yellow.png"),
+            "blue": linpg.load.img("<!ui>range_blue.png"),
+            "orange": linpg.load.img("<!ui>range_orange.png"),
             "eyeImg": linpg.ProgressBarSurface(
                 "Assets/image/UI/eye_red.png",
                 "Assets/image/UI/eye_orange.png",
