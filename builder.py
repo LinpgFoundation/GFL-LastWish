@@ -7,8 +7,7 @@ from linpg import Builder
 # 编译游戏本体
 Builder.delete_file_if_exist(PATH.join("Source_pyd"))
 Builder.delete_file_if_exist(PATH.join("src"))
-Builder.compile("Source", ignore_key_words=("experimental",))
-Builder.delete_file_if_exist(PATH.join("src", "Source", "experimental"))
+Builder.compile("Source")
 
 # 确认是否想要打包
 if input("Do you want to generate a package for the game(Y/n):") == "Y":

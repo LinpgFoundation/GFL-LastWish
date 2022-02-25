@@ -1,5 +1,4 @@
-from .ui import linpg, os, glob
-from copy import deepcopy
+from .ui import linpg
 
 # 地图编辑器系统
 class MapEditor(linpg.AbstractMapEditor):

@@ -52,8 +52,8 @@ class MainMenu(linpg.AbstractSystem):
         # 主菜单文字
         self.main_menu_txt: dict = {}
         # 退出确认窗口
-        self.exit_confirm_menu: linpg.ConfirmMessageWindow = linpg.ConfirmMessageWindow(
-            linpg.lang.get_text("Global", "tip"), linpg.lang.get_text("LeavingWithoutSavingWarning", "exit_confirm")
+        self.__exit_confirm_menu: linpg.ConfirmMessageWindow = linpg.ConfirmMessageWindow(
+            linpg.lang.get_text("Global", "tip"), ""
         )
         # 加载主菜单文字
         self.__reset_menu_text(screen.get_size())
@@ -469,14 +469,13 @@ class MainMenu(linpg.AbstractSystem):
                 elif self.main_menu_txt["menu_main"]["6_developer_team"].is_hovered():
                     pass
                 # 退出
-                elif (
-                    self.main_menu_txt["menu_main"]["7_exit"].is_hovered()
-                    and self.exit_confirm_menu.show() == linpg.ConfirmMessageWindow.YES()
-                ):
-                    Gamemode.VIDEO_BACKGROUND.stop()
-                    self.stop()
-                    if RPC is not None:
-                        RPC.close()
+                elif self.main_menu_txt["menu_main"]["7_exit"].is_hovered():
+                    self.__exit_confirm_menu.update_message(linpg.lang.get_text("LeavingWithoutSavingWarning", "exit_confirm"))
+                    if self.__exit_confirm_menu.show() == linpg.ConfirmMessageWindow.YES():
+                        Gamemode.VIDEO_BACKGROUND.stop()
+                        self.stop()
+                        if RPC is not None:
+                            RPC.close()
             # 选择主线章节
             elif self.menu_type == 1:
                 if self.chapter_select[-1].is_hovered():

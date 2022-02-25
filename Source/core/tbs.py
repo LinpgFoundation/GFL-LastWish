@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Iterable, Optional
 from .ui import (
     CharacterInfoBoard,
     ItemNeedBlit,
@@ -128,7 +128,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         # 加载战斗状态数据
         self.__result_info = dict(DataToProcess["resultInfo"])
 
-    def new(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: str = None):
+    def new(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: Optional[str] = None):
         self._initialize(chapterType, chapterId, projectName)
         # 加载地图与角色数据
         self.__process_data(screen, linpg.config.load_file(self.get_map_file_location()))
@@ -488,8 +488,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         pos_click: any,
         the_skill_cover_area: any,
         action: str = "detect",
-        skill_target: str = None,
-        damage_do_to_character: dict = None,
+        skill_target: Optional[str] = None,
+        damage_do_to_character: Optional[dict] = None,
     ) -> any:
         if action == "detect":
             skill_target = None
@@ -748,7 +748,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                     self.characterInControl.try_reduce_action_point(len(self.the_route) * 2)
                     self.characterInControl.move_follow(self.the_route)
                     self.reset_areaDrawColorBlock()
-                elif self.selectMenuUI.item_being_hovered == "attack":
+                elif self.selectMenuUI.item_being_hovered == "attack" and self.characterGetClick is not None:
                     if self.characterInControl.current_bullets > 0 and self.characterInControl.have_enough_action_point(5):
                         self.action_choice = "attack"
                         self.__if_draw_range = False
@@ -757,21 +757,21 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                         self.warnings_to_display.add("magazine_is_empty")
                     elif not self.characterInControl.have_enough_action_point(5):
                         self.warnings_to_display.add("no_enough_ap_to_attack")
-                elif self.selectMenuUI.item_being_hovered == "move":
+                elif self.selectMenuUI.item_being_hovered == "move" and self.characterGetClick is not None:
                     if self.characterInControl.have_enough_action_point(2):
                         self.action_choice = "move"
                         self.__if_draw_range = False
                         self.selectMenuUI.set_visible(False)
                     else:
                         self.warnings_to_display.add("no_enough_ap_to_move")
-                elif self.selectMenuUI.item_being_hovered == "skill":
+                elif self.selectMenuUI.item_being_hovered == "skill" and self.characterGetClick is not None:
                     if self.characterInControl.have_enough_action_point(8):
                         self.action_choice = "skill"
                         self.__if_draw_range = False
                         self.selectMenuUI.set_visible(False)
                     else:
                         self.warnings_to_display.add("no_enough_ap_to_use_skill")
-                elif self.selectMenuUI.item_being_hovered == "reload":
+                elif self.selectMenuUI.item_being_hovered == "reload" and self.characterGetClick is not None:
                     if self.characterInControl.have_enough_action_point(5) and self.characterInControl.bullets_carried > 0:
                         self.action_choice = "reload"
                         self.__if_draw_range = False
@@ -780,14 +780,14 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                         self.warnings_to_display.add("no_bullets_left")
                     elif not self.characterInControl.have_enough_action_point(5):
                         self.warnings_to_display.add("no_enough_ap_to_reload")
-                elif self.selectMenuUI.item_being_hovered == "rescue":
+                elif self.selectMenuUI.item_being_hovered == "rescue" and self.characterGetClick is not None:
                     if self.characterInControl.have_enough_action_point(8):
                         self.action_choice = "rescue"
                         self.__if_draw_range = False
                         self.selectMenuUI.set_visible(False)
                     else:
                         self.warnings_to_display.add("no_enough_ap_to_rescue")
-                elif self.selectMenuUI.item_being_hovered == "interact":
+                elif self.selectMenuUI.item_being_hovered == "interact" and self.characterGetClick is not None:
                     if self.characterInControl.have_enough_action_point(2):
                         self.action_choice = "interact"
                         self.__if_draw_range = False

@@ -37,7 +37,7 @@ dialogs:
       background_music: null
       character_images:
       - kalina_5.png<d>
-      - k<c>.png<d>
+      - k.png<c><d>
       contents:
       - 现在究竟是什么状况，我想你比我还要清楚。我的梯队已经溃散
       - 所以我想知道你所说的救援什么时候能够到达

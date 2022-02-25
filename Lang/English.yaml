@@ -38,9 +38,6 @@ MainMenu:
   other:
     new_chapter: Create New Chapter
     new_project: Create New Project
-MapEditor:
-  block: Block
-  decoration: Decoration
 ResultBoard:
   characters_down: Friendly character down
   pressKeyContinue: Press Space to continue

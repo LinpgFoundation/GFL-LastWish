@@ -1,7 +1,6 @@
-from typing import Optional
 from ..base import *
 from .editor import MapEditor
-from .tbs import TurnBasedBattleSystem
+from .tbs import TurnBasedBattleSystem, Optional
 
 
 class Gamemode:

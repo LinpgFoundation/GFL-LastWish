@@ -43,9 +43,6 @@ MainMenu:
   other:
     new_chapter: 新建章节
     new_project: 新建项目
-MapEditor:
-  block: 方块
-  decoration: 装饰物
 ResultBoard:
   characters_down: 友方角色被击倒
   pressKeyContinue: 按空格继续
