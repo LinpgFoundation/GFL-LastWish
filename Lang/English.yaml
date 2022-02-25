@@ -18,13 +18,6 @@ General:
   map_editor: Map Editor
   sangvis_ferri: Sangvis Ferri
   workshop: Workshop
-LinpgVersionIncorrect:
-  continue_button: Continue, I know what I am doing
-  exit_button: No, I want to exit
-  message: The recommended version of Linpg for this building is {0}. However, Linpg
-    {1} is detected. Using an incompatible version of Linpg may result in crashing
-    and file damage, even when using a newer version of Linpg than the recommended
-    one. Do you want to continue?
 LoadingTxt:
   now_loading: Loading...
   now_loading_characters: Loading characters' data...
@@ -45,9 +38,6 @@ MainMenu:
   other:
     new_chapter: Create New Chapter
     new_project: Create New Project
-MapEditor:
-  block: Block
-  decoration: Decoration
 ResultBoard:
   characters_down: Friendly character down
   pressKeyContinue: Press Space to continue
@@ -74,6 +64,6 @@ Warnings:
   no_enough_ap_to_rescue: You don't have enough action points for rescuing.
   no_enough_ap_to_use_skill: You don't have enough action points for using skill.
 alpha_build_warning: 'Alpha Build: Far From Finish'
-title1: 'Warning: All content is still in development and does not represent final
+title1: 'Warning: All contents are still in development and does not represent final
   results'
 title2: Presents by TigeiaWorkshop

@@ -9,13 +9,13 @@ description: Above the snowy plains, the bitter cold wind whipped my cheeks. But
 dialogs:
   dialog_after_battle:
     head:
-      content:
+      contents:
       - Ding......
     id_001:
-      content:
+      contents:
       - Commander, according to the plan, this is not the time for us to have a conversation.
     id_002:
-      content:
+      contents:
       - I think you know better than I do about how urgent the situation is right
         now.
       - My defense was close to disintegrating, and I'd like to know when that rescue
@@ -23,71 +23,71 @@ dialogs:
       - you were talking about would finally arrive.
       narrator: Me
     id_003:
-      content:
+      contents:
       - As I'm sure you're aware, the help I'm talking about has been right there
         with you all along.
       - But if I don't have the stuff, I won't let them go.
     id_004:
-      content:
+      contents:
       - Then I'd like to know why there was no mention of SangvisFerri in the documents
         which
       - were provided in the first place.
       narrator: Me
     id_005:
-      content:
+      contents:
       - SangvisFerri should not know about this, if I may say so. But as things stood,
       - someone on the inside must have leaked the information.
     id_006:
-      content:
+      contents:
       - If we don't get the support, I don't think my troops will be able to hold
         very long,
       - so how will we ever find what you're asking for?
       narrator: Me
     id_007:
-      content:
+      contents:
       - That's okay. Since the girls under your command can only do so much to support
       - you, then just keep going. I'll figure out the rest.
     id_008:
-      content:
+      contents:
       - End of communication.
     id_009:
-      content:
+      contents:
       - Damn it, I should have never accepted this commission in the first place.
       narrator: Me
     id_010:
-      content:
+      contents:
       - It's not your fault either...
       narrator: Kalina
     id_011:
-      content:
+      contents:
       - Now, let's just hope that sv-98 and the others will be back in time, and we'll
         think about
       - other things after that.
       narrator: Me
     id_012:
-      content:
+      contents:
       - And what if they don't make it back?
       narrator: Kalina
     id_013:
-      content:
+      contents:
       - Then... There's no other way...
       narrator: Me
     id_014:
-      content:
-      - Thanks for trying out Girls' Frontline - Last Wish, more content is still
+      contents:
+      - Thanks for trying out Girls' Frontline - Last Wish, more contents is still
         in development,
       - so stay tuned!
   dialog_before_battle:
     head:
-      content:
+      contents:
       - I have to admit, that I have thought about all kinds of situations that may
         occur
       - during the mission.
     id_001:
-      content:
+      contents:
       - But I didn't expect, that our mission will go south so quickly.
     id_002:
-      content:
+      contents:
       - Commander, SangvisFerri's attack is getting fiercer. If this continues, the
         remaining
       - troops will soon be surrounded and annihilated! It's time to proceed with
@@ -95,11 +95,11 @@ dialogs:
       - procedure.
       narrator: Kalina
     id_003:
-      content:
+      contents:
       - Any good news about them? The tenth logistic unit...
       narrator: Me
     id_004:
-      content:
+      contents:
       - I haven't been able to get ahold of them, so i have no idea what's going on...
       - That's worrisome. If we keep this up, it is only a matter of time before SangvisFerri
       - surrounds the place.
@@ -107,19 +107,19 @@ dialogs:
       next_dialog_id:
         target:
         - id: id_005
-          txt: What were the coordinates of the last call for help?
+          text: What were the coordinates of the last call for help?
         type: option
     id_005:
-      content:
+      contents:
       - The latest communication shows that they were on a site 50 kilometers away.
       - However, it fell under SangvisFerri's control 13 hours ago.
       narrator: Kalina
     id_006:
-      content:
+      contents:
       - Can we send someone out to search the area?
       narrator: Me
     id_007:
-      content:
+      contents:
       - All operational troops are currently spread out on the first line of defense.
       - Not to mention breaking through, it's already fortunate to be able to block
         SangvisFerri's
@@ -127,36 +127,36 @@ dialogs:
         apart.
       narrator: Kalina
     id_008:
-      content:
+      contents:
       - Damn it, where's that backup we were talking about? And this is just an island
         with no
       - resources whatsoever! Why the National Security Bureau is so concerned?
       narrator: Me
     id_009:
-      content:
+      contents:
       - I don't really know. The commission only mentions that it's related to information
       - intercepted by the National Security Bureau. Other than that, no more information
         was
       - revealed.
       narrator: Kalina
     id_010:
-      content:
+      contents:
       - Kalina...
       narrator: Me
     id_011:
-      content:
+      contents:
       - Yes!?
       narrator: Kalina
     id_012:
-      content:
+      contents:
       - Please start the evacuation procedure. Then get me K. I need to talk to him.
       narrator: Me
     id_013:
-      content:
+      contents:
       - Okay, I'm on it.
       narrator: Kalina
     id_014:
-      content:
+      contents:
       - At the moment, I was very anxious, whether sv-98 and the others could make
         it back
       - before the evacuation is one thing. I have a feeling that there is something
@@ -165,67 +165,67 @@ dialogs:
         don't even
       - know about yet.
     id_015:
-      content:
+      contents:
       - 24 hours ago.
     id_016:
-      content:
+      contents:
       - Asval, how is everything going so far?
     id_017:
-      content:
+      contents:
       - The commander has already sent a helicopter to pick us up.
       - We just need to clear the area in case there's an accident when the helicopter
         lands.
     id_018:
-      content:
+      contents:
       - Let's hurry up! As long as we can destroy all SangvisFerri's forces in the
         area before
       - the helicopters arrive, we'll be able to evacuate safely.
     id_019:
-      content:
+      contents:
       - Great!
       narrator: Other dolls
     id_020:
-      content:
+      contents:
       - Keep your voice down! It's not like SangvisFerri didn't have ears.
   dialog_during_battle:
     head:
-      content:
+      contents:
       - At last, we're free of SangvisFerri's
       - pursuers. Did anyone get hurt?
     initial_dialog_2:
-      content:
+      contents:
       - Fine
       narrator: Everyone
     initial_dialog_3:
-      content:
+      contents:
       - Sv-98, we have signs of SangvisFerri activity ahead.
     initial_dialog_4:
-      content:
+      contents:
       - Oh no! I'm out of ammo...
     initial_dialog_5:
-      content:
+      contents:
       - The SangvisFerri in the front...
       - Seems to be guarding something.
     initial_dialog_6:
-      content:
+      contents:
       - From a distance, it looks like a supply crate.
     initial_dialog_7:
-      content:
+      contents:
       - Sv-98, go for it. We'll cover you.
     initial_dialog_8:
-      content:
+      contents:
       - It seems like I have no choice...
       - Girls, get ready, it is our show time!
     initial_dialog_9:
-      content:
+      contents:
       - sv-98 has no bullets at this moment
       - and cannot attack
       narrator: Tip
     tutorial1:
-      content:
+      contents:
       - Guys, I got the supplies!
     tutorial2:
-      content:
+      contents:
       - Please remember to reload.
       narrator: Tip
 title: A Wish Likes Snow

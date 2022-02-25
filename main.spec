@@ -10,7 +10,8 @@ a = Analysis(
         ('Assets','Assets'),
         ('Data','Data'),
         ('Lang','Lang'),
-        ('Source_pyd','Source_pyd'),
+        ('src','src'),
+        ('ThirdPartyLibraries','ThirdPartyLibraries'),
         ('icon.ico','.')
     ],
     hiddenimports = [
@@ -20,12 +21,12 @@ a = Analysis(
         "cv2",
         "yaml",
         "linpg",
-        "linpgtoolkit",
         "pygame",
         "pygame.locals",
         "pygame.colordict",
         "pygame._sdl2",
         "pypresence",
+        "PySimpleGUI",
     ],
     hookspath = [],
     runtime_hooks = [],

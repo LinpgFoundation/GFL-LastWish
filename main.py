@@ -1,8 +1,8 @@
 # 导入核心组件
 from os.path import exists as EXISTS
 
-if EXISTS("Source_pyd"):
-    from Source_pyd import MainMenu, linpg
+if EXISTS("src"):
+    from src.Source import MainMenu, linpg
 else:
     from Source import MainMenu, linpg
 

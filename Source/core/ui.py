@@ -2,6 +2,25 @@ import time
 from collections import deque
 from ..base import *
 
+# 中心展示模块1：接受两个item和item2的x和y，将item1展示在item2的中心位置,但不展示item2：
+def display_in_center(
+    item1: linpg.ImageSurface,
+    item2: linpg.ImageSurface,
+    x: int,
+    y: int,
+    screen: linpg.ImageSurface,
+    off_set_x: int = 0,
+    off_set_y: int = 0,
+) -> None:
+    screen.blit(
+        item1,
+        (
+            x + (item2.get_width() - item1.get_width()) / 2 + off_set_x,
+            y + (item2.get_height() - item1.get_height()) / 2 + off_set_y,
+        ),
+    )
+
+
 # 显示回合切换的UI
 class RoundSwitch:
     def __init__(self, window_x: int, window_y: int, battleUiTxt: dict):
@@ -136,7 +155,7 @@ class WarningSystem:
         self.font_size: int = font_size
 
     # 更新语言
-    def updated_language(self):
+    def update_language(self):
         self.__warnings_msg: dict = linpg.lang.get_texts("Warnings")
         self.clear()
 
@@ -230,9 +249,7 @@ class SelectMenu(linpg.GameObjectsDictContainer):
                     button_data_t["button"] = selectButtonBase.copy()
                     txt_temp = linpg.font.render(selectMenuTxtDict[key], "black", big_font_size)
                     txt_temp2 = linpg.font.render(button_data_t["ap_text"], "black", small_font_size)
-                    top: int = int(
-                        (selectButtonBase.get_height() - txt_temp.get_height() - txt_temp2.get_height() - panding) / 2
-                    )
+                    top: int = int((selectButtonBase.get_height() - txt_temp.get_height() - txt_temp2.get_height() - panding) / 2)
                     button_data_t["button"].blit(txt_temp, ((selectButtonBase.get_width() - txt_temp.get_width()) / 2, top))
                     button_data_t["button"].blit(
                         txt_temp2,
@@ -243,40 +260,40 @@ class SelectMenu(linpg.GameObjectsDictContainer):
             # 攻击按钮 - 左
             txt_tempX = location["xStart"] - selectButtonBaseWidth * 0.6
             txt_tempY = location["yStart"]
-            if linpg.is_hover(self.get("attack")["button"], (txt_tempX, txt_tempY)):
+            if linpg.is_hovering(self.get("attack")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "attack"
             screen.blit(self.get("attack")["button"], (txt_tempX, txt_tempY))
             # 移动按钮 - 右
             txt_tempX = location["xEnd"] - selectButtonBaseWidth * 0.4
             # txt_tempY 与攻击按钮一致
-            if linpg.is_hover(self.get("move")["button"], (txt_tempX, txt_tempY)):
+            if linpg.is_hovering(self.get("move")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "move"
             screen.blit(self.get("move")["button"], (txt_tempX, txt_tempY))
             # 换弹按钮 - 下
             txt_tempX = location["xStart"] + selectButtonBaseWidth * 0.5
             txt_tempY = location["yEnd"] - selectButtonBaseWidth * 0.25
-            if linpg.is_hover(self.get("reload")["button"], (txt_tempX, txt_tempY)):
+            if linpg.is_hovering(self.get("reload")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "reload"
             screen.blit(self.get("reload")["button"], (txt_tempX, txt_tempY))
             # 技能按钮 - 上
             if kind != "HOC":
                 # txt_tempX与换弹按钮一致
                 txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
-                if linpg.is_hover(self.get("skill")["button"], (txt_tempX, txt_tempY)):
+                if linpg.is_hovering(self.get("skill")["button"], (txt_tempX, txt_tempY)):
                     self._item_being_hovered = "skill"
                 screen.blit(self.get("skill")["button"], (txt_tempX, txt_tempY))
             # 救助队友
             if len(friendsCanSave) > 0:
                 txt_tempX = location["xStart"] - selectButtonBaseWidth * 0.6
                 txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
-                if linpg.is_hover(self.get("rescue")["button"], (txt_tempX, txt_tempY)):
+                if linpg.is_hovering(self.get("rescue")["button"], (txt_tempX, txt_tempY)):
                     self._item_being_hovered = "rescue"
                 screen.blit(self.get("rescue")["button"], (txt_tempX, txt_tempY))
             # 互动
             if len(thingsCanReact) > 0:
                 txt_tempX = location["xEnd"] - selectButtonBaseWidth * 0.4
                 txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
-                if linpg.is_hover(self.get("interact")["button"], (txt_tempX, txt_tempY)):
+                if linpg.is_hovering(self.get("interact")["button"], (txt_tempX, txt_tempY)):
                     self._item_being_hovered = "interact"
                 screen.blit(self.get("interact")["button"], (txt_tempX, txt_tempY))
 
@@ -294,9 +311,7 @@ class CharacterInfoBoard:
         self.informationBoard = None
         hp_empty_img = linpg.load.img(r"Assets/image/UI/hp_empty.png")
         self.hp_red = linpg.ProgressBarSurface(r"Assets/image/UI/hp_red.png", hp_empty_img, 0, 0, window_x / 15, text_size)
-        self.hp_green = linpg.ProgressBarSurface(
-            r"Assets/image/UI/hp_green.png", hp_empty_img, 0, 0, window_x / 15, text_size
-        )
+        self.hp_green = linpg.ProgressBarSurface(r"Assets/image/UI/hp_green.png", hp_empty_img, 0, 0, window_x / 15, text_size)
         self.action_point_blue = linpg.ProgressBarSurface(
             r"Assets/image/UI/action_point.png", hp_empty_img, 0, 0, window_x / 15, text_size
         )
@@ -316,9 +331,7 @@ class CharacterInfoBoard:
         self.informationBoard.blit(self.characterIconImages[theCharacterData.type], (padding, padding))
         # 加载所需的文字
         tcgc_hp1 = linpg.font.render("HP: ", "white", fontSize)
-        tcgc_hp2 = linpg.font.render(
-            str(theCharacterData.current_hp) + "/" + str(theCharacterData.max_hp), "black", fontSize
-        )
+        tcgc_hp2 = linpg.font.render(str(theCharacterData.current_hp) + "/" + str(theCharacterData.max_hp), "black", fontSize)
         tcgc_action_point1 = linpg.font.render("AP: ", "white", fontSize)
         tcgc_action_point2 = linpg.font.render(
             str(theCharacterData.current_action_point) + "/" + str(theCharacterData.max_action_point), "black", fontSize
@@ -346,13 +359,13 @@ class CharacterInfoBoard:
         self.bullets_number_brown.set_percentage(theCharacterData.current_bullets / theCharacterData.magazine_capacity)
         # 画出
         self.hp_green.draw(self.informationBoard)
-        linpg.display_in_center(tcgc_hp2, self.hp_green, temp_posX, temp_posY, self.informationBoard)
+        display_in_center(tcgc_hp2, self.hp_green, temp_posX, temp_posY, self.informationBoard)
         self.action_point_blue.draw(self.informationBoard)
-        linpg.display_in_center(
+        display_in_center(
             tcgc_action_point2, self.action_point_blue, temp_posX, temp_posY + self.text_size * 1.5, self.informationBoard
         )
         self.bullets_number_brown.draw(self.informationBoard)
-        linpg.display_in_center(
+        display_in_center(
             tcgc_bullets_situation2,
             self.bullets_number_brown,
             temp_posX,
@@ -440,3 +453,20 @@ class LoadingTitle:
         self.title_chapterNum.draw(screen)
         self.title_chapterName.draw(screen)
         self.title_description.draw(screen)
+
+
+# 需要被打印的物品
+class ItemNeedBlit(linpg.GameObject2point5d):
+    def __init__(self, image: object, weight: int, pos: tuple, offSet: tuple):
+        super().__init__(pos[0], pos[1], weight)
+        self.image = image
+        self.offSet = offSet
+
+    def draw(self, surface: linpg.ImageSurface) -> None:
+        if isinstance(self.image, linpg.ImageSurface):
+            surface.blit(self.image, linpg.coordinates.add(self.pos, self.offSet))
+        else:
+            try:
+                self.image.display(surface, self.offSet)
+            except Exception:
+                self.image.draw(surface)

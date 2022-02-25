@@ -23,11 +23,6 @@ HealthyGamingAdvice:
 - 注意自我保护，谨防受骗上当。
 - 适度游戏益脑，沉迷游戏伤身。
 - 合理安排时间，享受健康生活。
-LinpgVersionIncorrect:
-  continue_button: 继续，我知道我在做什么
-  exit_button: 不，我想退出
-  message: 该构建的推荐Linpg引擎版本为{0}. 然而，检测到的Linpg版本为{1}. 使用不兼容的Linpg版本可能导致游戏崩溃或者存档损坏, 即使你使用的是比推荐版本更新的Linpg构建.
-    你确定要继续运行游戏吗?
 LoadingTxt:
   now_loading: 正在加载
   now_loading_characters: 正在加载角色信息...
@@ -48,9 +43,6 @@ MainMenu:
   other:
     new_chapter: 新建章节
     new_project: 新建项目
-MapEditor:
-  block: 方块
-  decoration: 装饰物
 ResultBoard:
   characters_down: 友方角色被击倒
   pressKeyContinue: 按空格继续

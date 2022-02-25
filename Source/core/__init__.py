@@ -1,46 +1,47 @@
 from ..base import *
-from .dialog import DialogSystem
 from .editor import MapEditor
-from .tbs import TurnBasedBattleSystem
+from .tbs import TurnBasedBattleSystem, Optional
 
 
-class GamemodeManager:
-    def __init__(self) -> None:
-        # 储存闸门动画的图片素材
-        self.__GateImgAbove: linpg.ImageSurface = None
-        self.__GateImgBelow: linpg.ImageSurface = None
-        self.VIDEO_BACKGROUND = None
+class Gamemode:
+
+    # 储存闸门动画的图片素材
+    __GateImgAbove: Optional[linpg.ImageSurface] = None
+    __GateImgBelow: Optional[linpg.ImageSurface] = None
+    VIDEO_BACKGROUND = None
 
     # 画出加载ui
-    def draw_loading_chapter_ui(self, screen: linpg.ImageSurface, percent: int) -> None:
-        if self.__GateImgAbove is not None:
-            self.__GateImgAbove.set_size(screen.get_width() + 4, screen.get_height() / 1.7)
-            self.__GateImgAbove.set_bottom(self.__GateImgAbove.get_height() / 100 * percent)
-            self.__GateImgAbove.draw(screen)
-            self.__GateImgBelow.set_size(screen.get_width() + 4, screen.get_height() / 2.05)
-            self.__GateImgBelow.set_top(screen.get_height() - self.__GateImgBelow.get_height() / 100 * percent)
-            self.__GateImgBelow.draw(screen)
+    @classmethod
+    def draw_loading_chapter_ui(cls, screen: linpg.ImageSurface, percent: int) -> None:
+        if cls.__GateImgAbove is not None:
+            cls.__GateImgAbove.set_size(screen.get_width() + 4, screen.get_height() / 1.7)
+            cls.__GateImgAbove.set_bottom(cls.__GateImgAbove.get_height() / 100 * percent)
+            cls.__GateImgAbove.draw(screen)
+            cls.__GateImgBelow.set_size(screen.get_width() + 4, screen.get_height() / 2.05)
+            cls.__GateImgBelow.set_top(screen.get_height() - cls.__GateImgBelow.get_height() / 100 * percent)
+            cls.__GateImgBelow.draw(screen)
         else:
-            self.__GateImgAbove = linpg.DynamicImage(
+            cls.__GateImgAbove = linpg.DynamicImage(
                 linpg.transform.crop_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgAbove.png")), -2, 0
             )
-            self.__GateImgBelow = linpg.DynamicImage(
+            cls.__GateImgBelow = linpg.DynamicImage(
                 linpg.transform.crop_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgBelow.png")), -2, 0
             )
         linpg.display.flip()
 
     # 对话系统
+    @classmethod
     def dialog(
-        self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, part: str, projectName: str = None
+        cls, screen: linpg.ImageSurface, chapterType: Optional[str], chapterId: int, part: str, projectName: Optional[str] = None
     ) -> None:
         # 开始加载-闸门关闭的效果
         for i in range(101):
-            self.draw_loading_chapter_ui(screen, i)
-        self.VIDEO_BACKGROUND.stop()
+            cls.draw_loading_chapter_ui(screen, i)
+        cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
         # 初始化对话系统模块
-        DIALOG: object = DialogSystem()
+        DIALOG: object = linpg.DialogSystem()
         if chapterType is not None:
             DIALOG.new(chapterType, chapterId, part, projectName)
         else:
@@ -48,7 +49,7 @@ class GamemodeManager:
         # 加载完成-闸门开启的效果
         for i in range(100, -1, -1):
             DIALOG.display_background_image(screen)
-            self.draw_loading_chapter_ui(screen, i)
+            cls.draw_loading_chapter_ui(screen, i)
         # DIALOG.auto_save = True
         # 主循环
         while DIALOG.is_playing():
@@ -57,10 +58,11 @@ class GamemodeManager:
             linpg.display.flip()
 
     # 对话编辑器
+    @classmethod
     def dialogEditor(
-        self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, part: str, projectName: str = None
+        cls, screen: linpg.ImageSurface, chapterType: Optional[str], chapterId: int, part: str, projectName: Optional[str] = None
     ) -> None:
-        self.VIDEO_BACKGROUND.stop()
+        cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
         # 改变标题
@@ -87,8 +89,11 @@ class GamemodeManager:
             RPC.update(state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"), large_image=LARGE_IMAGE)
 
     # 战斗系统
-    def battle(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: str = None) -> dict:
-        self.VIDEO_BACKGROUND.stop()
+    @classmethod
+    def battle(
+        cls, screen: linpg.ImageSurface, chapterType: Optional[str], chapterId: int, projectName: Optional[str] = None
+    ) -> None:
+        cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
         BATTLE: object = TurnBasedBattleSystem()
@@ -103,11 +108,13 @@ class GamemodeManager:
             linpg.display.flip()
         # 暂停声效 - 尤其是环境声
         linpg.media.unload()
-        return BATTLE.resultInfo
 
     # 地图编辑器
-    def mapEditor(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: str = None) -> None:
-        self.VIDEO_BACKGROUND.stop()
+    @classmethod
+    def mapEditor(
+        cls, screen: linpg.ImageSurface, chapterType: Optional[str], chapterId: int, projectName: Optional[str] = None
+    ) -> None:
+        cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
         MAP_EDITOR = MapEditor()
@@ -133,20 +140,18 @@ class GamemodeManager:
             RPC.update(state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"), large_image=LARGE_IMAGE)
 
 
-gamemode: object = GamemodeManager()
-
 # 控制台
 class Console(linpg.Console):
     def _check_command(self, conditions: list) -> None:
         if conditions[0] == "load":
             if conditions[1] == "dialog":
                 if len(conditions) < 5:
-                    gamemode.dialog(linpg.display.screen_window, conditions[2], conditions[3], conditions[4], conditions[5])
+                    Gamemode.dialog(linpg.display.screen_window, conditions[2], conditions[3], conditions[4], conditions[5])
                 else:
                     self._txt_output.append("Missing critical parameter(s).")
             elif conditions[1] == "battle":
                 if len(conditions) < 4:
-                    gamemode.battle(linpg.display.screen_window, conditions[2], conditions[3], conditions[4])
+                    Gamemode.battle(linpg.display.screen_window, conditions[2], conditions[3], conditions[4])
                 else:
                     self._txt_output.append("Missing critical parameter(s).")
             else:
@@ -155,4 +160,4 @@ class Console(linpg.Console):
             super()._check_command(conditions)
 
 
-console: object = Console(linpg.display.get_width() * 0.1, linpg.display.get_height() * 0.8)
+console: Console = Console(linpg.display.get_width() * 0.1, linpg.display.get_height() * 0.8)
