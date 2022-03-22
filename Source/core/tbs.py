@@ -210,7 +210,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         self.__dialog_dictionary = dict(DataToProcess["dialogs"]["dictionary"])
         self.__dialog_data = dict(DataToProcess["dialogs"]["data"])
         # 加载对应角色所需的图片
-        self._start_loading_characters(DataToProcess["character"], DataToProcess["sangvisFerri"])
+        self._start_loading_characters(DataToProcess["alliances"], DataToProcess["enemies"])
         while self._is_characters_loader_alive():
             self.infoToDisplayDuringLoading.draw(screen)
             now_loading = self.FONT.render(
@@ -266,7 +266,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         # 角色信息UI管理
         self.characterInfoBoardUI = CharacterInfoBoard(self.window_x, self.window_y)
         # 加载用于渲染电影效果的上下黑色帘幕
-        black_curtain = linpg.new_surface((self.window_x, self.window_y * 0.15))
+        black_curtain = linpg.surface.new((self.window_x, self.window_y * 0.15))
         black_curtain.fill(linpg.color.BLACK)
         self.__up_black_curtain = linpg.MovableImage(
             black_curtain, 0, -black_curtain.get_height(), 0, 0, 0, int(black_curtain.get_height() * 0.05)
@@ -320,15 +320,17 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
 
     # 返回需要保存数据
     def _get_data_need_to_save(self) -> dict:
-        return super()._get_data_need_to_save() | {
-            "type": "battle",
-            "dialog_key": self.__dialog_key,
-            "dialog_parameters": self.__dialog_parameters,
-            "resultInfo": self.__result_info,
-            "local_x": self._MAP.local_x,
-            "local_y": self._MAP.local_y,
-            "timeStamp": time.strftime(":%S", time.localtime()),
-        }
+        return (
+            super()._get_data_need_to_save()
+            | self._MAP.get_local_pos_in_percentage()
+            | {
+                "type": "battle",
+                "dialog_key": self.__dialog_key,
+                "dialog_parameters": self.__dialog_parameters,
+                "resultInfo": self.__result_info,
+                "timeStamp": time.strftime(":%S", time.localtime()),
+            }
+        )
 
     """画面"""
     # 新增需要在屏幕上画出的物品
@@ -493,7 +495,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
     ) -> any:
         if action == "detect":
             skill_target = None
-            if self._alliances_data[characterName].type == "gsh-18":
+            if self._alliances_data[characterName].type == "gsh18":
                 for character in self._alliances_data:
                     if linpg.coordinates.is_same(self._alliances_data[character], pos_click):
                         skill_target = character
@@ -501,7 +503,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             elif (
                 self._alliances_data[characterName].type == "asval"
                 or self._alliances_data[characterName].type == "pp1901"
-                or self._alliances_data[characterName].type == "sv-98"
+                or self._alliances_data[characterName].type == "sv98"
             ):
                 for enemies in self._enemies_data:
                     if (
@@ -512,7 +514,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                         break
             return skill_target
         elif action == "react":
-            if self._alliances_data[characterName].type == "gsh-18":
+            if self._alliances_data[characterName].type == "gsh18":
                 healed_hp = round(
                     (self._alliances_data[skill_target].max_hp - self._alliances_data[skill_target].current_hp) * 0.3
                 )
@@ -521,7 +523,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             elif (
                 self._alliances_data[characterName].type == "asval"
                 or self._alliances_data[characterName].type == "pp1901"
-                or self._alliances_data[characterName].type == "sv-98"
+                or self._alliances_data[characterName].type == "sv98"
             ):
                 the_damage = linpg.get_random_int(
                     self._alliances_data[characterName].min_damage,
@@ -537,7 +539,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         for every_chara in self._alliances_data:
             self._alliances_data[every_chara].draw(screen, self._MAP)
         for enemies in self._enemies_data:
-            if self._MAP.inLightArea(self._enemies_data[enemies]):
+            if self._MAP.is_coordinate_in_light_rea(self._enemies_data[enemies].x, self._enemies_data[enemies].y):
                 self._enemies_data[enemies].draw(screen, self._MAP)
         # 展示设施
         self._display_decoration(screen)
@@ -569,7 +571,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                     if not self.__dialog_is_route_generated:
                         for key, pos in currentDialog["move"].items():
                             if key in self._alliances_data:
-                                routeTmp: list = self._MAP.findPath(
+                                routeTmp: list = self._MAP.find_path(
                                     self._alliances_data[key], pos, self._alliances_data, self._enemies_data
                                 )
                                 if len(routeTmp) > 0:
@@ -577,7 +579,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                                 else:
                                     raise Exception("Error: Character {} cannot find a valid path!".format(key))
                             elif key in self._enemies_data:
-                                routeTmp: list = self._MAP.findPath(
+                                routeTmp: list = self._MAP.find_path(
                                     self._enemies_data[key], pos, self._enemies_data, self._alliances_data
                                 )
                                 if len(routeTmp) > 0:
@@ -651,7 +653,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 # 闲置一定时间（秒）
                 elif "idle" in currentDialog and currentDialog["idle"] is not None:
                     if self.__dialog_parameters["secondsToIdle"] is None:
-                        self.__dialog_parameters["secondsToIdle"] = currentDialog["idle"] * linpg.display.fps
+                        self.__dialog_parameters["secondsToIdle"] = currentDialog["idle"] * linpg.display.get_fps()
                     else:
                         if self.__dialog_parameters["secondsAlreadyIdle"] < self.__dialog_parameters["secondsToIdle"]:
                             self.__dialog_parameters["secondsAlreadyIdle"] += 1
@@ -662,7 +664,9 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 # 调整窗口位置
                 elif "changePos" in currentDialog and currentDialog["changePos"] is not None:
                     if self._screen_to_move_x is None or self._screen_to_move_y is None:
-                        tempX, tempY = self._MAP.calPosInMap(currentDialog["changePos"]["x"], currentDialog["changePos"]["y"])
+                        tempX, tempY = self._MAP.calculate_position(
+                            currentDialog["changePos"]["x"], currentDialog["changePos"]["y"]
+                        )
                         self._screen_to_move_x = int(screen.get_width() / 2 - tempX)
                         self._screen_to_move_y = int(screen.get_height() / 2 - tempY)
                     if self._screen_to_move_x == 0 and self._screen_to_move_y == 0:
@@ -688,7 +692,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             for every_chara in self._alliances_data:
                 self._alliances_data[every_chara].drawUI(screen, self._MAP)
             for enemies in self._enemies_data:
-                if self._MAP.inLightArea(self._enemies_data[enemies]):
+                if self._MAP.is_coordinate_in_light_rea(self._enemies_data[enemies].x, self._enemies_data[enemies].y):
                     self._enemies_data[enemies].drawUI(screen, self._MAP)
             if self.txt_alpha == 0:
                 self.__is_battle_mode = True
@@ -721,14 +725,14 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         # 画出用彩色方块表示的范围
         for area in self.__areaDrawColorBlock:
             for position in self.__areaDrawColorBlock[area]:
-                xTemp, yTemp = self._MAP.calPosInMap(position[0], position[1])
+                xTemp, yTemp = self._MAP.calculate_position(position[0], position[1])
                 self.range_ui_images[area].set_pos(xTemp + self._MAP.block_width * 0.1, yTemp)
                 self.range_ui_images[area].draw(screen)
 
         # 玩家回合
         if self.whose_round == "player":
             if linpg.controller.get_event("confirm"):
-                block_get_click = self._MAP.calBlockInMap()
+                block_get_click = self._MAP.calculate_coordinate()
                 # 如果点击了回合结束的按钮
                 if self.__end_round_button.is_hovered() and self.__is_waiting is True:
                     self.whose_round = "playerToSangvisFerris"
@@ -889,7 +893,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
             # 选择菜单的判定，显示功能在角色动画之后
             if self.selectMenuUI.is_visible() and self.characterGetClick is not None:
                 # 移动画面以使得被点击的角色可以被更好的操作
-                tempX, tempY = self._MAP.calPosInMap(self.characterInControl.x, self.characterInControl.y)
+                tempX, tempY = self._MAP.calculate_position(self.characterInControl.x, self.characterInControl.y)
                 if self._screen_to_move_x is None:
                     if tempX < self.window_x * 0.2 and self._MAP.get_local_x() <= 0:
                         self._screen_to_move_x = int(self.window_x * 0.2 - tempX)
@@ -902,7 +906,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                         self._screen_to_move_y = int(self.window_y * 0.8 - tempY)
             # 显示攻击/移动/技能范围
             if not self.__if_draw_range and self.characterGetClick is not None:
-                block_get_click = self._MAP.calBlockInMap()
+                block_get_click = self._MAP.calculate_coordinate()
                 # 显示移动范围
                 if self.action_choice == "move":
                     self.__areaDrawColorBlock["green"].clear()
@@ -915,7 +919,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                             + abs(block_get_click["y"] - self.characterInControl.y)
                             <= max_blocks_can_move
                         ):
-                            self.the_route = self._MAP.findPath(
+                            self.the_route = self._MAP.find_path(
                                 self.characterInControl,
                                 block_get_click,
                                 self._alliances_data,
@@ -925,7 +929,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                             if len(self.the_route) > 0:
                                 # 显示路径
                                 self.__areaDrawColorBlock["green"] = self.the_route
-                                xTemp, yTemp = self._MAP.calPosInMap(self.the_route[-1][0], self.the_route[-1][1])
+                                xTemp, yTemp = self._MAP.calculate_position(self.the_route[-1][0], self.the_route[-1][1])
                                 screen.blit(
                                     self.FONT.render(str(len(self.the_route) * 2), linpg.color.WHITE),
                                     (
@@ -961,7 +965,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                                             + self.characterInControl.attack_coverage
                                             + (y - block_get_click["y"]),
                                         ):
-                                            if self._MAP.ifBlockCanPassThrough({"x": x, "y": y}):
+                                            if self._MAP.if_block_can_pass_through({"x": x, "y": y}):
                                                 the_attacking_range_area.append((x, y))
                                     else:
                                         for x in range(
@@ -973,7 +977,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                                             + self.characterInControl.attack_coverage
                                             - (y - block_get_click["y"]),
                                         ):
-                                            if self._MAP.ifBlockCanPassThrough({"x": x, "y": y}):
+                                            if self._MAP.if_block_can_pass_through({"x": x, "y": y}):
                                                 the_attacking_range_area.append((x, y))
                                 break
                         self.enemiesGetAttack.clear()
@@ -1075,7 +1079,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                         self.__areaDrawColorBlock["green"] = skill_range["near"]
                         self.__areaDrawColorBlock["blue"] = skill_range["middle"]
                         self.__areaDrawColorBlock["yellow"] = skill_range["far"]
-                        block_get_click = self._MAP.calBlockInMap()
+                        block_get_click = self._MAP.calculate_coordinate()
                         if block_get_click is not None:
                             the_skill_cover_area = []
                             for area in skill_range:
@@ -1100,7 +1104,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                                                 if (
                                                     self._MAP.row > y >= 0
                                                     and self._MAP.column > x >= 0
-                                                    and self._MAP.ifBlockCanPassThrough({"x": x, "y": y})
+                                                    and self._MAP.if_block_can_pass_through({"x": x, "y": y})
                                                 ):
                                                     the_skill_cover_area.append([x, y])
                                         else:
@@ -1116,7 +1120,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                                                 if (
                                                     self._MAP.row > y >= 0
                                                     and self._MAP.column > x >= 0
-                                                    and self._MAP.ifBlockCanPassThrough({"x": x, "y": y})
+                                                    and self._MAP.if_block_can_pass_through({"x": x, "y": y})
                                                 ):
                                                     the_skill_cover_area.append([x, y])
                                     self.__areaDrawColorBlock["orange"] = the_skill_cover_area
@@ -1246,7 +1250,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 elif self.action_choice == "attack":
                     # 根据敌我坐标判断是否需要反转角色
                     if self.characterInControl.get_imgId("attack") == 0:
-                        block_get_click = self._MAP.calBlockInMap()
+                        block_get_click = self._MAP.calculate_coordinate()
                         if block_get_click is not None:
                             self.characterInControl.set_flip_based_on_pos(block_get_click)
                         self.characterInControl.play_sound("attack")
@@ -1350,9 +1354,9 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         rightClickCharacterAlphaDeduct = True
         for key, value in {**self._alliances_data, **self._enemies_data}.items():
             # 如果天亮的双方都可以看见/天黑，但是是友方角色/天黑，但是是敌方角色在可观测的范围内 -- 则画出角色
-            if value.faction == "character" or value.faction == "sangvisFerri" and self._MAP.inLightArea(value):
+            if value.attitude > 0 or self._MAP.is_coordinate_in_light_rea(value.x, value.y):
                 if self.__if_draw_range is True and linpg.controller.mouse.get_pressed(2):
-                    block_get_click = self._MAP.calBlockInMap()
+                    block_get_click = self._MAP.calculate_coordinate()
                     if block_get_click is not None and block_get_click["x"] == value.x and block_get_click["y"] == value.y:
                         rightClickCharacterAlphaDeduct = False
                         if self.rightClickCharacterAlpha is None:
@@ -1368,16 +1372,15 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                         self.__areaDrawColorBlock["green"] = rangeCanAttack["near"]
                 value.draw(screen, self._MAP)
             else:
-                value.draw_nothing()
+                value.draw(screen, self._MAP, True)
             # 是否有在播放死亡角色的动画（而不是倒地状态）
-            if not value.is_alive() and key not in self.the_dead_one:
-                if value.kind == "HOC" or value.faction == "sangvisFerri":
-                    self.the_dead_one[key] = value.faction
+            if not value.is_alive() and key not in self.the_dead_one and (value.kind == "HOC" or value.attitude < 0):
+                self.the_dead_one[key] = value.attitude
             # 伤害/治理数值显示
             if key in self.__damage_do_to_characters:
                 the_alpha_to_check = self.__damage_do_to_characters[key].get_alpha()
                 if the_alpha_to_check > 0:
-                    xTemp, yTemp = self._MAP.calPosInMap(value.x, value.y)
+                    xTemp, yTemp = self._MAP.calculate_position(value.x, value.y)
                     xTemp += self._MAP.block_width * 0.05
                     yTemp -= self._MAP.block_width * 0.05
                     display_in_center(
@@ -1393,8 +1396,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         # 移除死亡的角色
         if len(self.the_dead_one) > 0:
             the_dead_one_remove = []
-            for key, value in self.the_dead_one.items():
-                if value == "sangvisFerri":
+            for key in self.the_dead_one:
+                if self.the_dead_one[key] < 0:
                     if self._enemies_data[key].get_imgId("die") == self._enemies_data[key].get_imgNum("die") - 1:
                         the_alpha = self._enemies_data[key].get_imgAlpaha("die")
                         if the_alpha > 0:
@@ -1403,7 +1406,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                             the_dead_one_remove.append(key)
                             del self._enemies_data[key]
                             self.__result_info["total_kills"] += 1
-                elif value == "character":
+                elif self.the_dead_one[key] > 0:
                     if self._alliances_data[key].get_imgId("die") == self._alliances_data[key].get_imgNum("die") - 1:
                         the_alpha = self._alliances_data[key].get_imgAlpaha("die")
                         if the_alpha > 0:
@@ -1437,14 +1440,20 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         for _alliance in self._alliances_data.values():
             _alliance.drawUI(screen, self._MAP)
         for _enemy in self._enemies_data.values():
-            if self._MAP.isPosInLightArea(int(_enemy.x), int(_enemy.y)):
+            if self._MAP.is_coordinate_in_light_rea(int(_enemy.x), int(_enemy.y)):
                 _enemy.drawUI(screen, self._MAP)
         if self.characterGetClick is not None:
+            the_coord: tuple[int, int] = self._MAP.calculate_position(self.characterInControl.x, self.characterInControl.y)
             # 显示选择菜单
             self.selectMenuUI.draw(
                 screen,
                 round(self._MAP.block_width / 10),
-                self._MAP.getBlockExactLocation(self.characterInControl.x, self.characterInControl.y),
+                {
+                    "xStart": the_coord[0],
+                    "xEnd": the_coord[0] + self._MAP.block_width,
+                    "yStart": the_coord[1],
+                    "yEnd": the_coord[1] + self._MAP.block_width * 0.5,
+                },
                 self.characterInControl.kind,
                 self.friendsCanSave,
                 self.thingsCanReact,
@@ -1548,7 +1557,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 self.__zoomIn -= 10
             elif self.__zoomIntoBe > self.__zoomIn:
                 self.__zoomIn += 10
-            self._MAP.changePerBlockSize(
+            self._MAP.set_tile_block_size(
                 self._standard_block_width * self.__zoomIn / 100, self._standard_block_height * self.__zoomIn / 100
             )
             # 根据block尺寸重新加载对应尺寸的UI

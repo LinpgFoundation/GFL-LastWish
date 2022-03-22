@@ -12,7 +12,7 @@ class MainMenu(linpg.AbstractSystem):
         """生成加载页面"""
         index: int = 0
         font_size: int = int(screen.get_width() / 64)
-        self.loading_screen: linpg.ImageSurface = linpg.new_surface(screen.get_size())
+        self.loading_screen: linpg.ImageSurface = linpg.surface.new(screen.get_size())
         self.loading_screen.fill(linpg.color.BLACK)
         # 获取健康游戏忠告
         HealthyGamingAdvice: list = (
@@ -42,7 +42,7 @@ class MainMenu(linpg.AbstractSystem):
             index += 1
         """开始加载"""
         # 载入页面 - 渐入
-        for index in range(0, 250, int(2 * linpg.display.sfpsp)):
+        for index in range(0, 250, int(2 * linpg.display.get_delta_time())):
             screen.fill(linpg.color.BLACK)
             self.loading_screen.set_alpha(index)
             screen.blit(self.loading_screen, linpg.ORIGIN)
@@ -591,5 +591,5 @@ class MainMenu(linpg.AbstractSystem):
             if alpha_t <= 0:
                 self.loading_screen = None
             else:
-                self.loading_screen.set_alpha(max(0, alpha_t - int(5 * linpg.display.sfpsp)))
+                self.loading_screen.set_alpha(max(0, alpha_t - int(5 * linpg.display.get_delta_time())))
                 screen.blit(self.loading_screen, linpg.ORIGIN)

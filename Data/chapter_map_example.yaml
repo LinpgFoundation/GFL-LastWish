@@ -1,12 +1,12 @@
+alliances:
+  sv98:
+    bullets_carried: 0
+    type: sv98
+    x: 5
+    y: 7
 at_night: false
 background_image: snowfield.jpg
 background_music: Combat_02_RemnantFantasyPackage_Synari.ogg
-character:
-  sv-98:
-    bullets_carried: 0
-    type: sv-98
-    x: 5
-    y: 7
 decoration:
   campfire:
     campfire1:
@@ -30,17 +30,14 @@ decoration:
       x: 10
       y: 12
 dialogs: {}
-local_x: 0
-local_y: 0
-map: null
+enemies:
+  guard:
+    type: guard
+    x: 19
+    y: 19
 mission_objectives:
   allow_any_one_die: false
   round_limitation: 10
   target: null
   type: annihilation
-sangvisFerri:
-  guard:
-    type: guard
-    x: 19
-    y: 19
 weather: snow

@@ -155,7 +155,7 @@ dialogs:
       character_images:
       - kalina_8.png<d>
       contents:
-      - 现在只希望，sv-98他们能够及时回来，之后再考虑其他的事情吧
+      - 现在只希望，sv98他们能够及时回来，之后再考虑其他的事情吧
       last_dialog_id: id_010
       narrator: 我
       next_dialog_id:
@@ -378,7 +378,7 @@ dialogs:
       background_music: BGM_Boss_1.ogg
       character_images: null
       contents:
-      - 此时此刻，我的内心十分不安，sv-98她们能不能在撤离前赶回来是一件事
+      - 此时此刻，我的内心十分不安，sv98她们能不能在撤离前赶回来是一件事
       - 但我总感觉这座岛上，有着格里芬甚至安全局自己都还不知道的谜团
       last_dialog_id: id_013
       narrator: null
@@ -400,11 +400,11 @@ dialogs:
       background_image: snowfield.jpg
       background_music: BGM_Brain_1.ogg
       character_images:
-      - sv-98.png
+      - sv98.png
       contents:
       - asval，情况怎么样？
       last_dialog_id: id_015
-      narrator: sv-98
+      narrator: sv98
       next_dialog_id:
         target: id_017
         type: default
@@ -413,7 +413,7 @@ dialogs:
       background_music: BGM_Brain_1.ogg
       character_images:
       - asval.png
-      - sv-98.png<d>
+      - sv98.png<d>
       contents:
       - 指挥官已经派直升机来接我们了，我们只需要清空地面上铁血火力，防止直升机降落时出现意外
       last_dialog_id: id_016
@@ -425,7 +425,7 @@ dialogs:
       background_image: snowfield.jpg
       background_music: BGM_Brain_1.ogg
       character_images:
-      - sv-98.png
+      - sv98.png
       contents:
       - 大家再加把劲，只要我们在直升机到来前尽可能消灭当前区域内的铁血势力
       - 到时候我们就能安全撤离了。
@@ -438,7 +438,7 @@ dialogs:
       background_image: snowfield.jpg
       background_music: BGM_Brain_1.ogg
       character_images:
-      - sv-98.png<d>
+      - sv98.png<d>
       contents:
       - 好！
       last_dialog_id: id_018
@@ -450,7 +450,7 @@ dialogs:
       background_image: snowfield.jpg
       background_music: BGM_Brain_1.ogg
       character_images:
-      - sv-98.png
+      - sv98.png
       contents:
       - 小声点！铁血又不是没长耳朵。
       last_dialog_id: id_019
@@ -461,12 +461,12 @@ dialogs:
       background_image: <transparent>
       background_music: null
       character_images:
-      - sv-98.png
+      - sv98.png
       contents:
       - 总算是摆脱铁血的追兵了
       - 大家都没事吧
       last_dialog_id: null
-      narrator: sv-98
+      narrator: sv98
       next_dialog_id:
         target: initial_dialog_2
         type: default
@@ -474,7 +474,7 @@ dialogs:
       background_image: <transparent>
       background_music: null
       character_images:
-      - sv-98.png<d>
+      - sv98.png<d>
       contents:
       - 没事
       last_dialog_id: head
@@ -487,7 +487,7 @@ dialogs:
       character_images:
       - asval.png
       contents:
-      - sv-98，前方发现有铁血活动的痕迹
+      - sv98，前方发现有铁血活动的痕迹
       last_dialog_id: null
       narrator: asval
       next_dialog_id:
@@ -496,11 +496,11 @@ dialogs:
       background_image: <transparent>
       background_music: null
       character_images:
-      - sv-98.png
+      - sv98.png
       contents:
       - 该死...我已经没有弹药了
       last_dialog_id: null
-      narrator: sv-98
+      narrator: sv98
       next_dialog_id:
         target: initial_dialog_5
         type: default
@@ -520,11 +520,11 @@ dialogs:
       background_image: <transparent>
       background_music: null
       character_images:
-      - gsh-18.png
+      - gsh18.png
       contents:
       - 远远看过去，好像是物资箱
       last_dialog_id: null
-      narrator: gsh-18
+      narrator: gsh18
       next_dialog_id:
         target: initial_dialog_7
         type: default
@@ -534,7 +534,7 @@ dialogs:
       character_images:
       - asval.png
       contents:
-      - sv-98，上吧。我们会掩护你的。
+      - sv98，上吧。我们会掩护你的。
       last_dialog_id: initial_dialog_6
       narrator: asval
       next_dialog_id:
@@ -544,12 +544,12 @@ dialogs:
       background_image: <transparent>
       background_music: null
       character_images:
-      - sv-98.png
+      - sv98.png
       contents:
       - 那就拜托你们了...
       - 各位，子弹上膛，准备战斗！
       last_dialog_id: initial_dialog_7
-      narrator: sv-98
+      narrator: sv98
       next_dialog_id:
         target: initial_dialog_9
         type: default
@@ -558,7 +558,7 @@ dialogs:
       background_music: null
       character_images: null
       contents:
-      - 目前sv-98没有子弹，无法攻击
+      - 目前sv98没有子弹，无法攻击
       last_dialog_id: initial_dialog_8
       narrator: 提示
       next_dialog_id:
@@ -567,11 +567,11 @@ dialogs:
       background_image: <transparent>
       background_music: null
       character_images:
-      - sv-98.png
+      - sv98.png
       contents:
       - 各位，我拿到补给了！
       last_dialog_id: null
-      narrator: sv-98
+      narrator: sv98
       next_dialog_id:
         target: tutorial2
         type: default

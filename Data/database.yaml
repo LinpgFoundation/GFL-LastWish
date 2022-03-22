@@ -3,6 +3,12 @@ Contributors:
   - DIZZYs WALLPAPERS
   sound:
   - 影之光
+Decorations:
+  campfire: campfire
+  chest: chest
+Faction:
+  alliances: GriffinKryuger
+  enemies: SangvisFerri
 Npc:
   aa12:
   - aa12.png
@@ -28,9 +34,9 @@ Npc:
   grizzly:
   - grizzly.png
   - grizzly_hurt.png
-  gsh-18:
-  - gsh-18.png
-  - gsh-18_hurt.png
+  gsh18:
+  - gsh18.png
+  - gsh18_hurt.png
   helianthus:
   - helianthus_1.png
   - helianthus_2.png
@@ -88,9 +94,9 @@ Npc:
   sr3mp:
   - sr3mp.png
   - sr3mp_hurt.png
-  sv-98:
-  - sv-98.png
-  - sv-98_hurt.png
+  sv98:
+  - sv98.png
+  - sv98_hurt.png
   ump45:
   - ump45.png
   - ump45_hurt.png

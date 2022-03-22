@@ -11,12 +11,12 @@ DiscordStatus:
   now_playing: '正在游玩:'
   staying_at_main_menu: 正在浏览主菜单
 General:
+  GriffinKryuger: 格里芬
+  SangvisFerri: 铁血工造
   dialog_editor: 对话编辑器
   game_title: 少女前线-遗愿
-  griffin_Kryuger: 格里芬
   main_chapter: 主线章节
   map_editor: 地图编辑器
-  sangvis_ferri: 铁血工造
   workshop: 创意工坊
 HealthyGamingAdvice:
 - 抵制不良游戏，拒绝盗版游戏。

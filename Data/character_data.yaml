@@ -10,6 +10,7 @@
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: HOC
   magazine_capacity: 1
   max_action_point: 1
@@ -30,6 +31,7 @@ aa12:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: SG
   magazine_capacity: 1
   max_action_point: 1
@@ -50,6 +52,7 @@ aegis:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -68,6 +71,7 @@ aegis_ga:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -86,6 +90,7 @@ aegis_swap:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -104,6 +109,7 @@ asval:
     near:
     - 1
     - 3
+  faction: GriffinKryuger
   kind: AR
   magazine_capacity: 20
   max_action_point: 15
@@ -130,6 +136,7 @@ brute:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -148,6 +155,7 @@ contender:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: HG
   magazine_capacity: 1
   max_action_point: 1
@@ -168,6 +176,7 @@ dinergate:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -186,6 +195,7 @@ dragoon:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -204,6 +214,7 @@ dragoon_swap:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -222,6 +233,7 @@ fnfnc:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: AR
   magazine_capacity: 1
   max_action_point: 1
@@ -242,6 +254,7 @@ g11:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: AR
   magazine_capacity: 1
   max_action_point: 1
@@ -262,6 +275,7 @@ g36:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: AR
   magazine_capacity: 1
   max_action_point: 1
@@ -282,6 +296,7 @@ g41:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: AR
   magazine_capacity: 1
   max_action_point: 1
@@ -302,6 +317,7 @@ golyat:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -320,6 +336,7 @@ golyatplus:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -338,6 +355,7 @@ grizzly:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: HG
   magazine_capacity: 1
   max_action_point: 1
@@ -346,7 +364,7 @@ grizzly:
   min_damage: 1
   skill_coverage: 1
   skill_effective_range: {}
-gsh-18:
+gsh18:
   attack_coverage: 1
   effective_range:
     far:
@@ -358,6 +376,7 @@ gsh-18:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: HG
   magazine_capacity: 18
   max_action_point: 12
@@ -375,6 +394,7 @@ guard:
     near:
     - 1
     - 5
+  faction: SangvisFerri
   kind: HG
   magazine_capacity: 20
   max_action_point: 20
@@ -387,6 +407,7 @@ guard_swap:
     near:
     - 1
     - 6
+  faction: SangvisFerri
   kind: HG
   magazine_capacity: 20
   max_action_point: 20
@@ -405,6 +426,7 @@ hk416:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: AR
   magazine_capacity: 1
   max_action_point: 1
@@ -425,6 +447,7 @@ jaeger:
     near:
     - 1
     - 3
+  faction: SangvisFerri
   kind: RF
   magazine_capacity: 20
   max_action_point: 20
@@ -443,6 +466,7 @@ jaeger_swap:
     near:
     - 1
     - 4
+  faction: SangvisFerri
   kind: RF
   magazine_capacity: 20
   max_action_point: 20
@@ -461,6 +485,7 @@ jaguar:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -479,6 +504,7 @@ jupiter:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -497,6 +523,7 @@ kp31:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: SMG
   magazine_capacity: 1
   max_action_point: 1
@@ -517,6 +544,7 @@ lewis:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: MG
   magazine_capacity: 1
   max_action_point: 1
@@ -537,6 +565,7 @@ m14:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: RF
   magazine_capacity: 1
   max_action_point: 1
@@ -557,6 +586,7 @@ m1903:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: RF
   magazine_capacity: 1
   max_action_point: 1
@@ -577,6 +607,7 @@ m1928a1:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: SMG
   magazine_capacity: 1
   max_action_point: 1
@@ -597,6 +628,7 @@ manticore:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -615,6 +647,7 @@ mg4:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: MG
   magazine_capacity: 1
   max_action_point: 1
@@ -635,6 +668,7 @@ negev:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: MG
   magazine_capacity: 1
   max_action_point: 1
@@ -655,6 +689,7 @@ nemeum:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -673,6 +708,7 @@ pp1901:
     near:
     - 1
     - 1
+  faction: GriffinKryuger
   kind: SMG
   magazine_capacity: 30
   max_action_point: 15
@@ -699,6 +735,7 @@ prowler:
     near:
     - 1
     - 4
+  faction: SangvisFerri
   kind: SMG
   magazine_capacity: 20
   max_action_point: 10
@@ -717,6 +754,7 @@ prowler_swap:
     near:
     - 1
     - 4
+  faction: SangvisFerri
   kind: SMG
   magazine_capacity: 20
   max_action_point: 10
@@ -732,6 +770,7 @@ ripper:
     near:
     - 1
     - 4
+  faction: SangvisFerri
   kind: SMG
   magazine_capacity: 20
   max_action_point: 10
@@ -750,6 +789,7 @@ saiga12:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: SG
   magazine_capacity: 1
   max_action_point: 1
@@ -770,6 +810,7 @@ sat8:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: SG
   magazine_capacity: 1
   max_action_point: 1
@@ -790,6 +831,7 @@ scouts:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -808,6 +850,7 @@ sr3mp:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: SMG
   magazine_capacity: 1
   max_action_point: 1
@@ -816,7 +859,7 @@ sr3mp:
   min_damage: 1
   skill_coverage: 1
   skill_effective_range: {}
-sv-98:
+sv98:
   attack_coverage: 1
   effective_range:
     far:
@@ -828,6 +871,7 @@ sv-98:
     near:
     - 1
     - 3
+  faction: GriffinKryuger
   kind: RF
   magazine_capacity: 10
   max_action_point: 10
@@ -854,6 +898,7 @@ tarantula:
     near:
     - 1
     - 2
+  faction: SangvisFerri
   kind: null
   magazine_capacity: 1
   max_action_point: 1
@@ -872,6 +917,7 @@ ump45:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: SMG
   magazine_capacity: 1
   max_action_point: 1
@@ -892,6 +938,7 @@ ump9:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: SMG
   magazine_capacity: 1
   max_action_point: 1
@@ -912,6 +959,7 @@ vespid:
     near:
     - 1
     - 4
+  faction: SangvisFerri
   kind: AR
   magazine_capacity: 20
   max_action_point: 15
@@ -930,6 +978,7 @@ wa2000:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: RF
   magazine_capacity: 1
   max_action_point: 1
@@ -950,6 +999,7 @@ welrod:
     near:
     - 1
     - 2
+  faction: GriffinKryuger
   kind: HG
   magazine_capacity: 1
   max_action_point: 1

@@ -1,15 +1,12 @@
-at_night: true
-background_image: snowfield.jpg
-background_music: Combat_02_RemnantFantasyPackage_Synari.ogg
-character:
+alliances:
   asval:
     bullets_carried: 200
     type: asval
     x: 8
     y: 5
-  gsh-18:
+  gsh18:
     bullets_carried: 200
-    type: gsh-18
+    type: gsh18
     x: 1
     y: 0
   pp1901:
@@ -17,12 +14,15 @@ character:
     type: pp1901
     x: 0
     y: 0
-  sv-98:
+  sv98:
     bullets_carried: 0
     current_bullets: 0
-    type: sv-98
+    type: sv98
     x: 5
     y: 7
+at_night: true
+background_image: snowfield.jpg
+background_music: Combat_02_RemnantFantasyPackage_Synari.ogg
 decoration:
   campfire:
     campfire1:
@@ -38,7 +38,7 @@ decoration:
       items:
         bullet: 100
       whitelist:
-      - sv-98
+      - sv98
       x: 15
       y: 10
   obstacle:
@@ -447,7 +447,7 @@ dialogs:
         x: 0
         y: 0
     - move:
-        gsh-18:
+        gsh18:
           x: 8
           y: 4
         pp1901:
@@ -478,9 +478,30 @@ dialogs:
         dialog_key: tutorial1
         repeat: false
         whitelist:
-        - sv-98
-local_x: -3000
-local_y: 1000
+        - sv98
+enemies:
+  guard:
+    type: guard
+    x: 19
+    y: 19
+  jaeger:
+    type: jaeger
+    x: 10
+    y: 11
+  prowler:
+    type: prowler
+    x: 14
+    y: 8
+  ripper:
+    type: ripper
+    x: 16
+    y: 4
+  vespid:
+    type: vespid
+    x: 18
+    y: 10
+local_x: -40%
+local_y: 10%
 map:
   array2d:
   - - 3
@@ -2995,25 +3016,4 @@ mission_objectives:
   round_limitation: 10
   target: null
   type: annihilation
-sangvisFerri:
-  guard:
-    type: guard
-    x: 19
-    y: 19
-  jaeger:
-    type: jaeger
-    x: 10
-    y: 11
-  prowler:
-    type: prowler
-    x: 14
-    y: 8
-  ripper:
-    type: ripper
-    x: 16
-    y: 4
-  vespid:
-    type: vespid
-    x: 18
-    y: 10
 weather: snow

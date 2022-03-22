@@ -11,12 +11,12 @@ DiscordStatus:
   now_playing: 'Now playing:'
   staying_at_main_menu: Browsing main menu
 General:
+  GriffinKryuger: Griffin & Kryuger
+  SangvisFerri: Sangvis Ferri
   dialog_editor: Dialog Editor
   game_title: Girls' Frontline - Last Wish
-  griffin_Kryuger: Griffin & Kryuger
   main_chapter: Main Chapter
   map_editor: Map Editor
-  sangvis_ferri: Sangvis Ferri
   workshop: Workshop
 LoadingTxt:
   now_loading: Loading...
