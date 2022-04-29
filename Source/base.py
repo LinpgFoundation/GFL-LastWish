@@ -1,12 +1,22 @@
 import os
 from glob import glob
 
-if os.path.exists("dev.key"):
-    from linpgdevenv import linpg
-
-    linpg.setting.set_developer_mode(True)
-else:
+if not os.path.exists(r"dev.key"):
     import linpg
+else:
+    import sys
+
+    # 从开发key中读取linpg开发版本的路径
+    with open(r"dev.key") as f:
+        sys.path.append(f.readline().rstrip())
+
+    # 导入linpg开发版本
+    import linpg
+
+    # 移除相对路径
+    sys.path.pop()
+    # 启用开发模式
+    linpg.debug.set_developer_mode(True)
 
 # 加载版本信息
 version_info: dict = linpg.config.load("Data/version.yaml")

@@ -2,7 +2,7 @@
 from os.path import exists as EXISTS
 
 if EXISTS("src"):
-    from src.Source import MainMenu, linpg
+    from src.Source import MainMenu, linpg  # type: ignore
 else:
     from Source import MainMenu, linpg
 

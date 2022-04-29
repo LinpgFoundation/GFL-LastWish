@@ -76,7 +76,7 @@ class MainMenu(linpg.AbstractSystem):
         self.last_hover_sound_play_on = None
         # 加载主菜单背景
         Gamemode.VIDEO_BACKGROUND = linpg.VideoSurface(
-            r"Assets/movie/SquadAR.mp4", True, not linpg.setting.developer_mode, (935, 3105), cache_key="into"
+            r"Assets/movie/SquadAR.mp4", True, not linpg.debug.get_developer_mode(), (935, 3105), cache_key="into"
         )
         Gamemode.VIDEO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
         # 初始化返回菜单判定参数
@@ -98,7 +98,7 @@ class MainMenu(linpg.AbstractSystem):
             except Exception:
                 linpg.create_new_project(path, "yaml")
             self.workshop_files_text.append(os.path.basename(path))
-            self.workshop_files.append(info_data["title"][linpg.setting.language])
+            self.workshop_files.append(info_data["title"][linpg.setting.get_language()])
         self.workshop_files.append(linpg.lang.get_text("Global", "back"))
         txt_location: int = int(screen_size[0] * 2 / 3)
         txt_y: int = int((screen_size[1] - len(self.workshop_files) * linpg.font.get_global_font_size("medium") * 2) / 2)
@@ -112,13 +112,13 @@ class MainMenu(linpg.AbstractSystem):
     def __get_chapter_title(self, chapterType: str, chapterId: int) -> str:
         # 生成dialog文件的路径
         dialog_file_path: str = (
-            os.path.join("Data", chapterType, "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.language))
+            os.path.join("Data", chapterType, "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.get_language()))
             if chapterType == "main_chapter"
             else os.path.join(
                 "Data",
                 chapterType,
                 self.current_selected_workshop_project,
-                "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.language),
+                "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.get_language()),
             )
         )
         chapter_title: str
@@ -227,7 +227,7 @@ class MainMenu(linpg.AbstractSystem):
                         "Data",
                         "workshop",
                         self.current_selected_workshop_project,
-                        "*_dialogs_{}.yaml".format(linpg.setting.language),
+                        "*_dialogs_{}.yaml".format(linpg.setting.get_language()),
                     )
                 )
             )
@@ -240,7 +240,7 @@ class MainMenu(linpg.AbstractSystem):
                 "Data",
                 "workshop",
                 self.current_selected_workshop_project,
-                "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.language),
+                "chapter{0}_dialogs_{1}.yaml".format(chapterId, linpg.setting.get_language()),
             ),
         )
         # 复制战斗系统默认模板

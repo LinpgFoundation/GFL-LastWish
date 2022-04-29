@@ -1,7 +1,6 @@
 from typing import Iterable, Optional
 from .ui import (
     CharacterInfoBoard,
-    ItemNeedBlit,
     LoadingTitle,
     ResultBoard,
     RoundSwitch,
@@ -13,7 +12,7 @@ from .ui import (
     time,
     display_in_center,
 )
-
+from .module import AttackingSoundManager, ItemNeedBlit
 
 # 回合制游戏战斗系统
 class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleForGameSystem):
@@ -99,12 +98,12 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
     """Quick Reference"""
     # 正在控制的角色
     @property
-    def characterInControl(self) -> object:
+    def characterInControl(self) -> linpg.FriendlyCharacter:
         return self._alliances_data[self.characterGetClick]
 
     # 正在控制的铁血角色
     @property
-    def enemyInControl(self) -> object:
+    def enemyInControl(self) -> linpg.HostileCharacter:
         return self._enemies_data[self.sangvisFerris_name_list[self.enemies_in_control_id]]
 
     """加载与储存"""
@@ -288,7 +287,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         # 更新所有音效的音量
         self._update_sound_volume()
         # 攻击的音效 -- 频道2
-        self.attackingSounds = linpg.AttackingSoundManager(linpg.media.volume.effects, 2)
+        self.attackingSounds = AttackingSoundManager(linpg.media.volume.effects, 2)
         # 切换回合时的UI
         self.RoundSwitchUI = RoundSwitch(self.window_x, self.window_y, self.battleModeUiTxt)
         # 关卡背景介绍信息文字
@@ -532,6 +531,8 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 self._enemies_data[skill_target].injury(the_damage)
                 damage_do_to_character[skill_target] = linpg.font.render("-" + str(the_damage), "red", 25)
             return damage_do_to_character
+        else:
+            return None
 
     # 对话模块
     def __play_dialog(self, screen: linpg.ImageSurface) -> None:

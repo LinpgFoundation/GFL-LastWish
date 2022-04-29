@@ -1,5 +1,6 @@
 import time
 from collections import deque
+from typing import Optional
 from ..base import *
 
 # 中心展示模块1：接受两个item和item2的x和y，将item1展示在item2的中心位置,但不展示item2：
@@ -37,7 +38,7 @@ class RoundSwitch:
         self.TxtAlphaUp = True
         self.idleTime = 60
         self.now_total_rounds_text = battleUiTxt["numRound"]
-        self.now_total_rounds_surface = None
+        self.now_total_rounds_surface: Optional[linpg.ImageSurface] = None
         self.your_round_txt_surface = linpg.font.render(battleUiTxt["yourRound"], "white", window_x / 36)
         self.your_round_txt_surface.set_alpha(0)
         self.enemy_round_txt_surface = linpg.font.render(battleUiTxt["enemyRound"], "white", window_x / 36)
@@ -234,7 +235,7 @@ class SelectMenu(linpg.GameObjectsDictContainer):
         kind: str,
         friendsCanSave: list,
         thingsCanReact: list,
-    ) -> str:
+    ) -> None:
         self._item_being_hovered = None
         if self.is_visible():
             # 如果按钮没有初始化，则应该立刻初始化按钮
@@ -301,14 +302,14 @@ class SelectMenu(linpg.GameObjectsDictContainer):
 # 角色信息板
 class CharacterInfoBoard:
     def __init__(self, window_x: int, window_y: int, text_size: int = 20):
-        self.boardImg = linpg.load.img(r"Assets/image/UI/score.png", (window_x / 5, window_y / 6))
-        self.characterIconImages = {}
+        self.boardImg: linpg.ImageSurface = linpg.load.img(r"Assets/image/UI/score.png", (window_x / 5, window_y / 6))
+        self.characterIconImages: dict[str, linpg.ImageSurface] = {}
         for img_path in glob(r"Assets/image/npc_icon/*.png"):
             self.characterIconImages[os.path.basename(img_path).replace(".png", "")] = linpg.transform.resize(
                 linpg.load.img(img_path), (window_y * 0.08, window_y * 0.08)
             )
-        self.text_size = text_size
-        self.informationBoard = None
+        self.text_size: int = text_size
+        self.informationBoard: Optional[linpg.ImageSurface] = None
         hp_empty_img = linpg.load.img(r"Assets/image/UI/hp_empty.png")
         self.hp_red = linpg.ProgressBarSurface(r"Assets/image/UI/hp_red.png", hp_empty_img, 0, 0, window_x / 15, text_size)
         self.hp_green = linpg.ProgressBarSurface(r"Assets/image/UI/hp_green.png", hp_empty_img, 0, 0, window_x / 15, text_size)
@@ -324,9 +325,9 @@ class CharacterInfoBoard:
         self.informationBoard = None
 
     # 更新信息板
-    def updateInformationBoard(self, fontSize: int, theCharacterData: object) -> None:
+    def updateInformationBoard(self, fontSize: int, theCharacterData: linpg.Entity) -> None:
         self.informationBoard = self.boardImg.copy()
-        padding = (self.boardImg.get_height() - self.characterIconImages[theCharacterData.type].get_height()) / 2
+        padding: int = (self.boardImg.get_height() - self.characterIconImages[theCharacterData.type].get_height()) // 2
         # 画出角色图标
         self.informationBoard.blit(self.characterIconImages[theCharacterData.type], (padding, padding))
         # 加载所需的文字
@@ -362,7 +363,7 @@ class CharacterInfoBoard:
         display_in_center(tcgc_hp2, self.hp_green, temp_posX, temp_posY, self.informationBoard)
         self.action_point_blue.draw(self.informationBoard)
         display_in_center(
-            tcgc_action_point2, self.action_point_blue, temp_posX, temp_posY + self.text_size * 1.5, self.informationBoard
+            tcgc_action_point2, self.action_point_blue, temp_posX, temp_posY + int(self.text_size * 1.5), self.informationBoard
         )
         self.bullets_number_brown.draw(self.informationBoard)
         display_in_center(
@@ -453,20 +454,3 @@ class LoadingTitle:
         self.title_chapterNum.draw(screen)
         self.title_chapterName.draw(screen)
         self.title_description.draw(screen)
-
-
-# 需要被打印的物品
-class ItemNeedBlit(linpg.GameObject2point5d):
-    def __init__(self, image: object, weight: int, pos: tuple, offSet: tuple):
-        super().__init__(pos[0], pos[1], weight)
-        self.image = image
-        self.offSet = offSet
-
-    def draw(self, surface: linpg.ImageSurface) -> None:
-        if isinstance(self.image, linpg.ImageSurface):
-            surface.blit(self.image, linpg.coordinates.add(self.pos, self.offSet))
-        else:
-            try:
-                self.image.display(surface, self.offSet)
-            except Exception:
-                self.image.draw(surface)
