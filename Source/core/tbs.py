@@ -254,11 +254,11 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         self.supply_board.stayingTime = 0
         # 用于表示范围的方框图片
         self.range_ui_images = {
-            "green": linpg.load.static_image(r"<!ui>range_green.png", (0, 0)),
-            "red": linpg.load.static_image(r"<!ui>range_red.png", (0, 0)),
-            "yellow": linpg.load.static_image(r"<!ui>range_yellow.png", (0, 0)),
-            "blue": linpg.load.static_image(r"<!ui>range_blue.png", (0, 0)),
-            "orange": linpg.load.static_image(r"<!ui>range_orange.png", (0, 0)),
+            "green": linpg.load.static_image(r"<&ui>range_green.png", (0, 0)),
+            "red": linpg.load.static_image(r"<&ui>range_red.png", (0, 0)),
+            "yellow": linpg.load.static_image(r"<&ui>range_yellow.png", (0, 0)),
+            "blue": linpg.load.static_image(r"<&ui>range_blue.png", (0, 0)),
+            "orange": linpg.load.static_image(r"<&ui>range_orange.png", (0, 0)),
         }
         for key in self.range_ui_images:
             self.range_ui_images[key].set_width_with_original_image_size_locked(self._MAP.block_width * 0.8)

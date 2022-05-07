@@ -27,7 +27,7 @@ class AttackingSoundManager(linpg.AbstractSoundManager):
     # 播放
     def play(self, kind: str) -> None:
         if kind in self.__SOUNDS:
-            linpg.sound.play(self.__SOUNDS[kind][linpg.sound.get_random_int(0, len(self.__SOUNDS[kind]) - 1)], self._channel_id)
+            linpg.sound.play(self.__SOUNDS[kind][linpg.get_random_int(0, len(self.__SOUNDS[kind]) - 1)], self._channel_id)
 
 
 # 需要被打印的物品

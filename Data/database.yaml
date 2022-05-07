@@ -9,6 +9,20 @@ Decorations:
 Faction:
   alliances: GriffinKryuger
   enemies: SangvisFerri
+Filters:
+  communicating:
+    crop:
+    - 0
+    - 7.5%
+    - 100%
+    - 85%
+    path: Assets/image/UI/communication.png
+    rect:
+    - 12.5%
+    - 0
+    - 25%
+    - 30%
+    type: image
 Npc:
   aa12:
   - aa12.png

@@ -195,7 +195,7 @@ class WarningSystem:
 class SelectMenu(linpg.GameObjectsDictContainer):
     def __init__(self) -> None:
         super().__init__(None, 0, 0, 0, 0)
-        self.selectButtonImg = linpg.load.img("<!ui>button.png")
+        self.selectButtonImg = linpg.load.img("<&ui>button.png")
         self._update(
             {
                 # 攻击
