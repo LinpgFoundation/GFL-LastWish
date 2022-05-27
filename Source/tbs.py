@@ -12,7 +12,7 @@ from .ui import (
     time,
     display_in_center,
 )
-from .module import AttackingSoundManager, ItemNeedBlit
+from .modules import AttackingSoundManager, ItemNeedBlit
 
 # 回合制游戏战斗系统
 class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleForGameSystem):
@@ -265,7 +265,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         # 角色信息UI管理
         self.characterInfoBoardUI = CharacterInfoBoard(self.window_x, self.window_y)
         # 加载用于渲染电影效果的上下黑色帘幕
-        black_curtain = linpg.surface.new((self.window_x, self.window_y * 0.15))
+        black_curtain = linpg.surfaces.new((self.window_x, self.window_y * 0.15))
         black_curtain.fill(linpg.color.BLACK)
         self.__up_black_curtain = linpg.MovableImage(
             black_curtain, 0, -black_curtain.get_height(), 0, 0, 0, int(black_curtain.get_height() * 0.05)

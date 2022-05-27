@@ -1,4 +1,4 @@
-from ..base import *
+from .api import *
 
 # 射击音效
 class AttackingSoundManager(linpg.AbstractSoundManager):

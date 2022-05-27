@@ -1,4 +1,4 @@
-from ..base import *
+from .api import *
 from .editor import MapEditor
 from .tbs import TurnBasedBattleSystem, Optional
 
@@ -22,10 +22,10 @@ class Gamemode:
             cls.__GateImgBelow.draw(screen)
         else:
             cls.__GateImgAbove = linpg.DynamicImage(
-                linpg.transform.crop_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgAbove.png")), -2, 0
+                linpg.images.crop_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgAbove.png")), -2, 0
             )
             cls.__GateImgBelow = linpg.DynamicImage(
-                linpg.transform.crop_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgBelow.png")), -2, 0
+                linpg.images.crop_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgBelow.png")), -2, 0
             )
         linpg.display.flip()
 

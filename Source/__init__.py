@@ -1,1 +1,1 @@
-from .mainMenu import MainMenu, linpg
+from .menu import MainMenu, linpg

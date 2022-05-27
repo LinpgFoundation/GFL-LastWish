@@ -1,7 +1,7 @@
 import time
 from collections import deque
 from typing import Optional
-from ..base import *
+from .api import *
 
 # 中心展示模块1：接受两个item和item2的x和y，将item1展示在item2的中心位置,但不展示item2：
 def display_in_center(
@@ -26,9 +26,9 @@ def display_in_center(
 class RoundSwitch:
     def __init__(self, window_x: int, window_y: int, battleUiTxt: dict):
         self.lineRedDown = linpg.load.img(r"Assets/image/UI/lineRed.png", (window_x, window_y / 50))
-        self.lineRedUp = linpg.transform.rotate(self.lineRedDown, 180)
+        self.lineRedUp = linpg.images.rotate(self.lineRedDown, 180)
         self.lineGreenDown = linpg.load.img(r"Assets/image/UI/lineGreen.png", (window_x, window_y / 50))
-        self.lineGreenUp = linpg.transform.rotate(self.lineGreenDown, 180)
+        self.lineGreenUp = linpg.images.rotate(self.lineGreenDown, 180)
         self.baseImg = linpg.load.img(r"Assets/image/UI/roundSwitchBase.png", (window_x, window_y / 5))
         self.baseImg.set_alpha(0)
         self.x = -window_x
@@ -240,7 +240,9 @@ class SelectMenu(linpg.GameObjectsDictContainer):
         if self.is_visible():
             # 如果按钮没有初始化，则应该立刻初始化按钮
             if self.__need_update is True:
-                selectButtonBase = linpg.transform.resize(self.selectButtonImg, (round(fontSize * 5), round(fontSize * 2.6)))
+                selectButtonBase = linpg.images.smoothly_resize(
+                    self.selectButtonImg, (round(fontSize * 5), round(fontSize * 2.6))
+                )
                 big_font_size: int = int(fontSize)
                 small_font_size: int = int(fontSize * 0.75)
                 selectMenuTxtDict: dict = linpg.lang.get_texts("SelectMenu")
@@ -305,7 +307,7 @@ class CharacterInfoBoard:
         self.boardImg: linpg.ImageSurface = linpg.load.img(r"Assets/image/UI/score.png", (window_x / 5, window_y / 6))
         self.characterIconImages: dict[str, linpg.ImageSurface] = {}
         for img_path in glob(r"Assets/image/npc_icon/*.png"):
-            self.characterIconImages[os.path.basename(img_path).replace(".png", "")] = linpg.transform.resize(
+            self.characterIconImages[os.path.basename(img_path).replace(".png", "")] = linpg.images.smoothly_resize(
                 linpg.load.img(img_path), (window_y * 0.08, window_y * 0.08)
             )
         self.text_size: int = text_size
@@ -430,7 +432,7 @@ class LoadingTitle:
         self, window_x: int, window_y: int, numChapter_txt: str, chapterId: int, chapterTitle_txt: str, chapterDesc_txt: str
     ):
         # 黑色Void帘幕
-        black_surface_t = linpg.surface.new(linpg.display.get_size())
+        black_surface_t = linpg.surfaces.new(linpg.display.get_size())
         black_surface_t.fill(linpg.color.BLACK)
         self.black_bg = linpg.StaticImage(black_surface_t, 0, 0, black_surface_t.get_width(), black_surface_t.get_height())
         title_chapterNum = linpg.font.render(numChapter_txt.format(chapterId), "white", window_x / 38)

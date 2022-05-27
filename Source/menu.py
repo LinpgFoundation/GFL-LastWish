@@ -1,7 +1,7 @@
 from shutil import copyfile
 from time import time as get_current_time
-from .core import Gamemode, console
-from .base import *
+from .components import Gamemode, console
+from .api import *
 
 
 # 主菜单系统
@@ -12,7 +12,7 @@ class MainMenu(linpg.AbstractSystem):
         """生成加载页面"""
         index: int = 0
         font_size: int = int(screen.get_width() / 64)
-        self.loading_screen: linpg.ImageSurface = linpg.surface.new(screen.get_size())
+        self.loading_screen: linpg.ImageSurface = linpg.surfaces.new(screen.get_size())
         self.loading_screen.fill(linpg.color.BLACK)
         # 获取健康游戏忠告
         HealthyGamingAdvice: list = (
