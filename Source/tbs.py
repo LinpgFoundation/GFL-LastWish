@@ -1,4 +1,4 @@
-from typing import Iterable, Optional
+from typing import Any
 from .ui import (
     CharacterInfoBoard,
     LoadingTitle,
@@ -11,8 +11,9 @@ from .ui import (
     os,
     time,
     display_in_center,
+    Optional,
 )
-from .modules import AttackingSoundManager, ItemNeedBlit
+from .modules import AttackingSoundManager, CharacterDataLoader, ItemNeedBlit
 
 # 回合制游戏战斗系统
 class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleForGameSystem):
@@ -209,16 +210,22 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
         self.__dialog_dictionary = dict(DataToProcess["dialogs"]["dictionary"])
         self.__dialog_data = dict(DataToProcess["dialogs"]["data"])
         # 加载对应角色所需的图片
-        self._start_loading_characters(DataToProcess["alliances"], DataToProcess["enemies"])
-        while self._is_characters_loader_alive():
+        characterDataLoaderThread: CharacterDataLoader = CharacterDataLoader(
+            DataToProcess["alliances"],
+            DataToProcess["enemies"],
+        )
+        characterDataLoaderThread.start()
+        while characterDataLoaderThread.is_alive():
             self.infoToDisplayDuringLoading.draw(screen)
             now_loading = self.FONT.render(
-                loading_info["now_loading_characters"] + "({}/{})".format(self.characters_loaded, self.characters_total),
+                loading_info["now_loading_characters"]
+                + "({}/{})".format(characterDataLoaderThread.currentID, characterDataLoaderThread.totalNum),
                 linpg.color.WHITE,
             )
             screen.blit(now_loading, (self.window_x * 0.75, self.window_y * 0.9))
             nowLoadingIcon.draw(screen)
             linpg.display.flip()
+        self._alliances_data, self._enemies_data = characterDataLoaderThread.getResult()
         # 开始加载关卡设定
         self.infoToDisplayDuringLoading.draw(screen)
         now_loading = self.FONT.render(loading_info["now_loading_map"], linpg.color.WHITE)
@@ -334,7 +341,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
     """画面"""
     # 新增需要在屏幕上画出的物品
     def __add_on_screen_object(
-        self, image: linpg.ImageSurface, weight: int = -1, pos: Iterable = linpg.ORIGIN, offSet: Iterable = linpg.ORIGIN
+        self, image: linpg.ImageSurface, weight: int = -1, pos: tuple = linpg.ORIGIN, offSet: tuple = linpg.ORIGIN
     ) -> None:
         if weight < 0:
             self.__max_item_weight += 1
@@ -486,12 +493,12 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
     def __skill(
         self,
         characterName: str,
-        pos_click: any,
-        the_skill_cover_area: any,
+        pos_click: Any,
+        the_skill_cover_area: Any,
         action: str = "detect",
         skill_target: Optional[str] = None,
         damage_do_to_character: Optional[dict] = None,
-    ) -> any:
+    ) -> Any:
         if action == "detect":
             skill_target = None
             if self._alliances_data[characterName].type == "gsh18":
@@ -565,14 +572,15 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                 )
             # 对话系统总循环
             if self.__dialog_parameters["dialogId"] < len(self.__dialog_data[self.__dialog_key]):
-                currentDialog = self.__dialog_data[self.__dialog_key][self.__dialog_parameters["dialogId"]]
+                currentDialog: dict = self.__dialog_data[self.__dialog_key][self.__dialog_parameters["dialogId"]]
                 # 如果操作是移动
                 if "move" in currentDialog and currentDialog["move"] is not None:
                     # 为所有角色设置路径
                     if not self.__dialog_is_route_generated:
+                        routeTmp: list
                         for key, pos in currentDialog["move"].items():
                             if key in self._alliances_data:
-                                routeTmp: list = self._MAP.find_path(
+                                routeTmp = self._MAP.find_path(
                                     self._alliances_data[key], pos, self._alliances_data, self._enemies_data
                                 )
                                 if len(routeTmp) > 0:
@@ -580,7 +588,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
                                 else:
                                     raise Exception("Error: Character {} cannot find a valid path!".format(key))
                             elif key in self._enemies_data:
-                                routeTmp: list = self._MAP.find_path(
+                                routeTmp = self._MAP.find_path(
                                     self._enemies_data[key], pos, self._enemies_data, self._alliances_data
                                 )
                                 if len(routeTmp) > 0:
@@ -701,7 +709,7 @@ class TurnBasedBattleSystem(linpg.AbstractBattleSystem, linpg.PauseMenuModuleFor
     # 战斗模块
     def __play_battle(self, screen: linpg.ImageSurface) -> None:
         # 处理基础事件
-        skill_range = None
+        skill_range = Optional[dict[str, list]]
         for event in linpg.controller.events:
             if event.type == linpg.key.DOWN:
                 if event.key == linpg.key.ESCAPE and self.characterGetClick is None:

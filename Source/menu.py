@@ -1,6 +1,6 @@
 from shutil import copyfile
 from time import time as get_current_time
-from .components import Gamemode, console
+from .components import Gamemode, console, Optional
 from .api import *
 
 
@@ -62,9 +62,9 @@ class MainMenu(linpg.AbstractSystem):
         self.chapter_select: list = []
         self.workshop_files: list = []
         self.workshop_files_text: list = []
-        self.current_selected_workshop_project = None
+        self.current_selected_workshop_project: str = ""
         # 关卡选择的封面
-        self.__cover_img_surface = None
+        self.__cover_img_surface: Optional[linpg.StaticImage] = None
         # 音效
         self.click_button_sound = linpg.sound.load(
             r"Assets/sound/ui/main_menu_click_button.ogg", linpg.media.volume.effects / 100.0
@@ -72,13 +72,8 @@ class MainMenu(linpg.AbstractSystem):
         self.hover_on_button_sound = linpg.sound.load(
             r"Assets/sound/ui/main_menu_hover_on_button.ogg", linpg.media.volume.effects / 100.0
         )
-        self.hover_sound_play_on = None
-        self.last_hover_sound_play_on = None
-        # 加载主菜单背景
-        Gamemode.VIDEO_BACKGROUND = linpg.VideoSurface(
-            r"Assets/movie/SquadAR.mp4", True, not linpg.debug.get_developer_mode(), (935, 3105), cache_key="into"
-        )
-        Gamemode.VIDEO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
+        self.hover_sound_play_on: int = -1
+        self.last_hover_sound_play_on: int = -2
         # 初始化返回菜单判定参数
         linpg.global_value.set("BackToMainMenu", False)
         # 设置Discord状态
@@ -397,7 +392,7 @@ class MainMenu(linpg.AbstractSystem):
     # 画出背景
     def __draw_background(self, screen: linpg.ImageSurface) -> None:
         # 处理封面的更替
-        cover_path: str = None
+        cover_path: Optional[str] = None
         if self.menu_type == 1:
             for i in range(len(self.chapter_select) - 1):
                 if self.chapter_select[i].is_hovered():

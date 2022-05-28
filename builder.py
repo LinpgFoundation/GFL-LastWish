@@ -2,7 +2,7 @@ from os import path as PATH
 from shutil import move as MOVE
 from subprocess import check_call
 import pkg_resources
-from linpg import Builder
+from linpg import Builder  # type: ignore
 
 # 编译游戏本体
 Builder.delete_file_if_exist(PATH.join("Source_pyd"))
@@ -29,6 +29,6 @@ if input("Do you want to generate a package for the game(Y/n):") == "Y":
     MOVE(PATH.join("dist", "main"), PATH.join("dist", "GirlsFrontLine-LastWish"))
 
     # 移除移除的缓存文件
-    folders_need_remove: tuple[str] = ("build", "logs", "__pycache__", "Source_pyd")
+    folders_need_remove: tuple[str, ...] = ("build", "logs", "__pycache__", "Source_pyd")
     for folder_p in folders_need_remove:
         Builder.delete_file_if_exist(folder_p)

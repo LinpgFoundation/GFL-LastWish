@@ -2,7 +2,7 @@ import os
 from glob import glob
 
 if not os.path.exists(r"dev.key"):
-    import linpg
+    import linpg  # type: ignore
 else:
     import sys
 
@@ -34,7 +34,7 @@ LARGE_IMAGE: str = "test"
 if linpg.setting.try_get("DiscordRichPresence") is True:
     # 尝试连接Discord
     try:
-        from pypresence import Presence
+        from pypresence import Presence  # type: ignore
 
         RPC = Presence(str(_CLIENT_ID))
         RPC.connect()

@@ -1,6 +1,38 @@
 from .api import *
-from .editor import MapEditor
-from .tbs import TurnBasedBattleSystem, Optional
+from .tbs import TurnBasedBattleSystem, Optional, CharacterDataLoader
+
+# 地图编辑器系统
+class MapEditor(linpg.AbstractMapEditor):
+
+    # 加载角色的数据
+    def _load_characters_data(self, alliances: dict, enemies: dict) -> None:
+        characterDataLoaderThread = CharacterDataLoader(alliances, enemies, "dev")
+        characterDataLoaderThread.start()
+        characterDataLoaderThread.join()
+        self._alliances_data, self._enemies_data = characterDataLoaderThread.getResult()
+
+
+# 控制台
+class Console(linpg.Console):
+    def _check_command(self, conditions: list) -> None:
+        if conditions[0] == "load":
+            if conditions[1] == "dialog":
+                if len(conditions) < 5:
+                    Gamemode.dialog(linpg.display.screen_window, conditions[2], conditions[3], conditions[4], conditions[5])
+                else:
+                    self._txt_output.append("Missing critical parameter(s).")
+            elif conditions[1] == "battle":
+                if len(conditions) < 4:
+                    Gamemode.battle(linpg.display.screen_window, conditions[2], conditions[3], conditions[4])
+                else:
+                    self._txt_output.append("Missing critical parameter(s).")
+            else:
+                self._txt_output.append("Error, do not know what to load.")
+        else:
+            super()._check_command(conditions)
+
+
+console: Console = Console(linpg.display.get_width() * 0.1, linpg.display.get_height() * 0.8)
 
 
 class Gamemode:
@@ -8,12 +40,16 @@ class Gamemode:
     # 储存闸门动画的图片素材
     __GateImgAbove: Optional[linpg.ImageSurface] = None
     __GateImgBelow: Optional[linpg.ImageSurface] = None
-    VIDEO_BACKGROUND = None
+    # 加载主菜单背景
+    VIDEO_BACKGROUND: linpg.VideoSurface = linpg.VideoSurface(
+        r"Assets/movie/SquadAR.mp4", True, not linpg.debug.get_developer_mode(), (935, 3105), cache_key="into"
+    )
+    VIDEO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
 
     # 画出加载ui
     @classmethod
     def draw_loading_chapter_ui(cls, screen: linpg.ImageSurface, percent: int) -> None:
-        if cls.__GateImgAbove is not None:
+        if cls.__GateImgAbove is not None and cls.__GateImgBelow is not None:
             cls.__GateImgAbove.set_size(screen.get_width() + 4, screen.get_height() / 1.7)
             cls.__GateImgAbove.set_bottom(cls.__GateImgAbove.get_height() / 100 * percent)
             cls.__GateImgAbove.draw(screen)
@@ -41,7 +77,7 @@ class Gamemode:
         # 卸载音乐
         linpg.media.unload()
         # 初始化对话系统模块
-        DIALOG: object = linpg.DialogSystem()
+        DIALOG: linpg.DialogSystem = linpg.DialogSystem()
         if chapterType is not None:
             DIALOG.new(chapterType, chapterId, part, projectName)
         else:
@@ -76,7 +112,7 @@ class Gamemode:
                 large_image=LARGE_IMAGE,
             )
         # 加载对话
-        DIALOG: object = linpg.DialogEditor()
+        DIALOG: linpg.DialogEditor = linpg.DialogEditor()
         DIALOG.load(chapterType, chapterId, part, projectName)
         # 主循环
         while DIALOG.is_playing():
@@ -96,7 +132,7 @@ class Gamemode:
         cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
-        BATTLE: object = TurnBasedBattleSystem()
+        BATTLE: TurnBasedBattleSystem = TurnBasedBattleSystem()
         if chapterType is not None:
             BATTLE.new(screen, chapterType, chapterId, projectName)
         else:
@@ -138,26 +174,3 @@ class Gamemode:
         linpg.display.set_caption(linpg.lang.get_text("General", "game_title"))
         if RPC is not None:
             RPC.update(state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"), large_image=LARGE_IMAGE)
-
-
-# 控制台
-class Console(linpg.Console):
-    def _check_command(self, conditions: list) -> None:
-        if conditions[0] == "load":
-            if conditions[1] == "dialog":
-                if len(conditions) < 5:
-                    Gamemode.dialog(linpg.display.screen_window, conditions[2], conditions[3], conditions[4], conditions[5])
-                else:
-                    self._txt_output.append("Missing critical parameter(s).")
-            elif conditions[1] == "battle":
-                if len(conditions) < 4:
-                    Gamemode.battle(linpg.display.screen_window, conditions[2], conditions[3], conditions[4])
-                else:
-                    self._txt_output.append("Missing critical parameter(s).")
-            else:
-                self._txt_output.append("Error, do not know what to load.")
-        else:
-            super()._check_command(conditions)
-
-
-console: Console = Console(linpg.display.get_width() * 0.1, linpg.display.get_height() * 0.8)
