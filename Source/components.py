@@ -1,15 +1,21 @@
 from .api import *
-from .tbs import TurnBasedBattleSystem, Optional, CharacterDataLoader
+from .character import FriendlyCharacter, HostileCharacter, Optional
+from .tbs import CharacterDataLoader, TurnBasedBattleSystem
 
 # 地图编辑器系统
 class MapEditor(linpg.AbstractMapEditor):
+    def update_entity(self, faction: str, key: str, data: dict) -> None:
+        if faction == "GriffinKryuger":
+            self._entities_data[faction][key] = FriendlyCharacter(data, "dev")
+        if faction == "SangvisFerri":
+            self._entities_data[faction][key] = HostileCharacter(data, "dev")
 
     # 加载角色的数据
-    def _load_characters_data(self, alliances: dict, enemies: dict) -> None:
-        characterDataLoaderThread = CharacterDataLoader(alliances, enemies, "dev")
+    def _load_characters_data(self, entities: dict) -> None:
+        characterDataLoaderThread = CharacterDataLoader(entities, "dev")
         characterDataLoaderThread.start()
         characterDataLoaderThread.join()
-        self._alliances_data, self._enemies_data = characterDataLoaderThread.getResult()
+        self._entities_data = characterDataLoaderThread.getResult()
 
 
 # 控制台

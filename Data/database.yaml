@@ -6,9 +6,6 @@ Contributors:
 Decorations:
   campfire: campfire
   chest: chest
-Faction:
-  alliances: GriffinKryuger
-  enemies: SangvisFerri
 Filters:
   communicating:
     crop:

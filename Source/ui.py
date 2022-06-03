@@ -1,7 +1,8 @@
 import time
 from collections import deque
-from typing import Optional
-from .api import *
+from typing import Union
+from .character import *
+
 
 # 中心展示模块1：接受两个item和item2的x和y，将item1展示在item2的中心位置,但不展示item2：
 def display_in_center(
@@ -201,14 +202,14 @@ class SelectMenu(linpg.GameObjectsDictContainer):
                 # 攻击
                 "attack": {
                     "button": None,
-                    "ap": linpg.AP_IS_NEEDED_TO_ATTACK,
-                    "ap_text": str(linpg.AP_IS_NEEDED_TO_ATTACK) + " AP",
+                    "ap": BasicEntity.AP_IS_NEEDED_TO_ATTACK,
+                    "ap_text": str(BasicEntity.AP_IS_NEEDED_TO_ATTACK) + " AP",
                 },
                 # 移动
                 "move": {
                     "button": None,
-                    "ap": linpg.AP_IS_NEEDED_TO_MOVE_ONE_BLOCK,
-                    "ap_text": str(linpg.AP_IS_NEEDED_TO_MOVE_ONE_BLOCK) + "N AP",
+                    "ap": BasicEntity.AP_IS_NEEDED_TO_MOVE_ONE_BLOCK,
+                    "ap_text": str(BasicEntity.AP_IS_NEEDED_TO_MOVE_ONE_BLOCK) + "N AP",
                 },
                 # 换弹
                 "reload": {"button": None, "ap": 5, "ap_text": "5 AP"},
@@ -456,3 +457,20 @@ class LoadingTitle:
         self.title_chapterNum.draw(screen)
         self.title_chapterName.draw(screen)
         self.title_description.draw(screen)
+
+
+# 需要被打印的物品
+class ItemNeedBlit(linpg.GameObject2point5d):
+    def __init__(self, image: Union[linpg.ImageSurface, linpg.GameObject2d], weight: int, pos: tuple, offSet: tuple):
+        super().__init__(pos[0], pos[1], weight)
+        self.image: Union[linpg.ImageSurface, linpg.GameObject2d] = image
+        self.offSet: tuple = offSet
+
+    def draw(self, surface: linpg.ImageSurface) -> None:
+        if isinstance(self.image, linpg.ImageSurface):
+            surface.blit(self.image, linpg.coordinates.add(self.pos, self.offSet))
+        else:
+            try:
+                self.image.display(surface, self.offSet)
+            except Exception:
+                self.image.draw(surface)

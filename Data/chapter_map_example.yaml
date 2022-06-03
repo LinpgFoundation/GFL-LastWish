@@ -1,9 +1,3 @@
-alliances:
-  sv98:
-    bullets_carried: 0
-    type: sv98
-    x: 5
-    y: 7
 at_night: false
 background_image: snowfield.jpg
 background_music: Combat_02_RemnantFantasyPackage_Synari.ogg
@@ -30,11 +24,18 @@ decoration:
       x: 10
       y: 12
 dialogs: {}
-enemies:
-  guard:
-    type: guard
-    x: 19
-    y: 19
+entities:
+  GriffinKryuger:
+    sv98:
+      bullets_carried: 0
+      type: sv98
+      x: 5
+      y: 7
+  SangvisFerri:
+    guard:
+      type: guard
+      x: 19
+      y: 19
 mission_objectives:
   allow_any_one_die: false
   round_limitation: 10

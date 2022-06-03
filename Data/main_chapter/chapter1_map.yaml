@@ -1,25 +1,3 @@
-alliances:
-  asval:
-    bullets_carried: 200
-    type: asval
-    x: 8
-    y: 5
-  gsh18:
-    bullets_carried: 200
-    type: gsh18
-    x: 1
-    y: 0
-  pp1901:
-    bullets_carried: 200
-    type: pp1901
-    x: 0
-    y: 0
-  sv98:
-    bullets_carried: 0
-    current_bullets: 0
-    type: sv98
-    x: 5
-    y: 7
 at_night: true
 background_image: snowfield.jpg
 background_music: Combat_02_RemnantFantasyPackage_Synari.ogg
@@ -479,27 +457,50 @@ dialogs:
         repeat: false
         whitelist:
         - sv98
-enemies:
-  guard:
-    type: guard
-    x: 19
-    y: 19
-  jaeger:
-    type: jaeger
-    x: 10
-    y: 11
-  prowler:
-    type: prowler
-    x: 14
-    y: 8
-  ripper:
-    type: ripper
-    x: 16
-    y: 4
-  vespid:
-    type: vespid
-    x: 18
-    y: 10
+entities:
+  GriffinKryuger:
+    asval:
+      bullets_carried: 200
+      type: asval
+      x: 8
+      y: 5
+    gsh18:
+      bullets_carried: 200
+      type: gsh18
+      x: 1
+      y: 0
+    pp1901:
+      bullets_carried: 200
+      type: pp1901
+      x: 0
+      y: 0
+    sv98:
+      bullets_carried: 0
+      current_bullets: 0
+      type: sv98
+      x: 5
+      y: 7
+  SangvisFerri:
+    guard:
+      type: guard
+      x: 19
+      y: 19
+    jaeger:
+      type: jaeger
+      x: 10
+      y: 11
+    prowler:
+      type: prowler
+      x: 14
+      y: 8
+    ripper:
+      type: ripper
+      x: 16
+      y: 4
+    vespid:
+      type: vespid
+      x: 18
+      y: 10
 local_x: -40%
 local_y: 10%
 map:

@@ -18,6 +18,9 @@ else:
     # 启用开发模式
     linpg.debug.set_developer_mode(True)
 
+# 初始化
+linpg.display.init()
+
 # 加载版本信息
 version_info: dict = linpg.config.load("Data/version.yaml")
 
@@ -29,8 +32,7 @@ __all__ = ["linpg", "os", "glob", "RPC", "ALPHA_BUILD_WARNING", "LARGE_IMAGE"]
 # 本游戏的客户端ID
 _CLIENT_ID: int = 831417008734208011
 LARGE_IMAGE: str = "test"
-# discord接口
-# 如果不想要展示Discord的Rich Presence
+# discord接口 - 如果不想要展示Discord的Rich Presence
 if linpg.setting.try_get("DiscordRichPresence") is True:
     # 尝试连接Discord
     try:

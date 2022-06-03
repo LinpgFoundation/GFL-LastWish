@@ -18,16 +18,14 @@ if __name__ == "__main__":
     GAMESTART: bool = True
 
     if GAMESTART is True:
-        # 创建窗口
-        screen = linpg.display.init()
         # 窗口标题图标
         linpg.display.set_icon(r"Assets/image/UI/icon.png")
         linpg.display.set_caption(linpg.lang.get_text("General", "game_title"))
         # 主菜单模块
-        mainMenu = MainMenu(screen)
+        mainMenu = MainMenu(linpg.display.get_window())
         # 主循环
         while mainMenu.is_playing():
-            mainMenu.draw(screen)
+            mainMenu.draw(linpg.display.get_window())
             linpg.display.flip()
 
 # 释放内容占用
