@@ -1,15 +1,9 @@
 2b14:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: HOC
   magazine_capacity: 1
@@ -18,19 +12,13 @@
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 aa12:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: SG
   magazine_capacity: 1
@@ -39,19 +27,13 @@ aa12:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 aegis:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -62,15 +44,9 @@ aegis:
 aegis_ga:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -81,15 +57,9 @@ aegis_ga:
 aegis_swap:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -100,15 +70,9 @@ aegis_swap:
 asval:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 5
-    middle:
-    - 4
-    - 4
-    near:
-    - 1
-    - 3
+  - 3
+  - 1
+  - 1
   faction: GriffinKryuger
   kind: AR
   magazine_capacity: 20
@@ -118,24 +82,14 @@ asval:
   min_damage: 250
   skill_coverage: 1
   skill_effective_range:
-    middle:
-    - 4
-    - 5
-    near:
-    - 1
-    - 3
+  - 3
+  - 2
 brute:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -146,15 +100,9 @@ brute:
 contender:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: HG
   magazine_capacity: 1
@@ -163,19 +111,13 @@ contender:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 dinergate:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -186,15 +128,9 @@ dinergate:
 dragoon:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -205,15 +141,9 @@ dragoon:
 dragoon_swap:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -224,15 +154,9 @@ dragoon_swap:
 fnfnc:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: AR
   magazine_capacity: 1
@@ -241,19 +165,13 @@ fnfnc:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 g11:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: AR
   magazine_capacity: 1
@@ -262,19 +180,13 @@ g11:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 g36:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: AR
   magazine_capacity: 1
@@ -283,19 +195,13 @@ g36:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 g41:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: AR
   magazine_capacity: 1
@@ -304,19 +210,13 @@ g41:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 golyat:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -327,15 +227,9 @@ golyat:
 golyatplus:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -346,15 +240,9 @@ golyatplus:
 grizzly:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: HG
   magazine_capacity: 1
@@ -363,19 +251,13 @@ grizzly:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 gsh18:
   attack_coverage: 1
   effective_range:
-    far:
-    - 4
-    - 4
-    middle:
-    - 3
-    - 3
-    near:
-    - 1
-    - 2
+  - 2
+  - 1
+  - 1
   faction: GriffinKryuger
   kind: HG
   magazine_capacity: 18
@@ -385,15 +267,11 @@ gsh18:
   min_damage: 100
   skill_coverage: 1
   skill_effective_range:
-    near:
-    - 1
-    - 6
+  - 6
 guard:
   attack_coverage: 1
   effective_range:
-    near:
-    - 1
-    - 5
+  - 5
   faction: SangvisFerri
   kind: HG
   magazine_capacity: 20
@@ -404,9 +282,7 @@ guard:
 guard_swap:
   attack_coverage: 1
   effective_range:
-    near:
-    - 1
-    - 6
+  - 6
   faction: SangvisFerri
   kind: HG
   magazine_capacity: 20
@@ -417,15 +293,9 @@ guard_swap:
 hk416:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: AR
   magazine_capacity: 1
@@ -434,19 +304,13 @@ hk416:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 jaeger:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 5
-    middle:
-    - 4
-    - 4
-    near:
-    - 1
-    - 3
+  - 3
+  - 1
+  - 1
   faction: SangvisFerri
   kind: RF
   magazine_capacity: 20
@@ -457,15 +321,9 @@ jaeger:
 jaeger_swap:
   attack_coverage: 1
   effective_range:
-    far:
-    - 6
-    - 6
-    middle:
-    - 5
-    - 5
-    near:
-    - 1
-    - 4
+  - 4
+  - 1
+  - 1
   faction: SangvisFerri
   kind: RF
   magazine_capacity: 20
@@ -476,15 +334,9 @@ jaeger_swap:
 jaguar:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -495,15 +347,9 @@ jaguar:
 jupiter:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -514,15 +360,9 @@ jupiter:
 kp31:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: SMG
   magazine_capacity: 1
@@ -531,19 +371,13 @@ kp31:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 lewis:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: MG
   magazine_capacity: 1
@@ -552,19 +386,13 @@ lewis:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 m14:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: RF
   magazine_capacity: 1
@@ -573,19 +401,13 @@ m14:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 m1903:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: RF
   magazine_capacity: 1
@@ -594,19 +416,13 @@ m1903:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 m1928a1:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: SMG
   magazine_capacity: 1
@@ -615,19 +431,13 @@ m1928a1:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 manticore:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -638,15 +448,9 @@ manticore:
 mg4:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: MG
   magazine_capacity: 1
@@ -655,19 +459,13 @@ mg4:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 negev:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: MG
   magazine_capacity: 1
@@ -676,19 +474,13 @@ negev:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 nemeum:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -699,15 +491,9 @@ nemeum:
 pp1901:
   attack_coverage: 2
   effective_range:
-    far:
-    - 4
-    - 3
-    middle:
-    - 2
-    - 2
-    near:
-    - 1
-    - 1
+  - 1
+  - 1
+  - 2
   faction: GriffinKryuger
   kind: SMG
   magazine_capacity: 30
@@ -717,24 +503,14 @@ pp1901:
   min_damage: 150
   skill_coverage: 3
   skill_effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 4
-    - 4
-    near:
-    - 1
-    - 3
+  - 3
+  - 1
+  - 2
 prowler:
   attack_coverage: 1
   effective_range:
-    middle:
-    - 5
-    - 5
-    near:
-    - 1
-    - 4
+  - 4
+  - 1
   faction: SangvisFerri
   kind: SMG
   magazine_capacity: 20
@@ -745,15 +521,9 @@ prowler:
 prowler_swap:
   attack_coverage: 1
   effective_range:
-    far:
-    - 6
-    - 6
-    middle:
-    - 5
-    - 5
-    near:
-    - 1
-    - 4
+  - 4
+  - 1
+  - 1
   faction: SangvisFerri
   kind: SMG
   magazine_capacity: 20
@@ -764,12 +534,8 @@ prowler_swap:
 ripper:
   attack_coverage: 1
   effective_range:
-    middle:
-    - 5
-    - 6
-    near:
-    - 1
-    - 4
+  - 4
+  - 2
   faction: SangvisFerri
   kind: SMG
   magazine_capacity: 20
@@ -780,15 +546,9 @@ ripper:
 saiga12:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: SG
   magazine_capacity: 1
@@ -797,19 +557,13 @@ saiga12:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 sat8:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: SG
   magazine_capacity: 1
@@ -818,19 +572,13 @@ sat8:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 scouts:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -841,15 +589,9 @@ scouts:
 sr3mp:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: SMG
   magazine_capacity: 1
@@ -858,19 +600,13 @@ sr3mp:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 sv98:
   attack_coverage: 1
   effective_range:
-    far:
-    - 6
-    - 6
-    middle:
-    - 4
-    - 5
-    near:
-    - 1
-    - 3
+  - 3
+  - 2
+  - 1
   faction: GriffinKryuger
   kind: RF
   magazine_capacity: 10
@@ -880,24 +616,14 @@ sv98:
   min_damage: 400
   skill_coverage: 1
   skill_effective_range:
-    middle:
-    - 6
-    - 6
-    near:
-    - 1
-    - 5
+  - 5
+  - 1
 tarantula:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: SangvisFerri
   kind: null
   magazine_capacity: 1
@@ -908,15 +634,9 @@ tarantula:
 ump45:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: SMG
   magazine_capacity: 1
@@ -925,19 +645,13 @@ ump45:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 ump9:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: SMG
   magazine_capacity: 1
@@ -946,19 +660,13 @@ ump9:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 vespid:
   attack_coverage: 1
   effective_range:
-    far:
-    - 7
-    - 7
-    middle:
-    - 5
-    - 6
-    near:
-    - 1
-    - 4
+  - 4
+  - 2
+  - 1
   faction: SangvisFerri
   kind: AR
   magazine_capacity: 20
@@ -969,15 +677,9 @@ vespid:
 wa2000:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: RF
   magazine_capacity: 1
@@ -986,19 +688,13 @@ wa2000:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []
 welrod:
   attack_coverage: 1
   effective_range:
-    far:
-    - 5
-    - 6
-    middle:
-    - 3
-    - 4
-    near:
-    - 1
-    - 2
+  - 2
+  - 2
+  - 2
   faction: GriffinKryuger
   kind: HG
   magazine_capacity: 1
@@ -1007,4 +703,4 @@ welrod:
   max_hp: 1
   min_damage: 1
   skill_coverage: 1
-  skill_effective_range: {}
+  skill_effective_range: []

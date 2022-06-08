@@ -24,12 +24,12 @@ class Console(linpg.Console):
         if conditions[0] == "load":
             if conditions[1] == "dialog":
                 if len(conditions) < 5:
-                    Gamemode.dialog(linpg.display.screen_window, conditions[2], conditions[3], conditions[4], conditions[5])
+                    Gamemode.dialog(linpg.display.get_window(), conditions[2], conditions[3], conditions[4], conditions[5])
                 else:
                     self._txt_output.append("Missing critical parameter(s).")
             elif conditions[1] == "battle":
                 if len(conditions) < 4:
-                    Gamemode.battle(linpg.display.screen_window, conditions[2], conditions[3], conditions[4])
+                    Gamemode.battle(linpg.display.get_window(), conditions[2], conditions[3], conditions[4])
                 else:
                     self._txt_output.append("Missing critical parameter(s).")
             else:
@@ -44,8 +44,8 @@ console: Console = Console(linpg.display.get_width() * 0.1, linpg.display.get_he
 class Gamemode:
 
     # 储存闸门动画的图片素材
-    __GateImgAbove: Optional[linpg.ImageSurface] = None
-    __GateImgBelow: Optional[linpg.ImageSurface] = None
+    __GateImgAbove: Optional[linpg.DynamicImage] = None
+    __GateImgBelow: Optional[linpg.DynamicImage] = None
     # 加载主菜单背景
     VIDEO_BACKGROUND: linpg.VideoSurface = linpg.VideoSurface(
         r"Assets/movie/SquadAR.mp4", True, not linpg.debug.get_developer_mode(), (935, 3105), cache_key="into"
@@ -102,7 +102,7 @@ class Gamemode:
     # 对话编辑器
     @classmethod
     def dialogEditor(
-        cls, screen: linpg.ImageSurface, chapterType: Optional[str], chapterId: int, part: str, projectName: Optional[str] = None
+        cls, screen: linpg.ImageSurface, chapterType: str, chapterId: int, part: str, projectName: Optional[str] = None
     ) -> None:
         cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
@@ -153,9 +153,7 @@ class Gamemode:
 
     # 地图编辑器
     @classmethod
-    def mapEditor(
-        cls, screen: linpg.ImageSurface, chapterType: Optional[str], chapterId: int, projectName: Optional[str] = None
-    ) -> None:
+    def mapEditor(cls, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: Optional[str] = None) -> None:
         cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()

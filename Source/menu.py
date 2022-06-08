@@ -12,8 +12,8 @@ class MainMenu(linpg.AbstractSystem):
         """生成加载页面"""
         index: int = 0
         font_size: int = int(screen.get_width() / 64)
-        self.loading_screen: linpg.ImageSurface = linpg.surfaces.new(screen.get_size())
-        self.loading_screen.fill(linpg.color.BLACK)
+        self.__loading_screen: Optional[linpg.ImageSurface] = linpg.surfaces.new(screen.get_size())
+        self.__loading_screen.fill(linpg.color.BLACK)
         # 获取健康游戏忠告
         HealthyGamingAdvice: list = (
             [linpg.font.render(text_t, "white", font_size) for text_t in linpg.lang.get_texts("HealthyGamingAdvice")]
@@ -24,7 +24,7 @@ class MainMenu(linpg.AbstractSystem):
         text1 = linpg.font.render(linpg.lang.get_text("title1"), "white", font_size)
         text2 = linpg.font.render(linpg.lang.get_text("title2"), "white", font_size)
         # 画到暂时的帘幕上
-        self.loading_screen.blits(
+        self.__loading_screen.blits(
             (
                 (text1, (font_size, screen.get_height() * 0.9)),
                 (text2, (font_size, screen.get_height() * 0.9 - screen.get_width() / 32)),
@@ -32,7 +32,7 @@ class MainMenu(linpg.AbstractSystem):
         )
         index = 0
         for item_t in HealthyGamingAdvice:
-            self.loading_screen.blit(
+            self.__loading_screen.blit(
                 item_t,
                 (
                     screen.get_width() - screen.get_width() / 32 - item_t.get_width(),
@@ -44,8 +44,8 @@ class MainMenu(linpg.AbstractSystem):
         # 载入页面 - 渐入
         for index in range(0, 250, int(2 * linpg.display.get_delta_time())):
             screen.fill(linpg.color.BLACK)
-            self.loading_screen.set_alpha(index)
-            screen.blit(self.loading_screen, linpg.ORIGIN)
+            self.__loading_screen.set_alpha(index)
+            screen.blit(self.__loading_screen, linpg.ORIGIN)
             linpg.display.flip()
         # 检测继续按钮是否可用的参数
         self.continueButtonIsOn: bool = False
@@ -373,16 +373,6 @@ class MainMenu(linpg.AbstractSystem):
             )
             txt_y += font_size
 
-    # 更新语言
-    def update_language(self, screen: linpg.ImageSurface) -> None:
-        super().update_language()
-        self.__reset_menu_text(screen.get_size())
-        if self.menu_type == 1:
-            self.__reload_chapter_select_list(screen.get_size())
-        elif self.menu_type == 6:
-            self.__reload_workshop_files_list(screen.get_size(), False)
-            self.__reload_chapter_select_list(screen.get_size(), "workshop")
-
     # 更新音量
     def updated_volume(self) -> None:
         self.click_button_sound.set_volume(linpg.media.volume.effects / 100.0)
@@ -432,7 +422,13 @@ class MainMenu(linpg.AbstractSystem):
             self.updated_volume()
         # 更新语言
         if linpg.option_menu.need_update["language"] is True or self.language_need_update() is True:
-            self.update_language(screen)
+            self.update_language()
+            self.__reset_menu_text(screen.get_size())
+            if self.menu_type == 1:
+                self.__reload_chapter_select_list(screen.get_size())
+            elif self.menu_type == 6:
+                self.__reload_workshop_files_list(screen.get_size(), False)
+                self.__reload_chapter_select_list(screen.get_size(), "workshop")
         # 展示控制台
         console.draw(screen)
         # 判断按键
@@ -581,10 +577,10 @@ class MainMenu(linpg.AbstractSystem):
                             self.__restart_background()
                             break
         ALPHA_BUILD_WARNING.draw(screen)
-        if self.loading_screen is not None:
-            alpha_t: int = self.loading_screen.get_alpha()
-            if alpha_t <= 0:
-                self.loading_screen = None
+        if self.__loading_screen is not None:
+            alpha_t: Optional[int] = self.__loading_screen.get_alpha()
+            if alpha_t is None or alpha_t <= 0:
+                self.__loading_screen = None
             else:
-                self.loading_screen.set_alpha(max(0, alpha_t - int(5 * linpg.display.get_delta_time())))
-                screen.blit(self.loading_screen, linpg.ORIGIN)
+                self.__loading_screen.set_alpha(max(0, alpha_t - int(5 * linpg.display.get_delta_time())))
+                screen.blit(self.__loading_screen, linpg.ORIGIN)

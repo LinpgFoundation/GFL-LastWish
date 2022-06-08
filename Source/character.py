@@ -1,7 +1,7 @@
 import threading
 from collections import deque
 from copy import deepcopy
-from typing import Optional
+from typing import Optional, Sequence
 from .api import *
 
 
@@ -136,11 +136,11 @@ class FriendlyCharacter(BasicEntity):
         # 技能覆盖范围
         self.__skill_coverage: int = int(characterData["skill_coverage"])
         # 技能施展范围
-        self.__skill_effective_range: dict = {}
-        if "skill_effective_range" in characterData and characterData["skill_effective_range"] is not None:
-            self.__skill_effective_range.update(characterData["skill_effective_range"])
-        # 最远技能施展范围
-        self.__max_skill_range: int = self._calculate_range(self.__skill_effective_range)
+        self.__skill_effective_range: tuple[int, ...] = (
+            tuple(_data) if (_data := characterData.get("skill_effective_range")) is not None else tuple()
+        )
+        # 技能的类型 【0 - 伤害，1 - 治疗己方】
+        self.__skill_type: int = int(characterData.get("skill_type", -1))
         # 被察觉程度
         self.__detection: int = (
             int(characterData["detection"]) if "detection" in characterData and characterData["detection"] is not None else 0
@@ -169,7 +169,7 @@ class FriendlyCharacter(BasicEntity):
             {
                 "bullets_carried": self.__bullets_carried,
                 "skill_coverage": self.__skill_coverage,
-                "skill_effective_range": self.__skill_effective_range,
+                "skill_effective_range": list(self.__skill_effective_range),
             }
         )
         # 除去重复数据
@@ -237,13 +237,51 @@ class FriendlyCharacter(BasicEntity):
 
     # 技能施展范围
     @property
-    def skill_effective_range(self) -> dict:
+    def skill_effective_range(self) -> tuple[int, ...]:
         return self.__skill_effective_range
 
     # 最远技能施展范围
     @property
     def max_skill_range(self) -> int:
-        return self.__max_skill_range
+        _length: int = len(self.__skill_effective_range)
+        return self.__skill_effective_range[_length - 1] if _length > 0 else -1
+
+    def skill_range_target_in(self, otherEntity: linpg.Entity) -> int:
+        distanceBetween: int = abs(int(otherEntity.x - self.x)) + abs(int(otherEntity.y - self.y))
+        _total: int = 0
+        for i in range(len(self.__effective_range)):
+            _total += self.__effective_range[i]
+            if distanceBetween <= _total:
+                return i
+        return -1
+
+    # 获取
+    def get_entity_in_skill_effective_range(self, alliances: dict, enemies: dict, center_pos: tuple[int, int]) -> tuple[str, ...]:
+        _targets: list[str] = []
+        if self.__skill_type == 0:
+            _targets = [
+                key
+                for key, value in enemies
+                if abs(int(value.x - center_pos[0])) + abs(int(value.y - center_pos[1])) <= self.__skill_coverage
+                and value.current_hp > 0
+            ]
+        elif self.__skill_type == 1:
+            _targets = [
+                key
+                for key, value in alliances.items()
+                if abs(int(value.x - center_pos[0])) + abs(int(value.y - center_pos[1])) <= self.__skill_coverage
+            ]
+        return tuple(_targets)
+
+    def apply_skill(self, alliances: dict, enemies: dict, area: int, _targets: tuple[str, ...]) -> dict:
+        results: dict[str, tuple[int, int]] = {}
+        if self.__skill_type == 0:
+            the_damage: int = 0
+            for key in _targets:
+                the_damage = linpg.get_random_int(self.min_damage, self.max_damage)
+                enemies[key].injury(the_damage)
+                results[key] = (0, the_damage)
+        return results
 
     # 是否处于濒死状态
     def is_dying(self) -> bool:
@@ -322,7 +360,7 @@ class HostileCharacter(BasicEntity):
 
     # 用于存放角色做出的决定
     class __DecisionHolder:
-        def __init__(self, action: str, data: tuple):
+        def __init__(self, action: str, data: Sequence):
             self.action: str = action
             self.data = data
 
@@ -440,7 +478,7 @@ class HostileCharacter(BasicEntity):
                     min_weight = data[1]
                     target = data[0]
             targetCharacterData = friendlyCharacters[target]
-            if self.can_attack(targetCharacterData):
+            if self.range_target_in(targetCharacterData) >= 0:
                 actions.append(self.__DecisionHolder("attack", tuple((target, self.range_target_in(targetCharacterData)))))
                 action_point_can_use -= self.AP_IS_NEEDED_TO_ATTACK
                 """
@@ -458,28 +496,23 @@ class HostileCharacter(BasicEntity):
                     self.pos, targetCharacterData.pos, hostileCharacters, friendlyCharacters, blocks_can_move, [target]
                 )
                 if len(the_route) > 0:
-                    potential_attacking_pos_index = {}
+                    potential_attacking_pos_area = -1
+                    potential_attacking_pos_index = 0
+                    o_pos = self.pos
                     for i in range(len(the_route) - self.AP_IS_NEEDED_TO_ATTACK // self.AP_IS_NEEDED_TO_MOVE_ONE_BLOCK + 1):
                         # 当前正在处理的坐标
-                        pos_on_route = the_route[i]
+                        self.set_pos(*the_route[i])
                         # 获取可能的攻击范围
-                        range_target_in_if_can_attack = self.range_target_in(targetCharacterData, pos_on_route)
-                        if (
-                            range_target_in_if_can_attack is not None
-                            and range_target_in_if_can_attack not in potential_attacking_pos_index
-                        ):
-                            potential_attacking_pos_index[range_target_in_if_can_attack] = i + 1
-                            if range_target_in_if_can_attack == "near":
+                        areaT = self.range_target_in(targetCharacterData)
+                        if areaT >= 0 and areaT < potential_attacking_pos_area:
+                            potential_attacking_pos_area = areaT
+                            potential_attacking_pos_index = i
+                            if potential_attacking_pos_area == 0:
                                 break
-                    if "near" in potential_attacking_pos_index:
-                        actions.append(self.__DecisionHolder("move", the_route[: potential_attacking_pos_index["near"]]))
-                        actions.append(self.__DecisionHolder("attack", tuple((target, "near"))))
-                    elif "middle" in potential_attacking_pos_index:
-                        actions.append(self.__DecisionHolder("move", the_route[: potential_attacking_pos_index["middle"]]))
-                        actions.append(self.__DecisionHolder("attack", tuple((target, "middle"))))
-                    elif "far" in potential_attacking_pos_index:
-                        actions.append(self.__DecisionHolder("move", the_route[: potential_attacking_pos_index["far"]]))
-                        actions.append(self.__DecisionHolder("attack", tuple((target, "far"))))
+                    self.set_pos(*o_pos)
+                    if potential_attacking_pos_area >= 0:
+                        actions.append(self.__DecisionHolder("move", the_route[:potential_attacking_pos_index]))
+                        actions.append(self.__DecisionHolder("attack", (target, potential_attacking_pos_area)))
                     else:
                         actions.append(self.__DecisionHolder("move", the_route))
                 else:

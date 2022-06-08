@@ -1,22 +1,7 @@
 import os
 from glob import glob
 
-if not os.path.exists(r"dev.key"):
-    import linpg  # type: ignore
-else:
-    import sys
-
-    # 从开发key中读取linpg开发版本的路径
-    with open(r"dev.key") as f:
-        sys.path.append(f.readline().rstrip())
-
-    # 导入linpg开发版本
-    import linpg
-
-    # 移除相对路径
-    sys.path.pop()
-    # 启用开发模式
-    linpg.debug.set_developer_mode(True)
+import linpg
 
 # 初始化
 linpg.display.init()

@@ -1,13 +1,13 @@
 import time
 from collections import deque
 from typing import Union
-from .character import *
+from .dolls import *
 
 
 # 中心展示模块1：接受两个item和item2的x和y，将item1展示在item2的中心位置,但不展示item2：
 def display_in_center(
     item1: linpg.ImageSurface,
-    item2: linpg.ImageSurface,
+    item2: Union[linpg.ImageSurface, linpg.GameObject2d],
     x: int,
     y: int,
     screen: linpg.ImageSurface,
@@ -32,8 +32,8 @@ class RoundSwitch:
         self.lineGreenUp = linpg.images.rotate(self.lineGreenDown, 180)
         self.baseImg = linpg.load.img(r"Assets/image/UI/roundSwitchBase.png", (window_x, window_y / 5))
         self.baseImg.set_alpha(0)
-        self.x = -window_x
-        self.y = int((window_y - self.baseImg.get_height()) / 2)
+        self.x: int = -window_x
+        self.y: int = int((window_y - self.baseImg.get_height()) / 2)
         self.y2 = self.y + self.baseImg.get_height() - self.lineRedDown.get_height()
         self.baseAlphaUp = True
         self.TxtAlphaUp = True
@@ -54,11 +54,14 @@ class RoundSwitch:
                 screen.get_width() / 38,
             )
             self.now_total_rounds_surface.set_alpha(0)
+        alphaTemp: Optional[int] = None
         # 如果UI底的alpha值在渐入阶段
         if self.baseAlphaUp:
             alphaTemp = self.baseImg.get_alpha()
             # 如果值还未到255（即完全显露），则继续增加，反之如果x到0了再进入淡出阶段
-            if alphaTemp > 250 and self.x >= 0:
+            if alphaTemp is None:
+                self.baseImg.set_alpha(0)
+            elif alphaTemp > 250 and self.x >= 0:
                 self.baseAlphaUp = False
             elif alphaTemp <= 250:
                 self.baseImg.set_alpha(alphaTemp + 5)
@@ -68,19 +71,25 @@ class RoundSwitch:
             if self.TxtAlphaUp is True:
                 alphaTemp = self.now_total_rounds_surface.get_alpha()
                 # “第N回合”的文字先渐入
-                if alphaTemp < 250:
+                if alphaTemp is None:
+                    self.now_total_rounds_surface.set_alpha(0)
+                elif alphaTemp < 250:
                     self.now_total_rounds_surface.set_alpha(alphaTemp + 10)
                 else:
                     # 然后“谁的回合”的文字渐入
                     if whose_round == "playerToSangvisFerris":
                         alphaTemp = self.enemy_round_txt_surface.get_alpha()
-                        if alphaTemp < 250:
+                        if alphaTemp is None:
+                            self.enemy_round_txt_surface.set_alpha(0)
+                        elif alphaTemp < 250:
                             self.enemy_round_txt_surface.set_alpha(alphaTemp + 10)
                         else:
                             self.TxtAlphaUp = False
                     if whose_round == "sangvisFerrisToPlayer":
                         alphaTemp = self.your_round_txt_surface.get_alpha()
-                        if alphaTemp < 250:
+                        if alphaTemp is None:
+                            self.your_round_txt_surface.set_alpha(0)
+                        elif alphaTemp < 250:
                             self.your_round_txt_surface.set_alpha(alphaTemp + 10)
                         else:
                             self.TxtAlphaUp = False
@@ -90,6 +99,8 @@ class RoundSwitch:
             # 如果idle时间结束，则所有UI开始淡出
             else:
                 alphaTemp = self.baseImg.get_alpha()
+                if alphaTemp is None:
+                    alphaTemp = 255
                 if alphaTemp > 0:
                     alphaTemp -= 10
                     self.baseImg.set_alpha(alphaTemp)
@@ -118,7 +129,7 @@ class RoundSwitch:
                     return True
         # 横条移动
         if self.x < 0:
-            self.x += screen.get_width() / 35
+            self.x += screen.get_width() // 35
         # 展示UI
         screen.blits(
             (
@@ -228,14 +239,8 @@ class SelectMenu(linpg.GameObjectsDictContainer):
         self.__need_update = True
 
     # 将菜单按钮画出
-    def draw(
-        self,
-        screen: linpg.ImageSurface,
-        fontSize: linpg.int_f,
-        location: dict,
-        kind: str,
-        friendsCanSave: list,
-        thingsCanReact: list,
+    def draw(  # type: ignore[override]
+        self, screen: linpg.ImageSurface, fontSize: int, location: dict, kind: str, friendsCanSave: list, thingsCanReact: list
     ) -> None:
         self._item_being_hovered = None
         if self.is_visible():
@@ -314,13 +319,13 @@ class CharacterInfoBoard:
         self.text_size: int = text_size
         self.informationBoard: Optional[linpg.ImageSurface] = None
         hp_empty_img = linpg.load.img(r"Assets/image/UI/hp_empty.png")
-        self.hp_red = linpg.ProgressBarSurface(r"Assets/image/UI/hp_red.png", hp_empty_img, 0, 0, window_x / 15, text_size)
-        self.hp_green = linpg.ProgressBarSurface(r"Assets/image/UI/hp_green.png", hp_empty_img, 0, 0, window_x / 15, text_size)
+        self.hp_red = linpg.ProgressBarSurface(r"Assets/image/UI/hp_red.png", hp_empty_img, 0, 0, window_x // 15, text_size)
+        self.hp_green = linpg.ProgressBarSurface(r"Assets/image/UI/hp_green.png", hp_empty_img, 0, 0, window_x // 15, text_size)
         self.action_point_blue = linpg.ProgressBarSurface(
-            r"Assets/image/UI/action_point.png", hp_empty_img, 0, 0, window_x / 15, text_size
+            r"Assets/image/UI/action_point.png", hp_empty_img, 0, 0, window_x // 15, text_size
         )
         self.bullets_number_brown = linpg.ProgressBarSurface(
-            r"Assets/image/UI/bullets_number.png", hp_empty_img, 0, 0, window_x / 15, text_size
+            r"Assets/image/UI/bullets_number.png", hp_empty_img, 0, 0, window_x // 15, text_size
         )
 
     # 标记需要更新
@@ -328,7 +333,7 @@ class CharacterInfoBoard:
         self.informationBoard = None
 
     # 更新信息板
-    def updateInformationBoard(self, fontSize: int, theCharacterData: linpg.Entity) -> None:
+    def updateInformationBoard(self, fontSize: int, theCharacterData: FriendlyCharacter) -> None:
         self.informationBoard = self.boardImg.copy()
         padding: int = (self.boardImg.get_height() - self.characterIconImages[theCharacterData.type].get_height()) // 2
         # 画出角色图标
@@ -345,13 +350,13 @@ class CharacterInfoBoard:
             str(theCharacterData.current_bullets) + "/" + str(theCharacterData.bullets_carried), "black", fontSize
         )
         # 先画出hp,ap和bp的文字
-        temp_posX = self.characterIconImages[theCharacterData.type].get_width() * 2
-        temp_posY = padding - fontSize * 0.2
+        temp_posX: int = self.characterIconImages[theCharacterData.type].get_width() * 2
+        temp_posY: int = padding - fontSize // 5
         self.informationBoard.blit(tcgc_hp1, (temp_posX, temp_posY))
         self.informationBoard.blit(tcgc_action_point1, (temp_posX, temp_posY + self.text_size * 1.5))
         self.informationBoard.blit(tcgc_bullets_situation1, (temp_posX, temp_posY + self.text_size * 3.0))
         # 设置坐标和百分比
-        temp_posX = self.characterIconImages[theCharacterData.type].get_width() * 2.4
+        temp_posX = int(self.characterIconImages[theCharacterData.type].get_width() * 2.4)
         temp_posY = padding
         self.hp_red.set_pos(temp_posX, temp_posY)
         self.hp_red.set_percentage(theCharacterData.hp_precentage)
@@ -378,12 +383,13 @@ class CharacterInfoBoard:
         )
 
     # 画出信息板
-    def draw(self, screen: linpg.ImageSurface, theCharacterData: object) -> None:
+    def draw(self, screen: linpg.ImageSurface, theCharacterData: FriendlyCharacter) -> None:
         # 如果信息板还没更新，则应该先更新再画出
         if self.informationBoard is None:
-            self.updateInformationBoard(int(screen.get_width() / 96), theCharacterData)
+            self.updateInformationBoard(screen.get_width() // 96, theCharacterData)
         # 画出信息板
-        screen.blit(self.informationBoard, (0, screen.get_height() - self.boardImg.get_height()))
+        if self.informationBoard is not None:
+            screen.blit(self.informationBoard, (0, screen.get_height() - self.boardImg.get_height()))
 
 
 # 计分板
@@ -461,10 +467,12 @@ class LoadingTitle:
 
 # 需要被打印的物品
 class ItemNeedBlit(linpg.GameObject2point5d):
-    def __init__(self, image: Union[linpg.ImageSurface, linpg.GameObject2d], weight: int, pos: tuple, offSet: tuple):
+    def __init__(
+        self, image: Union[linpg.ImageSurface, linpg.GameObject2d], weight: int, pos: tuple[int, int], offSet: tuple[int, int]
+    ):
         super().__init__(pos[0], pos[1], weight)
         self.image: Union[linpg.ImageSurface, linpg.GameObject2d] = image
-        self.offSet: tuple = offSet
+        self.offSet: tuple[int, int] = offSet
 
     def draw(self, surface: linpg.ImageSurface) -> None:
         if isinstance(self.image, linpg.ImageSurface):
@@ -474,3 +482,85 @@ class ItemNeedBlit(linpg.GameObject2point5d):
                 self.image.display(surface, self.offSet)
             except Exception:
                 self.image.draw(surface)
+
+
+class RangeSystem:
+
+    # 区域坐标
+    __areas: tuple[list, ...] = ([], [], [], [], [])
+    # 用于表示范围的方框图片
+    __images: tuple[linpg.StaticImage, ...] = (
+        linpg.load.static_image(r"<&ui>range_green.png", (0, 0)),
+        linpg.load.static_image(r"<&ui>range_red.png", (0, 0)),
+        linpg.load.static_image(r"<&ui>range_yellow.png", (0, 0)),
+        linpg.load.static_image(r"<&ui>range_blue.png", (0, 0)),
+        linpg.load.static_image(r"<&ui>range_orange.png", (0, 0)),
+    )
+    # 是否不要画出用于表示范围的方块
+    __is_visible: bool = True
+    # 目标透明度
+    __target_alpha: int = 255
+
+    @classmethod
+    def update_size(cls, _width: int) -> None:
+        for _prt in cls.__images:
+            _prt.set_width_with_original_image_size_locked(_width)
+
+    # 重置用于储存需要画出范围方块的字典
+    @classmethod
+    def clear(cls) -> None:
+        for _prt in cls.__areas:
+            _prt.clear()
+
+    @classmethod
+    def set_alpha(cls, _value: int) -> None:
+        for _prt in cls.__images:
+            _prt.set_alpha(_value)
+
+    @classmethod
+    def set_target_alpha(cls, _value: int) -> None:
+        cls.__target_alpha = _value
+
+    @classmethod
+    def get_image(cls, index: int) -> linpg.StaticImage:
+        return cls.__images[index]
+
+    @classmethod
+    def set_positions(cls, index: int, _positions: list) -> None:
+        cls.__areas[index].clear()
+        cls.__areas[index].extend(_positions)
+
+    @classmethod
+    def update_attack_range(cls, rangeCanAttack: list):
+        if len(rangeCanAttack) > 0:
+            cls.set_positions(0, rangeCanAttack[0])
+            if len(rangeCanAttack) > 1:
+                cls.set_positions(3, rangeCanAttack[1])
+                if len(rangeCanAttack) > 2:
+                    cls.set_positions(2, rangeCanAttack[2])
+
+    @classmethod
+    def append_position(cls, index: int, _position: tuple[int, int]) -> None:
+        cls.__areas[index].append(_position)
+
+    @classmethod
+    def set_visible(cls, visible: bool) -> None:
+        cls.__is_visible = visible
+
+    @classmethod
+    def get_visible(cls) -> bool:
+        return cls.__is_visible
+
+    @classmethod
+    def draw(cls, map_prt: linpg.MapObject, screen: linpg.ImageSurface) -> None:
+        for prt in cls.__images:
+            if prt.get_alpha() > cls.__target_alpha:
+                prt.subtract_alpha(17)
+            elif prt.get_alpha() < cls.__target_alpha:
+                prt.add_alpha(17)
+        if cls.__is_visible:
+            for i in range(len(cls.__areas)):
+                for _position in cls.__areas[i]:
+                    xTemp, yTemp = map_prt.calculate_position(_position[0], _position[1])
+                    cls.__images[i].set_pos(xTemp + map_prt.block_width * 0.1, yTemp)
+                    cls.__images[i].draw(screen)
