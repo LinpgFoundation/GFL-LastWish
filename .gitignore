@@ -9,5 +9,5 @@ dist/
 crash_reports/
 test.py
 ThirdPartyLibraries/
-Source/linpg/
+linpg/
 .vs*/

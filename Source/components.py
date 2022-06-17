@@ -11,7 +11,7 @@ class MapEditor(linpg.AbstractMapEditor):
             self._entities_data[faction][key] = HostileCharacter(data, "dev")
 
     # 加载角色的数据
-    def _load_characters_data(self, entities: dict) -> None:
+    def _load_entities(self, entities: dict) -> None:
         characterDataLoaderThread = CharacterDataLoader(entities, "dev")
         characterDataLoaderThread.start()
         characterDataLoaderThread.join()

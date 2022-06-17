@@ -240,20 +240,13 @@ class FriendlyCharacter(BasicEntity):
     def skill_effective_range(self) -> tuple[int, ...]:
         return self.__skill_effective_range
 
-    # 最远技能施展范围
-    @property
-    def max_skill_range(self) -> int:
-        _length: int = len(self.__skill_effective_range)
-        return self.__skill_effective_range[_length - 1] if _length > 0 else -1
-
-    def skill_range_target_in(self, otherEntity: linpg.Entity) -> int:
-        distanceBetween: int = abs(int(otherEntity.x - self.x)) + abs(int(otherEntity.y - self.y))
-        _total: int = 0
-        for i in range(len(self.__effective_range)):
-            _total += self.__effective_range[i]
-            if distanceBetween <= _total:
-                return i
-        return -1
+    # 获取技能有效范围内的所有坐标
+    def get_skill_effective_range_coordinates(
+        self, MAP_P: linpg.AbstractMap, ifHalfMode: bool = False
+    ) -> list[list[tuple[int, int]]]:
+        return self.generate_range_coordinates(
+            int(self.x), int(self.y), self.__skill_effective_range, MAP_P, self._if_flip, ifHalfMode
+        )
 
     # 获取
     def get_entity_in_skill_effective_range(self, alliances: dict, enemies: dict, center_pos: tuple[int, int]) -> tuple[str, ...]:
@@ -273,7 +266,14 @@ class FriendlyCharacter(BasicEntity):
             ]
         return tuple(_targets)
 
-    def apply_skill(self, alliances: dict, enemies: dict, area: int, _targets: tuple[str, ...]) -> dict:
+    def get_skill_coverage_coordinates(self, _x: int, _y: int, MAP_P: linpg.AbstractMap) -> list[tuple[int, int]]:
+        return (
+            self.generate_coverage_coordinates(_x, _y, self.__skill_coverage, MAP_P)
+            if abs(round(self.x) - _x) + abs(round(self.y) - _y) <= sum(self.__skill_effective_range)
+            else []
+        )
+
+    def apply_skill(self, alliances: dict, enemies: dict, _targets: tuple[str, ...]) -> dict:
         results: dict[str, tuple[int, int]] = {}
         if self.__skill_type == 0:
             the_damage: int = 0
@@ -318,7 +318,7 @@ class FriendlyCharacter(BasicEntity):
         if not self.is_alive() and self.__down_time < 0 and self.kind != "HOC":
             self.__down_time = self.DYING_ROUND_LIMIT
             if self.__getHurtImage is not None:
-                self.__getHurtImage.x = -self.__getHurtImage.width
+                self.__getHurtImage.move_left(self.__getHurtImage.width)
                 self.__getHurtImage.alpha = 255
                 self.__getHurtImage.delay = 255
                 self.play_sound("injured")
@@ -366,24 +366,21 @@ class HostileCharacter(BasicEntity):
 
         @property
         def route(self) -> list:
-            if self.action == "move":
-                return list(self.data)
-            else:
+            if self.action != "move":
                 raise Exception("The character does not decide to move!")
+            return list(self.data)
 
         @property
         def target(self) -> str:
-            if self.action == "attack":
-                return str(self.data[0])
-            else:
+            if self.action != "attack":
                 raise Exception("The character does not decide to attack!")
+            return str(self.data[0])
 
         @property
-        def target_area(self) -> str:
-            if self.action == "attack":
-                return str(self.data[1])
-            else:
+        def target_area(self) -> int:
+            if self.action != "attack":
                 raise Exception("The character does not decide to attack!")
+            return int(self.data[1])
 
     def __init__(self, characterData: dict, mode: str) -> None:
         super().__init__(characterData, mode)

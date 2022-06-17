@@ -25,7 +25,8 @@ def display_in_center(
 
 # 显示回合切换的UI
 class RoundSwitch:
-    def __init__(self, window_x: int, window_y: int, battleUiTxt: dict):
+    def __init__(self, window_x: int, window_y: int):
+        battleUiTxt: dict = linpg.lang.get_texts("Battle_UI")
         self.lineRedDown = linpg.load.img(r"Assets/image/UI/lineRed.png", (window_x, window_y / 50))
         self.lineRedUp = linpg.images.rotate(self.lineRedDown, 180)
         self.lineGreenDown = linpg.load.img(r"Assets/image/UI/lineGreen.png", (window_x, window_y / 50))
@@ -161,46 +162,53 @@ class RoundSwitch:
 
 
 # 警告系统
-class WarningSystem:
-    def __init__(self, font_size: int = 30):
-        self.__all_warnings: deque = deque()
-        self.__warnings_msg: dict = linpg.lang.get_texts("Warnings")
-        self.font_size: int = font_size
+class WarningMessageSystem:
+
+    __all_warnings: deque = deque()
+    __warnings_msg: dict = {}
+    __font_size: int = 0
+
+    @classmethod
+    def init(cls, font_size: int = 30):
+        cls.__font_size = font_size
+        cls.update_language()
 
     # 更新语言
-    def update_language(self):
-        self.__warnings_msg: dict = linpg.lang.get_texts("Warnings")
-        self.clear()
+    @classmethod
+    def update_language(cls):
+        # 清空所有当前正在播放的警告讯息
+        cls.__all_warnings.clear()
+        # 更新语言
+        cls.__warnings_msg.clear()
+        cls.__warnings_msg.update(linpg.lang.get_texts("Warnings"))
 
     # 新增一个讯息
-    def add(self, the_warning: str) -> None:
-        if len(self.__all_warnings) >= 5:
-            self.__all_warnings.pop()
-        self.__all_warnings.appendleft(linpg.font.render(self.__warnings_msg[the_warning], "red", self.font_size, True))
-
-    # 清空所有当前正在播放的警告讯息
-    def clear(self) -> None:
-        self.__all_warnings.clear()
+    @classmethod
+    def add(cls, the_warning: str) -> None:
+        if len(cls.__all_warnings) >= 5:
+            cls.__all_warnings.pop()
+        cls.__all_warnings.appendleft(linpg.font.render(cls.__warnings_msg[the_warning], "red", cls.__font_size, True))
 
     # 画出
-    def draw(self, screen: linpg.ImageSurface) -> None:
-        for i in range(len(self.__all_warnings)):
+    @classmethod
+    def draw(cls, screen: linpg.ImageSurface) -> None:
+        for i in range(len(cls.__all_warnings)):
             try:
-                img_alpha = self.__all_warnings[i].get_alpha()
+                img_alpha = cls.__all_warnings[i].get_alpha()
             except Exception:
                 break
             if img_alpha > 0:
                 screen.blit(
-                    self.__all_warnings[i],
+                    cls.__all_warnings[i],
                     (
-                        (screen.get_width() - self.__all_warnings[i].get_width()) / 2,
-                        (screen.get_height() - self.__all_warnings[i].get_height()) / 2
-                        + i * self.__all_warnings[i].get_height() * 1.2,
+                        (screen.get_width() - cls.__all_warnings[i].get_width()) / 2,
+                        (screen.get_height() - cls.__all_warnings[i].get_height()) / 2
+                        + i * cls.__all_warnings[i].get_height() * 1.2,
                     ),
                 )
-                self.__all_warnings[i].set_alpha(img_alpha - 5)
+                cls.__all_warnings[i].set_alpha(img_alpha - 5)
             else:
-                self.__all_warnings.pop()
+                cls.__all_warnings.pop()
 
 
 # 角色行动选项菜单
@@ -435,34 +443,41 @@ class ResultBoard:
 
 # 章节标题(在加载时显示)
 class LoadingTitle:
-    def __init__(
-        self, window_x: int, window_y: int, numChapter_txt: str, chapterId: int, chapterTitle_txt: str, chapterDesc_txt: str
-    ):
+
+    black_bg: linpg.StaticImage = linpg.StaticImage(linpg.surfaces.colored(linpg.display.get_size(), linpg.color.BLACK), 0, 0)
+    title_chapterNum: Optional[linpg.StaticImage] = None
+    title_chapterName: Optional[linpg.StaticImage] = None
+    title_description: Optional[linpg.StaticImage] = None
+
+    @classmethod
+    def update(cls, numChapter_txt: str, chapterId: int, chapterTitle_txt: str, chapterDesc_txt: str):
         # 黑色Void帘幕
-        black_surface_t = linpg.surfaces.new(linpg.display.get_size())
-        black_surface_t.fill(linpg.color.BLACK)
-        self.black_bg = linpg.StaticImage(black_surface_t, 0, 0, black_surface_t.get_width(), black_surface_t.get_height())
-        title_chapterNum = linpg.font.render(numChapter_txt.format(chapterId), "white", window_x / 38)
-        self.title_chapterNum = linpg.StaticImage(
-            title_chapterNum, (window_x - title_chapterNum.get_width()) / 2, window_y * 0.37
+        cls.black_bg.set_size(linpg.display.get_width(), linpg.display.get_height())
+        title_chapterNum = linpg.font.render(numChapter_txt.format(chapterId), "white", linpg.display.get_width() / 38)
+        cls.title_chapterNum = linpg.StaticImage(
+            title_chapterNum, (linpg.display.get_width() - title_chapterNum.get_width()) / 2, linpg.display.get_height() * 0.37
         )
-        title_chapterName = linpg.font.render(chapterTitle_txt, "white", window_x / 38)
-        self.title_chapterName = linpg.StaticImage(
-            title_chapterName, (window_x - title_chapterName.get_width()) / 2, window_y * 0.46
+        title_chapterName = linpg.font.render(chapterTitle_txt, "white", linpg.display.get_width() / 38)
+        cls.title_chapterName = linpg.StaticImage(
+            title_chapterName, (linpg.display.get_width() - title_chapterName.get_width()) / 2, linpg.display.get_height() * 0.46
         )
-        title_description = linpg.font.render(chapterDesc_txt, "white", window_x / 76)
-        self.title_description = linpg.StaticImage(
-            title_description, (window_x - title_description.get_width()) / 2, window_y * 0.6
+        title_description = linpg.font.render(chapterDesc_txt, "white", linpg.display.get_width() / 76)
+        cls.title_description = linpg.StaticImage(
+            title_description, (linpg.display.get_width() - title_description.get_width()) / 2, linpg.display.get_height() * 0.6
         )
 
-    def draw(self, screen: linpg.ImageSurface, alpha: int = 255) -> None:
-        self.title_chapterNum.set_alpha(alpha)
-        self.title_chapterName.set_alpha(alpha)
-        self.title_description.set_alpha(alpha)
-        self.black_bg.draw(screen)
-        self.title_chapterNum.draw(screen)
-        self.title_chapterName.draw(screen)
-        self.title_description.draw(screen)
+    @classmethod
+    def draw(cls, screen: linpg.ImageSurface, alpha: int = 255) -> None:
+        cls.black_bg.draw(screen)
+        if cls.title_chapterNum is not None:
+            cls.title_chapterNum.set_alpha(alpha)
+            cls.title_chapterNum.draw(screen)
+        if cls.title_chapterName is not None:
+            cls.title_chapterName.set_alpha(alpha)
+            cls.title_chapterName.draw(screen)
+        if cls.title_description is not None:
+            cls.title_description.set_alpha(alpha)
+            cls.title_description.draw(screen)
 
 
 # 需要被打印的物品
@@ -487,7 +502,7 @@ class ItemNeedBlit(linpg.GameObject2point5d):
 class RangeSystem:
 
     # 区域坐标
-    __areas: tuple[list, ...] = ([], [], [], [], [])
+    __areas: tuple[list[tuple[int, int]], ...] = ([], [], [], [], [])
     # 用于表示范围的方框图片
     __images: tuple[linpg.StaticImage, ...] = (
         linpg.load.static_image(r"<&ui>range_green.png", (0, 0)),
@@ -501,6 +516,7 @@ class RangeSystem:
     # 目标透明度
     __target_alpha: int = 255
 
+    # 更新尺寸
     @classmethod
     def update_size(cls, _width: int) -> None:
         for _prt in cls.__images:
@@ -512,45 +528,61 @@ class RangeSystem:
         for _prt in cls.__areas:
             _prt.clear()
 
+    # 设置透明度
     @classmethod
     def set_alpha(cls, _value: int) -> None:
+        cls.__target_alpha = _value
         for _prt in cls.__images:
             _prt.set_alpha(_value)
 
+    # 设置目标透明度（渐变效果）
     @classmethod
     def set_target_alpha(cls, _value: int) -> None:
         cls.__target_alpha = _value
 
+    # 通过index获取图片
     @classmethod
     def get_image(cls, index: int) -> linpg.StaticImage:
         return cls.__images[index]
 
+    # 设置需要画出范围的坐标
     @classmethod
     def set_positions(cls, index: int, _positions: list) -> None:
         cls.__areas[index].clear()
         cls.__areas[index].extend(_positions)
 
+    # 更新范围的坐标
     @classmethod
-    def update_attack_range(cls, rangeCanAttack: list):
+    def update_attack_range(cls, rangeCanAttack: list[list]):
         if len(rangeCanAttack) > 0:
             cls.set_positions(0, rangeCanAttack[0])
-            if len(rangeCanAttack) > 1:
-                cls.set_positions(3, rangeCanAttack[1])
-                if len(rangeCanAttack) > 2:
-                    cls.set_positions(2, rangeCanAttack[2])
+        else:
+            cls.__areas[0].clear()
+        if len(rangeCanAttack) > 1:
+            cls.set_positions(3, rangeCanAttack[1])
+        else:
+            cls.__areas[3].clear()
+        if len(rangeCanAttack) > 2:
+            cls.set_positions(2, rangeCanAttack[2])
+        else:
+            cls.__areas[2].clear()
 
+    # 为指定的范围新增坐标
     @classmethod
     def append_position(cls, index: int, _position: tuple[int, int]) -> None:
         cls.__areas[index].append(_position)
 
+    # 设置是否可见
     @classmethod
     def set_visible(cls, visible: bool) -> None:
         cls.__is_visible = visible
 
+    # 获取可见度
     @classmethod
     def get_visible(cls) -> bool:
         return cls.__is_visible
 
+    # 渲染到屏幕上
     @classmethod
     def draw(cls, map_prt: linpg.MapObject, screen: linpg.ImageSurface) -> None:
         for prt in cls.__images:
@@ -558,9 +590,8 @@ class RangeSystem:
                 prt.subtract_alpha(17)
             elif prt.get_alpha() < cls.__target_alpha:
                 prt.add_alpha(17)
-        if cls.__is_visible:
-            for i in range(len(cls.__areas)):
-                for _position in cls.__areas[i]:
-                    xTemp, yTemp = map_prt.calculate_position(_position[0], _position[1])
-                    cls.__images[i].set_pos(xTemp + map_prt.block_width * 0.1, yTemp)
-                    cls.__images[i].draw(screen)
+        for i in range(len(cls.__areas)):
+            for _position in cls.__areas[i]:
+                xTemp, yTemp = map_prt.calculate_position(_position[0], _position[1])
+                cls.__images[i].set_pos(xTemp + map_prt.block_width * 0.1, yTemp)
+                cls.__images[i].draw(screen)

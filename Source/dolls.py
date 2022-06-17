@@ -2,7 +2,7 @@ from .character import *
 
 
 class Gsh18(FriendlyCharacter):
-    def apply_skill(self, alliances: dict, enemies: dict, area: int, _targets: tuple[str, ...]) -> dict[str, tuple[int, int]]:
+    def apply_skill(self, alliances: dict, enemies: dict, _targets: tuple[str, ...]) -> dict[str, tuple[int, int]]:
         results: dict[str, tuple[int, int]] = {}
         healed_hp: int = 0
         for key in _targets:
