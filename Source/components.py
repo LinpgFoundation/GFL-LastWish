@@ -1,21 +1,43 @@
 from .api import *
 from .character import FriendlyCharacter, HostileCharacter, Optional
-from .tbs import CharacterDataLoader, TurnBasedBattleSystem
+from .tbs import TurnBasedBattleSystem, LoadingModule, threading
 
 # 地图编辑器系统
-class MapEditor(linpg.AbstractMapEditor):
+class MapEditor(LoadingModule, linpg.AbstractMapEditor):
+    def __init__(self) -> None:
+        LoadingModule.__init__(self)
+        linpg.AbstractMapEditor.__init__(self)
+
+    # 获取角色数据 - 子类需实现
+    def get_entities_data(self) -> dict[str, dict[str, linpg.Entity]]:
+        return self._entities_data
+
+    # 更新特定角色
     def update_entity(self, faction: str, key: str, data: dict) -> None:
         if faction == "GriffinKryuger":
             self._entities_data[faction][key] = FriendlyCharacter(data, "dev")
         if faction == "SangvisFerri":
             self._entities_data[faction][key] = HostileCharacter(data, "dev")
 
-    # 加载角色的数据
-    def _load_entities(self, entities: dict) -> None:
-        characterDataLoaderThread = CharacterDataLoader(entities, "dev")
-        characterDataLoaderThread.start()
-        characterDataLoaderThread.join()
-        self._entities_data = characterDataLoaderThread.getResult()
+    # 加载图片 - 重写使其更新加载信息
+    def _load_map(self, _data: dict) -> None:
+        self._update_loading_info("now_loading_map")
+        super()._load_map(_data)
+
+    # 加载数据 - 重写使其以多线程的形式进行
+    def load(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: Optional[str] = None) -> None:
+        # 初始化加载模块
+        self._initialize_loading_module()
+        _task: threading.Thread = threading.Thread(target=super().load, args=(screen, chapterType, chapterId, projectName))
+        # 开始加载
+        _task.start()
+        # 显示加载过程
+        while _task.is_alive():
+            screen.fill(linpg.color.BLACK)
+            self._show_current_loading_porgress(screen)
+            linpg.display.flip()
+        # 加载完成，释放初始化模块占用的内存
+        self._finish_loading()
 
 
 # 控制台

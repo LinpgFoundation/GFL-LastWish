@@ -1,6 +1,4 @@
-import threading
 from collections import deque
-from copy import deepcopy
 from typing import Optional, Sequence
 from .api import *
 
@@ -174,8 +172,7 @@ class FriendlyCharacter(BasicEntity):
         )
         # 除去重复数据
         o_data: dict = dict(self.get_enity_data(new_data["type"]))
-        _keys: tuple = tuple(new_data.keys())
-        for key in _keys:
+        for key in tuple(new_data.keys()):
             if key in o_data and o_data[key] == new_data[key]:
                 del new_data[key]
         """加入友方角色可选数据"""
@@ -545,38 +542,6 @@ class HostileCharacter(BasicEntity):
             pass
         # 放回一个装有指令的列表
         return actions
-
-
-# 初始化角色信息
-class CharacterDataLoader(threading.Thread):
-    def __init__(self, entities: dict[str, dict], mode: str = "default") -> None:
-        super().__init__()
-        self.__entities: dict[str, dict] = deepcopy(entities)
-        self.totalNum: int = 0
-        for key in self.__entities:
-            self.totalNum += len(self.__entities[key])
-        self.currentID: int = 0
-        self.mode: str = mode
-
-    def run(self) -> None:
-        data_t: dict
-        for key, value in self.__entities["GriffinKryuger"].items():
-            data_t = deepcopy(linpg.Entity.get_enity_data(value["type"]))
-            data_t.update(value)
-            self.__entities["GriffinKryuger"][key] = FriendlyCharacter(data_t, self.mode)
-            self.currentID += 1
-            if linpg.debug.get_developer_mode():
-                print("total: {0}, current: {1}".format(self.totalNum, self.currentID))
-        for key, value in self.__entities["SangvisFerri"].items():
-            data_t = deepcopy(linpg.Entity.get_enity_data(value["type"]))
-            data_t.update(value)
-            self.__entities["SangvisFerri"][key] = HostileCharacter(data_t, self.mode)
-            self.currentID += 1
-            if linpg.debug.get_developer_mode():
-                print("total: {0}, current: {1}".format(self.totalNum, self.currentID))
-
-    def getResult(self) -> dict[str, dict]:
-        return self.__entities
 
 
 # 射击音效

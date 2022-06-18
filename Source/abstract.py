@@ -1,4 +1,5 @@
-from .character import *
+import threading
+from copy import deepcopy
 from .ui import *
 
 # 加载模块
@@ -12,11 +13,18 @@ class LoadingModule:
         self.__loading_info_msg: dict[str, str] = {}
         # 文字模块
         self.__FONT: linpg.FontGenerator = linpg.font.create(linpg.display.get_width() / 76)
+        # 正在加载的gif动态图标
+        self.__loading_icon: Optional[linpg.AnimatedImage] = None
 
     # 初始化加载模块
     def _initialize_loading_module(self) -> None:
         self.__loading_info_msg.clear()
         self.__loading_info_msg.update(linpg.lang.get_texts("LoadingTxt"))
+        self.__loading_icon = linpg.load.gif(
+            r"Assets/image/UI/sv98_walking.gif",
+            (int(linpg.display.get_width() * 0.7), int(linpg.display.get_height() * 0.83)),
+            (int(linpg.display.get_width() * 0.003 * 15), int(linpg.display.get_width() * 0.003 * 21)),
+        )
         # 开始加载
         self._update_loading_info("now_loading_level")
 
@@ -24,6 +32,7 @@ class LoadingModule:
     def _finish_loading(self) -> None:
         self.__now_loading = None
         self.__loading_info_msg.clear()
+        self.__loading_icon = None
 
     # 更新当前正在加载的数据的信息
     def __update_loading_info(self, text: str) -> None:
@@ -69,6 +78,8 @@ class LoadingModule:
         self.__THREADING_LOCK.acquire()
         if self.__now_loading is not None:
             screen.blit(self.__now_loading, (screen.get_width() * 0.75, screen.get_height() * 0.9))
+        if self.__loading_icon is not None:
+            self.__loading_icon.draw(screen)
         self.__THREADING_LOCK.release()
 
 

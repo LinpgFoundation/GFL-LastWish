@@ -58,7 +58,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         # 结束回合的图片
         self.__end_round_button: linpg.StaticImage = None
         # 关卡背景信息
-        self.__battle_info = []
+        self.__battle_info: tuple[linpg.ImageSurface, ...] = tuple()
         # 加载用于渲染电影效果的上下黑色帘幕
         black_curtain: linpg.ImageSurface = linpg.surfaces.colored(
             (linpg.display.get_width(), linpg.display.get_height() // 7), linpg.color.BLACK
@@ -223,12 +223,6 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         }
 
     def __start_loading(self, screen: linpg.ImageSurface, _data: dict) -> None:
-        # 正在加载的gif动态图标
-        nowLoadingIcon = linpg.load.gif(
-            r"Assets/image/UI/sv98_walking.gif",
-            (int(screen.get_width() * 0.7), int(screen.get_height() * 0.83)),
-            (int(screen.get_width() * 0.003 * 15), int(screen.get_width() * 0.003 * 21)),
-        )
         # 初始化剧情模块
         self._init_dialog(dict(_data["dialogs"]["data"]))
         # 章节标题显示
@@ -240,9 +234,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             DataTmp.get("description", linpg.lang.get_text("Global", "no_translation")),
         )
         # 加载关卡背景介绍信息文字
-        self.__battle_info.clear()
-        for _text in DataTmp.get("battle_info", linpg.config.load(r"Data/chapter_dialogs_example.yaml", "battle_info")):
-            self.__battle_info.append(self.get_font().render(_text, linpg.color.WHITE, with_bounding=True))
+        self.__battle_info = tuple(
+            [
+                self.get_font().render(_text, linpg.color.WHITE, with_bounding=True)
+                for _text in DataTmp.get("battle_info", linpg.config.load(r"Data/chapter_dialogs_example.yaml", "battle_info"))
+            ]
+        )
         # 初始化加载模块
         self._initialize_loading_module()
         # 渐入效果
@@ -254,34 +251,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         while _task.is_alive():
             LoadingTitle.draw(screen)
             self._show_current_loading_porgress(screen)
-            nowLoadingIcon.draw(screen)
             linpg.display.flip()
         # 加载完成，释放初始化模块占用的内存
         self._finish_loading()
         # 显示章节信息
-        for a in range(0, 250, 2):
+        for i in range(0, 250, 2):
             LoadingTitle.draw(screen)
-            for i in range(len(self.__battle_info)):
-                self.__battle_info[i].set_alpha(a)
-                screen.blit(
-                    self.__battle_info[i],
-                    (
-                        screen.get_width() / 20,
-                        screen.get_height() * 0.75 + self.__battle_info[i].get_height() * 1.2 * i,
-                    ),
-                )
-                if i == 1:
-                    temp_secode = self.get_font().render(
-                        time.strftime(":%S", time.localtime()), linpg.color.WHITE, with_bounding=True
-                    )
-                    temp_secode.set_alpha(a)
-                    screen.blit(
-                        temp_secode,
-                        (
-                            screen.get_width() / 20 + self.__battle_info[i].get_width(),
-                            screen.get_height() * 0.75 + self.__battle_info[i].get_height() * 1.2,
-                        ),
-                    )
+            self.__draw_battle_info(screen, i)
             linpg.display.flip()
 
     # 加载游戏进程
@@ -383,6 +359,30 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 for character in self.alliances:
                     if self.enemies[key].range_target_in(self.alliances[character]) >= 0:
                         self.alliances[character].notice(100)
+
+    # 显示关卡信息
+    def __draw_battle_info(self, screen: linpg.ImageSurface, _alpha: int) -> None:
+        for i in range(len(self.__battle_info)):
+            self.__battle_info[i].set_alpha(_alpha)
+            screen.blit(
+                self.__battle_info[i],
+                (
+                    screen.get_width() / 20,
+                    screen.get_height() * 0.75 + self.__battle_info[i].get_height() * 1.2 * i,
+                ),
+            )
+            if i == 1:
+                temp_secode = self.get_font().render(
+                    time.strftime(":%S", time.localtime()), linpg.color.WHITE, with_bounding=True
+                )
+                temp_secode.set_alpha(_alpha)
+                screen.blit(
+                    temp_secode,
+                    (
+                        screen.get_width() / 20 + self.__battle_info[i].get_width(),
+                        screen.get_height() * 0.75 + self.__battle_info[i].get_height() * 1.2,
+                    ),
+                )
 
     # 把战斗系统的画面画到screen上
     def draw(self, screen: linpg.ImageSurface) -> None:
@@ -1055,24 +1055,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         if self.__txt_alpha > 0:
             LoadingTitle.black_bg.set_alpha(self.__txt_alpha)
             LoadingTitle.draw(screen, self.__txt_alpha)
-            for i in range(len(self.__battle_info)):
-                self.__battle_info[i].set_alpha(self.__txt_alpha)
-                screen.blit(
-                    self.__battle_info[i],
-                    (screen.get_width() / 20, screen.get_height() * 0.75 + self.__battle_info[i].get_height() * 1.2 * i),
-                )
-                if i == 1:
-                    temp_secode = self.get_font().render(
-                        time.strftime(":%S", time.localtime()), linpg.color.WHITE, with_bounding=True
-                    )
-                    temp_secode.set_alpha(self.__txt_alpha)
-                    screen.blit(
-                        temp_secode,
-                        (
-                            screen.get_width() / 20 + self.__battle_info[i].get_width(),
-                            screen.get_height() * 0.75 + self.__battle_info[i].get_height() * 1.2,
-                        ),
-                    )
+            self.__draw_battle_info(screen, self.__txt_alpha)
             self.__txt_alpha -= 5
         # 刷新画面
         self.__update_scene(screen)
