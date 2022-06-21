@@ -45,7 +45,8 @@ class LoadingModule:
         self.__update_loading_info(self.__loading_info_msg[_key])
 
     # 获取文字模块
-    def get_font(self) -> linpg.FontGenerator:
+    @property
+    def _FONT(self) -> linpg.FontGenerator:
         return self.__FONT
 
     # 获取角色数据 - 子类需实现
@@ -53,7 +54,7 @@ class LoadingModule:
         raise NotImplementedError()
 
     # 加载角色所需的图片
-    def _load_entities(self, _entities: dict):
+    def _load_entities(self, _entities: dict, _mode: str):
         totalNum: int = 0
         for key in _entities:
             totalNum += len(_entities[key])
@@ -63,13 +64,16 @@ class LoadingModule:
         for key, value in _entities["GriffinKryuger"].items():
             data_t = deepcopy(linpg.Entity.get_enity_data(value["type"]))
             data_t.update(value)
-            self.get_entities_data()["GriffinKryuger"][key] = FriendlyCharacter(data_t, "default")
+            if value["type"] == "gsh18":
+                self.get_entities_data()["GriffinKryuger"][key] = Gsh18(data_t, _mode)
+            else:
+                self.get_entities_data()["GriffinKryuger"][key] = FriendlyCharacter(data_t, _mode)
             currentID += 1
             self.__update_loading_info(self.__loading_info_msg["now_loading_characters"] + "({}/{})".format(currentID, totalNum))
         for key, value in _entities["SangvisFerri"].items():
             data_t = deepcopy(linpg.Entity.get_enity_data(value["type"]))
             data_t.update(value)
-            self.get_entities_data()["SangvisFerri"][key] = HostileCharacter(data_t, "default")
+            self.get_entities_data()["SangvisFerri"][key] = HostileCharacter(data_t, _mode)
             currentID += 1
             self.__update_loading_info(self.__loading_info_msg["now_loading_characters"] + "({}/{})".format(currentID, totalNum))
 
@@ -153,11 +157,7 @@ class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSy
         return (
             super()._get_data_need_to_save()
             | self._MAP.get_local_pos_in_percentage()
-            | {
-                "dialog_key": self.__dialog_key,
-                "dialog_parameters": self.__dialog_parameters,
-                "time_stamp": time.strftime(":%S", time.localtime()),
-            }
+            | {"dialog_key": self.__dialog_key, "dialog_parameters": self.__dialog_parameters}
         )
 
     # 角色动画
@@ -212,12 +212,7 @@ class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSy
         # 设定初始化
         if len(self.__dialog_parameters) <= 0:
             self.__dialog_parameters.update(
-                {
-                    "dialogId": 0,
-                    "charactersPaths": None,
-                    "secondsAlreadyIdle": 0,
-                    "secondsToIdle": None,
-                }
+                {"dialogId": 0, "charactersPaths": None, "secondsAlreadyIdle": 0, "secondsToIdle": None}
             )
         # 对话系统总循环
         if self.__dialog_parameters["dialogId"] < len(self.__dialog_data[self.__dialog_key]):
@@ -253,7 +248,7 @@ class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSy
                     if key in self.alliances:
                         if not self.alliances[key].is_idle():
                             allGetToTargetPos = False
-                        if self.alliances[key].needUpdateMap():
+                        if self.alliances[key].need_update_map():
                             reProcessMap = True
                     elif key in self.enemies and not self.enemies[key].is_idle():
                         allGetToTargetPos = False

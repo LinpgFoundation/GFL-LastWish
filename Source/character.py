@@ -2,6 +2,48 @@ from collections import deque
 from typing import Optional, Sequence
 from .api import *
 
+# 射击音效
+class AttackingSoundManager:
+
+    __channel_id: int = 2
+    __SOUNDS: dict[str, list] = {}
+
+    @classmethod
+    def initialize(cls) -> None:
+        path_p: tuple = ("Assets", "sound", "attack")
+        cls.__SOUNDS.clear()
+        cls.__SOUNDS.update(
+            {
+                # 突击步枪
+                "AR": glob(os.path.join(*path_p, "ar_*.ogg")),
+                # 手枪
+                "HG": glob(os.path.join(*path_p, "hg_*.ogg")),
+                # 机枪
+                "MG": glob(os.path.join(*path_p, "mg_*.ogg")),
+                # 步枪
+                "RF": glob(os.path.join(*path_p, "rf_*.ogg")),
+                # 冲锋枪
+                "SMG": glob(os.path.join(*path_p, "smg_*.ogg")),
+            }
+        )
+        for key in cls.__SOUNDS:
+            for i in range(len(cls.__SOUNDS[key])):
+                cls.__SOUNDS[key][i] = linpg.sound.load(cls.__SOUNDS[key][i])
+
+    # 播放
+    @classmethod
+    def play(cls, kind: str) -> None:
+        sounds_c: Optional[list] = cls.__SOUNDS.get(kind)
+        if sounds_c is not None:
+            sound_to_play = sounds_c[linpg.get_random_int(0, len(sounds_c) - 1)]
+            sound_to_play.set_volume(linpg.media.volume.effects / 100.0)
+            linpg.sound.play(sound_to_play, cls.__channel_id)
+
+    # 释放内存
+    @classmethod
+    def release(cls) -> None:
+        cls.__SOUNDS.clear()
+
 
 # 友方角色被察觉的图标管理模块
 class FriendlyCharacterDynamicProgressBarSurface(linpg.DynamicProgressBarSurface):
@@ -138,7 +180,9 @@ class FriendlyCharacter(BasicEntity):
             tuple(_data) if (_data := characterData.get("skill_effective_range")) is not None else tuple()
         )
         # 技能的类型 【0 - 伤害，1 - 治疗己方】
-        self.__skill_type: int = int(characterData.get("skill_type", -1))
+        self._skill_type: int = int(characterData.get("skill_type", 0))
+        # 角色的攻击范围
+        self.__skill_effective_range_coordinates: Optional[list[list[tuple[int, int]]]] = None
         # 被察觉程度
         self.__detection: int = (
             int(characterData["detection"]) if "detection" in characterData and characterData["detection"] is not None else 0
@@ -158,6 +202,8 @@ class FriendlyCharacter(BasicEntity):
             self.__getHurtImage = None
             if not os.path.exists(linpg.Specification.get_directory("character_icon", "{}.png".format(self.type))):
                 print("And also its icon.")
+
+    """修改父类的方法"""
 
     def to_dict(self) -> dict:
         # 获取父类信息
@@ -184,6 +230,10 @@ class FriendlyCharacter(BasicEntity):
             new_data["down_time"] = self.__down_time
         # 返回优化后的数据
         return new_data
+
+    def _need_update(self) -> None:
+        super()._need_update()
+        self.__skill_effective_range_coordinates = None
 
     """
     子弹
@@ -237,47 +287,53 @@ class FriendlyCharacter(BasicEntity):
     def skill_effective_range(self) -> tuple[int, ...]:
         return self.__skill_effective_range
 
+    @property
+    def skill_type(self) -> int:
+        return self._skill_type
+
     # 获取技能有效范围内的所有坐标
     def get_skill_effective_range_coordinates(
         self, MAP_P: linpg.AbstractMap, ifHalfMode: bool = False
     ) -> list[list[tuple[int, int]]]:
-        return self.generate_range_coordinates(
-            int(self.x), int(self.y), self.__skill_effective_range, MAP_P, self._if_flip, ifHalfMode
+        if self.__skill_effective_range_coordinates is None:
+            self.__skill_effective_range_coordinates = self._generate_range_coordinates(
+                round(self.x), round(self.y), self.__skill_effective_range, MAP_P, self._if_flip, ifHalfMode
+            )
+        return self.__skill_effective_range_coordinates
+
+    # 获取技能覆盖范围内的所有目标
+    def get_entity_in_skill_coverage(
+        self, _coverage_area: list[tuple[int, int]], alliances: dict, enemies: dict
+    ) -> tuple[str, ...]:
+        return tuple(
+            [key for key, value in enemies.items() if (round(value.x), round(value.y)) in _coverage_area and value.current_hp > 0]
+            if self._skill_type == 0
+            else [key for key, value in alliances.items() if (round(value.x), round(value.y)) in _coverage_area]
         )
 
-    # 获取
-    def get_entity_in_skill_effective_range(self, alliances: dict, enemies: dict, center_pos: tuple[int, int]) -> tuple[str, ...]:
-        _targets: list[str] = []
-        if self.__skill_type == 0:
-            _targets = [
-                key
-                for key, value in enemies
-                if abs(int(value.x - center_pos[0])) + abs(int(value.y - center_pos[1])) <= self.__skill_coverage
-                and value.current_hp > 0
-            ]
-        elif self.__skill_type == 1:
-            _targets = [
-                key
-                for key, value in alliances.items()
-                if abs(int(value.x - center_pos[0])) + abs(int(value.y - center_pos[1])) <= self.__skill_coverage
-            ]
-        return tuple(_targets)
-
+    # 获取技能覆盖范围
     def get_skill_coverage_coordinates(self, _x: int, _y: int, MAP_P: linpg.AbstractMap) -> list[tuple[int, int]]:
         return (
-            self.generate_coverage_coordinates(_x, _y, self.__skill_coverage, MAP_P)
+            self._generate_coverage_coordinates(_x, _y, self.__skill_coverage, MAP_P)
             if abs(round(self.x) - _x) + abs(round(self.y) - _y) <= sum(self.__skill_effective_range)
             else []
         )
 
-    def apply_skill(self, alliances: dict, enemies: dict, _targets: tuple[str, ...]) -> dict:
-        results: dict[str, tuple[int, int]] = {}
-        if self.__skill_type == 0:
-            the_damage: int = 0
-            for key in _targets:
+    def skill_range_target_in(self, otherEntity: "FriendlyCharacter") -> int:
+        return self._identify_range(
+            self.__skill_effective_range, abs(round(otherEntity.x) - round(self.x)) + abs(round(otherEntity.y) - round(self.y))
+        )
+
+    def apply_skill(self, alliances: dict, enemies: dict, _targets: tuple[str, ...]) -> dict[str, int]:
+        results: dict[str, int] = {}
+        the_damage: int = 0
+        for key in _targets:
+            if linpg.get_random_int(0, 100) <= 50 + (self.skill_range_target_in(enemies[key]) + 1) * 15:
                 the_damage = linpg.get_random_int(self.min_damage, self.max_damage)
                 enemies[key].injury(the_damage)
-                results[key] = (0, the_damage)
+                results[key] = the_damage
+            else:
+                results[key] = 0
         return results
 
     # 是否处于濒死状态
@@ -542,46 +598,3 @@ class HostileCharacter(BasicEntity):
             pass
         # 放回一个装有指令的列表
         return actions
-
-
-# 射击音效
-class AttackingSoundManager:
-
-    __channel_id: int = 2
-    __SOUNDS: dict[str, list] = {}
-
-    @classmethod
-    def initialize(cls) -> None:
-        path_p: tuple = ("Assets", "sound", "attack")
-        cls.__SOUNDS.clear()
-        cls.__SOUNDS.update(
-            {
-                # 突击步枪
-                "AR": glob(os.path.join(*path_p, "ar_*.ogg")),
-                # 手枪
-                "HG": glob(os.path.join(*path_p, "hg_*.ogg")),
-                # 机枪
-                "MG": glob(os.path.join(*path_p, "mg_*.ogg")),
-                # 步枪
-                "RF": glob(os.path.join(*path_p, "rf_*.ogg")),
-                # 冲锋枪
-                "SMG": glob(os.path.join(*path_p, "smg_*.ogg")),
-            }
-        )
-        for key in cls.__SOUNDS:
-            for i in range(len(cls.__SOUNDS[key])):
-                cls.__SOUNDS[key][i] = linpg.sound.load(cls.__SOUNDS[key][i])
-
-    # 播放
-    @classmethod
-    def play(cls, kind: str) -> None:
-        sounds_c: Optional[list] = cls.__SOUNDS.get(kind)
-        if sounds_c is not None:
-            sound_to_play = sounds_c[linpg.get_random_int(0, len(sounds_c) - 1)]
-            sound_to_play.set_volume(linpg.media.volume.effects / 100.0)
-            linpg.sound.play(sound_to_play, cls.__channel_id)
-
-    # 释放内存
-    @classmethod
-    def release(cls) -> None:
-        cls.__SOUNDS.clear()

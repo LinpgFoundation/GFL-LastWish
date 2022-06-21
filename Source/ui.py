@@ -407,7 +407,7 @@ class ResultBoard:
         self.x = int(font_size * 10)
         self.y = int(font_size * 10)
         self.txt_x = int(font_size * 12)
-        self.boardImg = linpg.load.img("Assets/image/UI/score.png", (font_size * 16, font_size * 32))
+        self.boardImg = linpg.load.img(r"Assets/image/UI/score.png", (font_size * 16, font_size * 32))
         self.total_kills = linpg.font.render(
             resultTxt["total_kills"] + ": " + str(finalResult["total_kills"]), "white", font_size
         )
