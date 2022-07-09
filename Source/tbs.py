@@ -351,7 +351,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
     # 更新音量
     def _update_sound_volume(self) -> None:
         super()._update_sound_volume()
-        self.environment_sound.set_volume(linpg.media.volume.environment / 100.0)
+        self.environment_sound.set_volume(linpg.volume.get_environment() / 100.0)
 
     # 警告某个角色周围的敌人
     def __alert_enemy_around(self, name: str, value: int = 10) -> None:
@@ -449,16 +449,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         RangeSystem.set_visible(True)
                         RangeSystem.clear()
                     # 是否在显示移动范围后点击了且点击区域在移动范围内
-                    elif (
-                        len(self.the_route) != 0
-                        and self._block_is_hovering is not None
-                        and (self._block_is_hovering[0], self._block_is_hovering[1]) in self.the_route
-                        and not RangeSystem.get_visible()
-                    ):
+                    elif len(self.the_route) > 0 and not RangeSystem.get_visible():
                         self.__is_waiting = False
                         RangeSystem.set_visible(True)
                         self.characterInControl.try_reduce_action_point(len(self.the_route) * 2)
                         self.characterInControl.move_follow(self.the_route)
+                        self.the_route.clear()
                         RangeSystem.clear()
                     elif self.selectMenuUI.item_being_hovered == "attack" and self.characterGetClick is not None:
                         if self.characterInControl.current_bullets > 0 and self.characterInControl.have_enough_action_point(5):
@@ -596,6 +592,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                     index += 1
                                 self.selectMenuUI.set_visible(True)
                                 break
+                self.the_route.clear()
                 # 选择菜单的判定，显示功能在角色动画之后
                 if self.selectMenuUI.is_visible() and self.characterGetClick is not None:
                     # 移动画面以使得被点击的角色可以被更好的操作
@@ -636,9 +633,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                     self.enemies,
                                     max_blocks_can_move,
                                 )
+                                RangeSystem.set_positions(0, self.the_route)
                                 if len(self.the_route) > 0:
                                     # 显示路径
-                                    RangeSystem.set_positions(0, self.the_route)
                                     xTemp, yTemp = self._MAP.calculate_position(self.the_route[-1][0], self.the_route[-1][1])
                                     screen.blit(
                                         self._FONT.render(str(len(self.the_route) * 2), linpg.color.WHITE),
@@ -1027,8 +1024,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     self.__statistics["total_time"] = time.localtime(time.time() - self.__statistics["total_time"])
                     self.ResultBoardUI = ResultBoard(self.__statistics, screen.get_width() // 96)
                 for event in linpg.controller.events:
-                    if event.type == linpg.key.DOWN:
-                        if event.key == linpg.key.SPACE:
+                    if event.type == linpg.keys.DOWN:
+                        if event.key == linpg.keys.SPACE:
                             self.__is_battle_mode = False
                             self.stop()
                 self.__add_on_screen_object(self.ResultBoardUI)
@@ -1038,8 +1035,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     self.__statistics["total_time"] = time.localtime(time.time() - self.__statistics["total_time"])
                     self.ResultBoardUI = ResultBoard(self.__statistics, screen.get_width() // 96, False)
                 for event in linpg.controller.events:
-                    if event.type == linpg.key.DOWN:
-                        if event.key == linpg.key.SPACE:
+                    if event.type == linpg.keys.DOWN:
+                        if event.key == linpg.keys.SPACE:
                             linpg.media.unload()
                             self.__init__()
                             chapter_info: dict = self.get_data_of_parent_game_system()
@@ -1047,7 +1044,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 screen, chapter_info["chapter_type"], chapter_info["chapter_id"], chapter_info["project_name"]
                             )
                             break
-                        elif event.key == linpg.key.BACKSPACE:
+                        elif event.key == linpg.keys.BACKSPACE:
                             linpg.media.unload()
                             self.stop()
                             self.__is_battle_mode = False

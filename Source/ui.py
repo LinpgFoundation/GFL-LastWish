@@ -584,7 +584,7 @@ class RangeSystem:
 
     # 渲染到屏幕上
     @classmethod
-    def draw(cls, map_prt: linpg.MapObject, screen: linpg.ImageSurface) -> None:
+    def draw(cls, map_prt: linpg.TileMap, screen: linpg.ImageSurface) -> None:
         for prt in cls.__images:
             if prt.get_alpha() > cls.__target_alpha:
                 prt.subtract_alpha(17)

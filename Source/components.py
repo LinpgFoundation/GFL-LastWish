@@ -72,7 +72,7 @@ class Gamemode:
     VIDEO_BACKGROUND: linpg.VideoSurface = linpg.VideoSurface(
         r"Assets/movie/SquadAR.mp4", True, not linpg.debug.get_developer_mode(), (935, 3105), cache_key="into"
     )
-    VIDEO_BACKGROUND.set_volume(linpg.media.volume.background_music / 100.0)
+    VIDEO_BACKGROUND.set_volume(linpg.volume.get_background_music() / 100.0)
 
     # 画出加载ui
     @classmethod

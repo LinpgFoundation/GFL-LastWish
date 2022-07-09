@@ -1,160 +1,6 @@
 from collections import deque
-from typing import Optional, Sequence
-from .api import *
-
-# 射击音效
-class AttackingSoundManager:
-
-    __channel_id: int = 2
-    __SOUNDS: dict[str, list] = {}
-
-    @classmethod
-    def initialize(cls) -> None:
-        path_p: tuple = ("Assets", "sound", "attack")
-        cls.__SOUNDS.clear()
-        cls.__SOUNDS.update(
-            {
-                # 突击步枪
-                "AR": glob(os.path.join(*path_p, "ar_*.ogg")),
-                # 手枪
-                "HG": glob(os.path.join(*path_p, "hg_*.ogg")),
-                # 机枪
-                "MG": glob(os.path.join(*path_p, "mg_*.ogg")),
-                # 步枪
-                "RF": glob(os.path.join(*path_p, "rf_*.ogg")),
-                # 冲锋枪
-                "SMG": glob(os.path.join(*path_p, "smg_*.ogg")),
-            }
-        )
-        for key in cls.__SOUNDS:
-            for i in range(len(cls.__SOUNDS[key])):
-                cls.__SOUNDS[key][i] = linpg.sound.load(cls.__SOUNDS[key][i])
-
-    # 播放
-    @classmethod
-    def play(cls, kind: str) -> None:
-        sounds_c: Optional[list] = cls.__SOUNDS.get(kind)
-        if sounds_c is not None:
-            sound_to_play = sounds_c[linpg.get_random_int(0, len(sounds_c) - 1)]
-            sound_to_play.set_volume(linpg.media.volume.effects / 100.0)
-            linpg.sound.play(sound_to_play, cls.__channel_id)
-
-    # 释放内存
-    @classmethod
-    def release(cls) -> None:
-        cls.__SOUNDS.clear()
-
-
-# 友方角色被察觉的图标管理模块
-class FriendlyCharacterDynamicProgressBarSurface(linpg.DynamicProgressBarSurface):
-
-    # 指向储存角色被察觉图标的指针
-    __FULLY_EXPOSED_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>eye_red.png")
-    __BEING_NOTICED_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>eye_orange.png")
-
-    def __init__(self) -> None:
-        super().__init__(self.__FULLY_EXPOSED_IMG, self.__BEING_NOTICED_IMG, 0, 0, 0, 0)
-
-
-# 敌方角色警觉度的图标管理模块
-class HostileCharacterDynamicProgressBarSurface(linpg.DynamicProgressBarSurface):
-
-    # 指向储存敌方角色警觉程度图标的指针
-    __ORANGE_VIGILANCE_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>vigilance_orange.png")
-    __RED_VIGILANCE_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>vigilance_red.png")
-
-    def __init__(self) -> None:
-        super().__init__(self.__RED_VIGILANCE_IMG, self.__ORANGE_VIGILANCE_IMG, 0, 0, 0, 0, "vertical")
-
-
-# 角色血条图片管理模块
-class EntityHpBar(linpg.DynamicProgressBarSurface):
-
-    # 指向储存血条图片的指针
-    __HP_GREEN_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>hp_green.png")
-    __HP_RED_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>hp_red.png")
-    __HP_EMPTY_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>hp_empty.png")
-
-    def __init__(self) -> None:
-        # 是否角色死亡
-        self.__is_dying: bool = False
-        # 初始化父类
-        super().__init__(self.__HP_GREEN_IMG, self.__HP_EMPTY_IMG, 0, 0, 0, 0)
-
-    # 获取上方图片
-    def _get_img_on_top(self) -> linpg.ImageSurface:
-        return super()._get_img_on_top() if not self.__is_dying else self.__HP_RED_IMG
-
-    def set_dying(self, value: bool) -> None:
-        self.__is_dying = value
-
-
-# 角色受伤立绘图形模块
-class EntityGetHurtImage(linpg.Square):
-
-    # 存储角色受伤立绘的常量
-    __CHARACTERS_GET_HURT_IMAGE_DICT: dict = {}
-
-    def __init__(self, self_type: str, y: linpg.int_f, width: linpg.int_f):
-        super().__init__(0, y, width)
-        self.delay: int = 255
-        self.alpha: int = 0
-        self.add(self_type)
-
-    def draw(self, screen: linpg.ImageSurface, characterType: str) -> None:  # type: ignore[override]
-        _image = linpg.images.resize(self.__CHARACTERS_GET_HURT_IMAGE_DICT[characterType], self.size)
-        if self.alpha != 255:
-            _image.set_alpha(self.alpha)
-        screen.blit(_image, self.pos)
-
-    def add(self, characterType: str) -> None:
-        if characterType not in self.__CHARACTERS_GET_HURT_IMAGE_DICT:
-            self.__CHARACTERS_GET_HURT_IMAGE_DICT[characterType] = linpg.images.quickly_load(
-                linpg.Specification.get_directory("character_image", "{}_hurt.png".format(characterType))
-            )
-
-
-# 基础角色类
-class BasicEntity(linpg.Entity):
-
-    # 攻击所需的AP
-    AP_IS_NEEDED_TO_ATTACK: int = 5
-    AP_IS_NEEDED_TO_MOVE_ONE_BLOCK: int = 2
-    # 濒死回合限制
-    DYING_ROUND_LIMIT: int = 3
-
-    def __init__(self, characterData: dict, mode: str) -> None:
-        super().__init__(characterData, mode)
-        # 血条图片
-        self.__hp_bar: EntityHpBar = EntityHpBar()
-        self.__status_font: linpg.StaticTextSurface = linpg.StaticTextSurface("", 0, 0, linpg.display.get_width() / 192)
-
-    # 把角色ui画到屏幕上
-    def _drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: linpg.MapObject, customHpData: Optional[tuple] = None) -> tuple:
-        xTemp, yTemp = MAP_POINTER.calculate_position(self.x, self.y)
-        xTemp += MAP_POINTER.block_width // 4
-        yTemp -= MAP_POINTER.block_width // 5
-        self.__hp_bar.set_size(MAP_POINTER.block_width / 2, MAP_POINTER.block_width / 10)
-        self.__hp_bar.set_pos(xTemp, yTemp)
-        # 预处理血条图片
-        if customHpData is None:
-            self.__hp_bar.set_percentage(self.current_hp / self.max_hp)
-            self.__hp_bar.set_dying(False)
-            self.__status_font.set_text("{0}/{1}".format(self.current_hp, self.max_hp))
-        else:
-            self.__hp_bar.set_percentage(customHpData[0] / customHpData[1])
-            self.__hp_bar.set_dying(customHpData[2])
-            self.__status_font.set_text("{0}/{1}".format(customHpData[0], customHpData[1]))
-        # 把血条画到屏幕上
-        self.__hp_bar.draw(surface)
-        self.__status_font.set_pos(
-            self.__hp_bar.x + (self.__hp_bar.get_width() - self.__status_font.get_width()) // 2,
-            self.__hp_bar.y + (self.__hp_bar.get_height() - self.__status_font.get_height()) // 2,
-        )
-        self.__status_font.draw(surface)
-        # 返回坐标以供子类进行处理
-        return xTemp, yTemp
-
+from typing import Sequence
+from .entity import *
 
 # 友方角色类
 class FriendlyCharacter(BasicEntity):
@@ -166,10 +12,10 @@ class FriendlyCharacter(BasicEntity):
             if "down_time" in characterData
             else (-1 if self.is_alive() else self.DYING_ROUND_LIMIT)
         )
+        # 弹夹容量
+        self.__magazine_capacity: int = int(characterData["magazine_capacity"])
         # 当前弹夹的子弹数
-        self.__current_bullets: int = (
-            int(characterData["current_bullets"]) if "current_bullets" in characterData else self.magazine_capacity
-        )
+        self.__current_bullets: int = int(characterData.get("current_bullets", self.__magazine_capacity))
         # 当前携带子弹数量
         _bullets_carried = characterData.get("bullets_carried")
         self.__bullets_carried: int = int(_bullets_carried) if _bullets_carried is not None else 100
@@ -214,6 +60,7 @@ class FriendlyCharacter(BasicEntity):
                 "bullets_carried": self.__bullets_carried,
                 "skill_coverage": self.__skill_coverage,
                 "skill_effective_range": list(self.__skill_effective_range),
+                "magazine_capacity": self.__magazine_capacity,
             }
         )
         # 除去重复数据
@@ -222,7 +69,7 @@ class FriendlyCharacter(BasicEntity):
             if key in o_data and o_data[key] == new_data[key]:
                 del new_data[key]
         """加入友方角色可选数据"""
-        if self.__current_bullets != self.magazine_capacity:
+        if self.__current_bullets != self.__magazine_capacity:
             new_data["current_bullets"] = self.__current_bullets
         if self.__detection > 0:
             new_data["detection"] = self.__detection
@@ -238,6 +85,11 @@ class FriendlyCharacter(BasicEntity):
     """
     子弹
     """
+
+    # 弹夹容量
+    @property
+    def magazine_capacity(self) -> int:
+        return self.__magazine_capacity
 
     # 当前子弹携带数量
     @property
@@ -259,11 +111,11 @@ class FriendlyCharacter(BasicEntity):
 
     # 是否需要换弹
     def is_reload_needed(self) -> int:
-        return self.magazine_capacity - self.__current_bullets > 0
+        return self.__magazine_capacity - self.__current_bullets > 0
 
     # 换弹
     def reload_magazine(self) -> None:
-        bullets_to_add: int = self.magazine_capacity - self.__current_bullets
+        bullets_to_add: int = self.__magazine_capacity - self.__current_bullets
         # 当所剩子弹足够换弹的时候
         if bullets_to_add < self.__bullets_carried:
             self.__current_bullets += bullets_to_add
@@ -293,7 +145,7 @@ class FriendlyCharacter(BasicEntity):
 
     # 获取技能有效范围内的所有坐标
     def get_skill_effective_range_coordinates(
-        self, MAP_P: linpg.AbstractMap, ifHalfMode: bool = False
+        self, MAP_P: linpg.TileMap, ifHalfMode: bool = False
     ) -> list[list[tuple[int, int]]]:
         if self.__skill_effective_range_coordinates is None:
             self.__skill_effective_range_coordinates = self._generate_range_coordinates(
@@ -312,7 +164,7 @@ class FriendlyCharacter(BasicEntity):
         )
 
     # 获取技能覆盖范围
-    def get_skill_coverage_coordinates(self, _x: int, _y: int, MAP_P: linpg.AbstractMap) -> list[tuple[int, int]]:
+    def get_skill_coverage_coordinates(self, _x: int, _y: int, MAP_P: linpg.TileMap) -> list[tuple[int, int]]:
         return (
             self._generate_coverage_coordinates(_x, _y, self.__skill_coverage, MAP_P)
             if abs(round(self.x) - _x) + abs(round(self.y) - _y) <= sum(self.__skill_effective_range)
@@ -324,6 +176,7 @@ class FriendlyCharacter(BasicEntity):
             self.__skill_effective_range, abs(round(otherEntity.x) - round(self.x)) + abs(round(otherEntity.y) - round(self.y))
         )
 
+    # 使用技能
     def apply_skill(self, alliances: dict, enemies: dict, _targets: tuple[str, ...]) -> dict[str, int]:
         results: dict[str, int] = {}
         the_damage: int = 0
@@ -382,7 +235,7 @@ class FriendlyCharacter(BasicEntity):
             self.__down_time = -1
             self._if_play_action_in_reversing = True
 
-    def drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: linpg.MapObject) -> None:
+    def drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: linpg.TileMap) -> None:
         customHpData: Optional[tuple] = None if self.__down_time < 0 else (self.__down_time, self.DYING_ROUND_LIMIT, True)
         blit_pos = super()._drawUI(surface, MAP_POINTER, customHpData)
         # 展示被察觉的程度
@@ -482,7 +335,7 @@ class HostileCharacter(BasicEntity):
         return self.__vigilance >= 100
 
     # 画UI - 列如血条
-    def drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: linpg.MapObject) -> None:
+    def drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: linpg.TileMap) -> None:
         blit_pos = super()._drawUI(surface, MAP_POINTER)
         # 展示警觉的程度
         if self.__vigilance > 0:
@@ -498,7 +351,7 @@ class HostileCharacter(BasicEntity):
 
     def make_decision(
         self,
-        MAP_POINTER: linpg.MapObject,
+        MAP_POINTER: linpg.TileMap,
         friendlyCharacters: dict,
         hostileCharacters: dict,
         characters_detected_last_round: dict,

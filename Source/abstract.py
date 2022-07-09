@@ -64,10 +64,7 @@ class LoadingModule:
         for key, value in _entities["GriffinKryuger"].items():
             data_t = deepcopy(linpg.Entity.get_enity_data(value["type"]))
             data_t.update(value)
-            if value["type"] == "gsh18":
-                self.get_entities_data()["GriffinKryuger"][key] = Gsh18(data_t, _mode)
-            else:
-                self.get_entities_data()["GriffinKryuger"][key] = FriendlyCharacter(data_t, _mode)
+            self.get_entities_data()["GriffinKryuger"][key] = Dolls.new(data_t, _mode, value["type"])
             currentID += 1
             self.__update_loading_info(self.__loading_info_msg["now_loading_characters"] + "({}/{})".format(currentID, totalNum))
         for key, value in _entities["SangvisFerri"].items():
@@ -170,8 +167,8 @@ class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSy
 
     # 更新音量
     def _update_sound_volume(self) -> None:
-        self._footstep_sounds.set_volume(linpg.media.volume.effects / 100)
-        self.set_bgm_volume(linpg.media.volume.background_music / 100.0)
+        self._footstep_sounds.set_volume(linpg.volume.get_effects() / 100)
+        self.set_bgm_volume(linpg.volume.get_background_music() / 100.0)
 
     """其他"""
 
