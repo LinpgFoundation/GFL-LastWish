@@ -15,26 +15,38 @@ class FriendlyCharacter(BasicEntity):
         # 弹夹容量
         self.__magazine_capacity: int = int(characterData["magazine_capacity"])
         # 当前弹夹的子弹数
-        self.__current_bullets: int = int(characterData.get("current_bullets", self.__magazine_capacity))
+        self.__current_bullets: int = int(
+            characterData.get("current_bullets", self.__magazine_capacity)
+        )
         # 当前携带子弹数量
         _bullets_carried = characterData.get("bullets_carried")
-        self.__bullets_carried: int = int(_bullets_carried) if _bullets_carried is not None else 100
+        self.__bullets_carried: int = (
+            int(_bullets_carried) if _bullets_carried is not None else 100
+        )
         # 技能覆盖范围
         self.__skill_coverage: int = int(characterData["skill_coverage"])
         # 技能施展范围
         self.__skill_effective_range: tuple[int, ...] = (
-            tuple(_data) if (_data := characterData.get("skill_effective_range")) is not None else tuple()
+            tuple(_data)
+            if (_data := characterData.get("skill_effective_range")) is not None
+            else tuple()
         )
         # 技能的类型 【0 - 伤害，1 - 治疗己方】
         self._skill_type: int = int(characterData.get("skill_type", 0))
         # 角色的攻击范围
-        self.__skill_effective_range_coordinates: Optional[list[list[tuple[int, int]]]] = None
+        self.__skill_effective_range_coordinates: Optional[
+            list[list[tuple[int, int]]]
+        ] = None
         # 被察觉程度
         self.__detection: int = (
-            int(characterData["detection"]) if "detection" in characterData and characterData["detection"] is not None else 0
+            int(characterData["detection"])
+            if "detection" in characterData and characterData["detection"] is not None
+            else 0
         )
         # 生成被察觉的图标
-        self.__beNoticedImage: FriendlyCharacterDynamicProgressBarSurface = FriendlyCharacterDynamicProgressBarSurface()
+        self.__beNoticedImage: FriendlyCharacterDynamicProgressBarSurface = (
+            FriendlyCharacterDynamicProgressBarSurface()
+        )
         self.__beNoticedImage.set_percentage(self.__detection / 100)
         # 重创立绘
         self.__getHurtImage: Optional[EntityGetHurtImage] = None
@@ -42,11 +54,19 @@ class FriendlyCharacter(BasicEntity):
         self.set_attitude(1)
         # 尝试加载重创立绘
         try:
-            self.__getHurtImage = EntityGetHurtImage(self.type, linpg.display.get_height() // 4, linpg.display.get_height() // 2)
+            self.__getHurtImage = EntityGetHurtImage(
+                self.type,
+                linpg.display.get_height() // 4,
+                linpg.display.get_height() // 2,
+            )
         except Exception:
             print("Character {} does not have damaged artwork!".format(self.type))
             self.__getHurtImage = None
-            if not os.path.exists(linpg.Specification.get_directory("character_icon", "{}.png".format(self.type))):
+            if not os.path.exists(
+                linpg.Specification.get_directory(
+                    "character_icon", "{}.png".format(self.type)
+                )
+            ):
                 print("And also its icon.")
 
     """修改父类的方法"""
@@ -64,7 +84,7 @@ class FriendlyCharacter(BasicEntity):
             }
         )
         # 除去重复数据
-        o_data: dict = dict(self.get_enity_data(new_data["type"]))
+        o_data: dict = dict(self.get_entity_data(new_data["type"]))
         for key in tuple(new_data.keys()):
             if key in o_data and o_data[key] == new_data[key]:
                 del new_data[key]
@@ -149,7 +169,12 @@ class FriendlyCharacter(BasicEntity):
     ) -> list[list[tuple[int, int]]]:
         if self.__skill_effective_range_coordinates is None:
             self.__skill_effective_range_coordinates = self._generate_range_coordinates(
-                round(self.x), round(self.y), self.__skill_effective_range, MAP_P, self._if_flip, ifHalfMode
+                round(self.x),
+                round(self.y),
+                self.__skill_effective_range,
+                MAP_P,
+                self._if_flip,
+                ifHalfMode,
             )
         return self.__skill_effective_range_coordinates
 
@@ -158,31 +183,52 @@ class FriendlyCharacter(BasicEntity):
         self, _coverage_area: list[tuple[int, int]], alliances: dict, enemies: dict
     ) -> tuple[str, ...]:
         return tuple(
-            [key for key, value in enemies.items() if (round(value.x), round(value.y)) in _coverage_area and value.current_hp > 0]
+            [
+                key
+                for key, value in enemies.items()
+                if (round(value.x), round(value.y)) in _coverage_area
+                and value.current_hp > 0
+            ]
             if self._skill_type == 0
-            else [key for key, value in alliances.items() if (round(value.x), round(value.y)) in _coverage_area]
+            else [
+                key
+                for key, value in alliances.items()
+                if (round(value.x), round(value.y)) in _coverage_area
+            ]
         )
 
     # 获取技能覆盖范围
-    def get_skill_coverage_coordinates(self, _x: int, _y: int, MAP_P: linpg.TileMap) -> list[tuple[int, int]]:
+    def get_skill_coverage_coordinates(
+        self, _x: int, _y: int, MAP_P: linpg.TileMap
+    ) -> list[tuple[int, int]]:
         return (
             self._generate_coverage_coordinates(_x, _y, self.__skill_coverage, MAP_P)
-            if abs(round(self.x) - _x) + abs(round(self.y) - _y) <= sum(self.__skill_effective_range)
+            if abs(round(self.x) - _x) + abs(round(self.y) - _y)
+            <= sum(self.__skill_effective_range)
             else []
         )
 
     def skill_range_target_in(self, otherEntity: "FriendlyCharacter") -> int:
         return self._identify_range(
-            self.__skill_effective_range, abs(round(otherEntity.x) - round(self.x)) + abs(round(otherEntity.y) - round(self.y))
+            self.__skill_effective_range,
+            abs(round(otherEntity.x) - round(self.x))
+            + abs(round(otherEntity.y) - round(self.y)),
         )
 
     # 使用技能
-    def apply_skill(self, alliances: dict, enemies: dict, _targets: tuple[str, ...]) -> dict[str, int]:
+    def apply_skill(
+        self, alliances: dict, enemies: dict, _targets: tuple[str, ...]
+    ) -> dict[str, int]:
         results: dict[str, int] = {}
         the_damage: int = 0
         for key in _targets:
-            if linpg.get_random_int(0, 100) <= 50 + (self.skill_range_target_in(enemies[key]) + 1) * 15:
-                the_damage = linpg.get_random_int(self.min_damage, self.max_damage)
+            if (
+                linpg.numbers.get_random_int(0, 100)
+                <= 50 + (self.skill_range_target_in(enemies[key]) + 1) * 15
+            ):
+                the_damage = linpg.numbers.get_random_int(
+                    self.min_damage, self.max_damage
+                )
                 enemies[key].injury(the_damage)
                 results[key] = the_damage
             else:
@@ -236,7 +282,11 @@ class FriendlyCharacter(BasicEntity):
             self._if_play_action_in_reversing = True
 
     def drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: linpg.TileMap) -> None:
-        customHpData: Optional[tuple] = None if self.__down_time < 0 else (self.__down_time, self.DYING_ROUND_LIMIT, True)
+        customHpData: Optional[tuple] = (
+            None
+            if self.__down_time < 0
+            else (self.__down_time, self.DYING_ROUND_LIMIT, True)
+        )
         blit_pos = super()._drawUI(surface, MAP_POINTER, customHpData)
         # 展示被察觉的程度
         if self.__detection > 0:
@@ -247,7 +297,10 @@ class FriendlyCharacter(BasicEntity):
             numberY: float = (eyeImgHeight - MAP_POINTER.block_width / 10) / 2
             # 根据参数调整图片
             self.__beNoticedImage.set_size(eyeImgWidth, eyeImgHeight)
-            self.__beNoticedImage.set_pos(blit_pos[0] + MAP_POINTER.block_width * 0.51 - numberX, blit_pos[1] - numberY)
+            self.__beNoticedImage.set_pos(
+                blit_pos[0] + MAP_POINTER.block_width * 0.51 - numberX,
+                blit_pos[1] - numberY,
+            )
             self.__beNoticedImage.draw(surface)
         # 重创立绘
         if self.__getHurtImage is not None and self.__getHurtImage.alpha > 0:
@@ -290,9 +343,17 @@ class HostileCharacter(BasicEntity):
 
     def __init__(self, characterData: dict, mode: str) -> None:
         super().__init__(characterData, mode)
-        self.__patrol_path: deque = deque(characterData["patrol_path"]) if "patrol_path" in characterData else deque()
-        self.__vigilance: int = int(characterData["vigilance"]) if "vigilance" in characterData else 0
-        self.__vigilanceImage: HostileCharacterDynamicProgressBarSurface = HostileCharacterDynamicProgressBarSurface()
+        self.__patrol_path: deque = (
+            deque(characterData["patrol_path"])
+            if "patrol_path" in characterData
+            else deque()
+        )
+        self.__vigilance: int = (
+            int(characterData["vigilance"]) if "vigilance" in characterData else 0
+        )
+        self.__vigilanceImage: HostileCharacterDynamicProgressBarSurface = (
+            HostileCharacterDynamicProgressBarSurface()
+        )
         self.__vigilanceImage.set_percentage(self.__vigilance / 100)
         # 设置态度flag
         self.set_attitude(-1)
@@ -304,7 +365,7 @@ class HostileCharacter(BasicEntity):
         if len(self.__patrol_path) > 0:
             new_data["patrol_path"] = list(self.__patrol_path)
         # 除去重复数据
-        o_data: dict = self.get_enity_data(new_data["type"])
+        o_data: dict = self.get_entity_data(new_data["type"])
         _keys: tuple = tuple(new_data.keys())
         for key in _keys:
             if key in o_data and o_data[key] == new_data[key]:
@@ -346,14 +407,17 @@ class HostileCharacter(BasicEntity):
             numberY: float = (eyeImgHeight - MAP_POINTER.block_width / 10) / 2
             # 根据参数调整图片
             self.__vigilanceImage.set_size(eyeImgWidth, eyeImgHeight)
-            self.__vigilanceImage.set_pos(blit_pos[0] + MAP_POINTER.block_width * 0.51 - numberX, blit_pos[1] - numberY)
+            self.__vigilanceImage.set_pos(
+                blit_pos[0] + MAP_POINTER.block_width * 0.51 - numberX,
+                blit_pos[1] - numberY,
+            )
             self.__vigilanceImage.draw(surface)
 
     def make_decision(
         self,
         MAP_POINTER: linpg.TileMap,
-        friendlyCharacters: dict,
-        hostileCharacters: dict,
+        friendlyCharacters: dict[str, FriendlyCharacter],
+        hostileCharacters: dict[str, "HostileCharacter"],
         characters_detected_last_round: dict,
     ) -> deque:
         # 存储友方角色价值榜
@@ -364,14 +428,19 @@ class HostileCharacter(BasicEntity):
                 # 计算距离的分数
                 weight += int(abs(self.x - theCharacter.x) + abs(self.y - theCharacter.y))
                 # 计算血量分数
-                weight += int(self.current_hp * self.hp_precentage)
+                weight += int(self.current_hp * self.hp_percentage)
                 target_value_board.append((name, weight))
         # 最大移动距离
-        blocks_can_move: int = self.max_action_point // self.AP_IS_NEEDED_TO_MOVE_ONE_BLOCK
+        blocks_can_move: int = (
+            self.max_action_point // self.AP_IS_NEEDED_TO_MOVE_ONE_BLOCK
+        )
         # 角色将会在该回合采取的行动
         actions: deque = deque()
         # 如果角色有可以攻击的对象，且角色至少有足够的行动点数攻击
-        if len(target_value_board) > 0 and self.max_action_point > self.AP_IS_NEEDED_TO_ATTACK:
+        if (
+            len(target_value_board) > 0
+            and self.max_action_point > self.AP_IS_NEEDED_TO_ATTACK
+        ):
             action_point_can_use = self.max_action_point
             # 筛选分数最低的角色作为目标
             target = target_value_board[0][0]
@@ -382,11 +451,16 @@ class HostileCharacter(BasicEntity):
                     target = data[0]
             targetCharacterData = friendlyCharacters[target]
             if self.range_target_in(targetCharacterData) >= 0:
-                actions.append(self.__DecisionHolder("attack", tuple((target, self.range_target_in(targetCharacterData)))))
+                actions.append(
+                    self.__DecisionHolder(
+                        "attack",
+                        tuple((target, self.range_target_in(targetCharacterData))),
+                    )
+                )
                 action_point_can_use -= self.AP_IS_NEEDED_TO_ATTACK
                 """
                 if action_point_can_use > AP_IS_NEEDED_TO_ATTACK:
-                    if self.hp_precentage > 0.2:
+                    if self.hp_percentage > 0.2:
                         #如果自身血量正常，则应该考虑再次攻击角色
                         actions.append(self.__DecisionHolder("attack",target))
                         action_point_can_use -= AP_IS_NEEDED_TO_ATTACK
@@ -396,13 +470,31 @@ class HostileCharacter(BasicEntity):
             else:
                 # 寻找一条能到达该角色附近的线路
                 the_route = MAP_POINTER.find_path(
-                    self.pos, targetCharacterData.pos, hostileCharacters, friendlyCharacters, blocks_can_move, [target]
+                    self.get_coordinate(),
+                    targetCharacterData.get_coordinate(),
+                    hostileCharacters,
+                    friendlyCharacters,
+                    True,
+                    blocks_can_move,
+                    (target,),
                 )
                 if len(the_route) > 0:
+                    # 防止敌方角色走到目标的坐标上去
+                    if (
+                        the_route[len(the_route) - 1]
+                        == targetCharacterData.get_coordinate()
+                    ):
+                        the_route.pop()
+                    # 计算攻击范围
                     potential_attacking_pos_area = -1
                     potential_attacking_pos_index = 0
-                    o_pos = self.pos
-                    for i in range(len(the_route) - self.AP_IS_NEEDED_TO_ATTACK // self.AP_IS_NEEDED_TO_MOVE_ONE_BLOCK + 1):
+                    o_pos: tuple[linpg.number, linpg.number] = self.get_pos()
+                    for i in range(
+                        len(the_route)
+                        - self.AP_IS_NEEDED_TO_ATTACK
+                        // self.AP_IS_NEEDED_TO_MOVE_ONE_BLOCK
+                        + 1
+                    ):
                         # 当前正在处理的坐标
                         self.set_pos(*the_route[i])
                         # 获取可能的攻击范围
@@ -414,19 +506,36 @@ class HostileCharacter(BasicEntity):
                                 break
                     self.set_pos(*o_pos)
                     if potential_attacking_pos_area >= 0:
-                        actions.append(self.__DecisionHolder("move", the_route[:potential_attacking_pos_index]))
-                        actions.append(self.__DecisionHolder("attack", (target, potential_attacking_pos_area)))
+                        actions.append(
+                            self.__DecisionHolder(
+                                "move", the_route[:potential_attacking_pos_index]
+                            )
+                        )
+                        actions.append(
+                            self.__DecisionHolder(
+                                "attack", (target, potential_attacking_pos_area)
+                            )
+                        )
                     else:
                         actions.append(self.__DecisionHolder("move", the_route))
                 else:
-                    raise Exception("A hostile character cannot find a valid path when trying to attack {}!".format(target))
+                    raise Exception(
+                        "A hostile character cannot find a valid path when trying to attack {}!".format(
+                            target
+                        )
+                    )
         # 如果角色没有可以攻击的对象，则查看角色是否需要巡逻
         elif len(self.__patrol_path) > 0:
             # 如果巡逻坐标点只有一个（意味着角色需要在该坐标上长期镇守）
             if len(self.__patrol_path) == 1:
                 if not linpg.coordinates.is_same(self.pos, self.__patrol_path[0]):
                     the_route = MAP_POINTER.find_path(
-                        self.pos, self.__patrol_path[0], hostileCharacters, friendlyCharacters, blocks_can_move
+                        self.get_coordinate(),
+                        self.__patrol_path[0],
+                        hostileCharacters,
+                        friendlyCharacters,
+                        True,
+                        blocks_can_move,
                     )
                     if len(the_route) > 0:
                         actions.append(self.__DecisionHolder("move", the_route))
@@ -438,7 +547,12 @@ class HostileCharacter(BasicEntity):
             # 如果巡逻坐标点有多个
             else:
                 the_route = MAP_POINTER.find_path(
-                    self.pos, self.__patrol_path[0], hostileCharacters, friendlyCharacters, blocks_can_move
+                    self.get_coordinate(),
+                    self.__patrol_path[0],
+                    hostileCharacters,
+                    friendlyCharacters,
+                    True,
+                    blocks_can_move,
                 )
                 if len(the_route) > 0:
                     actions.append(self.__DecisionHolder("move", the_route))

@@ -15,7 +15,7 @@ dialogs:
       contents:
       - 滴......
       last_dialog_id: null
-      narrator: null
+      narrator: ''
       next_dialog_id:
         target: id_001
         type: default
@@ -121,7 +121,7 @@ dialogs:
       contents:
       - 通讯结束
       last_dialog_id: id_007
-      narrator: null
+      narrator: ''
       next_dialog_id:
         target: id_009
         type: default
@@ -188,11 +188,11 @@ dialogs:
     id_014:
       background_image: SlumpingFluid.mp4
       background_music: null
-      character_images: null
+      character_images: []
       contents:
       - 感谢试玩《少女前线-遗愿》，更多内容仍在研发当中，敬请期待
       last_dialog_id: id_013
-      narrator: null
+      narrator: ''
       next_dialog_id:
         target: WhatAmIFightingFor.mp4
         type: cutscene
@@ -200,22 +200,22 @@ dialogs:
     head:
       background_image: null
       background_music: null
-      character_images: null
+      character_images: []
       contents:
       - 在我的潜意识中，我曾担心过意外
       last_dialog_id: null
-      narrator: null
+      narrator: ''
       next_dialog_id:
         target: id_001
         type: default
     id_001:
       background_image: null
       background_music: null
-      character_images: null
+      character_images: []
       contents:
       - 然而我却没有想到，意外会来得如此之快
       last_dialog_id: head
-      narrator: null
+      narrator: ''
       next_dialog_id:
         target: id_002
         type: default
@@ -376,23 +376,23 @@ dialogs:
     id_014:
       background_image: research.jpg
       background_music: BGM_Boss_1.ogg
-      character_images: null
+      character_images: []
       contents:
       - 此时此刻，我的内心十分不安，sv98她们能不能在撤离前赶回来是一件事
       - 但我总感觉这座岛上，有着格里芬甚至安全局自己都还不知道的谜团
       last_dialog_id: id_013
-      narrator: null
+      narrator: ''
       next_dialog_id:
         target: id_015
         type: changeScene
     id_015:
       background_image: snowfield.jpg
       background_music: BGM_Brain_1.ogg
-      character_images: null
+      character_images: []
       contents:
       - 24小时以前
       last_dialog_id: null
-      narrator: null
+      narrator: ''
       next_dialog_id:
         target: id_016
         type: default
@@ -458,7 +458,7 @@ dialogs:
       next_dialog_id: null
   dialog_during_battle:
     head:
-      background_image: <transparent>
+      background_image: null
       background_music: null
       character_images:
       - sv98.png
@@ -471,7 +471,7 @@ dialogs:
         target: initial_dialog_2
         type: default
     initial_dialog_2:
-      background_image: <transparent>
+      background_image: null
       background_music: null
       character_images:
       - sv98.png&silent
@@ -482,7 +482,7 @@ dialogs:
       next_dialog_id:
         type: break
     initial_dialog_3:
-      background_image: <transparent>
+      background_image: null
       background_music: null
       character_images:
       - asval.png
@@ -493,7 +493,7 @@ dialogs:
       next_dialog_id:
         type: break
     initial_dialog_4:
-      background_image: <transparent>
+      background_image: null
       background_music: null
       character_images:
       - sv98.png
@@ -505,7 +505,7 @@ dialogs:
         target: initial_dialog_5
         type: default
     initial_dialog_5:
-      background_image: <transparent>
+      background_image: null
       background_music: null
       character_images:
       - pp1901.png
@@ -517,7 +517,7 @@ dialogs:
         target: initial_dialog_6
         type: default
     initial_dialog_6:
-      background_image: <transparent>
+      background_image: null
       background_music: null
       character_images:
       - gsh18.png
@@ -529,7 +529,7 @@ dialogs:
         target: initial_dialog_7
         type: default
     initial_dialog_7:
-      background_image: <transparent>
+      background_image: null
       background_music: null
       character_images:
       - asval.png
@@ -541,7 +541,7 @@ dialogs:
         target: initial_dialog_8
         type: default
     initial_dialog_8:
-      background_image: <transparent>
+      background_image: null
       background_music: null
       character_images:
       - sv98.png
@@ -554,9 +554,9 @@ dialogs:
         target: initial_dialog_9
         type: default
     initial_dialog_9:
-      background_image: <transparent>
+      background_image: null
       background_music: null
-      character_images: null
+      character_images: []
       contents:
       - 目前sv98没有子弹，无法攻击
       last_dialog_id: initial_dialog_8
@@ -564,7 +564,7 @@ dialogs:
       next_dialog_id:
         type: break
     tutorial1:
-      background_image: <transparent>
+      background_image: null
       background_music: null
       character_images:
       - sv98.png
@@ -576,9 +576,9 @@ dialogs:
         target: tutorial2
         type: default
     tutorial2:
-      background_image: <transparent>
+      background_image: null
       background_music: null
-      character_images: null
+      character_images: []
       contents:
       - 请注意换弹
       last_dialog_id: tutorial1

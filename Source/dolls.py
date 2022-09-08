@@ -1,3 +1,4 @@
+from typing import Callable
 from .character import *
 
 
@@ -12,11 +13,15 @@ class Dolls:
             super().__init__(characterData, mode)
             self._skill_type = 1
 
-        def apply_skill(self, alliances: dict, enemies: dict, _targets: tuple[str, ...]) -> dict[str, int]:
+        def apply_skill(
+            self, alliances: dict, enemies: dict, _targets: tuple[str, ...]
+        ) -> dict[str, int]:
             results: dict[str, int] = {}
             healed_hp: int = 0
             for key in _targets:
-                healed_hp = round((alliances[key].max_hp - alliances[key].current_hp) * 0.3)
+                healed_hp = round(
+                    (alliances[key].max_hp - alliances[key].current_hp) * 0.3
+                )
                 alliances[key].heal(healed_hp)
                 results[key] = healed_hp
             return results
@@ -25,7 +30,9 @@ class Dolls:
     @classmethod
     def new(cls, characterData: dict, mode: str, _type: str) -> FriendlyCharacter:
         # 获取构建器
-        _func = cls.__dict__.get(_type)
+        _func: Optional[Callable[[dict, str], FriendlyCharacter]] = cls.__dict__.get(
+            _type
+        )
         # 如果没有对应的构建器
         if _func is None:
             return FriendlyCharacter(characterData, mode)

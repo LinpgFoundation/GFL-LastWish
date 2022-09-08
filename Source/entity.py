@@ -14,15 +14,40 @@ class AttackingSoundManager:
         cls.__SOUNDS.update(
             {
                 # 突击步枪
-                "AR": tuple([linpg.sound.load(_path) for _path in glob(os.path.join(*path_p, "ar_*.ogg"))]),
+                "AR": tuple(
+                    [
+                        linpg.sound.load(_path)
+                        for _path in glob(os.path.join(*path_p, "ar_*.ogg"))
+                    ]
+                ),
                 # 手枪
-                "HG": tuple([linpg.sound.load(_path) for _path in glob(os.path.join(*path_p, "hg_*.ogg"))]),
+                "HG": tuple(
+                    [
+                        linpg.sound.load(_path)
+                        for _path in glob(os.path.join(*path_p, "hg_*.ogg"))
+                    ]
+                ),
                 # 机枪
-                "MG": tuple([linpg.sound.load(_path) for _path in glob(os.path.join(*path_p, "mg_*.ogg"))]),
+                "MG": tuple(
+                    [
+                        linpg.sound.load(_path)
+                        for _path in glob(os.path.join(*path_p, "mg_*.ogg"))
+                    ]
+                ),
                 # 步枪
-                "RF": tuple([linpg.sound.load(_path) for _path in glob(os.path.join(*path_p, "rf_*.ogg"))]),
+                "RF": tuple(
+                    [
+                        linpg.sound.load(_path)
+                        for _path in glob(os.path.join(*path_p, "rf_*.ogg"))
+                    ]
+                ),
                 # 冲锋枪
-                "SMG": tuple([linpg.sound.load(_path) for _path in glob(os.path.join(*path_p, "smg_*.ogg"))]),
+                "SMG": tuple(
+                    [
+                        linpg.sound.load(_path)
+                        for _path in glob(os.path.join(*path_p, "smg_*.ogg"))
+                    ]
+                ),
             }
         )
 
@@ -30,7 +55,7 @@ class AttackingSoundManager:
     @classmethod
     def play(cls, kind: str) -> None:
         if (sounds_c := cls.__SOUNDS.get(kind)) is not None:
-            sound_to_play = sounds_c[linpg.get_random_int(0, len(sounds_c) - 1)]
+            sound_to_play = sounds_c[linpg.numbers.get_random_int(0, len(sounds_c) - 1)]
             sound_to_play.set_volume(linpg.volume.get_effects() / 100.0)
             linpg.sound.play(sound_to_play, cls.__channel_id)
 
@@ -44,8 +69,12 @@ class AttackingSoundManager:
 class FriendlyCharacterDynamicProgressBarSurface(linpg.DynamicProgressBarSurface):
 
     # 指向储存角色被察觉图标的指针
-    __FULLY_EXPOSED_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>eye_red.png")
-    __BEING_NOTICED_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>eye_orange.png")
+    __FULLY_EXPOSED_IMG: linpg.ImageSurface = linpg.images.quickly_load(
+        "<&ui>eye_red.png"
+    )
+    __BEING_NOTICED_IMG: linpg.ImageSurface = linpg.images.quickly_load(
+        "<&ui>eye_orange.png"
+    )
 
     def __init__(self) -> None:
         super().__init__(self.__FULLY_EXPOSED_IMG, self.__BEING_NOTICED_IMG, 0, 0, 0, 0)
@@ -55,11 +84,23 @@ class FriendlyCharacterDynamicProgressBarSurface(linpg.DynamicProgressBarSurface
 class HostileCharacterDynamicProgressBarSurface(linpg.DynamicProgressBarSurface):
 
     # 指向储存敌方角色警觉程度图标的指针
-    __ORANGE_VIGILANCE_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>vigilance_orange.png")
-    __RED_VIGILANCE_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>vigilance_red.png")
+    __ORANGE_VIGILANCE_IMG: linpg.ImageSurface = linpg.images.quickly_load(
+        "<&ui>vigilance_orange.png"
+    )
+    __RED_VIGILANCE_IMG: linpg.ImageSurface = linpg.images.quickly_load(
+        "<&ui>vigilance_red.png"
+    )
 
     def __init__(self) -> None:
-        super().__init__(self.__RED_VIGILANCE_IMG, self.__ORANGE_VIGILANCE_IMG, 0, 0, 0, 0, "vertical")
+        super().__init__(
+            self.__RED_VIGILANCE_IMG,
+            self.__ORANGE_VIGILANCE_IMG,
+            0,
+            0,
+            0,
+            0,
+            "vertical",
+        )
 
 
 # 角色血条图片管理模块
@@ -97,15 +138,21 @@ class EntityGetHurtImage(linpg.Square):
         self.add(self_type)
 
     def draw(self, screen: linpg.ImageSurface, characterType: str) -> None:  # type: ignore[override]
-        _image: linpg.ImageSurface = linpg.images.resize(self.__CHARACTERS_GET_HURT_IMAGE_DICT[characterType], self.size)
+        _image: linpg.ImageSurface = linpg.images.resize(
+            self.__CHARACTERS_GET_HURT_IMAGE_DICT[characterType], self.size
+        )
         if self.alpha != 255:
             _image.set_alpha(self.alpha)
         screen.blit(_image, self.pos)
 
     def add(self, characterType: str) -> None:
         if characterType not in self.__CHARACTERS_GET_HURT_IMAGE_DICT:
-            self.__CHARACTERS_GET_HURT_IMAGE_DICT[characterType] = linpg.images.quickly_load(
-                linpg.Specification.get_directory("character_image", "{}_hurt.png".format(characterType))
+            self.__CHARACTERS_GET_HURT_IMAGE_DICT[
+                characterType
+            ] = linpg.images.quickly_load(
+                linpg.Specification.get_directory(
+                    "character_image", "{}_hurt.png".format(characterType)
+                )
             )
 
 
@@ -123,10 +170,14 @@ class BasicEntity(linpg.Entity):
         # 最大行动值
         self.__max_action_point: int = int(characterData["max_action_point"])
         # 当前行动值
-        self.__current_action_point: int = int(characterData.get("current_action_point", self.__max_action_point))
+        self.__current_action_point: int = int(
+            characterData.get("current_action_point", self.__max_action_point)
+        )
         # 血条图片
         self.__hp_bar: EntityHpBar = EntityHpBar()
-        self.__status_font: linpg.StaticTextSurface = linpg.StaticTextSurface("", 0, 0, linpg.display.get_width() / 192)
+        self.__status_font: linpg.StaticTextSurface = linpg.StaticTextSurface(
+            "", 0, 0, linpg.display.get_width() / 192
+        )
 
     # 当前行动值
     @property
@@ -172,7 +223,12 @@ class BasicEntity(linpg.Entity):
         return _data
 
     # 把角色ui画到屏幕上
-    def _drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: linpg.TileMap, customHpData: Optional[tuple] = None) -> tuple:
+    def _drawUI(
+        self,
+        surface: linpg.ImageSurface,
+        MAP_POINTER: linpg.TileMap,
+        customHpData: Optional[tuple] = None,
+    ) -> tuple:
         xTemp, yTemp = MAP_POINTER.calculate_position(self.x, self.y)
         xTemp += MAP_POINTER.block_width // 4
         yTemp -= MAP_POINTER.block_width // 5
@@ -186,12 +242,16 @@ class BasicEntity(linpg.Entity):
         else:
             self.__hp_bar.set_percentage(customHpData[0] / customHpData[1])
             self.__hp_bar.set_dying(customHpData[2])
-            self.__status_font.set_text("{0}/{1}".format(customHpData[0], customHpData[1]))
+            self.__status_font.set_text(
+                "{0}/{1}".format(customHpData[0], customHpData[1])
+            )
         # 把血条画到屏幕上
         self.__hp_bar.draw(surface)
         self.__status_font.set_pos(
-            self.__hp_bar.x + (self.__hp_bar.get_width() - self.__status_font.get_width()) // 2,
-            self.__hp_bar.y + (self.__hp_bar.get_height() - self.__status_font.get_height()) // 2,
+            self.__hp_bar.x
+            + (self.__hp_bar.get_width() - self.__status_font.get_width()) // 2,
+            self.__hp_bar.y
+            + (self.__hp_bar.get_height() - self.__status_font.get_height()) // 2,
         )
         self.__status_font.draw(surface)
         # 返回坐标以供子类进行处理

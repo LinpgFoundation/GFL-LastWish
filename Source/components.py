@@ -25,16 +25,24 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
         super()._load_map(_data)
 
     # 加载数据 - 重写使其以多线程的形式进行
-    def load(self, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: Optional[str] = None) -> None:
+    def load(
+        self,
+        screen: linpg.ImageSurface,
+        chapterType: str,
+        chapterId: int,
+        projectName: Optional[str] = None,
+    ) -> None:
         # 初始化加载模块
         self._initialize_loading_module()
-        _task: threading.Thread = threading.Thread(target=super().load, args=(screen, chapterType, chapterId, projectName))
+        _task: threading.Thread = threading.Thread(
+            target=super().load, args=(screen, chapterType, chapterId, projectName)
+        )
         # 开始加载
         _task.start()
         # 显示加载过程
         while _task.is_alive():
             screen.fill(linpg.color.BLACK)
-            self._show_current_loading_porgress(screen)
+            self._show_current_loading_progress(screen)
             linpg.display.flip()
         # 加载完成，释放初始化模块占用的内存
         self._finish_loading()
@@ -46,12 +54,23 @@ class Console(linpg.Console):
         if conditions[0] == "load":
             if conditions[1] == "dialog":
                 if len(conditions) < 5:
-                    Gamemode.dialog(linpg.display.get_window(), conditions[2], conditions[3], conditions[4], conditions[5])
+                    GameMode.dialog(
+                        linpg.display.get_window(),
+                        conditions[2],
+                        conditions[3],
+                        conditions[4],
+                        conditions[5],
+                    )
                 else:
                     self._txt_output.append("Missing critical parameter(s).")
             elif conditions[1] == "battle":
                 if len(conditions) < 4:
-                    Gamemode.battle(linpg.display.get_window(), conditions[2], conditions[3], conditions[4])
+                    GameMode.battle(
+                        linpg.display.get_window(),
+                        conditions[2],
+                        conditions[3],
+                        conditions[4],
+                    )
                 else:
                     self._txt_output.append("Missing critical parameter(s).")
             else:
@@ -60,17 +79,23 @@ class Console(linpg.Console):
             super()._check_command(conditions)
 
 
-console: Console = Console(linpg.display.get_width() * 0.1, linpg.display.get_height() * 0.8)
+console: Console = Console(
+    linpg.display.get_width() * 0.1, linpg.display.get_height() * 0.8
+)
 
 
-class Gamemode:
+class GameMode:
 
     # 储存闸门动画的图片素材
     __GateImgAbove: Optional[linpg.DynamicImage] = None
     __GateImgBelow: Optional[linpg.DynamicImage] = None
     # 加载主菜单背景
     VIDEO_BACKGROUND: linpg.VideoSurface = linpg.VideoSurface(
-        r"Assets/movie/SquadAR.mp4", True, not linpg.debug.get_developer_mode(), (935, 3105), cache_key="into"
+        r"Assets/movie/SquadAR.mp4",
+        True,
+        not linpg.debug.get_developer_mode(),
+        (935, 3105),
+        cache_key="into",
     )
     VIDEO_BACKGROUND.set_volume(linpg.volume.get_background_music() / 100.0)
 
@@ -81,22 +106,39 @@ class Gamemode:
             cls.__GateImgAbove.set_size(screen.get_width() + 4, screen.get_height() / 1.7)
             cls.__GateImgAbove.set_bottom(cls.__GateImgAbove.get_height() / 100 * percent)
             cls.__GateImgAbove.draw(screen)
-            cls.__GateImgBelow.set_size(screen.get_width() + 4, screen.get_height() / 2.05)
-            cls.__GateImgBelow.set_top(screen.get_height() - cls.__GateImgBelow.get_height() / 100 * percent)
+            cls.__GateImgBelow.set_size(
+                screen.get_width() + 4, screen.get_height() / 2.05
+            )
+            cls.__GateImgBelow.set_top(
+                screen.get_height() - cls.__GateImgBelow.get_height() / 100 * percent
+            )
             cls.__GateImgBelow.draw(screen)
         else:
             cls.__GateImgAbove = linpg.DynamicImage(
-                linpg.images.crop_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgAbove.png")), -2, 0
+                linpg.images.crop_bounding(
+                    linpg.load.img(r"Assets/image/UI/LoadingImgAbove.png")
+                ),
+                -2,
+                0,
             )
             cls.__GateImgBelow = linpg.DynamicImage(
-                linpg.images.crop_bounding(linpg.load.img(r"Assets/image/UI/LoadingImgBelow.png")), -2, 0
+                linpg.images.crop_bounding(
+                    linpg.load.img(r"Assets/image/UI/LoadingImgBelow.png")
+                ),
+                -2,
+                0,
             )
         linpg.display.flip()
 
     # 对话系统
     @classmethod
     def dialog(
-        cls, screen: linpg.ImageSurface, chapterType: Optional[str], chapterId: int, part: str, projectName: Optional[str] = None
+        cls,
+        screen: linpg.ImageSurface,
+        chapterType: Optional[str],
+        chapterId: int,
+        part: str,
+        projectName: Optional[str] = None,
     ) -> None:
         # 开始加载-闸门关闭的效果
         for i in range(101):
@@ -124,14 +166,22 @@ class Gamemode:
     # 对话编辑器
     @classmethod
     def dialogEditor(
-        cls, screen: linpg.ImageSurface, chapterType: str, chapterId: int, part: str, projectName: Optional[str] = None
+        cls,
+        screen: linpg.ImageSurface,
+        chapterType: str,
+        chapterId: int,
+        part: str,
+        projectName: Optional[str] = None,
     ) -> None:
         cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
         # 改变标题
         linpg.display.set_caption(
-            "{0} ({1})".format(linpg.lang.get_text("General", "game_title"), linpg.lang.get_text("General", "dialog_editor"))
+            "{0} ({1})".format(
+                linpg.lang.get_text("General", "game_title"),
+                linpg.lang.get_text("General", "dialog_editor"),
+            )
         )
         if RPC is not None:
             RPC.update(
@@ -150,12 +200,19 @@ class Gamemode:
         # 改变标题回主菜单的样式
         linpg.display.set_caption(linpg.lang.get_text("General", "game_title"))
         if RPC is not None:
-            RPC.update(state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"), large_image=LARGE_IMAGE)
+            RPC.update(
+                state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"),
+                large_image=LARGE_IMAGE,
+            )
 
     # 战斗系统
     @classmethod
     def battle(
-        cls, screen: linpg.ImageSurface, chapterType: Optional[str], chapterId: int, projectName: Optional[str] = None
+        cls,
+        screen: linpg.ImageSurface,
+        chapterType: Optional[str],
+        chapterId: int,
+        projectName: Optional[str] = None,
     ) -> None:
         cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
@@ -175,7 +232,13 @@ class Gamemode:
 
     # 地图编辑器
     @classmethod
-    def mapEditor(cls, screen: linpg.ImageSurface, chapterType: str, chapterId: int, projectName: Optional[str] = None) -> None:
+    def mapEditor(
+        cls,
+        screen: linpg.ImageSurface,
+        chapterType: str,
+        chapterId: int,
+        projectName: Optional[str] = None,
+    ) -> None:
         cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
@@ -183,7 +246,10 @@ class Gamemode:
         MAP_EDITOR.load(screen, chapterType, chapterId, projectName)
         # 改变标题
         linpg.display.set_caption(
-            "{0} ({1})".format(linpg.lang.get_text("General", "game_title"), linpg.lang.get_text("General", "map_editor"))
+            "{0} ({1})".format(
+                linpg.lang.get_text("General", "game_title"),
+                linpg.lang.get_text("General", "map_editor"),
+            )
         )
         if RPC is not None:
             RPC.update(
@@ -199,4 +265,7 @@ class Gamemode:
         # 改变标题回主菜单的样式
         linpg.display.set_caption(linpg.lang.get_text("General", "game_title"))
         if RPC is not None:
-            RPC.update(state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"), large_image=LARGE_IMAGE)
+            RPC.update(
+                state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"),
+                large_image=LARGE_IMAGE,
+            )

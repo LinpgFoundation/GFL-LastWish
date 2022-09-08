@@ -12,27 +12,43 @@ class LoadingModule:
         # 加载信息
         self.__loading_info_msg: dict[str, str] = {}
         # 文字模块
-        self.__FONT: linpg.FontGenerator = linpg.font.create(linpg.display.get_width() / 76)
+        self.__FONT: linpg.FontGenerator = linpg.font.create(
+            linpg.display.get_width() / 76
+        )
         # 正在加载的gif动态图标
         self.__loading_icon: Optional[linpg.AnimatedImage] = None
+        # 是否初始化
+        self.__initialized = False
 
     # 初始化加载模块
     def _initialize_loading_module(self) -> None:
-        self.__loading_info_msg.clear()
-        self.__loading_info_msg.update(linpg.lang.get_texts("LoadingTxt"))
+        self.__initialize_loading_info_msg()
         self.__loading_icon = linpg.load.gif(
             r"Assets/image/UI/sv98_walking.gif",
-            (int(linpg.display.get_width() * 0.7), int(linpg.display.get_height() * 0.83)),
-            (int(linpg.display.get_width() * 0.003 * 15), int(linpg.display.get_width() * 0.003 * 21)),
+            (
+                int(linpg.display.get_width() * 0.7),
+                int(linpg.display.get_height() * 0.83),
+            ),
+            (
+                int(linpg.display.get_width() * 0.003 * 15),
+                int(linpg.display.get_width() * 0.003 * 21),
+            ),
         )
+        self.__initialized = True
         # 开始加载
         self._update_loading_info("now_loading_level")
+
+    # 初始化加载信息
+    def __initialize_loading_info_msg(self) -> None:
+        self.__loading_info_msg.clear()
+        self.__loading_info_msg.update(linpg.lang.get_texts("LoadingTxt"))
 
     # 完成加载 - 释放内存
     def _finish_loading(self) -> None:
         self.__now_loading = None
         self.__loading_info_msg.clear()
         self.__loading_icon = None
+        self.__initialized = False
 
     # 更新当前正在加载的数据的信息
     def __update_loading_info(self, text: str) -> None:
@@ -54,44 +70,62 @@ class LoadingModule:
         raise NotImplementedError()
 
     # 加载角色所需的图片
-    def _load_entities(self, _entities: dict, _mode: str):
+    def _load_entities(self, _entities: dict, _mode: str) -> None:
         totalNum: int = 0
         for key in _entities:
             totalNum += len(_entities[key])
             self.get_entities_data()[key] = {}
+        if not self.__initialized:
+            self._initialize_loading_module()
         currentID: int = 0
         data_t: dict
         for key, value in _entities["GriffinKryuger"].items():
-            data_t = deepcopy(linpg.Entity.get_enity_data(value["type"]))
+            data_t = deepcopy(linpg.Entity.get_entity_data(value["type"]))
             data_t.update(value)
-            self.get_entities_data()["GriffinKryuger"][key] = Dolls.new(data_t, _mode, value["type"])
+            self.get_entities_data()["GriffinKryuger"][key] = Dolls.new(
+                data_t, _mode, value["type"]
+            )
             currentID += 1
-            self.__update_loading_info(self.__loading_info_msg["now_loading_characters"] + "({}/{})".format(currentID, totalNum))
+            self.__update_loading_info(
+                self.__loading_info_msg["now_loading_characters"]
+                + "({}/{})".format(currentID, totalNum)
+            )
         for key, value in _entities["SangvisFerri"].items():
-            data_t = deepcopy(linpg.Entity.get_enity_data(value["type"]))
+            data_t = deepcopy(linpg.Entity.get_entity_data(value["type"]))
             data_t.update(value)
-            self.get_entities_data()["SangvisFerri"][key] = HostileCharacter(data_t, _mode)
+            self.get_entities_data()["SangvisFerri"][key] = HostileCharacter(
+                data_t, _mode
+            )
             currentID += 1
-            self.__update_loading_info(self.__loading_info_msg["now_loading_characters"] + "({}/{})".format(currentID, totalNum))
+            self.__update_loading_info(
+                self.__loading_info_msg["now_loading_characters"]
+                + "({}/{})".format(currentID, totalNum)
+            )
 
     # 显示正在加载的数据信息
-    def _show_current_loading_porgress(self, screen: linpg.ImageSurface) -> None:
+    def _show_current_loading_progress(self, screen: linpg.ImageSurface) -> None:
         self.__THREADING_LOCK.acquire()
         if self.__now_loading is not None:
-            screen.blit(self.__now_loading, (screen.get_width() * 0.75, screen.get_height() * 0.9))
+            screen.blit(
+                self.__now_loading,
+                (screen.get_width() * 0.75, screen.get_height() * 0.9),
+            )
         if self.__loading_icon is not None:
             self.__loading_icon.draw(screen)
         self.__THREADING_LOCK.release()
 
 
 # 基础战斗系统框架
-class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSystem, linpg.PauseMenuModuleForGameSystem):
-    def __init__(self):
+class AbstractBattleSystemWithInGameDialog(
+    LoadingModule, linpg.AbstractBattleSystem, linpg.PauseMenuModuleForGameSystem
+):
+    def __init__(self) -> None:
         LoadingModule.__init__(self)
         linpg.AbstractBattleSystem.__init__(self)
         linpg.PauseMenuModuleForGameSystem.__init__(self)
         # 视觉小说模块与参数
-        self.__DIALOG: linpg.DialogSystem = linpg.DialogSystem(True)
+        self.__DIALOG: linpg.DialogSystem = linpg.DialogSystem()
+        self.__DIALOG.disable_basic_features()
         # 视觉小说缓存参数
         self.__dialog_parameters: dict = {}
         # 是否对话已经更新
@@ -154,7 +188,10 @@ class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSy
         return (
             super()._get_data_need_to_save()
             | self._MAP.get_local_pos_in_percentage()
-            | {"dialog_key": self.__dialog_key, "dialog_parameters": self.__dialog_parameters}
+            | {
+                "dialog_key": self.__dialog_key,
+                "dialog_parameters": self.__dialog_parameters,
+            }
         )
 
     # 角色动画
@@ -177,7 +214,12 @@ class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSy
 
     # 初始化视觉小说系统
     def _init_dialog(self, _data: dict) -> None:
-        self.__DIALOG.new(self._chapter_type, self._chapter_id, "dialog_during_battle", self._project_name)
+        self.__DIALOG.new(
+            self._chapter_type,
+            self._chapter_id,
+            "dialog_during_battle",
+            self._project_name,
+        )
         self.__DIALOG.stop()
         self.__dialog_data.clear()
         self.__dialog_data.update(_data)
@@ -201,19 +243,28 @@ class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSy
         return len(self.__dialog_key) > 0
 
     # 更新正在被照亮的区域
-    def _update_darkness(self):
-        self._MAP.calculate_darkness(self.alliances)  # type: ignore
+    def _update_darkness(self) -> None:
+        self._MAP.calculate_darkness(self.alliances)
 
     # 渲染到屏幕上
     def draw(self, screen: linpg.ImageSurface) -> None:
         # 设定初始化
         if len(self.__dialog_parameters) <= 0:
             self.__dialog_parameters.update(
-                {"dialogId": 0, "charactersPaths": None, "secondsAlreadyIdle": 0, "secondsToIdle": None}
+                {
+                    "dialogId": 0,
+                    "charactersPaths": None,
+                    "secondsAlreadyIdle": 0,
+                    "secondsToIdle": None,
+                }
             )
         # 对话系统总循环
-        if self.__dialog_parameters["dialogId"] < len(self.__dialog_data[self.__dialog_key]):
-            currentDialog: dict = self.__dialog_data[self.__dialog_key][self.__dialog_parameters["dialogId"]]
+        if self.__dialog_parameters["dialogId"] < len(
+            self.__dialog_data[self.__dialog_key]
+        ):
+            currentDialog: dict = self.__dialog_data[self.__dialog_key][
+                self.__dialog_parameters["dialogId"]
+            ]
             # 如果操作是移动
             if "move" in currentDialog and currentDialog["move"] is not None:
                 # 为所有角色设置路径
@@ -221,19 +272,41 @@ class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSy
                     routeTmp: list
                     for key, pos in currentDialog["move"].items():
                         if key in self.alliances:
-                            routeTmp = self._MAP.find_path(self.alliances[key], pos, self.alliances, self.enemies)
+                            routeTmp = self._MAP.find_path(
+                                self.alliances[key].get_coordinate(),
+                                linpg.Coordinates.convert(pos),
+                                self.alliances,
+                                self.enemies,
+                                True,
+                            )
                             if len(routeTmp) > 0:
                                 self.alliances[key].move_follow(routeTmp)
                             else:
-                                raise Exception("Error: Character {} cannot find a valid path!".format(key))
+                                raise Exception(
+                                    "Error: Character {} cannot find a valid path!".format(
+                                        key
+                                    )
+                                )
                         elif key in self.enemies:
-                            routeTmp = self._MAP.find_path(self.enemies[key], pos, self.enemies, self.alliances)
+                            routeTmp = self._MAP.find_path(
+                                self.enemies[key].get_coordinate(),
+                                linpg.Coordinates.convert(pos),
+                                self.enemies,
+                                self.alliances,
+                                True,
+                            )
                             if len(routeTmp) > 0:
                                 self.enemies[key].move_follow(routeTmp)
                             else:
-                                raise Exception("Error: Character {} cannot find a valid path!".format(key))
+                                raise Exception(
+                                    "Error: Character {} cannot find a valid path!".format(
+                                        key
+                                    )
+                                )
                         else:
-                            raise Exception("Error: Cannot find character {}!".format(key))
+                            raise Exception(
+                                "Error: Cannot find character {}!".format(key)
+                            )
                     self.__dialog_is_route_generated = True
                 # 播放脚步声
                 self._footstep_sounds.play()
@@ -245,7 +318,7 @@ class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSy
                     if key in self.alliances:
                         if not self.alliances[key].is_idle():
                             allGetToTargetPos = False
-                        if self.alliances[key].need_update_map():
+                        if self.alliances[key].just_entered_a_new_tile():
                             reProcessMap = True
                     elif key in self.enemies and not self.enemies[key].is_idle():
                         allGetToTargetPos = False
@@ -277,7 +350,9 @@ class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSy
                         self.enemies[key].set_action(action, False)
                 self.__dialog_parameters["dialogId"] += 1
             # 改变动作（长期）
-            elif "actionLoop" in currentDialog and currentDialog["actionLoop"] is not None:
+            elif (
+                "actionLoop" in currentDialog and currentDialog["actionLoop"] is not None
+            ):
                 for key, action in currentDialog["actionLoop"].items():
                     if key in self.alliances:
                         self.alliances[key].set_action(action)
@@ -299,9 +374,14 @@ class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSy
             # 闲置一定时间（秒）
             elif "idle" in currentDialog and currentDialog["idle"] is not None:
                 if self.__dialog_parameters["secondsToIdle"] is None:
-                    self.__dialog_parameters["secondsToIdle"] = currentDialog["idle"] * linpg.display.get_fps()
+                    self.__dialog_parameters["secondsToIdle"] = (
+                        currentDialog["idle"] * linpg.display.get_fps()
+                    )
                 else:
-                    if self.__dialog_parameters["secondsAlreadyIdle"] < self.__dialog_parameters["secondsToIdle"]:
+                    if (
+                        self.__dialog_parameters["secondsAlreadyIdle"]
+                        < self.__dialog_parameters["secondsToIdle"]
+                    ):
                         self.__dialog_parameters["secondsAlreadyIdle"] += 1
                     else:
                         self.__dialog_parameters["dialogId"] += 1
@@ -310,7 +390,9 @@ class AbstractBattleSystemWithInGameDialog(LoadingModule, linpg.AbstractBattleSy
             # 调整窗口位置
             elif "changePos" in currentDialog and currentDialog["changePos"] is not None:
                 if self._screen_to_move_x is None or self._screen_to_move_y is None:
-                    tempX, tempY = self._MAP.calculate_position(currentDialog["changePos"]["x"], currentDialog["changePos"]["y"])
+                    tempX, tempY = self._MAP.calculate_position(
+                        currentDialog["changePos"]["x"], currentDialog["changePos"]["y"]
+                    )
                     self._screen_to_move_x = int(screen.get_width() / 2 - tempX)
                     self._screen_to_move_y = int(screen.get_height() / 2 - tempY)
                 if self._screen_to_move_x == 0 and self._screen_to_move_y == 0:

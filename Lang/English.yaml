@@ -38,6 +38,16 @@ MainMenu:
   other:
     new_chapter: Create New Chapter
     new_project: Create New Project
+PhotosensitiveSeizureWarning:
+- This game has been optimized for preventing photosensitive seizure
+- 'About Photosensitive seizure:'
+- A very small percentage of people may experience a seizure when exposed to certain
+  visual images,
+- including flashing lights or patterns that may appear in video games.
+- Even people who have no history of seizures or epilepsy may have an undiagnosed
+  condition
+- that can cause these "photosensitive epileptic seizures" while playing video games.
+- Immediately stop playing and consult a doctor if you experience any symptoms.
 ResultBoard:
   characters_down: Friendly character down
   pressKeyContinue: Press Space to continue
