@@ -2,7 +2,7 @@
 
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/TigeiaWorkshop/GirlsFrontLine-LastWish.svg?style=for-the-badge&logo=appveyor?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/TigeiaWorkshop/GirlsFrontLine-LastWish/alerts/) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/TigeiaWorkshop/GirlsFrontLine-LastWish.svg?style=for-the-badge&logo=appveyor?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/TigeiaWorkshop/GirlsFrontLine-LastWish/context:python)  ![GitHub](https://img.shields.io/github/license/TigeiaWorkshop/GirlsFrontLine-LastWish?style=for-the-badge&logo=appveyor)
 
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/TigeiaWorkshop/GirlsFrontLine-LastWish?include_prereleases&style=for-the-badge) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/linpg?style=for-the-badge&logo=appveyor) ![pypresence](https://img.shields.io/badge/using-pypresence-00bb88.svg?style=for-the-badge&logo=discord&logoWidth=20)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/TigeiaWorkshop/GirlsFrontLine-LastWish?include_prereleases&style=for-the-badge) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/linpg?style=for-the-badge&logo=appveyor)
 
 # :speech_balloon: Preamble / 前言
 
@@ -74,7 +74,6 @@ Their stories may be forgotten by history, but what they have done will be remem
 | Name / 名称 | Recommended Version / 建议版本 |
 | :---------: | :----------------------------: |
 |   pyyaml    |             >=6.0              |
-| pypresence  |             >=4.2              |
 |    linpg    |               *                |
 
 ##### * You have to install the latest version of Linpg Engine!

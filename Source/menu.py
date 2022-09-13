@@ -109,12 +109,6 @@ class MainMenu(linpg.AbstractSystem):
         self.last_hover_sound_play_on: int = -2
         # 初始化返回菜单判定参数
         linpg.global_value.set("BackToMainMenu", False)
-        # 设置Discord状态
-        if RPC is not None:
-            RPC.update(
-                state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"),
-                large_image=LARGE_IMAGE,
-            )
 
     # 当前在Data/workshop文件夹中可以读取的文件夹的名字（font的形式）
     def __reload_workshop_files_list(
@@ -337,15 +331,6 @@ class MainMenu(linpg.AbstractSystem):
     def __load_scene(
         self, chapterType: str, chapterId: int, screen: linpg.ImageSurface
     ) -> None:
-        if RPC is not None:
-            RPC.update(
-                details=linpg.lang.get_text("General", "main_chapter")
-                if chapterType == "main_chapter"
-                else linpg.lang.get_text("General", "workshop"),
-                state=self.__get_chapter_title(chapterType, chapterId),
-                large_image=LARGE_IMAGE,
-                start=get_current_time(),
-            )
         projectName = (
             None
             if chapterType == "main_chapter"
@@ -366,26 +351,10 @@ class MainMenu(linpg.AbstractSystem):
         else:
             linpg.global_value.set("BackToMainMenu", False)
         self.__reset_menu()
-        if RPC is not None:
-            RPC.update(
-                state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"),
-                large_image=LARGE_IMAGE,
-            )
 
     # 继续章节
     def __continue_scene(self, screen: linpg.ImageSurface) -> None:
         SAVE: dict = dict(linpg.config.load("Save/save.yaml"))
-        if RPC is not None:
-            RPC.update(
-                details=(
-                    linpg.lang.get_text("General", "main_chapter")
-                    if SAVE["chapter_type"] == "main_chapter"
-                    else linpg.lang.get_text("General", "workshop")
-                ),
-                state=self.__get_chapter_title(SAVE["chapter_type"], SAVE["chapter_id"]),
-                large_image=LARGE_IMAGE,
-                start=get_current_time(),
-            )
         startPoint = SAVE["type"]
         if startPoint == "dialog_before_battle":
             GameMode.dialog(screen, None, 0, "")
@@ -424,11 +393,6 @@ class MainMenu(linpg.AbstractSystem):
             GameMode.dialog(screen, None, 0, "")
             linpg.global_value.if_get_set("BackToMainMenu", True, False)
         self.__reset_menu()
-        if RPC is not None:
-            RPC.update(
-                state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"),
-                large_image=LARGE_IMAGE,
-            )
 
     # 重置背景
     def __restart_background(self) -> None:
@@ -618,8 +582,6 @@ class MainMenu(linpg.AbstractSystem):
                     ):
                         GameMode.VIDEO_BACKGROUND.stop()
                         self.stop()
-                        if RPC is not None:
-                            RPC.close()
             # 选择主线章节
             elif self.menu_type == 1:
                 if self.chapter_select[-1].is_hovered():

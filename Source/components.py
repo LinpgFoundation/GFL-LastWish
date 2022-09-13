@@ -185,12 +185,6 @@ class GameMode:
                 linpg.lang.get_text("General", "dialog_editor"),
             )
         )
-        if RPC is not None:
-            RPC.update(
-                details=linpg.lang.get_text("DiscordStatus", "now_playing"),
-                state=linpg.lang.get_text("General", "dialog_editor"),
-                large_image=LARGE_IMAGE,
-            )
         # 加载对话
         DIALOG: linpg.DialogEditor = linpg.DialogEditor()
         DIALOG.load(chapterType, chapterId, part, projectName)
@@ -201,11 +195,6 @@ class GameMode:
             linpg.display.flip()
         # 改变标题回主菜单的样式
         linpg.display.set_caption(linpg.lang.get_text("General", "game_title"))
-        if RPC is not None:
-            RPC.update(
-                state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"),
-                large_image=LARGE_IMAGE,
-            )
 
     # 战斗系统
     @classmethod
@@ -253,12 +242,6 @@ class GameMode:
                 linpg.lang.get_text("General", "map_editor"),
             )
         )
-        if RPC is not None:
-            RPC.update(
-                details=linpg.lang.get_text("DiscordStatus", "now_playing"),
-                state=linpg.lang.get_text("General", "map_editor"),
-                large_image=LARGE_IMAGE,
-            )
         # 战斗系统主要loop
         while MAP_EDITOR.is_playing():
             MAP_EDITOR.draw(screen)
@@ -266,8 +249,3 @@ class GameMode:
             linpg.display.flip()
         # 改变标题回主菜单的样式
         linpg.display.set_caption(linpg.lang.get_text("General", "game_title"))
-        if RPC is not None:
-            RPC.update(
-                state=linpg.lang.get_text("DiscordStatus", "staying_at_main_menu"),
-                large_image=LARGE_IMAGE,
-            )

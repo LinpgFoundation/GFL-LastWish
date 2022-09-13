@@ -16,27 +16,7 @@ linpg.LinpgVersionChecker(
     version_info["recommended_linpg_patch"],
 )
 
-__all__ = ["linpg", "os", "glob", "RPC", "ALPHA_BUILD_WARNING", "LARGE_IMAGE"]
-
-# 本游戏的客户端ID
-_CLIENT_ID: int = 831417008734208011
-LARGE_IMAGE: str = "test"
-# discord接口 - 如果不想要展示Discord的Rich Presence
-if linpg.setting.try_get("DiscordRichPresence") is True:
-    # 尝试连接Discord
-    try:
-        from pypresence import Presence  # type: ignore
-
-        RPC = Presence(str(_CLIENT_ID))
-        RPC.connect()
-        RPC.update(
-            state=linpg.lang.get_text("DiscordStatus", "game_is_initializing"),
-            large_image=LARGE_IMAGE,
-        )
-    except Exception:
-        RPC = None
-else:
-    RPC = None
+__all__ = ["linpg", "os", "glob", "ALPHA_BUILD_WARNING"]
 
 # 设置引擎的标准文字大小
 linpg.font.set_global_font("medium", int(linpg.display.get_width() / 40))
