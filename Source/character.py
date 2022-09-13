@@ -318,7 +318,7 @@ class FriendlyCharacter(BasicEntity):
 class HostileCharacter(BasicEntity):
 
     # 用于存放角色做出的决定
-    class __DecisionHolder:
+    class DecisionHolder:
         def __init__(self, action: str, data: Sequence):
             self.action: str = action
             self.data = data
@@ -452,7 +452,7 @@ class HostileCharacter(BasicEntity):
             targetCharacterData = friendlyCharacters[target]
             if self.range_target_in(targetCharacterData) >= 0:
                 actions.append(
-                    self.__DecisionHolder(
+                    self.DecisionHolder(
                         "attack",
                         tuple((target, self.range_target_in(targetCharacterData))),
                     )
@@ -462,7 +462,7 @@ class HostileCharacter(BasicEntity):
                 if action_point_can_use > AP_IS_NEEDED_TO_ATTACK:
                     if self.hp_percentage > 0.2:
                         #如果自身血量正常，则应该考虑再次攻击角色
-                        actions.append(self.__DecisionHolder("attack",target))
+                        actions.append(self.DecisionHolder("attack",target))
                         action_point_can_use -= AP_IS_NEEDED_TO_ATTACK
                     else:
                         pass
@@ -507,17 +507,17 @@ class HostileCharacter(BasicEntity):
                     self.set_pos(*o_pos)
                     if potential_attacking_pos_area >= 0:
                         actions.append(
-                            self.__DecisionHolder(
+                            self.DecisionHolder(
                                 "move", the_route[:potential_attacking_pos_index]
                             )
                         )
                         actions.append(
-                            self.__DecisionHolder(
+                            self.DecisionHolder(
                                 "attack", (target, potential_attacking_pos_area)
                             )
                         )
                     else:
-                        actions.append(self.__DecisionHolder("move", the_route))
+                        actions.append(self.DecisionHolder("move", the_route))
                 else:
                     raise Exception(
                         "A hostile character cannot find a valid path when trying to attack {}!".format(
@@ -538,7 +538,7 @@ class HostileCharacter(BasicEntity):
                         blocks_can_move,
                     )
                     if len(the_route) > 0:
-                        actions.append(self.__DecisionHolder("move", the_route))
+                        actions.append(self.DecisionHolder("move", the_route))
                     else:
                         raise Exception("A hostile character cannot find a valid path!")
                 else:
@@ -555,7 +555,7 @@ class HostileCharacter(BasicEntity):
                     blocks_can_move,
                 )
                 if len(the_route) > 0:
-                    actions.append(self.__DecisionHolder("move", the_route))
+                    actions.append(self.DecisionHolder("move", the_route))
                     # 如果角色在这次移动后到达了最近的巡逻点，则应该更新最近的巡逻点
                     if linpg.coordinates.is_same(the_route[-1], self.__patrol_path[0]):
                         self.__patrol_path.append(self.__patrol_path.popleft())

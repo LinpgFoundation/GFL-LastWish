@@ -3006,12 +3006,12 @@ map:
     - 2
     - 5
   lookup_table:
-  - TileSnow01ToStone01
-  - TileSnow01
-  - TileSnow02ToStone02
-  - TileSnow02
-  - TileSnow01ToStone02
-  - TileSnow02ToStone01
+  - Snow:3
+  - Snow:2
+  - Snow:7
+  - Snow:5
+  - Snow:4
+  - Snow:6
 mission_objectives:
   allow_any_one_die: false
   round_limitation: 10

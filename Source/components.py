@@ -80,8 +80,10 @@ class Console(linpg.Console):
 
 
 console: Console = Console(
-    linpg.display.get_width() * 0.1, linpg.display.get_height() * 0.8
+    linpg.display.get_width() // 10, linpg.display.get_height() * 4 // 5
 )
+if linpg.debug.get_developer_mode() is True:
+    console.start()
 
 
 class GameMode:

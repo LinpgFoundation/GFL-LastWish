@@ -99,7 +99,7 @@ class HostileCharacterDynamicProgressBarSurface(linpg.DynamicProgressBarSurface)
             0,
             0,
             0,
-            "vertical",
+            linpg.Axis.VERTICAL,
         )
 
 

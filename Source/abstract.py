@@ -199,7 +199,7 @@ class AbstractBattleSystemWithInGameDialog(
         for _alliance in self.alliances.values():
             _alliance.draw(screen, self._MAP)
         for _enemy in self.enemies.values():
-            if self._MAP.is_coordinate_in_light_rea(_enemy.x, _enemy.y):
+            if self._MAP.is_coordinate_in_lit_area(_enemy.x, _enemy.y):
                 _enemy.draw(screen, self._MAP)
 
     # 更新音量
@@ -244,7 +244,7 @@ class AbstractBattleSystemWithInGameDialog(
 
     # 更新正在被照亮的区域
     def _update_darkness(self) -> None:
-        self._MAP.calculate_darkness(self.alliances)
+        self._MAP.refresh_lit_area(self.alliances)
 
     # 渲染到屏幕上
     def draw(self, screen: linpg.ImageSurface) -> None:
@@ -389,15 +389,21 @@ class AbstractBattleSystemWithInGameDialog(
                         self.__dialog_parameters["secondsToIdle"] = None
             # 调整窗口位置
             elif "changePos" in currentDialog and currentDialog["changePos"] is not None:
-                if self._screen_to_move_x is None or self._screen_to_move_y is None:
+                if (
+                    self._screen_to_move_speed_x is None
+                    or self._screen_to_move_speed_y is None
+                ):
                     tempX, tempY = self._MAP.calculate_position(
                         currentDialog["changePos"]["x"], currentDialog["changePos"]["y"]
                     )
-                    self._screen_to_move_x = int(screen.get_width() / 2 - tempX)
-                    self._screen_to_move_y = int(screen.get_height() / 2 - tempY)
-                if self._screen_to_move_x == 0 and self._screen_to_move_y == 0:
-                    self._screen_to_move_x = None
-                    self._screen_to_move_y = None
+                    self._screen_to_move_speed_x = int(screen.get_width() / 2 - tempX)
+                    self._screen_to_move_speed_y = int(screen.get_height() / 2 - tempY)
+                if (
+                    self._screen_to_move_speed_x == 0
+                    and self._screen_to_move_speed_y == 0
+                ):
+                    self._screen_to_move_speed_x = None
+                    self._screen_to_move_speed_y = None
                     self.__dialog_parameters["dialogId"] += 1
             else:
                 raise Exception(

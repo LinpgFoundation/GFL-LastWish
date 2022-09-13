@@ -11,7 +11,7 @@ version_info: dict = linpg.config.load("Data/version.yaml")
 
 # 确认linpg的版本是推荐版本
 linpg.LinpgVersionChecker(
-    "==",
+    ">=",
     version_info["recommended_linpg_revision"],
     version_info["recommended_linpg_patch"],
 )
