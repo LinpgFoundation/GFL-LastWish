@@ -1,5 +1,4 @@
 from shutil import copyfile
-from time import time as get_current_time
 
 from .components import GameMode, console, Optional
 from .api import *
@@ -11,7 +10,6 @@ class MainMenu(linpg.AbstractSystem):
         # 初始化系统模块
         super().__init__()
         """生成加载页面"""
-        index: int = 0
         font_size: int = int(screen.get_width() / 64)
         self.__loading_screen: Optional[linpg.ImageSurface] = linpg.surfaces.new(
             screen.get_size()
@@ -26,7 +24,7 @@ class MainMenu(linpg.AbstractSystem):
             if linpg.lang.has_key("HealthyGamingAdvice")
             else []
         )
-        index = 0
+        index: int = 0
         for _item in HealthyGamingAdvice:
             self.__loading_screen.blit(
                 _item,
@@ -50,8 +48,8 @@ class MainMenu(linpg.AbstractSystem):
             self.__loading_screen.blit(
                 _item,
                 (
-                    screen.get_width() * 0.1,
-                    screen.get_height() * 0.1 + _item.get_height() * index * 1.5,
+                    screen.get_width() // 10,
+                    screen.get_height() * 0.15 + _item.get_height() * index * 1.5,
                 ),
             )
             index += 1
@@ -120,10 +118,10 @@ class MainMenu(linpg.AbstractSystem):
         if createMode is True:
             self.workshop_files.append(self.main_menu_txt["other"]["new_project"])
         for path in glob(r"Data/workshop/*"):
-            try:
-                info_data = linpg.config.load(os.path.join(path, "info.yaml"))
-            except Exception:
+            _info_config_path: str = os.path.join(path, "info.yaml")
+            if not os.path.exists(_info_config_path):
                 linpg.create_new_project(path, "yaml")
+            info_data: dict = linpg.config.load(_info_config_path)
             self.workshop_files_text.append(os.path.basename(path))
             self.workshop_files.append(info_data["title"][linpg.setting.get_language()])
         self.workshop_files.append(linpg.lang.get_text("Global", "back"))

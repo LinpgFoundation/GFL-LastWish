@@ -11,3 +11,4 @@ test.py
 ThirdPartyLibraries/
 linpg/
 .vs*/
+.idea/

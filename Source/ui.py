@@ -330,34 +330,34 @@ class SelectMenu(linpg.GameObjectsDictContainer):
                 self.__need_update = False
             selectButtonBaseWidth = round(fontSize * 5)
             # 攻击按钮 - 左
-            txt_tempX = location["xStart"] - selectButtonBaseWidth * 0.6
-            txt_tempY = location["yStart"]
+            txt_tempX: int = int(location["xStart"] - selectButtonBaseWidth * 0.6)
+            txt_tempY: int = int(location["yStart"])
             if linpg.is_hovering(self.get("attack")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "attack"
             screen.blit(self.get("attack")["button"], (txt_tempX, txt_tempY))
             # 移动按钮 - 右
-            txt_tempX = location["xEnd"] - selectButtonBaseWidth * 0.4
+            txt_tempX = int(location["xEnd"] - selectButtonBaseWidth * 0.4)
             # txt_tempY 与攻击按钮一致
             if linpg.is_hovering(self.get("move")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "move"
             screen.blit(self.get("move")["button"], (txt_tempX, txt_tempY))
             # 换弹按钮 - 下
-            txt_tempX = location["xStart"] + selectButtonBaseWidth * 0.5
-            txt_tempY = location["yEnd"] - selectButtonBaseWidth * 0.25
+            txt_tempX = int(location["xStart"] + selectButtonBaseWidth * 0.5)
+            txt_tempY = int(location["yEnd"] - selectButtonBaseWidth * 0.25)
             if linpg.is_hovering(self.get("reload")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "reload"
             screen.blit(self.get("reload")["button"], (txt_tempX, txt_tempY))
             # 技能按钮 - 上
             if kind != "HOC":
                 # txt_tempX与换弹按钮一致
-                txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
+                txt_tempY = int(location["yStart"] - selectButtonBaseWidth * 0.7)
                 if linpg.is_hovering(self.get("skill")["button"], (txt_tempX, txt_tempY)):
                     self._item_being_hovered = "skill"
                 screen.blit(self.get("skill")["button"], (txt_tempX, txt_tempY))
             # 救助队友
             if len(friendsCanSave) > 0:
-                txt_tempX = location["xStart"] - selectButtonBaseWidth * 0.6
-                txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
+                txt_tempX = int(location["xStart"] - selectButtonBaseWidth * 0.6)
+                txt_tempY = int(location["yStart"] - selectButtonBaseWidth * 0.7)
                 if linpg.is_hovering(
                     self.get("rescue")["button"], (txt_tempX, txt_tempY)
                 ):
@@ -365,8 +365,8 @@ class SelectMenu(linpg.GameObjectsDictContainer):
                 screen.blit(self.get("rescue")["button"], (txt_tempX, txt_tempY))
             # 互动
             if len(thingsCanReact) > 0:
-                txt_tempX = location["xEnd"] - selectButtonBaseWidth * 0.4
-                txt_tempY = location["yStart"] - selectButtonBaseWidth * 0.7
+                txt_tempX = int(location["xEnd"] - selectButtonBaseWidth * 0.4)
+                txt_tempY = int(location["yStart"] - selectButtonBaseWidth * 0.7)
                 if linpg.is_hovering(
                     self.get("interact")["button"], (txt_tempX, txt_tempY)
                 ):
@@ -521,11 +521,10 @@ class CharacterInfoBoard:
 
 
 # 计分板
-class ResultBoard:
-    def __init__(self, finalResult: dict, font_size: int, is_win: bool = True):
+class ResultBoard(linpg.GameObject2d):
+    def __init__(self, finalResult: dict, font_size: int, is_win: bool = True) -> None:
+        super().__init__(int(font_size * 10), int(font_size * 10))
         resultTxt: dict = linpg.lang.get_texts("ResultBoard")
-        self.x = int(font_size * 10)
-        self.y = int(font_size * 10)
         self.txt_x = int(font_size * 12)
         self.boardImg = linpg.load.img(
             r"Assets/image/UI/score.png", (font_size * 16, font_size * 32)
@@ -562,6 +561,12 @@ class ResultBoard:
             if is_win
             else linpg.font.render(resultTxt["pressKeyRestart"], "white", font_size)
         )
+
+    def get_width(self) -> int:
+        return 0
+
+    def get_height(self) -> int:
+        return 0
 
     def draw(self, screen: linpg.ImageSurface) -> None:
         screen.blits(

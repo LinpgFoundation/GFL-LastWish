@@ -17,9 +17,8 @@ class Dolls:
             self, alliances: dict, enemies: dict, _targets: tuple[str, ...]
         ) -> dict[str, int]:
             results: dict[str, int] = {}
-            healed_hp: int = 0
             for key in _targets:
-                healed_hp = round(
+                healed_hp: int = round(
                     (alliances[key].max_hp - alliances[key].current_hp) * 0.3
                 )
                 alliances[key].heal(healed_hp)

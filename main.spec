@@ -21,6 +21,7 @@ a = Analysis(
         "cv2",
         "yaml",
         "linpg",
+        "linpgassets",
         "pygame",
         "pygame.colordict",
         "pygame._sdl2",

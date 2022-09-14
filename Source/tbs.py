@@ -7,9 +7,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         # 对话id查询用的字典
         self.__dialog_dictionary: dict = {}
         # 被选中的角色
-        self.characterGetClick = None
+        self.characterGetClick: Optional[str] = None
         self.enemiesGetAttack: dict = {}
-        self.action_choice = None
+        self.action_choice: Optional[str] = None
         # 被选中的装饰物
         self.decorationGetClick: Optional[int] = 0
         # 缩进
@@ -26,7 +26,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         # 技能对象
         self.__skill_target: tuple[str, ...] = tuple()
         # 被救助的那个角色
-        self.friendGetHelp = None
+        self.friendGetHelp: Optional[str] = None
         # AI系统正在操控的敌对角色ID
         self.enemies_in_control_id: int = 0
         # 所有敌对角色的名字列表
@@ -42,11 +42,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         # 格式：角色：[x,y]
         self.the_characters_detected_last_round: dict = {}
         # 敌人的指令
-        self.enemy_instructions = None
+        self.enemy_instructions: Optional[deque] = None
         # 敌人当前需要执行的指令
         self.current_instruction: Optional[HostileCharacter.DecisionHolder] = None
         # 积分栏的UI模块
-        self.ResultBoardUI = None
+        self.__ResultBoardUI: Optional[ResultBoard] = None
+        self.__RoundSwitchUI: Optional[RoundSwitch] = None
         # 可以互动的物品列表
         self.thingsCanReact: list = []
         # 需要救助的角色列表
@@ -94,7 +95,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
     def update_language(self) -> None:
         super().update_language()
         self.selectMenuUI.update()
-        self.RoundSwitchUI = RoundSwitch(
+        self.__RoundSwitchUI = RoundSwitch(
             linpg.display.get_width(), linpg.display.get_height()
         )
         self.end_round_txt = self._FONT.render(
@@ -387,7 +388,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             linpg.display.get_width(), linpg.display.get_height()
         )
         # 切换回合时的UI
-        self.RoundSwitchUI = RoundSwitch(
+        self.__RoundSwitchUI = RoundSwitch(
             linpg.display.get_width(), linpg.display.get_height()
         )
         """-----加载音效-----"""
@@ -1185,7 +1186,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 self.__whose_round == "playerToSangvisFerris"
                 or self.__whose_round == "sangvisFerrisToPlayer"
             ):
-                if self.RoundSwitchUI.draw(
+                if self.__RoundSwitchUI is not None and self.__RoundSwitchUI.draw(
                     screen, self.__whose_round, self.__statistics["total_rounds"]
                 ):
                     if self.__whose_round == "playerToSangvisFerris":
@@ -1329,11 +1330,11 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
 
             # 结束动画--胜利
             if self.__whose_round == "result_win":
-                if self.ResultBoardUI is None:
+                if self.__ResultBoardUI is None:
                     self.__statistics["total_time"] = time.localtime(
                         time.time() - self.__statistics["total_time"]
                     )
-                    self.ResultBoardUI = ResultBoard(
+                    self.__ResultBoardUI = ResultBoard(
                         self.__statistics, screen.get_width() // 96
                     )
                 for event in linpg.controller.get_events():
@@ -1341,14 +1342,14 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         if event.key == linpg.keys.SPACE:
                             self.__is_battle_mode = False
                             self.stop()
-                self.__add_on_screen_object(self.ResultBoardUI)
+                self.__add_on_screen_object(self.__ResultBoardUI)
             # 结束动画--失败
             elif self.__whose_round == "result_fail":
-                if self.ResultBoardUI is None:
+                if self.__ResultBoardUI is None:
                     self.__statistics["total_time"] = time.localtime(
                         time.time() - self.__statistics["total_time"]
                     )
-                    self.ResultBoardUI = ResultBoard(
+                    self.__ResultBoardUI = ResultBoard(
                         self.__statistics, screen.get_width() // 96, False
                     )
                 for event in linpg.controller.get_events():
@@ -1369,8 +1370,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             self.stop()
                             self.__is_battle_mode = False
                             break
-                if self.ResultBoardUI is not None:
-                    self.__add_on_screen_object(self.ResultBoardUI)
+                if self.__ResultBoardUI is not None:
+                    self.__add_on_screen_object(self.__ResultBoardUI)
 
         # 渐变效果：一次性的
         if self.__txt_alpha is None:

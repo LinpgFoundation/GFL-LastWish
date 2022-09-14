@@ -220,13 +220,12 @@ class FriendlyCharacter(BasicEntity):
         self, alliances: dict, enemies: dict, _targets: tuple[str, ...]
     ) -> dict[str, int]:
         results: dict[str, int] = {}
-        the_damage: int = 0
         for key in _targets:
             if (
                 linpg.numbers.get_random_int(0, 100)
                 <= 50 + (self.skill_range_target_in(enemies[key]) + 1) * 15
             ):
-                the_damage = linpg.numbers.get_random_int(
+                the_damage: int = linpg.numbers.get_random_int(
                     self.min_damage, self.max_damage
                 )
                 enemies[key].injury(the_damage)
@@ -450,23 +449,16 @@ class HostileCharacter(BasicEntity):
                     min_weight = data[1]
                     target = data[0]
             targetCharacterData = friendlyCharacters[target]
+            # 如果范围内有可以攻击的角色
             if self.range_target_in(targetCharacterData) >= 0:
-                actions.append(
-                    self.DecisionHolder(
-                        "attack",
-                        tuple((target, self.range_target_in(targetCharacterData))),
+                # 多次攻击角色直到ap耗尽
+                while action_point_can_use > self.AP_IS_NEEDED_TO_ATTACK:
+                    actions.append(
+                        self.DecisionHolder(
+                            "attack", (target, self.range_target_in(targetCharacterData))
+                        )
                     )
-                )
-                action_point_can_use -= self.AP_IS_NEEDED_TO_ATTACK
-                """
-                if action_point_can_use > AP_IS_NEEDED_TO_ATTACK:
-                    if self.hp_percentage > 0.2:
-                        #如果自身血量正常，则应该考虑再次攻击角色
-                        actions.append(self.DecisionHolder("attack",target))
-                        action_point_can_use -= AP_IS_NEEDED_TO_ATTACK
-                    else:
-                        pass
-                """
+                    action_point_can_use -= self.AP_IS_NEEDED_TO_ATTACK
             else:
                 # 寻找一条能到达该角色附近的线路
                 the_route = MAP_POINTER.find_path(
