@@ -1,5 +1,4 @@
-patch: 7
-recommended_linpg_patch: 2
-recommended_linpg_revision: 2
-revision: 0
+recommended_linpg_patch: 1
+recommended_linpg_revision: 4
+revision: 1
 version: 0

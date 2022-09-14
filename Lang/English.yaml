@@ -11,12 +11,12 @@ DiscordStatus:
   now_playing: 'Now playing:'
   staying_at_main_menu: Browsing main menu
 General:
+  GriffinKryuger: Griffin & Kryuger
+  SangvisFerri: Sangvis Ferri
   dialog_editor: Dialog Editor
   game_title: Girls' Frontline - Last Wish
-  griffin_Kryuger: Griffin & Kryuger
   main_chapter: Main Chapter
   map_editor: Map Editor
-  sangvis_ferri: Sangvis Ferri
   workshop: Workshop
 LoadingTxt:
   now_loading: Loading...
@@ -38,6 +38,16 @@ MainMenu:
   other:
     new_chapter: Create New Chapter
     new_project: Create New Project
+PhotosensitiveSeizureWarning:
+- This game has been optimized for preventing photosensitive seizure
+- 'About Photosensitive seizure:'
+- A very small percentage of people may experience a seizure when exposed to certain
+  visual images,
+- including flashing lights or patterns that may appear in video games.
+- Even people who have no history of seizures or epilepsy may have an undiagnosed
+  condition
+- that can cause these "photosensitive epileptic seizures" while playing video games.
+- Immediately stop playing and consult a doctor if you experience any symptoms.
 ResultBoard:
   characters_down: Friendly character down
   pressKeyContinue: Press Space to continue

@@ -60,7 +60,7 @@ dialogs:
       narrator: Kalina
     id_011:
       contents:
-      - Now, let's just hope that sv-98 and the others will be back in time, and we'll
+      - Now, let's just hope that sv98 and the others will be back in time, and we'll
         think about
       - other things after that.
       narrator: Me
@@ -157,7 +157,7 @@ dialogs:
       narrator: Kalina
     id_014:
       contents:
-      - At the moment, I was very anxious, whether sv-98 and the others could make
+      - At the moment, I was very anxious, whether sv98 and the others could make
         it back
       - before the evacuation is one thing. I have a feeling that there is something
         very secret
@@ -198,7 +198,7 @@ dialogs:
       narrator: Everyone
     initial_dialog_3:
       contents:
-      - Sv-98, we have signs of SangvisFerri activity ahead.
+      - sv98, we have signs of SangvisFerri activity ahead.
     initial_dialog_4:
       contents:
       - Oh no! I'm out of ammo...
@@ -211,14 +211,14 @@ dialogs:
       - From a distance, it looks like a supply crate.
     initial_dialog_7:
       contents:
-      - Sv-98, go for it. We'll cover you.
+      - sv98, go for it. We'll cover you.
     initial_dialog_8:
       contents:
       - It seems like I have no choice...
       - Girls, get ready, it is our show time!
     initial_dialog_9:
       contents:
-      - sv-98 has no bullets at this moment
+      - sv98 has no bullets at this moment
       - and cannot attack
       narrator: Tip
     tutorial1:
