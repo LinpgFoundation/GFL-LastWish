@@ -18,7 +18,7 @@ class MainMenu(linpg.AbstractSystem):
         # 渲染健康游戏忠告
         HealthyGamingAdvice: list[linpg.ImageSurface] = (
             [
-                linpg.font.render(text_t, "white", font_size, with_bounding=True)
+                linpg.font.render(text_t, "white", font_size)
                 for text_t in linpg.lang.get_texts("HealthyGamingAdvice")
             ]
             if linpg.lang.has_key("HealthyGamingAdvice")
@@ -37,7 +37,7 @@ class MainMenu(linpg.AbstractSystem):
         # 渲染获取光敏性癫痫警告
         PhotosensitiveSeizureWarning: list[linpg.ImageSurface] = (
             [
-                linpg.font.render(text_t, "white", font_size, with_bounding=True)
+                linpg.font.render(text_t, "white", font_size)
                 for text_t in linpg.lang.get_texts("PhotosensitiveSeizureWarning")
             ]
             if linpg.lang.has_key("PhotosensitiveSeizureWarning")
@@ -123,7 +123,12 @@ class MainMenu(linpg.AbstractSystem):
                 linpg.create_new_project(path, "yaml")
             info_data: dict = linpg.config.load(_info_config_path)
             self.workshop_files_text.append(os.path.basename(path))
-            self.workshop_files.append(info_data["title"][linpg.setting.get_language()])
+            self.workshop_files.append(
+                info_data["title"].get(
+                    linpg.setting.get_language(),
+                    linpg.lang.get_text("Global", "no_translation"),
+                )
+            )
         self.workshop_files.append(linpg.lang.get_text("Global", "back"))
         txt_location: int = int(screen_size[0] * 2 / 3)
         txt_y: int = int(
@@ -520,11 +525,11 @@ class MainMenu(linpg.AbstractSystem):
         # 展示设置UI
         linpg.option_menu.draw(screen)
         # 更新音量
-        if linpg.option_menu.need_update["volume"] is True:
+        if linpg.option_menu.need_update.get("volume") is True:
             self.updated_volume()
         # 更新语言
         if (
-            linpg.option_menu.need_update["language"] is True
+            linpg.option_menu.need_update.get("language") is True
             or self.language_need_update() is True
         ):
             self.update_language()

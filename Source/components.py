@@ -25,9 +25,8 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
         super()._load_map(_data)
 
     # 加载数据 - 重写使其以多线程的形式进行
-    def load(
+    def new(
         self,
-        screen: linpg.ImageSurface,
         chapterType: str,
         chapterId: int,
         projectName: Optional[str] = None,
@@ -35,14 +34,14 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
         # 初始化加载模块
         self._initialize_loading_module()
         _task: threading.Thread = threading.Thread(
-            target=super().load, args=(screen, chapterType, chapterId, projectName)
+            target=super().new, args=(chapterType, chapterId, projectName)
         )
         # 开始加载
         _task.start()
         # 显示加载过程
         while _task.is_alive():
-            screen.fill(linpg.color.BLACK)
-            self._show_current_loading_progress(screen)
+            linpg.display.get_window().fill(linpg.color.BLACK)
+            self._show_current_loading_progress(linpg.display.get_window())
             linpg.display.flip()
         # 加载完成，释放初始化模块占用的内存
         self._finish_loading()
@@ -153,7 +152,7 @@ class GameMode:
         if chapterType is not None:
             DIALOG.new(chapterType, chapterId, part, projectName)
         else:
-            DIALOG.load("Save/save.yaml")
+            DIALOG.load()
         # 加载完成-闸门开启的效果
         for i in range(100, -1, -1):
             DIALOG.display_background_image(screen)
@@ -187,7 +186,7 @@ class GameMode:
         )
         # 加载对话
         DIALOG: linpg.DialogEditor = linpg.DialogEditor()
-        DIALOG.load(chapterType, chapterId, part, projectName)
+        DIALOG.new(chapterType, chapterId, part, projectName)
         # 主循环
         while DIALOG.is_playing():
             DIALOG.draw(screen)
@@ -210,9 +209,9 @@ class GameMode:
         linpg.media.unload()
         BATTLE: TurnBasedBattleSystem = TurnBasedBattleSystem()
         if chapterType is not None:
-            BATTLE.new(screen, chapterType, chapterId, projectName)
+            BATTLE.new(chapterType, chapterId, projectName)
         else:
-            BATTLE.load(screen)
+            BATTLE.load()
         # 战斗系统主要loop
         while BATTLE.is_playing():
             BATTLE.draw(screen)
@@ -234,7 +233,7 @@ class GameMode:
         # 卸载音乐
         linpg.media.unload()
         MAP_EDITOR = MapEditor()
-        MAP_EDITOR.load(screen, chapterType, chapterId, projectName)
+        MAP_EDITOR.new(chapterType, chapterId, projectName)
         # 改变标题
         linpg.display.set_caption(
             "{0} ({1})".format(

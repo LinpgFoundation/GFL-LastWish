@@ -22,7 +22,7 @@ __all__ = ["linpg", "os", "glob", "ALPHA_BUILD_WARNING"]
 linpg.font.set_global_font("medium", int(linpg.display.get_width() / 40))
 
 # alpha构建警告
-ALPHA_BUILD_WARNING = linpg.load.static_text(
+ALPHA_BUILD_WARNING = linpg.load.text(
     linpg.lang.get_text("alpha_build_warning"),
     "white",
     (0, 0),

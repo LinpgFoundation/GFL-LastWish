@@ -240,7 +240,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
 
     """加载与储存"""
     # 从存档中加载游戏进程
-    def load(self, screen: linpg.ImageSurface) -> None:
+    def load(self) -> None:
         saveData: dict = linpg.config.load_file(os.path.join("Save", "save.yaml"))
         self._initialize(
             saveData["chapter_type"], saveData["chapter_id"], saveData["project_name"]
@@ -252,7 +252,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 'Error: Cannot load the data from the "save.yaml" file because the file type does not match'
             )
         # 加载地图与角色数据
-        self.__start_loading(screen, DataToProcess)
+        self.__start_loading(DataToProcess)
         # 初始化视觉小说系统
         self._update_dialog(
             DataToProcess.get("dialog_key", ""),
@@ -262,15 +262,11 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self.__statistics = dict(DataToProcess["statistics"])
 
     def new(
-        self,
-        screen: linpg.ImageSurface,
-        chapterType: str,
-        chapterId: int,
-        projectName: Optional[str] = None,
+        self, chapterType: str, chapterId: int, projectName: Optional[str] = None
     ) -> None:
         self._initialize(chapterType, chapterId, projectName)
         # 加载地图与角色数据
-        self.__start_loading(screen, linpg.config.load_file(self.get_map_file_location()))
+        self.__start_loading(linpg.config.load_file(self.get_map_file_location()))
         # 初始化视觉小说系统
         self._update_dialog(self.__dialog_dictionary.get("initial", ""))
         # 初始化战斗状态数据
@@ -281,7 +277,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             "times_characters_down": 0,
         }
 
-    def __start_loading(self, screen: linpg.ImageSurface, _data: dict) -> None:
+    def __start_loading(self, _data: dict) -> None:
         # 初始化剧情模块
         self._init_dialog(dict(_data["dialogs"]["data"]))
         # 章节标题显示
@@ -295,7 +291,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         # 加载关卡背景介绍信息文字
         self.__battle_info = tuple(
             [
-                self._FONT.render(_text, linpg.color.WHITE, with_bounding=True)
+                self._FONT.render(_text, linpg.color.WHITE)
                 for _text in DataTmp.get(
                     "battle_info",
                     linpg.config.load(
@@ -308,22 +304,22 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self._initialize_loading_module()
         # 渐入效果
         for i in range(1, 255, 2):
-            LoadingTitle.draw(screen, i)
+            LoadingTitle.draw(linpg.display.get_window(), i)
             linpg.display.flip()
         _task: threading.Thread = threading.Thread(
             target=self._process_data, args=(_data,)
         )
         _task.start()
         while _task.is_alive():
-            LoadingTitle.draw(screen)
-            self._show_current_loading_progress(screen)
+            LoadingTitle.draw(linpg.display.get_window())
+            self._show_current_loading_progress(linpg.display.get_window())
             linpg.display.flip()
         # 加载完成，释放初始化模块占用的内存
         self._finish_loading()
         # 显示章节信息
         for i in range(0, 250, 2):
-            LoadingTitle.draw(screen)
-            self.__draw_battle_info(screen, i)
+            LoadingTitle.draw(linpg.display.get_window())
+            self.__draw_battle_info(linpg.display.get_window(), i)
             linpg.display.flip()
 
     # 加载游戏进程
@@ -454,9 +450,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             )
             if i == 1:
                 temp_seconde = self._FONT.render(
-                    time.strftime(":%S", time.localtime()),
-                    linpg.color.WHITE,
-                    with_bounding=True,
+                    time.strftime(":%S", time.localtime()), linpg.color.WHITE
                 )
                 temp_seconde.set_alpha(_alpha)
                 screen.blit(
@@ -1359,7 +1353,6 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             TurnBasedBattleSystem.__init__(self)
                             chapter_info: dict = self.get_data_of_parent_game_system()
                             self.new(
-                                screen,
                                 chapter_info["chapter_type"],
                                 chapter_info["chapter_id"],
                                 chapter_info["project_name"],

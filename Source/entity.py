@@ -175,7 +175,7 @@ class BasicEntity(linpg.Entity):
         )
         # 血条图片
         self.__hp_bar: EntityHpBar = EntityHpBar()
-        self.__status_font: linpg.StaticTextSurface = linpg.StaticTextSurface(
+        self.__status_font: linpg.TextSurface = linpg.TextSurface(
             "", 0, 0, linpg.display.get_width() / 192
         )
 
