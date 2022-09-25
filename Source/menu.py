@@ -1,6 +1,6 @@
 from shutil import copyfile
 
-from .components import GameMode, console, Optional
+from .components import GameMode, CONSOLE, Optional
 from .api import *
 
 
@@ -358,29 +358,7 @@ class MainMenu(linpg.AbstractSystem):
     # 继续章节
     def __continue_scene(self, screen: linpg.ImageSurface) -> None:
         SAVE: dict = dict(linpg.config.load("Save/save.yaml"))
-        startPoint = SAVE["type"]
-        if startPoint == "dialog_before_battle":
-            GameMode.dialog(screen, None, 0, "")
-            if not linpg.global_value.get("BackToMainMenu"):
-                GameMode.battle(
-                    screen,
-                    SAVE["chapter_type"],
-                    SAVE["chapter_id"],
-                    SAVE["project_name"],
-                )
-                if not linpg.global_value.get("BackToMainMenu"):
-                    GameMode.dialog(
-                        screen,
-                        SAVE["chapter_type"],
-                        SAVE["chapter_id"],
-                        "dialog_after_battle",
-                        SAVE["project_name"],
-                    )
-                else:
-                    linpg.global_value.set("BackToMainMenu", False)
-            else:
-                linpg.global_value.set("BackToMainMenu", False)
-        elif startPoint == "battle":
+        if SAVE["type"] == "battle":
             GameMode.battle(screen, None, 0)
             if not linpg.global_value.get("BackToMainMenu"):
                 GameMode.dialog(
@@ -392,9 +370,31 @@ class MainMenu(linpg.AbstractSystem):
                 )
             else:
                 linpg.global_value.set("BackToMainMenu", False)
-        elif startPoint == "dialog_after_battle":
-            GameMode.dialog(screen, None, 0, "")
-            linpg.global_value.if_get_set("BackToMainMenu", True, False)
+        else:
+            if SAVE["section"] == "dialog_before_battle":
+                GameMode.dialog(screen, None, 0, "")
+                if not linpg.global_value.get("BackToMainMenu"):
+                    GameMode.battle(
+                        screen,
+                        SAVE["chapter_type"],
+                        SAVE["chapter_id"],
+                        SAVE["project_name"],
+                    )
+                    if not linpg.global_value.get("BackToMainMenu"):
+                        GameMode.dialog(
+                            screen,
+                            SAVE["chapter_type"],
+                            SAVE["chapter_id"],
+                            "dialog_after_battle",
+                            SAVE["project_name"],
+                        )
+                    else:
+                        linpg.global_value.set("BackToMainMenu", False)
+                else:
+                    linpg.global_value.set("BackToMainMenu", False)
+            elif SAVE["section"] == "dialog_after_battle":
+                GameMode.dialog(screen, None, 0, "")
+                linpg.global_value.if_get_set("BackToMainMenu", True, False)
         self.__reset_menu()
 
     # 重置背景
@@ -540,7 +540,8 @@ class MainMenu(linpg.AbstractSystem):
                 self.__reload_workshop_files_list(screen.get_size(), False)
                 self.__reload_chapter_select_list(screen.get_size(), "workshop")
         # 展示控制台
-        console.draw(screen)
+        if CONSOLE is not None:
+            CONSOLE.draw(screen)
         # 判断按键
         if (
             linpg.controller.get_event("confirm") is True

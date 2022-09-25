@@ -3,7 +3,7 @@ from .character import FriendlyCharacter, HostileCharacter, Optional
 from .tbs import TurnBasedBattleSystem, LoadingModule, threading
 
 # 地图编辑器系统
-class MapEditor(LoadingModule, linpg.AbstractMapEditor):
+class _MapEditor(LoadingModule, linpg.AbstractMapEditor):
     def __init__(self) -> None:
         LoadingModule.__init__(self)
         linpg.AbstractMapEditor.__init__(self)
@@ -48,7 +48,7 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
 
 
 # 控制台
-class Console(linpg.Console):
+class _Console(linpg.Console):
     def _check_command(self, conditions: list) -> None:
         if conditions[0] == "load":
             if conditions[1] == "dialog":
@@ -78,11 +78,14 @@ class Console(linpg.Console):
             super()._check_command(conditions)
 
 
-console: Console = Console(
-    linpg.display.get_width() // 10, linpg.display.get_height() * 4 // 5
-)
-if linpg.debug.get_developer_mode() is True:
-    console.start()
+# 根据设定决定是否启用控制台
+CONSOLE: Optional[_Console] = None
+if linpg.setting.try_get("EnableConsole") is True:
+    CONSOLE = _Console(
+        linpg.display.get_width() // 10, linpg.display.get_height() * 4 // 5
+    )
+    if linpg.debug.get_developer_mode() is True:
+        CONSOLE.start()
 
 
 class GameMode:
@@ -232,7 +235,7 @@ class GameMode:
         cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
-        MAP_EDITOR = MapEditor()
+        MAP_EDITOR: _MapEditor = _MapEditor()
         MAP_EDITOR.new(chapterType, chapterId, projectName)
         # 改变标题
         linpg.display.set_caption(

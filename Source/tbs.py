@@ -103,9 +103,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         )
         self.__end_round_button = linpg.load.static_image(
             r"Assets/image/UI/end_round_button.png",
-            (linpg.display.get_width() * 0.8, linpg.display.get_height() * 0.7),
-            (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 2.5),
+            (0, linpg.display.get_height() * 0.8),
+            (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 3),
         )
+        self.__end_round_button.set_right(linpg.display.get_width() * 0.95)
         WarningMessageSystem.update_language()
 
     # 返回需要保存数据
@@ -360,9 +361,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         )
         self.__end_round_button = linpg.load.static_image(
             r"Assets/image/UI/end_round_button.png",
-            (linpg.display.get_width() * 0.8, linpg.display.get_height() * 0.7),
-            (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 2.5),
+            (0, linpg.display.get_height() * 0.8),
+            (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 3),
         )
+        self.__end_round_button.set_right(linpg.display.get_width() * 0.95)
         # 加载子弹图片
         # bullet_img = load.img("Assets/image/UI/bullet.png", get_block_width()/6, self._MAP.block_height/12)
         # 加载显示获取到补给后的信息栏
@@ -380,9 +382,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self.__supply_board_stayingTime = 0
         RangeSystem.update_size(self._MAP.block_width * 4 // 5)
         # 角色信息UI管理
-        self.characterInfoBoardUI = CharacterInfoBoard(
-            linpg.display.get_width(), linpg.display.get_height()
-        )
+        self.__characterInfoBoard = CharacterInfoBoard()
         # 切换回合时的UI
         self.__RoundSwitchUI = RoundSwitch(
             linpg.display.get_width(), linpg.display.get_height()
@@ -682,7 +682,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 if self.characterGetClick != key:
                                     self.alliances[key].play_sound("get_click")
                                     self.characterGetClick = key
-                                self.characterInfoBoardUI.update()
+                                self.__characterInfoBoard.update()
                                 self.friendsCanSave = [
                                     key2
                                     for key2 in self.alliances
@@ -1168,7 +1168,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 )
                 # 左下角的角色信息
                 if self.selectMenuUI.is_visible():
-                    self.characterInfoBoardUI.draw(screen, self.characterInControl)
+                    self.__characterInfoBoard.draw(screen, self.characterInControl)
 
             # 移除电影视觉
             self.__up_black_curtain.move_back()
@@ -1313,9 +1313,11 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     self.__end_round_button.pos,
                     (
                         int(self.__end_round_button.get_width() * 0.35),
-                        int(
-                            (self.__end_round_button.get_height() - self._FONT.size) / 2.3
-                        ),
+                        (
+                            self.__end_round_button.get_height()
+                            - self.end_round_txt.get_height()
+                        )
+                        // 2,
                     ),
                 )
 
