@@ -56,9 +56,9 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 | Index | 名称             | Name                                     | Expected release date / 预计发布时间 | Status / 状态 |
 | ----- | ---------------- | ---------------------------------------- | ------------------------------------ | ------------- |
-| 1     | 雪色的希望       | A wish likes snow                        | 2022.9.27                            | :hammer:      |
-| 2     | 迷离之下         | Beneath smoke                            | 2022.9.27                            | :hammer:      |
-| 3     | 琴弦之上         | Above string                             |                                      |               |
+| 1     | 雪色的希望       | A wish likes snow                        | 2022.12.22                           | :hammer:      |
+| 2     | 迷离之下         | Beneath smoke                            | 2022.12.22                           | :hammer:      |
+| 3     | 琴弦之上         | Above string                             | 2022.12.22                           | :hammer:      |
 | 4     | 喘息（暂定）     | A gasp for breath (Provisional)          |                                      |               |
 | 5     | 无人之防（暂定） | Make defense without dolls (Provisional) |                                      |               |
 | 6     | 机遇（暂定）     | The opportunity (Provisional)            |                                      |               |

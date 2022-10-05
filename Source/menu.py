@@ -210,7 +210,7 @@ class MainMenu(linpg.AbstractSystem):
         ):
             self.chapter_select.append(
                 self.__get_chapter_title(
-                    chapterType, linpg.ScriptConverter.extract_info_from_path(path)[0]
+                    chapterType, linpg.ScriptCompiler.extract_info_from_path(path)[0]
                 )
             )
         # 将返回按钮放到菜单列表中

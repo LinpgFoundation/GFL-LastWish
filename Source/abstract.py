@@ -1,6 +1,5 @@
 import threading
-from copy import deepcopy
-from .ui import *
+from .map import *
 
 # 加载模块
 class LoadingModule:
@@ -123,8 +122,9 @@ class AbstractBattleSystemWithInGameDialog(
         LoadingModule.__init__(self)
         linpg.AbstractBattleSystem.__init__(self)
         linpg.PauseMenuModuleForGameSystem.__init__(self)
+        self._MAP = AdvancedTileMap()
         # 视觉小说模块与参数
-        self.__DIALOG: linpg.DialogSystem = linpg.DialogSystem()
+        self.__DIALOG: linpg.VisualNovelSystem = linpg.VisualNovelSystem()
         self.__DIALOG.disable_basic_features()
         # 视觉小说缓存参数
         self.__dialog_parameters: dict = {}

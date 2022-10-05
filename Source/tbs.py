@@ -70,7 +70,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             (linpg.display.get_width(), linpg.display.get_height() // 7),
             linpg.color.BLACK,
         )
-        self.__up_black_curtain: linpg.MovableImage = linpg.MovableImage(
+        self.__up_black_curtain: linpg.MovableStaticImage = linpg.MovableStaticImage(
             black_curtain,
             0,
             -black_curtain.get_height(),
@@ -79,7 +79,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             0,
             int(black_curtain.get_height() * 0.05),
         )
-        self.__down_black_curtain: linpg.MovableImage = linpg.MovableImage(
+        self.__down_black_curtain: linpg.MovableStaticImage = linpg.MovableStaticImage(
             black_curtain,
             0,
             linpg.display.get_height(),
@@ -371,7 +371,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         supply_board_width: int = int(linpg.display.get_width() / 3)
         supply_board_height: int = int(linpg.display.get_height() / 12)
         supply_board_x: int = int((linpg.display.get_width() - supply_board_width) / 2)
-        self.__supply_board = linpg.load.movable_image(
+        self.__supply_board = linpg.load.movable_static_image(
             r"Assets/image/UI/score.png",
             (supply_board_x, -supply_board_height),
             (supply_board_x, 0),
@@ -659,7 +659,11 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         and self.decorationGetClick is not None
                     ):
                         self.characterInControl.try_reduce_action_point(2)
-                        self._MAP.interact_decoration_with_id(self.decorationGetClick)
+                        theDecorationGetClick = self._MAP.decorations[
+                            self.decorationGetClick
+                        ]
+                        if isinstance(theDecorationGetClick, CampfireObject):
+                            theDecorationGetClick.interact()
                         self.characterGetClick = None
                         self.action_choice = None
                         self.__is_waiting = True
@@ -692,10 +696,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 self.thingsCanReact.clear()
                                 index = 0
                                 for decoration in self._MAP.decorations:
-                                    if (
-                                        decoration.get_type() == "campfire"
-                                        and self.alliances[key].near(decoration)
-                                    ):
+                                    if decoration.type == "campfire" and self.alliances[
+                                        key
+                                    ].near(decoration):
                                         self.thingsCanReact.append(index)
                                     index += 1
                                 self.selectMenuUI.set_visible(True)
@@ -922,49 +925,51 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         else:
                             self._footstep_sounds.stop()
                             # 检测是不是站在补给上
-                            decoration = self._MAP.find_decoration_on(
+                            _decorationOnPos = self._MAP.find_decoration_on(
                                 self.characterInControl.get_pos()
                             )
                             if (
-                                decoration is not None
-                                and decoration.get_type() == "chest"
+                                isinstance(_decorationOnPos, ChestObject)
+                                and self.characterGetClick in _decorationOnPos.whitelist
                             ):
-                                if self.characterGetClick in decoration.whitelist:
-                                    # 清空储存列表
-                                    self.__supply_board_items.clear()
-                                    # 将物品按照类型放入列表
-                                    for itemType, itemData in decoration.items.items():
-                                        if itemType == "bullet":
-                                            self.characterInControl.add_bullets_carried(
-                                                itemData
-                                            )
-                                            self.__supply_board_items.append(
-                                                self._FONT.render(
-                                                    linpg.lang.get_texts(
-                                                        "Battle_UI", "getBullets"
-                                                    )
-                                                    + ": "
-                                                    + str(itemData),
-                                                    linpg.color.WHITE,
+                                # 清空储存列表
+                                self.__supply_board_items.clear()
+                                # 将物品按照类型放入列表
+                                for (
+                                    itemType,
+                                    itemData,
+                                ) in _decorationOnPos.items.items():
+                                    if itemType == "bullet":
+                                        self.characterInControl.add_bullets_carried(
+                                            itemData
+                                        )
+                                        self.__supply_board_items.append(
+                                            self._FONT.render(
+                                                linpg.lang.get_texts(
+                                                    "Battle_UI", "getBullets"
                                                 )
+                                                + ": "
+                                                + str(itemData),
+                                                linpg.color.WHITE,
                                             )
-                                        elif itemType == "hp":
-                                            self.characterInControl.heal(itemData)
-                                            self.__supply_board_items.append(
-                                                self._FONT.render(
-                                                    linpg.lang.get_texts(
-                                                        "Battle_UI", "getHealth"
-                                                    )
-                                                    + ": "
-                                                    + str(itemData),
-                                                    linpg.color.WHITE,
+                                        )
+                                    elif itemType == "hp":
+                                        self.characterInControl.heal(itemData)
+                                        self.__supply_board_items.append(
+                                            self._FONT.render(
+                                                linpg.lang.get_texts(
+                                                    "Battle_UI", "getHealth"
                                                 )
+                                                + ": "
+                                                + str(itemData),
+                                                linpg.color.WHITE,
                                             )
-                                    # 如果UI已经回到原位
-                                    if len(self.__supply_board_items) > 0:
-                                        self.__supply_board.move_toward()
-                                    # 移除箱子
-                                    self._MAP.remove_decoration(decoration)
+                                        )
+                                # 如果UI已经回到原位
+                                if len(self.__supply_board_items) > 0:
+                                    self.__supply_board.move_toward()
+                                # 移除箱子
+                                self._MAP.remove_decoration(_decorationOnPos)
                             # 检测当前所在点是否应该触发对话
                             name_from_by_pos = (
                                 str(self.characterInControl.x)
@@ -1187,19 +1192,19 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.enemies_in_control_id = 0
                         self.sangvisFerris_name_list.clear()
                         any_is_alert = False
-                        for every_chara in self.enemies:
-                            if self.enemies[every_chara].is_alive():
-                                self.sangvisFerris_name_list.append(every_chara)
-                                if self.enemies[every_chara].is_alert:
+                        for key in self.enemies:
+                            if self.enemies[key].is_alive():
+                                self.sangvisFerris_name_list.append(key)
+                                if self.enemies[key].is_alert:
                                     any_is_alert = True
                         # 如果有一个铁血角色已经处于完全察觉的状态，则让所有铁血角色进入警觉状态
                         if any_is_alert:
-                            for every_chara in self.enemies:
-                                self.enemies[every_chara].alert(100)
+                            for key in self.enemies:
+                                self.enemies[key].alert(100)
                         # 让倒地的角色更接近死亡
-                        for every_chara in self.alliances:
-                            if self.alliances[every_chara].is_dying():
-                                self.alliances[every_chara].get_closer_to_death()
+                        for key in self.alliances:
+                            if self.alliances[key].is_dying():
+                                self.alliances[key].get_closer_to_death()
                         # 现在是铁血的回合！
                         self.__whose_round = "sangvisFerris"
                     elif self.__whose_round == "sangvisFerrisToPlayer":

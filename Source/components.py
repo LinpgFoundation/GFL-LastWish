@@ -91,8 +91,8 @@ if linpg.setting.try_get("EnableConsole") is True:
 class GameMode:
 
     # 储存闸门动画的图片素材
-    __GateImgAbove: Optional[linpg.DynamicImage] = None
-    __GateImgBelow: Optional[linpg.DynamicImage] = None
+    __GateImgAbove: Optional[linpg.StaticImage] = None
+    __GateImgBelow: Optional[linpg.StaticImage] = None
     # 加载主菜单背景
     VIDEO_BACKGROUND: linpg.VideoSurface = linpg.VideoSurface(
         r"Assets/movie/SquadAR.mp4",
@@ -118,14 +118,14 @@ class GameMode:
             )
             cls.__GateImgBelow.draw(screen)
         else:
-            cls.__GateImgAbove = linpg.DynamicImage(
+            cls.__GateImgAbove = linpg.StaticImage(
                 linpg.images.crop_bounding(
                     linpg.load.img(r"Assets/image/UI/LoadingImgAbove.png")
                 ),
                 -2,
                 0,
             )
-            cls.__GateImgBelow = linpg.DynamicImage(
+            cls.__GateImgBelow = linpg.StaticImage(
                 linpg.images.crop_bounding(
                     linpg.load.img(r"Assets/image/UI/LoadingImgBelow.png")
                 ),
@@ -151,7 +151,7 @@ class GameMode:
         # 卸载音乐
         linpg.media.unload()
         # 初始化对话系统模块
-        DIALOG: linpg.DialogSystem = linpg.DialogSystem()
+        DIALOG: linpg.VisualNovelSystem = linpg.VisualNovelSystem()
         if chapterType is not None:
             DIALOG.new(chapterType, chapterId, part, projectName)
         else:
