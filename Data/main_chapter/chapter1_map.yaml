@@ -14,6 +14,10 @@ decoration:
   status: {}
   x: 2
   y: 2
+- id: campfire
+  status: {}
+  x: 3
+  y: 3
 dialogs:
   data:
     initial_dialog:
@@ -2602,12 +2606,12 @@ map:
     - 2
     - 5
   lookup_table:
-  - Snow:3
-  - Snow:2
-  - Snow:7
-  - Snow:5
-  - Snow:4
-  - Snow:6
+  - snow:3
+  - snow:2
+  - snow:7
+  - snow:5
+  - snow:4
+  - snow:6
 mission_objectives:
   allow_any_one_die: false
   round_limitation: 10

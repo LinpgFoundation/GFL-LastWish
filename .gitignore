@@ -12,3 +12,4 @@ ThirdPartyLibraries/
 linpg/
 .vs*/
 .idea/
+.mypy_cache/

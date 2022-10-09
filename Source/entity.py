@@ -230,9 +230,9 @@ class BasicEntity(linpg.Entity):
         customHpData: Optional[tuple] = None,
     ) -> tuple:
         xTemp, yTemp = MAP_POINTER.calculate_position(self.x, self.y)
-        xTemp += MAP_POINTER.block_width // 4
-        yTemp -= MAP_POINTER.block_width // 5
-        self.__hp_bar.set_size(MAP_POINTER.block_width / 2, MAP_POINTER.block_width / 10)
+        xTemp += MAP_POINTER.tile_width // 4
+        yTemp -= MAP_POINTER.tile_width // 5
+        self.__hp_bar.set_size(MAP_POINTER.tile_width / 2, MAP_POINTER.tile_width / 10)
         self.__hp_bar.set_pos(xTemp, yTemp)
         # 预处理血条图片
         if customHpData is None:

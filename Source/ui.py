@@ -766,5 +766,5 @@ class RangeSystem:
         for i in range(len(cls.__areas)):
             for _position in cls.__areas[i]:
                 xTemp, yTemp = map_prt.calculate_position(_position[0], _position[1])
-                cls.__images[i].set_pos(xTemp + map_prt.block_width * 0.1, yTemp)
+                cls.__images[i].set_pos(xTemp + map_prt.tile_width // 10, yTemp)
                 cls.__images[i].draw(screen)

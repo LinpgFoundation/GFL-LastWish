@@ -4,8 +4,8 @@ from .ui import *
 # 篝火
 class CampfireObject(linpg.DecorationObject):
     def __init__(
-        self, x: int, y: int, _type: str, _variation: int = 0, status: dict = {}
-    ):
+        self, x: int, y: int, _type: str, _variation: int, status: dict = {}
+    ) -> None:
         super().__init__(x, y, _type, _variation, status)
         self.__range: int = status.get("range", 3)
         self.__alpha: int = 255
@@ -15,10 +15,16 @@ class CampfireObject(linpg.DecorationObject):
 
     @staticmethod
     def from_dict(_data: dict) -> "CampfireObject":
-        _type, sub_id = str(_data["id"]).split(":")
+        index_args: list[str] = str(_data["id"]).split(":")
         if not isinstance(_data.get("status"), dict):
             _data["status"] = {}
-        return CampfireObject(_data["x"], _data["y"], _type, id(sub_id), _data["status"])
+        return CampfireObject(
+            _data["x"],
+            _data["y"],
+            index_args[0],
+            0 if len(index_args) < 2 else int(index_args[1]),
+            _data["status"],
+        )
 
     def to_dict(self) -> dict:
         data_t: dict = super().to_dict()
@@ -60,7 +66,7 @@ class CampfireObject(linpg.DecorationObject):
             super().blit(_surface, pos, is_dark, self.__alpha)
             if (
                 self._variation
-                < linpg.DecorationImagesModule.get_image_num(self.type) - 1
+                < linpg.DecorationImagesModule.count_variations(self.type) - 1
             ):
                 self.__img_id += 1
             else:
@@ -95,20 +101,16 @@ class ChestObject(linpg.DecorationObject):
         return data_t
 
 
+# 自定义的地图
 class AdvancedTileMap(linpg.TileMap):
-    def __init__(self) -> None:
-        super().__init__()
-
-    def add_decoration(self, _data: dict, _sort: bool = False) -> None:
+    def add_decoration(self, _data: dict) -> None:
         _type: str = str(_data["id"]).split(":")[0]
         if _type == "campfire":
-            self.decorations.append(CampfireObject.from_dict(_data))
+            self._add_decoration(CampfireObject.from_dict(_data))
         elif _type == "chest":
-            self.decorations.append(ChestObject.from_dict(_data))
+            self._add_decoration(ChestObject.from_dict(_data))
         else:
             super().add_decoration(_data)
-        if _sort is True:
-            self.decorations.sort()
 
     def _get_lit_area(self, alliances_data: dict) -> set:
         lightArea: set[tuple[int, int]] = super()._get_lit_area(alliances_data)

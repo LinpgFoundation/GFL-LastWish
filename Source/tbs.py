@@ -141,9 +141,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             and linpg.controller.mouse.get_pressed(2)
                         ):
                             if (
-                                self._block_is_hovering is not None
-                                and self._block_is_hovering[0] == value.x
-                                and self._block_is_hovering[1] == value.y
+                                self._tile_is_hovering is not None
+                                and self._tile_is_hovering[0] == int(value.x)
+                                and self._tile_is_hovering[1] == int(value.y)
                             ):
                                 rightClickCharacterAlphaDeduct = False
                                 RangeSystem.set_target_alpha(255)
@@ -167,8 +167,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         ].get_alpha()
                         if the_alpha_to_check > 0:
                             xTemp, yTemp = self._MAP.calculate_position(value.x, value.y)
-                            xTemp += self._MAP.block_width // 20
-                            yTemp -= self._MAP.block_width // 20
+                            xTemp += self._MAP.tile_width // 20
+                            yTemp -= self._MAP.tile_width // 20
                             display_in_center(
                                 self.__damage_do_to_characters[key],
                                 RangeSystem.get_image(0),
@@ -220,7 +220,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
     def _display_map(self, screen: linpg.ImageSurface) -> None:
         super()._display_map(screen)
         # 展示天气
-        self._weather_system.draw(screen, self._MAP.block_width)
+        self._weather_system.draw(screen, self._MAP.tile_width)
         # 展示所有角色Ui
         if self.__is_battle_mode is True or not self._is_any_dialog_playing():
             # 角色UI
@@ -366,7 +366,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         )
         self.__end_round_button.set_right(linpg.display.get_width() * 0.95)
         # 加载子弹图片
-        # bullet_img = load.img("Assets/image/UI/bullet.png", get_block_width()/6, self._MAP.block_height/12)
+        # bullet_img = load.img("Assets/image/UI/bullet.png", get_tile_width()/6, self._MAP.tile_height/12)
         # 加载显示获取到补给后的信息栏
         supply_board_width: int = int(linpg.display.get_width() / 3)
         supply_board_height: int = int(linpg.display.get_height() / 12)
@@ -380,7 +380,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         )
         self.__supply_board_items.clear()
         self.__supply_board_stayingTime = 0
-        RangeSystem.update_size(self._MAP.block_width * 4 // 5)
+        RangeSystem.update_size(self._MAP.tile_width * 4 // 5)
         # 角色信息UI管理
         self.__characterInfoBoard = CharacterInfoBoard()
         # 切换回合时的UI
@@ -472,12 +472,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 self.__zoomIn -= 10
             elif self.__zoomIntoBe > self.__zoomIn:
                 self.__zoomIn += 10
-            self._MAP.set_tile_block_size(
-                self._standard_block_width * self.__zoomIn / 100,
-                self._standard_block_height * self.__zoomIn / 100,
+            self._MAP.set_tile_size(
+                self._standard_tile_width * self.__zoomIn / 100,
+                self._standard_tile_height * self.__zoomIn / 100,
             )
             # 根据block尺寸重新加载对应尺寸的UI
-            RangeSystem.update_size(self._MAP.block_width * 4 // 5)
+            RangeSystem.update_size(self._MAP.tile_width * 4 // 5)
             self.selectMenuUI.update()
         # 画出地图
         self._display_map(screen)
@@ -670,11 +670,11 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         RangeSystem.set_visible(True)
                         RangeSystem.clear()
                     # 判断是否有被点击的角色
-                    elif self._block_is_hovering is not None:
+                    elif self._tile_is_hovering is not None:
                         for key in self.alliances:
                             if (
                                 linpg.coordinates.is_same(
-                                    self.alliances[key], self._block_is_hovering
+                                    self.alliances[key], self._tile_is_hovering
                                 )
                                 and self.__is_waiting is True
                                 and self.alliances[key].is_alive()
@@ -699,7 +699,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                     if decoration.type == "campfire" and self.alliances[
                                         key
                                     ].near(decoration):
-                                        self.thingsCanReact.append(index)
+                                        self.thingsCanReact.append(decoration.get_pos())
                                     index += 1
                                 self.selectMenuUI.set_visible(True)
                                 break
@@ -721,7 +721,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         elif (
                             tempX > screen.get_width() * 0.8
                             and self._MAP.get_local_x()
-                            >= self._MAP.column * self._MAP.block_width * -1
+                            >= self._MAP.column * self._MAP.tile_width * -1
                         ):
                             self._screen_to_move_speed_x = int(
                                 screen.get_width() * 0.8 - tempX
@@ -737,7 +737,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         elif (
                             tempY > screen.get_height() * 0.8
                             and self._MAP.get_local_y()
-                            >= self._MAP.row * self._MAP.block_height * -1
+                            >= self._MAP.row * self._MAP.tile_height * -1
                         ):
                             self._screen_to_move_speed_y = int(
                                 screen.get_height() * 0.8 - tempY
@@ -746,7 +746,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 if not RangeSystem.get_visible() and self.characterGetClick is not None:
                     # 显示移动范围
                     if self.action_choice == "move":
-                        if self._block_is_hovering is not None:
+                        if self._tile_is_hovering is not None:
                             # 根据行动值计算最远可以移动的距离
                             max_blocks_can_move = int(
                                 self.characterInControl.current_action_point / 2
@@ -754,16 +754,16 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             if (
                                 0
                                 < abs(
-                                    self._block_is_hovering[0] - self.characterInControl.x
+                                    self._tile_is_hovering[0] - self.characterInControl.x
                                 )
                                 + abs(
-                                    self._block_is_hovering[1] - self.characterInControl.y
+                                    self._tile_is_hovering[1] - self.characterInControl.y
                                 )
                                 <= max_blocks_can_move
                             ):
                                 self.the_route = self._MAP.find_path(
                                     self.characterInControl.get_coordinate(),
-                                    self._block_is_hovering,
+                                    self._tile_is_hovering,
                                     self.alliances,
                                     self.enemies,
                                     lenMax=max_blocks_can_move,
@@ -794,13 +794,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 self._MAP
                             )
                         )
-                        if self._block_is_hovering is not None:
+                        if self._tile_is_hovering is not None:
                             self.enemiesGetAttack.clear()
                             _attack_coverage_area: list[
                                 tuple[int, int]
                             ] = self.characterInControl.get_attack_coverage_coordinates(
-                                self._block_is_hovering[0],
-                                self._block_is_hovering[1],
+                                self._tile_is_hovering[0],
+                                self._tile_is_hovering[1],
                                 self._MAP,
                             )
                             if len(_attack_coverage_area) > 0:
@@ -822,11 +822,11 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 self._MAP
                             )
                         )
-                        if self._block_is_hovering is not None:
+                        if self._tile_is_hovering is not None:
                             _skill_coverage_area = (
                                 self.characterInControl.get_skill_coverage_coordinates(
-                                    self._block_is_hovering[0],
-                                    self._block_is_hovering[1],
+                                    self._tile_is_hovering[0],
+                                    self._tile_is_hovering[1],
                                     self._MAP,
                                 )
                             )
@@ -863,21 +863,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.friendGetHelp = None
                         for friendNeedHelp in self.friendsCanSave:
                             if (
-                                self._block_is_hovering is not None
-                                and self._block_is_hovering[0]
-                                == self.alliances[friendNeedHelp].x
-                                and self._block_is_hovering[1]
-                                == self.alliances[friendNeedHelp].y
+                                self._tile_is_hovering is not None
+                                and self._tile_is_hovering[0]
+                                == int(self.alliances[friendNeedHelp].x)
+                                and self._tile_is_hovering[1]
+                                == int(self.alliances[friendNeedHelp].y)
                             ):
-                                RangeSystem.set_positions(
-                                    4,
-                                    [
-                                        (
-                                            self._block_is_hovering[0],
-                                            self._block_is_hovering[1],
-                                        )
-                                    ],
-                                )
+                                RangeSystem.set_positions(4, [self._tile_is_hovering])
                                 self.friendGetHelp = friendNeedHelp
                             else:
                                 RangeSystem.append_position(
@@ -891,25 +883,28 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         RangeSystem.clear()
                         self.decorationGetClick = None
                         for index in self.thingsCanReact:
-                            decoration = self._MAP.find_decoration_with_id(index)
-                            if (
-                                self._block_is_hovering is not None
-                                and decoration.is_on_pos(self._block_is_hovering)
-                            ):
-                                RangeSystem.set_positions(
-                                    4,
-                                    [
-                                        (
-                                            self._block_is_hovering[0],
-                                            self._block_is_hovering[1],
-                                        )
-                                    ],
-                                )
-                                self.decorationGetClick = index
-                            else:
-                                RangeSystem.append_position(
-                                    0, (decoration.x, decoration.y)
-                                )
+                            _decoration: Optional[
+                                linpg.DecorationObject
+                            ] = self._MAP.get_decoration(index)
+                            if _decoration is not None:
+                                if (
+                                    self._tile_is_hovering is not None
+                                    and _decoration.is_on_pos(self._tile_is_hovering)
+                                ):
+                                    RangeSystem.set_positions(
+                                        4,
+                                        [
+                                            (
+                                                self._tile_is_hovering[0],
+                                                self._tile_is_hovering[1],
+                                            )
+                                        ],
+                                    )
+                                    self.decorationGetClick = index
+                                else:
+                                    RangeSystem.append_position(
+                                        0, (_decoration.x, _decoration.y)
+                                    )
 
                 # 当有角色被点击时
                 if self.characterGetClick is not None and not self.__is_waiting:
@@ -925,7 +920,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         else:
                             self._footstep_sounds.stop()
                             # 检测是不是站在补给上
-                            _decorationOnPos = self._MAP.find_decoration_on(
+                            _decorationOnPos = self._MAP.get_decoration(
                                 self.characterInControl.get_pos()
                             )
                             if (
@@ -1005,9 +1000,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     elif self.action_choice == "attack":
                         # 根据敌我坐标判断是否需要反转角色
                         if self.characterInControl.get_imgId("attack") == 0:
-                            if self._block_is_hovering is not None:
+                            if self._tile_is_hovering is not None:
                                 self.characterInControl.set_flip_based_on_pos(
-                                    self._block_is_hovering
+                                    self._tile_is_hovering
                                 )
                             self.characterInControl.play_sound("attack")
                         # 播放射击音效
@@ -1160,12 +1155,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 # 显示选择菜单
                 self.selectMenuUI.draw(
                     screen,
-                    round(self._MAP.block_width / 10),
+                    round(self._MAP.tile_width / 10),
                     {
                         "xStart": the_coord[0],
-                        "xEnd": the_coord[0] + self._MAP.block_width,
+                        "xEnd": the_coord[0] + self._MAP.tile_width,
                         "yStart": the_coord[1],
-                        "yEnd": the_coord[1] + self._MAP.block_width * 0.5,
+                        "yEnd": the_coord[1] + self._MAP.tile_width * 0.5,
                     },
                     self.characterInControl.kind,
                     self.friendsCanSave,

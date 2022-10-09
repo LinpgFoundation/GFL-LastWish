@@ -4,8 +4,12 @@ Contributors:
   sound:
   - 影之光
 Decorations:
-  campfire: campfire
-  chest: chest
+  campfire:
+    passable: false
+  chest:
+    harmful: false
+    hidable: false
+    passable: true
 Filters:
   communicating:
     crop:
