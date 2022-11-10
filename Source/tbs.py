@@ -120,6 +120,37 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
     def stop(self) -> None:
         super().stop()
         AttackingSoundManager.release()
+        linpg.global_variables.remove("currentMode")
+
+    # 加载进程
+    def load_progress(self, _data: dict) -> None:
+        if _data.get("type") == "battle":
+            self._initialize(
+                _data["chapter_type"], _data["chapter_id"], _data["project_name"]
+            )
+            DataToProcess: dict = linpg.config.load_file(self.get_map_file_location())
+            DataToProcess.update(_data)
+            if DataToProcess["type"] != "battle":
+                raise Exception(
+                    'Error: Cannot load the data from the "save.yaml" file because the file type does not match'
+                )
+            # 加载地图与角色数据
+            self.__start_loading(DataToProcess)
+            # 初始化视觉小说系统
+            self._update_dialog(
+                DataToProcess.get("dialog_key", ""),
+                DataToProcess.get("dialog_parameters", {}),
+            )
+            # 加载战斗状态数据
+            self.__statistics = dict(DataToProcess["statistics"])
+        else:
+            self.stop()
+            # 设置参数
+            linpg.global_variables.set("currentMode", "dialog")
+            linpg.global_variables.set("chapterType", None)
+            linpg.global_variables.set("chapterId", 0)
+            linpg.global_variables.set("projectName", None)
+            linpg.global_variables.set("saveData", _data)
 
     # 角色动画
     def _display_entities(self, screen: linpg.ImageSurface) -> None:
@@ -240,27 +271,6 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             super()._check_key_up(event)
 
     """加载与储存"""
-    # 从存档中加载游戏进程
-    def load(self) -> None:
-        saveData: dict = linpg.config.load_file(os.path.join("Save", "save.yaml"))
-        self._initialize(
-            saveData["chapter_type"], saveData["chapter_id"], saveData["project_name"]
-        )
-        DataToProcess: dict = linpg.config.load_file(self.get_map_file_location())
-        DataToProcess.update(saveData)
-        if DataToProcess["type"] != "battle":
-            raise Exception(
-                'Error: Cannot load the data from the "save.yaml" file because the file type does not match'
-            )
-        # 加载地图与角色数据
-        self.__start_loading(DataToProcess)
-        # 初始化视觉小说系统
-        self._update_dialog(
-            DataToProcess.get("dialog_key", ""),
-            DataToProcess.get("dialog_parameters", {}),
-        )
-        # 加载战斗状态数据
-        self.__statistics = dict(DataToProcess["statistics"])
 
     def new(
         self, chapterType: str, chapterId: int, projectName: Optional[str] = None
@@ -278,9 +288,17 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             "times_characters_down": 0,
         }
 
+    def _initialize(
+        self, chapterType: str, chapterId: int, projectName: Optional[str]
+    ) -> None:
+        super()._initialize(chapterType, chapterId, projectName)
+        linpg.global_variables.set("chapterType", self._chapter_type)
+        linpg.global_variables.set("chapterId", self._chapter_id)
+        linpg.global_variables.set("projectName", self._project_name)
+
     def __start_loading(self, _data: dict) -> None:
         # 初始化剧情模块
-        self._init_dialog(dict(_data["dialogs"]["data"]))
+        self._init_dialog(dict(_data["dialogs"].get("data", {})))
         # 章节标题显示
         DataTmp: dict = linpg.config.load_file(self._get_dialog_file_location())
         LoadingTitle.update(
@@ -350,7 +368,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             self._weather_system.init(_data["weather"])
         # 加载对话信息
         self.__dialog_dictionary.clear()
-        self.__dialog_dictionary.update(_data["dialogs"]["dictionary"])
+        self.__dialog_dictionary.update(_data["dialogs"].get("dictionary", {}))
         # 开始加载关卡
         super()._process_data(_data, _mode)
         # 重新计算光亮区域
@@ -392,6 +410,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self._update_sound_volume()
         # 攻击的音效 -- 频道2
         AttackingSoundManager.initialize()
+        # 加载脚步声
+        self._footstep_sounds.clear()
+        for walkingSoundPath in glob(r"Assets/sound/snow/*.wav"):
+            self._footstep_sounds.add(walkingSoundPath)
 
     """画面"""
     # 新增需要在屏幕上画出的物品
@@ -1338,6 +1360,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         if event.key == linpg.keys.SPACE:
                             self.__is_battle_mode = False
                             self.stop()
+                            linpg.global_variables.set("currentMode", "dialog")
+                            linpg.global_variables.set("section", "dialog_after_battle")
                 self.__add_on_screen_object(self.__ResultBoardUI)
             # 结束动画--失败
             elif self.__whose_round == "result_fail":

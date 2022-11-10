@@ -93,7 +93,6 @@ class ChestObject(linpg.DecorationObject):
 
     def to_dict(self) -> dict:
         data_t: dict = super().to_dict()
-        del data_t["image"]
         if len(self.items) > 0:
             data_t["items"] = deepcopy(self.items)
         if len(self.whitelist) > 0:

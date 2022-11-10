@@ -214,6 +214,7 @@ class AbstractBattleSystemWithInGameDialog(
 
     # 初始化视觉小说系统
     def _init_dialog(self, _data: dict) -> None:
+        self.__dialog_data.clear()
         self.__DIALOG.new(
             self._chapter_type,
             self._chapter_id,
@@ -221,11 +222,8 @@ class AbstractBattleSystemWithInGameDialog(
             self._project_name,
         )
         self.__DIALOG.stop()
-        self.__dialog_data.clear()
-        self.__dialog_data.update(_data)
-        self._footstep_sounds.clear()
-        for walkingSoundPath in glob(r"Assets/sound/snow/*.wav"):
-            self._footstep_sounds.add(walkingSoundPath)
+        if len(_data) > 0:
+            self.__dialog_data.update(_data)
 
     # 更新视觉小说系统使其开始播放特定的对话
     def _update_dialog(self, _key: str, _parameters: dict = {}) -> None:

@@ -47,6 +47,38 @@ class _MapEditor(LoadingModule, linpg.AbstractMapEditor):
         self._finish_loading()
 
 
+# 重写视觉小说模组使其正确地调用和修改全局变量
+class _VisualNovelSystem(linpg.VisualNovelSystem):
+    def stop(self) -> None:
+        super().stop()
+        if (
+            linpg.global_variables.get_str("section") == "dialog_before_battle"
+            and self._has_reached_the_end() is True
+        ):
+            linpg.global_variables.set("currentMode", "battle")
+        else:
+            linpg.global_variables.remove("currentMode")
+
+    def load(self) -> None:
+        super().load()
+        linpg.global_variables.set("chapterType", self._chapter_type)
+        linpg.global_variables.set("chapterId", self._chapter_id)
+        linpg.global_variables.set("projectName", self._project_name)
+
+    def load_progress(self, _data: dict) -> None:
+        if _data.get("type") == "dialog":
+            super().load_progress(_data)
+        else:
+            self.stop()
+            # 设置参数
+            linpg.global_variables.set("currentMode", "battle")
+            linpg.global_variables.set("section", None)
+            linpg.global_variables.set("chapterType", None)
+            linpg.global_variables.set("chapterId", 0)
+            linpg.global_variables.set("projectName", None)
+            linpg.global_variables.set("saveData", _data)
+
+
 # 控制台
 class _Console(linpg.Console):
     def _check_command(self, conditions: list) -> None:
@@ -151,19 +183,24 @@ class GameMode:
         # 卸载音乐
         linpg.media.unload()
         # 初始化对话系统模块
-        DIALOG: linpg.VisualNovelSystem = linpg.VisualNovelSystem()
+        _DIALOG: _VisualNovelSystem = _VisualNovelSystem()
         if chapterType is not None:
-            DIALOG.new(chapterType, chapterId, part, projectName)
+            _DIALOG.new(chapterType, chapterId, part, projectName)
         else:
-            DIALOG.load()
+            _data: Optional[dict] = linpg.global_variables.try_get_dict("saveData")
+            if _data is not None:
+                _DIALOG.load_progress(_data)
+                linpg.global_variables.remove("saveData")
+            else:
+                _DIALOG.load()
         # 加载完成-闸门开启的效果
         for i in range(100, -1, -1):
-            DIALOG.display_background_image(screen)
+            _DIALOG.display_background_image(screen)
             cls.draw_loading_chapter_ui(screen, i)
-        # DIALOG.auto_save = True
+        # _DIALOG.auto_save = True
         # 主循环
-        while DIALOG.is_playing():
-            DIALOG.draw(screen)
+        while _DIALOG.is_playing():
+            _DIALOG.draw(screen)
             ALPHA_BUILD_WARNING.draw(screen)
             linpg.display.flip()
 
@@ -188,11 +225,11 @@ class GameMode:
             )
         )
         # 加载对话
-        DIALOG: linpg.DialogEditor = linpg.DialogEditor()
-        DIALOG.new(chapterType, chapterId, part, projectName)
+        _DIALOG: linpg.DialogEditor = linpg.DialogEditor()
+        _DIALOG.new(chapterType, chapterId, part, projectName)
         # 主循环
-        while DIALOG.is_playing():
-            DIALOG.draw(screen)
+        while _DIALOG.is_playing():
+            _DIALOG.draw(screen)
             ALPHA_BUILD_WARNING.draw(screen)
             linpg.display.flip()
         # 改变标题回主菜单的样式
@@ -210,14 +247,19 @@ class GameMode:
         cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
-        BATTLE: TurnBasedBattleSystem = TurnBasedBattleSystem()
+        _BATTLE: TurnBasedBattleSystem = TurnBasedBattleSystem()
         if chapterType is not None:
-            BATTLE.new(chapterType, chapterId, projectName)
+            _BATTLE.new(chapterType, chapterId, projectName)
         else:
-            BATTLE.load()
+            _data: Optional[dict] = linpg.global_variables.try_get_dict("saveData")
+            if _data is not None:
+                _BATTLE.load_progress(_data)
+                linpg.global_variables.remove("saveData")
+            else:
+                _BATTLE.load()
         # 战斗系统主要loop
-        while BATTLE.is_playing():
-            BATTLE.draw(screen)
+        while _BATTLE.is_playing():
+            _BATTLE.draw(screen)
             ALPHA_BUILD_WARNING.draw(screen)
             linpg.display.flip()
         # 暂停声效 - 尤其是环境声
