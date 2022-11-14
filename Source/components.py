@@ -51,16 +51,20 @@ class _MapEditor(LoadingModule, linpg.AbstractMapEditor):
 class _VisualNovelSystem(linpg.VisualNovelSystem):
     def stop(self) -> None:
         super().stop()
+        linpg.global_variables.remove("section")
         if (
-            linpg.global_variables.get_str("section") == "dialog_before_battle"
+            self._content.get_section() == "dialog_before_battle"
             and self._has_reached_the_end() is True
         ):
             linpg.global_variables.set("currentMode", "battle")
         else:
             linpg.global_variables.remove("currentMode")
 
-    def load(self) -> None:
-        super().load()
+    def _initialize(
+        self, chapterType: str, chapterId: int, projectName: Optional[str]
+    ) -> None:
+        super()._initialize(chapterType, chapterId, projectName)
+        linpg.global_variables.set("currentMode", "dialog")
         linpg.global_variables.set("chapterType", self._chapter_type)
         linpg.global_variables.set("chapterId", self._chapter_id)
         linpg.global_variables.set("projectName", self._project_name)
@@ -71,11 +75,11 @@ class _VisualNovelSystem(linpg.VisualNovelSystem):
         else:
             self.stop()
             # 设置参数
+            linpg.global_variables.remove("section")
             linpg.global_variables.set("currentMode", "battle")
-            linpg.global_variables.set("section", None)
-            linpg.global_variables.set("chapterType", None)
+            linpg.global_variables.remove("chapterType")
             linpg.global_variables.set("chapterId", 0)
-            linpg.global_variables.set("projectName", None)
+            linpg.global_variables.remove("projectName")
             linpg.global_variables.set("saveData", _data)
 
 

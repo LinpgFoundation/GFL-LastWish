@@ -27,6 +27,7 @@ if __name__ == "__main__":
     Builder.delete_file_if_exist("dist")
 
     # 打包main文件
+    subprocess.check_call(["pip", "install", "--upgrade", "pyinstaller"])
     dev_mode = input("If for dev purpose:")
     if dev_mode.lower() == "y":
         subprocess.check_call(["pyinstaller", "main.spec"])

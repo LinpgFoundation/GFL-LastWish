@@ -147,9 +147,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             self.stop()
             # 设置参数
             linpg.global_variables.set("currentMode", "dialog")
-            linpg.global_variables.set("chapterType", None)
+            linpg.global_variables.remove("chapterType")
             linpg.global_variables.set("chapterId", 0)
-            linpg.global_variables.set("projectName", None)
+            linpg.global_variables.remove("projectName")
+            linpg.global_variables.remove("section")
             linpg.global_variables.set("saveData", _data)
 
     # 角色动画
@@ -292,6 +293,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self, chapterType: str, chapterId: int, projectName: Optional[str]
     ) -> None:
         super()._initialize(chapterType, chapterId, projectName)
+        linpg.global_variables.set("currentMode", "battle")
         linpg.global_variables.set("chapterType", self._chapter_type)
         linpg.global_variables.set("chapterId", self._chapter_id)
         linpg.global_variables.set("projectName", self._project_name)
@@ -773,42 +775,31 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             max_blocks_can_move = int(
                                 self.characterInControl.current_action_point / 2
                             )
-                            if (
-                                0
-                                < abs(
-                                    self._tile_is_hovering[0] - self.characterInControl.x
+                            self.the_route = self._MAP.find_path(
+                                self.characterInControl.get_coordinate(),
+                                self._tile_is_hovering,
+                                self.alliances,
+                                self.enemies,
+                                lenMax=max_blocks_can_move,
+                            )
+                            RangeSystem.set_positions(0, self.the_route)
+                            if len(self.the_route) > 0:
+                                # 显示路径
+                                xTemp, yTemp = self._MAP.calculate_position(
+                                    self.the_route[-1][0], self.the_route[-1][1]
                                 )
-                                + abs(
-                                    self._tile_is_hovering[1] - self.characterInControl.y
+                                screen.blit(
+                                    self._FONT.render(
+                                        str(len(self.the_route) * 2), linpg.color.WHITE
+                                    ),
+                                    (
+                                        xTemp + self._FONT.size * 2,
+                                        yTemp + self._FONT.size,
+                                    ),
                                 )
-                                <= max_blocks_can_move
-                            ):
-                                self.the_route = self._MAP.find_path(
-                                    self.characterInControl.get_coordinate(),
-                                    self._tile_is_hovering,
-                                    self.alliances,
-                                    self.enemies,
-                                    lenMax=max_blocks_can_move,
+                                self.characterInControl.draw_custom(
+                                    "move", (xTemp, yTemp), screen, self._MAP
                                 )
-                                RangeSystem.set_positions(0, self.the_route)
-                                if len(self.the_route) > 0:
-                                    # 显示路径
-                                    xTemp, yTemp = self._MAP.calculate_position(
-                                        self.the_route[-1][0], self.the_route[-1][1]
-                                    )
-                                    screen.blit(
-                                        self._FONT.render(
-                                            str(len(self.the_route) * 2),
-                                            linpg.color.WHITE,
-                                        ),
-                                        (
-                                            xTemp + self._FONT.size * 2,
-                                            yTemp + self._FONT.size,
-                                        ),
-                                    )
-                                    self.characterInControl.draw_custom(
-                                        "move", (xTemp, yTemp), screen, self._MAP
-                                    )
                     # 显示攻击范围
                     elif self.action_choice == "attack":
                         RangeSystem.update_attack_range(
@@ -1360,6 +1351,22 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         if event.key == linpg.keys.SPACE:
                             self.__is_battle_mode = False
                             self.stop()
+                            if self._project_name is None:
+                                current_main_chapter_unlock = linpg.PersistentData.get(
+                                    "main_chapter_unlock"
+                                )
+                                max_unlock: int = max(
+                                    self._chapter_id,
+                                    0
+                                    if current_main_chapter_unlock is None
+                                    else int(current_main_chapter_unlock),
+                                )
+                                linpg.PersistentData.set(
+                                    "main_chapter_unlock", max_unlock
+                                )
+                                if max_unlock >= 1:
+                                    linpg.PersistentData.set("enable_workshop", True)
+                                linpg.PersistentData.save()
                             linpg.global_variables.set("currentMode", "dialog")
                             linpg.global_variables.set("section", "dialog_after_battle")
                 self.__add_on_screen_object(self.__ResultBoardUI)

@@ -12,4 +12,5 @@ build/
 crash_reports/
 dist/
 linpg/
+src/
 test.py

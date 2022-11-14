@@ -4,7 +4,7 @@ block_cipher = None
 
 a = Analysis(
     ['main.py'],
-    pathex = ['D:\\GitHub\\GirlsFrontLine-LastWish'],
+    pathex = [],
     binaries = [],
     datas = [
         ('Assets','Assets'),
@@ -25,6 +25,7 @@ a = Analysis(
         "pygame",
         "pygame.colordict",
         "pygame._sdl2",
+        "pygame.gfxdraw",
         "pypresence",
         "PySimpleGUI",
         "tcod",
