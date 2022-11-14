@@ -1,28 +1,7 @@
 at_night: false
 background_image: snowfield.jpg
 background_music: Combat_02_RemnantFantasyPackage_Synari.ogg
-decoration:
-  campfire:
-    campfire1:
-      range: 3
-      x: 12
-      y: 10
-  chest:
-    chest1:
-      items:
-        bullet: 100
-      x: 15
-      y: 10
-  decoration:
-    Desert_small_Agave_Cactus_03_0:
-      image: Desert_small_Agave_Cactus_03
-      x: 5
-      y: 5
-  obstacle:
-    Forest_big_stone_01_0:
-      image: Forest_big_stone_01
-      x: 10
-      y: 12
+decoration: []
 dialogs: {}
 entities:
   GriffinKryuger:

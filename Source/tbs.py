@@ -70,7 +70,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             (linpg.display.get_width(), linpg.display.get_height() // 7),
             linpg.color.BLACK,
         )
-        self.__up_black_curtain: linpg.MovableImage = linpg.MovableImage(
+        self.__up_black_curtain: linpg.MovableStaticImage = linpg.MovableStaticImage(
             black_curtain,
             0,
             -black_curtain.get_height(),
@@ -79,7 +79,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             0,
             int(black_curtain.get_height() * 0.05),
         )
-        self.__down_black_curtain: linpg.MovableImage = linpg.MovableImage(
+        self.__down_black_curtain: linpg.MovableStaticImage = linpg.MovableStaticImage(
             black_curtain,
             0,
             linpg.display.get_height(),
@@ -103,9 +103,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         )
         self.__end_round_button = linpg.load.static_image(
             r"Assets/image/UI/end_round_button.png",
-            (linpg.display.get_width() * 0.8, linpg.display.get_height() * 0.7),
-            (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 2.5),
+            (0, linpg.display.get_height() * 0.8),
+            (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 3),
         )
+        self.__end_round_button.set_right(linpg.display.get_width() * 0.95)
         WarningMessageSystem.update_language()
 
     # 返回需要保存数据
@@ -119,6 +120,38 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
     def stop(self) -> None:
         super().stop()
         AttackingSoundManager.release()
+        linpg.global_variables.remove("currentMode")
+
+    # 加载进程
+    def load_progress(self, _data: dict) -> None:
+        if _data.get("type") == "battle":
+            self._initialize(
+                _data["chapter_type"], _data["chapter_id"], _data["project_name"]
+            )
+            DataToProcess: dict = linpg.config.load_file(self.get_map_file_location())
+            DataToProcess.update(_data)
+            if DataToProcess["type"] != "battle":
+                raise Exception(
+                    'Error: Cannot load the data from the "save.yaml" file because the file type does not match'
+                )
+            # 加载地图与角色数据
+            self.__start_loading(DataToProcess)
+            # 初始化视觉小说系统
+            self._update_dialog(
+                DataToProcess.get("dialog_key", ""),
+                DataToProcess.get("dialog_parameters", {}),
+            )
+            # 加载战斗状态数据
+            self.__statistics = dict(DataToProcess["statistics"])
+        else:
+            self.stop()
+            # 设置参数
+            linpg.global_variables.set("currentMode", "dialog")
+            linpg.global_variables.remove("chapterType")
+            linpg.global_variables.set("chapterId", 0)
+            linpg.global_variables.remove("projectName")
+            linpg.global_variables.remove("section")
+            linpg.global_variables.set("saveData", _data)
 
     # 角色动画
     def _display_entities(self, screen: linpg.ImageSurface) -> None:
@@ -140,9 +173,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             and linpg.controller.mouse.get_pressed(2)
                         ):
                             if (
-                                self._block_is_hovering is not None
-                                and self._block_is_hovering[0] == value.x
-                                and self._block_is_hovering[1] == value.y
+                                self._tile_is_hovering is not None
+                                and self._tile_is_hovering[0] == int(value.x)
+                                and self._tile_is_hovering[1] == int(value.y)
                             ):
                                 rightClickCharacterAlphaDeduct = False
                                 RangeSystem.set_target_alpha(255)
@@ -166,8 +199,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         ].get_alpha()
                         if the_alpha_to_check > 0:
                             xTemp, yTemp = self._MAP.calculate_position(value.x, value.y)
-                            xTemp += self._MAP.block_width // 20
-                            yTemp -= self._MAP.block_width // 20
+                            xTemp += self._MAP.tile_width // 20
+                            yTemp -= self._MAP.tile_width // 20
                             display_in_center(
                                 self.__damage_do_to_characters[key],
                                 RangeSystem.get_image(0),
@@ -219,7 +252,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
     def _display_map(self, screen: linpg.ImageSurface) -> None:
         super()._display_map(screen)
         # 展示天气
-        self._weather_system.draw(screen, self._MAP.block_width)
+        self._weather_system.draw(screen, self._MAP.tile_width)
         # 展示所有角色Ui
         if self.__is_battle_mode is True or not self._is_any_dialog_playing():
             # 角色UI
@@ -239,38 +272,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             super()._check_key_up(event)
 
     """加载与储存"""
-    # 从存档中加载游戏进程
-    def load(self, screen: linpg.ImageSurface) -> None:
-        saveData: dict = linpg.config.load_file(os.path.join("Save", "save.yaml"))
-        self._initialize(
-            saveData["chapter_type"], saveData["chapter_id"], saveData["project_name"]
-        )
-        DataToProcess: dict = linpg.config.load_file(self.get_map_file_location())
-        DataToProcess.update(saveData)
-        if DataToProcess["type"] != "battle":
-            raise Exception(
-                'Error: Cannot load the data from the "save.yaml" file because the file type does not match'
-            )
-        # 加载地图与角色数据
-        self.__start_loading(screen, DataToProcess)
-        # 初始化视觉小说系统
-        self._update_dialog(
-            DataToProcess.get("dialog_key", ""),
-            DataToProcess.get("dialog_parameters", {}),
-        )
-        # 加载战斗状态数据
-        self.__statistics = dict(DataToProcess["statistics"])
 
     def new(
-        self,
-        screen: linpg.ImageSurface,
-        chapterType: str,
-        chapterId: int,
-        projectName: Optional[str] = None,
+        self, chapterType: str, chapterId: int, projectName: Optional[str] = None
     ) -> None:
         self._initialize(chapterType, chapterId, projectName)
         # 加载地图与角色数据
-        self.__start_loading(screen, linpg.config.load_file(self.get_map_file_location()))
+        self.__start_loading(linpg.config.load_file(self.get_map_file_location()))
         # 初始化视觉小说系统
         self._update_dialog(self.__dialog_dictionary.get("initial", ""))
         # 初始化战斗状态数据
@@ -281,9 +289,18 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             "times_characters_down": 0,
         }
 
-    def __start_loading(self, screen: linpg.ImageSurface, _data: dict) -> None:
+    def _initialize(
+        self, chapterType: str, chapterId: int, projectName: Optional[str]
+    ) -> None:
+        super()._initialize(chapterType, chapterId, projectName)
+        linpg.global_variables.set("currentMode", "battle")
+        linpg.global_variables.set("chapterType", self._chapter_type)
+        linpg.global_variables.set("chapterId", self._chapter_id)
+        linpg.global_variables.set("projectName", self._project_name)
+
+    def __start_loading(self, _data: dict) -> None:
         # 初始化剧情模块
-        self._init_dialog(dict(_data["dialogs"]["data"]))
+        self._init_dialog(dict(_data["dialogs"].get("data", {})))
         # 章节标题显示
         DataTmp: dict = linpg.config.load_file(self._get_dialog_file_location())
         LoadingTitle.update(
@@ -295,7 +312,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         # 加载关卡背景介绍信息文字
         self.__battle_info = tuple(
             [
-                self._FONT.render(_text, linpg.color.WHITE, with_bounding=True)
+                self._FONT.render(_text, linpg.color.WHITE)
                 for _text in DataTmp.get(
                     "battle_info",
                     linpg.config.load(
@@ -308,22 +325,22 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self._initialize_loading_module()
         # 渐入效果
         for i in range(1, 255, 2):
-            LoadingTitle.draw(screen, i)
+            LoadingTitle.draw(linpg.display.get_window(), i)
             linpg.display.flip()
         _task: threading.Thread = threading.Thread(
             target=self._process_data, args=(_data,)
         )
         _task.start()
         while _task.is_alive():
-            LoadingTitle.draw(screen)
-            self._show_current_loading_progress(screen)
+            LoadingTitle.draw(linpg.display.get_window())
+            self._show_current_loading_progress(linpg.display.get_window())
             linpg.display.flip()
         # 加载完成，释放初始化模块占用的内存
         self._finish_loading()
         # 显示章节信息
         for i in range(0, 250, 2):
-            LoadingTitle.draw(screen)
-            self.__draw_battle_info(screen, i)
+            LoadingTitle.draw(linpg.display.get_window())
+            self.__draw_battle_info(linpg.display.get_window(), i)
             linpg.display.flip()
 
     # 加载游戏进程
@@ -353,7 +370,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             self._weather_system.init(_data["weather"])
         # 加载对话信息
         self.__dialog_dictionary.clear()
-        self.__dialog_dictionary.update(_data["dialogs"]["dictionary"])
+        self.__dialog_dictionary.update(_data["dialogs"].get("dictionary", {}))
         # 开始加载关卡
         super()._process_data(_data, _mode)
         # 重新计算光亮区域
@@ -364,16 +381,17 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         )
         self.__end_round_button = linpg.load.static_image(
             r"Assets/image/UI/end_round_button.png",
-            (linpg.display.get_width() * 0.8, linpg.display.get_height() * 0.7),
-            (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 2.5),
+            (0, linpg.display.get_height() * 0.8),
+            (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 3),
         )
+        self.__end_round_button.set_right(linpg.display.get_width() * 0.95)
         # 加载子弹图片
-        # bullet_img = load.img("Assets/image/UI/bullet.png", get_block_width()/6, self._MAP.block_height/12)
+        # bullet_img = load.img("Assets/image/UI/bullet.png", get_tile_width()/6, self._MAP.tile_height/12)
         # 加载显示获取到补给后的信息栏
         supply_board_width: int = int(linpg.display.get_width() / 3)
         supply_board_height: int = int(linpg.display.get_height() / 12)
         supply_board_x: int = int((linpg.display.get_width() - supply_board_width) / 2)
-        self.__supply_board = linpg.load.movable_image(
+        self.__supply_board = linpg.load.movable_static_image(
             r"Assets/image/UI/score.png",
             (supply_board_x, -supply_board_height),
             (supply_board_x, 0),
@@ -382,11 +400,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         )
         self.__supply_board_items.clear()
         self.__supply_board_stayingTime = 0
-        RangeSystem.update_size(self._MAP.block_width * 4 // 5)
+        RangeSystem.update_size(self._MAP.tile_width * 4 // 5)
         # 角色信息UI管理
-        self.characterInfoBoardUI = CharacterInfoBoard(
-            linpg.display.get_width(), linpg.display.get_height()
-        )
+        self.__characterInfoBoard = CharacterInfoBoard()
         # 切换回合时的UI
         self.__RoundSwitchUI = RoundSwitch(
             linpg.display.get_width(), linpg.display.get_height()
@@ -396,6 +412,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self._update_sound_volume()
         # 攻击的音效 -- 频道2
         AttackingSoundManager.initialize()
+        # 加载脚步声
+        self._footstep_sounds.clear()
+        for walkingSoundPath in glob(r"Assets/sound/snow/*.wav"):
+            self._footstep_sounds.add(walkingSoundPath)
 
     """画面"""
     # 新增需要在屏幕上画出的物品
@@ -454,9 +474,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             )
             if i == 1:
                 temp_seconde = self._FONT.render(
-                    time.strftime(":%S", time.localtime()),
-                    linpg.color.WHITE,
-                    with_bounding=True,
+                    time.strftime(":%S", time.localtime()), linpg.color.WHITE
                 )
                 temp_seconde.set_alpha(_alpha)
                 screen.blit(
@@ -478,12 +496,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 self.__zoomIn -= 10
             elif self.__zoomIntoBe > self.__zoomIn:
                 self.__zoomIn += 10
-            self._MAP.set_tile_block_size(
-                self._standard_block_width * self.__zoomIn / 100,
-                self._standard_block_height * self.__zoomIn / 100,
+            self._MAP.set_tile_size(
+                self._standard_tile_width * self.__zoomIn / 100,
+                self._standard_tile_height * self.__zoomIn / 100,
             )
             # 根据block尺寸重新加载对应尺寸的UI
-            RangeSystem.update_size(self._MAP.block_width * 4 // 5)
+            RangeSystem.update_size(self._MAP.tile_width * 4 // 5)
             self.selectMenuUI.update()
         # 画出地图
         self._display_map(screen)
@@ -665,18 +683,22 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         and self.decorationGetClick is not None
                     ):
                         self.characterInControl.try_reduce_action_point(2)
-                        self._MAP.interact_decoration_with_id(self.decorationGetClick)
+                        theDecorationGetClick = self._MAP.decorations[
+                            self.decorationGetClick
+                        ]
+                        if isinstance(theDecorationGetClick, CampfireObject):
+                            theDecorationGetClick.interact()
                         self.characterGetClick = None
                         self.action_choice = None
                         self.__is_waiting = True
                         RangeSystem.set_visible(True)
                         RangeSystem.clear()
                     # 判断是否有被点击的角色
-                    elif self._block_is_hovering is not None:
+                    elif self._tile_is_hovering is not None:
                         for key in self.alliances:
                             if (
                                 linpg.coordinates.is_same(
-                                    self.alliances[key], self._block_is_hovering
+                                    self.alliances[key], self._tile_is_hovering
                                 )
                                 and self.__is_waiting is True
                                 and self.alliances[key].is_alive()
@@ -688,7 +710,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 if self.characterGetClick != key:
                                     self.alliances[key].play_sound("get_click")
                                     self.characterGetClick = key
-                                self.characterInfoBoardUI.update()
+                                self.__characterInfoBoard.update()
                                 self.friendsCanSave = [
                                     key2
                                     for key2 in self.alliances
@@ -698,11 +720,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 self.thingsCanReact.clear()
                                 index = 0
                                 for decoration in self._MAP.decorations:
-                                    if (
-                                        decoration.get_type() == "campfire"
-                                        and self.alliances[key].near(decoration)
-                                    ):
-                                        self.thingsCanReact.append(index)
+                                    if decoration.type == "campfire" and self.alliances[
+                                        key
+                                    ].near(decoration):
+                                        self.thingsCanReact.append(decoration.get_pos())
                                     index += 1
                                 self.selectMenuUI.set_visible(True)
                                 break
@@ -724,7 +745,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         elif (
                             tempX > screen.get_width() * 0.8
                             and self._MAP.get_local_x()
-                            >= self._MAP.column * self._MAP.block_width * -1
+                            >= self._MAP.column * self._MAP.tile_width * -1
                         ):
                             self._screen_to_move_speed_x = int(
                                 screen.get_width() * 0.8 - tempX
@@ -740,7 +761,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         elif (
                             tempY > screen.get_height() * 0.8
                             and self._MAP.get_local_y()
-                            >= self._MAP.row * self._MAP.block_height * -1
+                            >= self._MAP.row * self._MAP.tile_height * -1
                         ):
                             self._screen_to_move_speed_y = int(
                                 screen.get_height() * 0.8 - tempY
@@ -749,47 +770,36 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 if not RangeSystem.get_visible() and self.characterGetClick is not None:
                     # 显示移动范围
                     if self.action_choice == "move":
-                        if self._block_is_hovering is not None:
+                        if self._tile_is_hovering is not None:
                             # 根据行动值计算最远可以移动的距离
                             max_blocks_can_move = int(
                                 self.characterInControl.current_action_point / 2
                             )
-                            if (
-                                0
-                                < abs(
-                                    self._block_is_hovering[0] - self.characterInControl.x
+                            self.the_route = self._MAP.find_path(
+                                self.characterInControl.get_coordinate(),
+                                self._tile_is_hovering,
+                                self.alliances,
+                                self.enemies,
+                                lenMax=max_blocks_can_move,
+                            )
+                            RangeSystem.set_positions(0, self.the_route)
+                            if len(self.the_route) > 0:
+                                # 显示路径
+                                xTemp, yTemp = self._MAP.calculate_position(
+                                    self.the_route[-1][0], self.the_route[-1][1]
                                 )
-                                + abs(
-                                    self._block_is_hovering[1] - self.characterInControl.y
+                                screen.blit(
+                                    self._FONT.render(
+                                        str(len(self.the_route) * 2), linpg.color.WHITE
+                                    ),
+                                    (
+                                        xTemp + self._FONT.size * 2,
+                                        yTemp + self._FONT.size,
+                                    ),
                                 )
-                                <= max_blocks_can_move
-                            ):
-                                self.the_route = self._MAP.find_path(
-                                    self.characterInControl.get_coordinate(),
-                                    self._block_is_hovering,
-                                    self.alliances,
-                                    self.enemies,
-                                    lenMax=max_blocks_can_move,
+                                self.characterInControl.draw_custom(
+                                    "move", (xTemp, yTemp), screen, self._MAP
                                 )
-                                RangeSystem.set_positions(0, self.the_route)
-                                if len(self.the_route) > 0:
-                                    # 显示路径
-                                    xTemp, yTemp = self._MAP.calculate_position(
-                                        self.the_route[-1][0], self.the_route[-1][1]
-                                    )
-                                    screen.blit(
-                                        self._FONT.render(
-                                            str(len(self.the_route) * 2),
-                                            linpg.color.WHITE,
-                                        ),
-                                        (
-                                            xTemp + self._FONT.size * 2,
-                                            yTemp + self._FONT.size,
-                                        ),
-                                    )
-                                    self.characterInControl.draw_custom(
-                                        "move", (xTemp, yTemp), screen, self._MAP
-                                    )
                     # 显示攻击范围
                     elif self.action_choice == "attack":
                         RangeSystem.update_attack_range(
@@ -797,13 +807,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 self._MAP
                             )
                         )
-                        if self._block_is_hovering is not None:
+                        if self._tile_is_hovering is not None:
                             self.enemiesGetAttack.clear()
                             _attack_coverage_area: list[
                                 tuple[int, int]
                             ] = self.characterInControl.get_attack_coverage_coordinates(
-                                self._block_is_hovering[0],
-                                self._block_is_hovering[1],
+                                self._tile_is_hovering[0],
+                                self._tile_is_hovering[1],
                                 self._MAP,
                             )
                             if len(_attack_coverage_area) > 0:
@@ -825,11 +835,11 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 self._MAP
                             )
                         )
-                        if self._block_is_hovering is not None:
+                        if self._tile_is_hovering is not None:
                             _skill_coverage_area = (
                                 self.characterInControl.get_skill_coverage_coordinates(
-                                    self._block_is_hovering[0],
-                                    self._block_is_hovering[1],
+                                    self._tile_is_hovering[0],
+                                    self._tile_is_hovering[1],
                                     self._MAP,
                                 )
                             )
@@ -866,21 +876,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.friendGetHelp = None
                         for friendNeedHelp in self.friendsCanSave:
                             if (
-                                self._block_is_hovering is not None
-                                and self._block_is_hovering[0]
-                                == self.alliances[friendNeedHelp].x
-                                and self._block_is_hovering[1]
-                                == self.alliances[friendNeedHelp].y
+                                self._tile_is_hovering is not None
+                                and self._tile_is_hovering[0]
+                                == int(self.alliances[friendNeedHelp].x)
+                                and self._tile_is_hovering[1]
+                                == int(self.alliances[friendNeedHelp].y)
                             ):
-                                RangeSystem.set_positions(
-                                    4,
-                                    [
-                                        (
-                                            self._block_is_hovering[0],
-                                            self._block_is_hovering[1],
-                                        )
-                                    ],
-                                )
+                                RangeSystem.set_positions(4, [self._tile_is_hovering])
                                 self.friendGetHelp = friendNeedHelp
                             else:
                                 RangeSystem.append_position(
@@ -894,25 +896,28 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         RangeSystem.clear()
                         self.decorationGetClick = None
                         for index in self.thingsCanReact:
-                            decoration = self._MAP.find_decoration_with_id(index)
-                            if (
-                                self._block_is_hovering is not None
-                                and decoration.is_on_pos(self._block_is_hovering)
-                            ):
-                                RangeSystem.set_positions(
-                                    4,
-                                    [
-                                        (
-                                            self._block_is_hovering[0],
-                                            self._block_is_hovering[1],
-                                        )
-                                    ],
-                                )
-                                self.decorationGetClick = index
-                            else:
-                                RangeSystem.append_position(
-                                    0, (decoration.x, decoration.y)
-                                )
+                            _decoration: Optional[
+                                linpg.DecorationObject
+                            ] = self._MAP.get_decoration(index)
+                            if _decoration is not None:
+                                if (
+                                    self._tile_is_hovering is not None
+                                    and _decoration.is_on_pos(self._tile_is_hovering)
+                                ):
+                                    RangeSystem.set_positions(
+                                        4,
+                                        [
+                                            (
+                                                self._tile_is_hovering[0],
+                                                self._tile_is_hovering[1],
+                                            )
+                                        ],
+                                    )
+                                    self.decorationGetClick = index
+                                else:
+                                    RangeSystem.append_position(
+                                        0, (_decoration.x, _decoration.y)
+                                    )
 
                 # 当有角色被点击时
                 if self.characterGetClick is not None and not self.__is_waiting:
@@ -928,49 +933,51 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         else:
                             self._footstep_sounds.stop()
                             # 检测是不是站在补给上
-                            decoration = self._MAP.find_decoration_on(
+                            _decorationOnPos = self._MAP.get_decoration(
                                 self.characterInControl.get_pos()
                             )
                             if (
-                                decoration is not None
-                                and decoration.get_type() == "chest"
+                                isinstance(_decorationOnPos, ChestObject)
+                                and self.characterGetClick in _decorationOnPos.whitelist
                             ):
-                                if self.characterGetClick in decoration.whitelist:
-                                    # 清空储存列表
-                                    self.__supply_board_items.clear()
-                                    # 将物品按照类型放入列表
-                                    for itemType, itemData in decoration.items.items():
-                                        if itemType == "bullet":
-                                            self.characterInControl.add_bullets_carried(
-                                                itemData
-                                            )
-                                            self.__supply_board_items.append(
-                                                self._FONT.render(
-                                                    linpg.lang.get_texts(
-                                                        "Battle_UI", "getBullets"
-                                                    )
-                                                    + ": "
-                                                    + str(itemData),
-                                                    linpg.color.WHITE,
+                                # 清空储存列表
+                                self.__supply_board_items.clear()
+                                # 将物品按照类型放入列表
+                                for (
+                                    itemType,
+                                    itemData,
+                                ) in _decorationOnPos.items.items():
+                                    if itemType == "bullet":
+                                        self.characterInControl.add_bullets_carried(
+                                            itemData
+                                        )
+                                        self.__supply_board_items.append(
+                                            self._FONT.render(
+                                                linpg.lang.get_texts(
+                                                    "Battle_UI", "getBullets"
                                                 )
+                                                + ": "
+                                                + str(itemData),
+                                                linpg.color.WHITE,
                                             )
-                                        elif itemType == "hp":
-                                            self.characterInControl.heal(itemData)
-                                            self.__supply_board_items.append(
-                                                self._FONT.render(
-                                                    linpg.lang.get_texts(
-                                                        "Battle_UI", "getHealth"
-                                                    )
-                                                    + ": "
-                                                    + str(itemData),
-                                                    linpg.color.WHITE,
+                                        )
+                                    elif itemType == "hp":
+                                        self.characterInControl.heal(itemData)
+                                        self.__supply_board_items.append(
+                                            self._FONT.render(
+                                                linpg.lang.get_texts(
+                                                    "Battle_UI", "getHealth"
                                                 )
+                                                + ": "
+                                                + str(itemData),
+                                                linpg.color.WHITE,
                                             )
-                                    # 如果UI已经回到原位
-                                    if len(self.__supply_board_items) > 0:
-                                        self.__supply_board.move_toward()
-                                    # 移除箱子
-                                    self._MAP.remove_decoration(decoration)
+                                        )
+                                # 如果UI已经回到原位
+                                if len(self.__supply_board_items) > 0:
+                                    self.__supply_board.move_toward()
+                                # 移除箱子
+                                self._MAP.remove_decoration(_decorationOnPos)
                             # 检测当前所在点是否应该触发对话
                             name_from_by_pos = (
                                 str(self.characterInControl.x)
@@ -1006,9 +1013,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     elif self.action_choice == "attack":
                         # 根据敌我坐标判断是否需要反转角色
                         if self.characterInControl.get_imgId("attack") == 0:
-                            if self._block_is_hovering is not None:
+                            if self._tile_is_hovering is not None:
                                 self.characterInControl.set_flip_based_on_pos(
-                                    self._block_is_hovering
+                                    self._tile_is_hovering
                                 )
                             self.characterInControl.play_sound("attack")
                         # 播放射击音效
@@ -1161,12 +1168,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 # 显示选择菜单
                 self.selectMenuUI.draw(
                     screen,
-                    round(self._MAP.block_width / 10),
+                    round(self._MAP.tile_width / 10),
                     {
                         "xStart": the_coord[0],
-                        "xEnd": the_coord[0] + self._MAP.block_width,
+                        "xEnd": the_coord[0] + self._MAP.tile_width,
                         "yStart": the_coord[1],
-                        "yEnd": the_coord[1] + self._MAP.block_width * 0.5,
+                        "yEnd": the_coord[1] + self._MAP.tile_width * 0.5,
                     },
                     self.characterInControl.kind,
                     self.friendsCanSave,
@@ -1174,7 +1181,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 )
                 # 左下角的角色信息
                 if self.selectMenuUI.is_visible():
-                    self.characterInfoBoardUI.draw(screen, self.characterInControl)
+                    self.__characterInfoBoard.draw(screen, self.characterInControl)
 
             # 移除电影视觉
             self.__up_black_curtain.move_back()
@@ -1193,19 +1200,19 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.enemies_in_control_id = 0
                         self.sangvisFerris_name_list.clear()
                         any_is_alert = False
-                        for every_chara in self.enemies:
-                            if self.enemies[every_chara].is_alive():
-                                self.sangvisFerris_name_list.append(every_chara)
-                                if self.enemies[every_chara].is_alert:
+                        for key in self.enemies:
+                            if self.enemies[key].is_alive():
+                                self.sangvisFerris_name_list.append(key)
+                                if self.enemies[key].is_alert:
                                     any_is_alert = True
                         # 如果有一个铁血角色已经处于完全察觉的状态，则让所有铁血角色进入警觉状态
                         if any_is_alert:
-                            for every_chara in self.enemies:
-                                self.enemies[every_chara].alert(100)
+                            for key in self.enemies:
+                                self.enemies[key].alert(100)
                         # 让倒地的角色更接近死亡
-                        for every_chara in self.alliances:
-                            if self.alliances[every_chara].is_dying():
-                                self.alliances[every_chara].get_closer_to_death()
+                        for key in self.alliances:
+                            if self.alliances[key].is_dying():
+                                self.alliances[key].get_closer_to_death()
                         # 现在是铁血的回合！
                         self.__whose_round = "sangvisFerris"
                     elif self.__whose_round == "sangvisFerrisToPlayer":
@@ -1319,9 +1326,11 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     self.__end_round_button.pos,
                     (
                         int(self.__end_round_button.get_width() * 0.35),
-                        int(
-                            (self.__end_round_button.get_height() - self._FONT.size) / 2.3
-                        ),
+                        (
+                            self.__end_round_button.get_height()
+                            - self.end_round_txt.get_height()
+                        )
+                        // 2,
                     ),
                 )
 
@@ -1342,6 +1351,24 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         if event.key == linpg.keys.SPACE:
                             self.__is_battle_mode = False
                             self.stop()
+                            if self._project_name is None:
+                                current_main_chapter_unlock = linpg.PersistentData.get(
+                                    "main_chapter_unlock"
+                                )
+                                max_unlock: int = max(
+                                    self._chapter_id,
+                                    0
+                                    if current_main_chapter_unlock is None
+                                    else int(current_main_chapter_unlock),
+                                )
+                                linpg.PersistentData.set(
+                                    "main_chapter_unlock", max_unlock
+                                )
+                                if max_unlock >= 1:
+                                    linpg.PersistentData.set("enable_workshop", True)
+                                linpg.PersistentData.save()
+                            linpg.global_variables.set("currentMode", "dialog")
+                            linpg.global_variables.set("section", "dialog_after_battle")
                 self.__add_on_screen_object(self.__ResultBoardUI)
             # 结束动画--失败
             elif self.__whose_round == "result_fail":
@@ -1359,7 +1386,6 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             TurnBasedBattleSystem.__init__(self)
                             chapter_info: dict = self.get_data_of_parent_game_system()
                             self.new(
-                                screen,
                                 chapter_info["chapter_type"],
                                 chapter_info["chapter_id"],
                                 chapter_info["project_name"],

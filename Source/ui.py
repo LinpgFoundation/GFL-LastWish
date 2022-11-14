@@ -144,7 +144,7 @@ class RoundSwitch:
                     return True
         # 横条移动
         if self.x < 0:
-            self.x += screen.get_width() // 35
+            self.x = min(self.x + screen.get_width() // 35, 0)
         # 展示UI
         screen.blits(
             (
@@ -152,9 +152,9 @@ class RoundSwitch:
                 (
                     self.now_total_rounds_surface,
                     (
-                        screen.get_width() / 2
+                        screen.get_width() // 2
                         - self.now_total_rounds_surface.get_width(),
-                        self.y + screen.get_width() / 36,
+                        self.y + screen.get_width() // 36,
                     ),
                 ),
             )
@@ -166,7 +166,7 @@ class RoundSwitch:
                     (self.lineRedDown, (self.x, self.y2)),
                     (
                         self.enemy_round_txt_surface,
-                        (screen.get_width() / 2, self.y + screen.get_width() / 18),
+                        (screen.get_width() // 2, self.y + screen.get_width() // 18),
                     ),
                 )
             )
@@ -177,7 +177,7 @@ class RoundSwitch:
                     (self.lineGreenDown, (self.x, self.y2)),
                     (
                         self.your_round_txt_surface,
-                        (screen.get_width() / 2, self.y + screen.get_width() / 18),
+                        (screen.get_width() // 2, self.y + screen.get_width() // 18),
                     ),
                 )
             )
@@ -376,148 +376,156 @@ class SelectMenu(linpg.GameObjectsDictContainer):
 
 # 角色信息板
 class CharacterInfoBoard:
-    def __init__(self, window_x: int, window_y: int, text_size: int = 20):
-        self.boardImg: linpg.ImageSurface = linpg.load.img(
-            r"Assets/image/UI/score.png", (window_x / 5, window_y / 6)
-        )
-        self.characterIconImages: dict[str, linpg.ImageSurface] = {}
-        for img_path in glob(r"Assets/image/npc_icon/*.png"):
-            self.characterIconImages[
-                os.path.basename(img_path).replace(".png", "")
-            ] = linpg.images.smoothly_resize(
-                linpg.load.img(img_path), (window_y * 0.08, window_y * 0.08)
-            )
-        self.text_size: int = text_size
-        self.informationBoard: Optional[linpg.ImageSurface] = None
-        hp_empty_img = linpg.load.img(r"Assets/image/UI/hp_empty.png")
-        self.hp_red = linpg.ProgressBarSurface(
-            r"Assets/image/UI/hp_red.png", hp_empty_img, 0, 0, window_x // 15, text_size
-        )
-        self.hp_green = linpg.ProgressBarSurface(
-            r"Assets/image/UI/hp_green.png",
-            hp_empty_img,
-            0,
-            0,
-            window_x // 15,
-            text_size,
-        )
-        self.action_point_blue = linpg.ProgressBarSurface(
-            r"Assets/image/UI/action_point.png",
-            hp_empty_img,
-            0,
-            0,
-            window_x // 15,
-            text_size,
-        )
-        self.bullets_number_brown = linpg.ProgressBarSurface(
-            r"Assets/image/UI/bullets_number.png",
-            hp_empty_img,
-            0,
-            0,
-            window_x // 15,
-            text_size,
-        )
+    def __init__(self) -> None:
+        self.__board: Optional[linpg.ImageSurface] = None
 
     # 标记需要更新
     def update(self) -> None:
-        self.informationBoard = None
-
-    # 更新信息板
-    def updateInformationBoard(
-        self, fontSize: int, theCharacterData: FriendlyCharacter
-    ) -> None:
-        self.informationBoard = self.boardImg.copy()
-        padding: int = (
-            self.boardImg.get_height()
-            - self.characterIconImages[theCharacterData.type].get_height()
-        ) // 2
-        # 画出角色图标
-        self.informationBoard.blit(
-            self.characterIconImages[theCharacterData.type], (padding, padding)
-        )
-        # 加载所需的文字
-        tcgc_hp1 = linpg.font.render("HP: ", "white", fontSize)
-        tcgc_hp2 = linpg.font.render(
-            str(theCharacterData.current_hp) + "/" + str(theCharacterData.max_hp),
-            "black",
-            fontSize,
-        )
-        tcgc_action_point1 = linpg.font.render("AP: ", "white", fontSize)
-        tcgc_action_point2 = linpg.font.render(
-            str(theCharacterData.current_action_point)
-            + "/"
-            + str(theCharacterData.max_action_point),
-            "black",
-            fontSize,
-        )
-        tcgc_bullets_situation1 = linpg.font.render("BP: ", "white", fontSize)
-        tcgc_bullets_situation2 = linpg.font.render(
-            str(theCharacterData.current_bullets)
-            + "/"
-            + str(theCharacterData.bullets_carried),
-            "black",
-            fontSize,
-        )
-        # 先画出hp,ap和bp的文字
-        temp_posX: int = self.characterIconImages[theCharacterData.type].get_width() * 2
-        temp_posY: int = padding - fontSize // 5
-        self.informationBoard.blit(tcgc_hp1, (temp_posX, temp_posY))
-        self.informationBoard.blit(
-            tcgc_action_point1, (temp_posX, temp_posY + self.text_size * 1.5)
-        )
-        self.informationBoard.blit(
-            tcgc_bullets_situation1, (temp_posX, temp_posY + self.text_size * 3.0)
-        )
-        # 设置坐标和百分比
-        temp_posX = int(self.characterIconImages[theCharacterData.type].get_width() * 2.4)
-        temp_posY = padding
-        self.hp_red.set_pos(temp_posX, temp_posY)
-        self.hp_red.set_percentage(theCharacterData.hp_percentage)
-        self.hp_green.set_pos(temp_posX, temp_posY)
-        self.hp_green.set_percentage(theCharacterData.hp_percentage)
-        self.action_point_blue.set_pos(temp_posX, temp_posY + self.text_size * 1.5)
-        self.action_point_blue.set_percentage(
-            theCharacterData.current_action_point / theCharacterData.max_action_point
-        )
-        self.bullets_number_brown.set_pos(temp_posX, temp_posY + self.text_size * 3)
-        self.bullets_number_brown.set_percentage(
-            theCharacterData.current_bullets / theCharacterData.magazine_capacity
-        )
-        # 画出
-        self.hp_green.draw(self.informationBoard)
-        display_in_center(
-            tcgc_hp2, self.hp_green, temp_posX, temp_posY, self.informationBoard
-        )
-        self.action_point_blue.draw(self.informationBoard)
-        display_in_center(
-            tcgc_action_point2,
-            self.action_point_blue,
-            temp_posX,
-            temp_posY + int(self.text_size * 1.5),
-            self.informationBoard,
-        )
-        self.bullets_number_brown.draw(self.informationBoard)
-        display_in_center(
-            tcgc_bullets_situation2,
-            self.bullets_number_brown,
-            temp_posX,
-            temp_posY + self.text_size * 3,
-            self.informationBoard,
-        )
+        self.__board = None
 
     # 画出信息板
-    def draw(
-        self, screen: linpg.ImageSurface, theCharacterData: FriendlyCharacter
-    ) -> None:
+    def draw(self, _surface: linpg.ImageSurface, _character: FriendlyCharacter) -> None:
+        # 外间隙
+        _margin: int = int(_surface.get_width() * 0.03)
         # 如果信息板还没更新，则应该先更新再画出
-        if self.informationBoard is None:
-            self.updateInformationBoard(screen.get_width() // 96, theCharacterData)
-        # 画出信息板
-        if self.informationBoard is not None:
-            screen.blit(
-                self.informationBoard,
-                (0, screen.get_height() - self.boardImg.get_height()),
+        if self.__board is None:
+            _width: int = int(_surface.get_width() * 0.15)
+            _height: int = int(_width * 0.75)
+            _back_rect_margin: int = _margin // 10
+            # 新建一个透明图层用于渲染
+            self.__board = linpg.Surfaces.transparent(
+                (
+                    _width + (_back_rect_margin + 1) * 2 + 2,
+                    _height + (_back_rect_margin + 1) * 2,
+                )
             )
+            # 新增一个矩形用于渲染主体
+            _info_rect: linpg.Rectangle = linpg.Rectangle(
+                _back_rect_margin, _back_rect_margin, _width, _height
+            )
+            # 后面棕色阴影经过的点
+            _points: tuple[tuple[int, int], ...] = (
+                (0, _info_rect.top + _back_rect_margin),
+                (_info_rect.right - _back_rect_margin, 0),
+                (
+                    _info_rect.right + _back_rect_margin,
+                    _info_rect.bottom - _back_rect_margin,
+                ),
+                (
+                    _info_rect.left + _back_rect_margin,
+                    _info_rect.bottom + _back_rect_margin,
+                ),
+            )
+            linpg.Draw.polygon(self.__board, (125, 95, 0, 255), _points)
+            linpg.Draw.polygon(self.__board, linpg.Colors.BLACK, _points, 2)
+            # 画出背景
+            _info_rect.draw_outline(self.__board, (255, 235, 200, 255), 0)
+            # 画出黑色条
+            _line_num: int = 10
+            _line_size: int = _width // _line_num
+            for i in range(_line_num - 1):
+                _x: int = (i + 1) * _line_size + _info_rect.x
+                linpg.Draw.line(
+                    self.__board,
+                    (100, 100, 100, 155),
+                    (_x, _info_rect.top),
+                    (_x, _info_rect.bottom - 1),
+                )
+            _line_num = 8
+            _line_size = _height // _line_num
+            for i in range(_line_num - 1):
+                _y: int = (i + 1) * _line_size + _info_rect.y
+                linpg.Draw.line(
+                    self.__board,
+                    (100, 100, 100, 155),
+                    (_info_rect.left, _y),
+                    (_info_rect.right - 1, _y),
+                )
+            # 画出黑色外壳
+            _info_rect.draw_outline(self.__board, linpg.Colors.BLACK)
+            # 渲染文字
+            _padding: int = _width // 15
+            _padding_x: int = _info_rect.x + _padding
+            self.__board.blits(
+                (
+                    (
+                        linpg.Font.render("HP: ", linpg.color.BLACK, _height // 10),
+                        (_padding_x, _info_rect.y + _width // 10),
+                    ),
+                    (
+                        linpg.Font.render("AP: ", linpg.color.BLACK, _height // 10),
+                        (_padding_x, _info_rect.y + _width * 0.225),
+                    ),
+                )
+            )
+            # 渲染数据进度条
+            _bar: linpg.SimpleRectPointsBar = linpg.SimpleRectPointsBar(
+                _info_rect.x + _width // 4,
+                _info_rect.y + _width // 10,
+                int(_width * 0.7),
+                int(_height * 0.13),
+                (135, 190, 100, 255),
+                linpg.Colors.GRAY,
+                linpg.Colors.WHITE,
+                linpg.Colors.BLACK,
+            )
+            _bar.set_max_point(_character.max_hp)
+            _bar.set_current_point(_character.current_hp)
+            _bar.draw(self.__board)
+            _bar.set_top(_info_rect.y + _width * 0.225)
+            _bar.set_color((235, 125, 50, 255))
+            _bar.set_max_point(_character.max_action_point)
+            _bar.set_current_point(_character.current_action_point)
+            _bar.draw(self.__board)
+            # 角色立绘
+            character_image: linpg.ImageSurface = linpg.Images.smoothly_resize(
+                linpg.load.img(
+                    linpg.Specification.get_directory(
+                        "character_icon", "{}.png".format(_character.type)
+                    )
+                ),
+                (_width // 3, _width // 3),
+            )
+            character_image_dest: tuple[int, int] = (
+                _info_rect.y + int(_padding * 1.5),
+                _info_rect.bottom - _padding - character_image.get_height(),
+            )
+            self.__board.blit(character_image, character_image_dest)
+            linpg.Draw.rect(
+                self.__board,
+                linpg.Colors.BLACK,
+                (character_image_dest, character_image.get_size()),
+                2,
+            )
+            # 子弹信息
+            _current_bullets_text: linpg.ImageSurface = linpg.Font.render(
+                _character.current_bullets, linpg.Colors.BLACK, _height // 5, True
+            )
+            self.__board.blit(
+                _current_bullets_text,
+                (
+                    _info_rect.x
+                    + _info_rect.width * 0.7
+                    - _current_bullets_text.get_width(),
+                    _info_rect.y + _info_rect.height * 0.5,
+                ),
+            )
+            self.__board.blit(
+                linpg.Font.render(
+                    "/ " + str(_character.bullets_carried),
+                    linpg.Colors.BLACK,
+                    _height // 10,
+                ),
+                (
+                    _info_rect.x + _info_rect.width * 0.7,
+                    _info_rect.y + _info_rect.height * 0.7,
+                ),
+            )
+        # 画出信息板
+        _surface.blit(
+            self.__board,
+            (_margin, _surface.get_height() - self.__board.get_height() - _margin),
+        )
 
 
 # 计分板
@@ -670,11 +678,11 @@ class RangeSystem:
     __areas: tuple[list[tuple[int, int]], ...] = ([], [], [], [], [])
     # 用于表示范围的方框图片
     __images: tuple[linpg.StaticImage, ...] = (
-        linpg.load.static_image(r"<&ui>range_green.png", (0, 0)),
-        linpg.load.static_image(r"<&ui>range_red.png", (0, 0)),
-        linpg.load.static_image(r"<&ui>range_yellow.png", (0, 0)),
-        linpg.load.static_image(r"<&ui>range_blue.png", (0, 0)),
-        linpg.load.static_image(r"<&ui>range_orange.png", (0, 0)),
+        linpg.load.static_image(r"<&ui>range_green.png"),
+        linpg.load.static_image(r"<&ui>range_red.png"),
+        linpg.load.static_image(r"<&ui>range_yellow.png"),
+        linpg.load.static_image(r"<&ui>range_blue.png"),
+        linpg.load.static_image(r"<&ui>range_orange.png"),
     )
     # 是否不要画出用于表示范围的方块
     __is_visible: bool = True
@@ -758,5 +766,5 @@ class RangeSystem:
         for i in range(len(cls.__areas)):
             for _position in cls.__areas[i]:
                 xTemp, yTemp = map_prt.calculate_position(_position[0], _position[1])
-                cls.__images[i].set_pos(xTemp + map_prt.block_width * 0.1, yTemp)
+                cls.__images[i].set_pos(xTemp + map_prt.tile_width // 10, yTemp)
                 cls.__images[i].draw(screen)

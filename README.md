@@ -1,4 +1,4 @@
-# GFL-LastWish 少前-遗愿
+# GFL-Last Wish 少前-遗愿
 
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/TigeiaWorkshop/GirlsFrontLine-LastWish.svg?style=for-the-badge&logo=appveyor?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/TigeiaWorkshop/GirlsFrontLine-LastWish/alerts/) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/TigeiaWorkshop/GirlsFrontLine-LastWish.svg?style=for-the-badge&logo=appveyor?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/TigeiaWorkshop/GirlsFrontLine-LastWish/context:python)  ![GitHub](https://img.shields.io/github/license/TigeiaWorkshop/GirlsFrontLine-LastWish?style=for-the-badge&logo=appveyor)
 
@@ -56,18 +56,18 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 | Index | 名称             | Name                                     | Expected release date / 预计发布时间 | Status / 状态 |
 | ----- | ---------------- | ---------------------------------------- | ------------------------------------ | ------------- |
-| 1     | 雪色的希望       | A wish likes snow                        | 2022.9.27                            | :hammer:      |
-| 2     | 迷离之下         | Beneath smoke                            | 2022.9.27                            | :hammer:      |
-| 3     | 琴弦之上         | Above string                             | 2022.10                              |               |
-| 4     | 喘息（暂定）     | A gasp for breath (Provisional)          | 2022.10                              |               |
-| 5     | 无人之防（暂定） | Make defense without dolls (Provisional) | 2022.11                              |               |
-| 6     | 机遇（暂定）     | The opportunity (Provisional)            | 2022.11                              |               |
-| 7     | 强敌（暂定）     | Formidable enemies (Provisional)         | 2022.12                              |               |
-| 8     | 仅存的星火       | The only starburst                       | 2022.12                              |               |
-| 9     | 极夜前的黎光     | Light before long night                  | 2023.1                               |               |
-| 10    | 冲破黑暗与迷雾   | Through fog and darkness                 | 2023.1                               |               |
-| 11    | 拜托了，活下去！ | Please, stay alive!                      | 2023.1                               |               |
-| Final | 为了能看到的明天 | For a tomorrow that can be seen          | 2023.2                               |               |
+| 1     | 雪色的希望       | A wish likes snow                        | 2022.12.22                           | :hammer:      |
+| 2     | 迷离之下         | Beneath smoke                            | 2022.12.22                           | :hammer:      |
+| 3     | 琴弦之上         | Above string                             | 2022.12.22                           | :hammer:      |
+| 4     | 喘息（暂定）     | A gasp for breath (Provisional)          |                                      |               |
+| 5     | 无人之防（暂定） | Make defense without dolls (Provisional) |                                      |               |
+| 6     | 机遇（暂定）     | The opportunity (Provisional)            |                                      |               |
+| 7     | 强敌（暂定）     | Formidable enemies (Provisional)         |                                      |               |
+| 8     | 仅存的星火       | The only starburst                       |                                      |               |
+| 9     | 极夜前的黎光     | Light before long night                  |                                      |               |
+| 10    | 冲破黑暗与迷雾   | Through fog and darkness                 |                                      |               |
+| 11    | 拜托了，活下去！ | Please, stay alive!                      |                                      |               |
+| Final | 为了能看到的明天 | For a tomorrow that can be seen          |                                      |               |
 
 # :white_check_mark: Dependencies / 运行库
 
@@ -86,7 +86,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 | ---------------- | -------- | -------------------------------- | -------------------------------------- |
 | Operating System | 操作系统 | Windows® 10 64 bit, Ubuntu 22.04 | Windows® 11                            |
 | CPU              | 处理器   | Intel® or AMD® 3+ GHz processor  | Intel® or AMD® 3.5+ GHz processor      |
-| Memory           | 内存     | 4 GB RAM                         | 8GB RAM                                |
+| Memory           | 内存     | 4 GB RAM                         | 6GB RAM                                |
 | Graphics Cards   | 显卡     | Integrated Graphics              | GTX 960 or AMD RX 560                  |
 | Storage          | 硬盘空间 | 1 GB of free hard drive space    | 1.5 GB of free solid-state drive space |
 
@@ -123,10 +123,6 @@ See **[CONTRIBUTING.md](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWis
 # :video_game: ​Discord
 
 https://discord.gg/3wz6bs5jvu
-
-# :open_book: ​Wiki / 维基百科
-
-https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish
 
 # 📢 Credits / 特别鸣谢
 

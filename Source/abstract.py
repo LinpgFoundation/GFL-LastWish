@@ -1,6 +1,5 @@
 import threading
-from copy import deepcopy
-from .ui import *
+from .map import *
 
 # 加载模块
 class LoadingModule:
@@ -123,8 +122,9 @@ class AbstractBattleSystemWithInGameDialog(
         LoadingModule.__init__(self)
         linpg.AbstractBattleSystem.__init__(self)
         linpg.PauseMenuModuleForGameSystem.__init__(self)
+        self._MAP = AdvancedTileMap()
         # 视觉小说模块与参数
-        self.__DIALOG: linpg.DialogSystem = linpg.DialogSystem()
+        self.__DIALOG: linpg.VisualNovelSystem = linpg.VisualNovelSystem()
         self.__DIALOG.disable_basic_features()
         # 视觉小说缓存参数
         self.__dialog_parameters: dict = {}
@@ -214,6 +214,7 @@ class AbstractBattleSystemWithInGameDialog(
 
     # 初始化视觉小说系统
     def _init_dialog(self, _data: dict) -> None:
+        self.__dialog_data.clear()
         self.__DIALOG.new(
             self._chapter_type,
             self._chapter_id,
@@ -221,11 +222,8 @@ class AbstractBattleSystemWithInGameDialog(
             self._project_name,
         )
         self.__DIALOG.stop()
-        self.__dialog_data.clear()
-        self.__dialog_data.update(_data)
-        self._footstep_sounds.clear()
-        for walkingSoundPath in glob(r"Assets/sound/snow/*.wav"):
-            self._footstep_sounds.add(walkingSoundPath)
+        if len(_data) > 0:
+            self.__dialog_data.update(_data)
 
     # 更新视觉小说系统使其开始播放特定的对话
     def _update_dialog(self, _key: str, _parameters: dict = {}) -> None:

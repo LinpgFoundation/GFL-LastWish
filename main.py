@@ -27,4 +27,4 @@ if __name__ == "__main__":
             linpg.display.flip()
 
     # 释放内容占用
-    linpg.display.quit()
+    exit()

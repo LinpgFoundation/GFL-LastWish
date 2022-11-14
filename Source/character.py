@@ -290,14 +290,14 @@ class FriendlyCharacter(BasicEntity):
         # 展示被察觉的程度
         if self.__detection > 0:
             # 参数
-            eyeImgWidth: int = round(MAP_POINTER.block_width / 6)
-            eyeImgHeight: int = round(MAP_POINTER.block_width / 10)
-            numberX: float = (eyeImgWidth - MAP_POINTER.block_width / 6) / 2
-            numberY: float = (eyeImgHeight - MAP_POINTER.block_width / 10) / 2
+            eyeImgWidth: int = round(MAP_POINTER.tile_width / 6)
+            eyeImgHeight: int = round(MAP_POINTER.tile_width / 10)
+            numberX: float = (eyeImgWidth - MAP_POINTER.tile_width / 6) / 2
+            numberY: float = (eyeImgHeight - MAP_POINTER.tile_width / 10) / 2
             # 根据参数调整图片
             self.__beNoticedImage.set_size(eyeImgWidth, eyeImgHeight)
             self.__beNoticedImage.set_pos(
-                blit_pos[0] + MAP_POINTER.block_width * 0.51 - numberX,
+                blit_pos[0] + MAP_POINTER.tile_width * 0.51 - numberX,
                 blit_pos[1] - numberY,
             )
             self.__beNoticedImage.draw(surface)
@@ -400,14 +400,14 @@ class HostileCharacter(BasicEntity):
         # 展示警觉的程度
         if self.__vigilance > 0:
             # 参数
-            eyeImgWidth: int = round(MAP_POINTER.block_width / 6)
-            eyeImgHeight: int = round(MAP_POINTER.block_width / 6)
-            numberX: float = (eyeImgWidth - MAP_POINTER.block_width / 6) / 2
-            numberY: float = (eyeImgHeight - MAP_POINTER.block_width / 10) / 2
+            eyeImgWidth: int = round(MAP_POINTER.tile_width / 6)
+            eyeImgHeight: int = round(MAP_POINTER.tile_width / 6)
+            numberX: float = (eyeImgWidth - MAP_POINTER.tile_width / 6) / 2
+            numberY: float = (eyeImgHeight - MAP_POINTER.tile_width / 10) / 2
             # 根据参数调整图片
             self.__vigilanceImage.set_size(eyeImgWidth, eyeImgHeight)
             self.__vigilanceImage.set_pos(
-                blit_pos[0] + MAP_POINTER.block_width * 0.51 - numberX,
+                blit_pos[0] + MAP_POINTER.tile_width * 0.51 - numberX,
                 blit_pos[1] - numberY,
             )
             self.__vigilanceImage.draw(surface)
