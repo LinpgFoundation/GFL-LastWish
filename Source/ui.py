@@ -545,7 +545,7 @@ class ResultBoard(linpg.GameObject2d):
         self.total_time = linpg.font.render(
             resultTxt["total_time"]
             + ": "
-            + str(time.strftime("%M:%S", finalResult["total_time"])),
+            + time.strftime("%H:%M", time.localtime(finalResult["total_time"])),
             "white",
             font_size,
         )

@@ -11,7 +11,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self.enemiesGetAttack: dict = {}
         self.action_choice: Optional[str] = None
         # 被选中的装饰物
-        self.decorationGetClick: Optional[int] = 0
+        self.__decorationGetClick: int = -1
         # 缩进
         self.__zoomIn: int = 100
         self.__zoomIntoBe: int = 100
@@ -49,7 +49,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self.__ResultBoardUI: Optional[ResultBoard] = None
         self.__RoundSwitchUI: Optional[RoundSwitch] = None
         # 可以互动的物品列表
-        self.thingsCanReact: list = []
+        self.__thingsCanReact: list[linpg.DecorationObject] = []
         # 需要救助的角色列表
         self.friendsCanSave: list = []
         # 每次需要更新的物品
@@ -132,7 +132,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             DataToProcess.update(_data)
             if DataToProcess["type"] != "battle":
                 raise Exception(
-                    'Error: Cannot load the data from the "save.yaml" file because the file type does not match'
+                    "Error: Cannot load the data from the progress file because the file type does not match"
                 )
             # 加载地图与角色数据
             self.__start_loading(DataToProcess)
@@ -285,7 +285,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self.__statistics = {
             "total_rounds": 1,
             "total_kills": 0,
-            "total_time": time.time(),
+            "starting_time": time.time(),
+            "total_time": 0,
             "times_characters_down": 0,
         }
 
@@ -344,7 +345,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             linpg.display.flip()
 
     # 加载游戏进程
-    def _process_data(self, _data: dict, _mode: str = "default") -> None:
+    def _process_data(self, _data: dict) -> None:
         # 生成标准文字渲染器
         self._FONT.update(linpg.display.get_width() / 76)
         # 加载按钮的文字
@@ -372,7 +373,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self.__dialog_dictionary.clear()
         self.__dialog_dictionary.update(_data["dialogs"].get("dictionary", {}))
         # 开始加载关卡
-        super()._process_data(_data, _mode)
+        super()._process_data(_data)
         # 重新计算光亮区域
         self._update_darkness()
         # 加载结束回合的图片
@@ -680,11 +681,11 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.action_choice == "interact"
                         and not RangeSystem.get_visible()
                         and self.characterGetClick is not None
-                        and self.decorationGetClick is not None
+                        and self.__decorationGetClick >= 0
                     ):
                         self.characterInControl.try_reduce_action_point(2)
-                        theDecorationGetClick = self._MAP.decorations[
-                            self.decorationGetClick
+                        theDecorationGetClick = self.__thingsCanReact[
+                            self.__decorationGetClick
                         ]
                         if isinstance(theDecorationGetClick, CampfireObject):
                             theDecorationGetClick.interact()
@@ -717,13 +718,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                     if self.alliances[key2].is_dying()
                                     and self.alliances[key].near(self.alliances[key2])
                                 ]
-                                self.thingsCanReact.clear()
+                                self.__thingsCanReact.clear()
                                 index = 0
                                 for decoration in self._MAP.decorations:
                                     if decoration.type == "campfire" and self.alliances[
                                         key
                                     ].near(decoration):
-                                        self.thingsCanReact.append(decoration.get_pos())
+                                        self.__thingsCanReact.append(decoration)
                                     index += 1
                                 self.selectMenuUI.set_visible(True)
                                 break
@@ -894,30 +895,26 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 )
                     elif self.action_choice == "interact":
                         RangeSystem.clear()
-                        self.decorationGetClick = None
-                        for index in self.thingsCanReact:
-                            _decoration: Optional[
-                                linpg.DecorationObject
-                            ] = self._MAP.get_decoration(index)
-                            if _decoration is not None:
-                                if (
-                                    self._tile_is_hovering is not None
-                                    and _decoration.is_on_pos(self._tile_is_hovering)
-                                ):
-                                    RangeSystem.set_positions(
-                                        4,
-                                        [
-                                            (
-                                                self._tile_is_hovering[0],
-                                                self._tile_is_hovering[1],
-                                            )
-                                        ],
-                                    )
-                                    self.decorationGetClick = index
-                                else:
-                                    RangeSystem.append_position(
-                                        0, (_decoration.x, _decoration.y)
-                                    )
+                        self.__decorationGetClick = -1
+                        for i, _decoration in enumerate(self.__thingsCanReact):
+                            if (
+                                self._tile_is_hovering is not None
+                                and _decoration.is_on_pos(self._tile_is_hovering)
+                            ):
+                                RangeSystem.set_positions(
+                                    4,
+                                    [
+                                        (
+                                            self._tile_is_hovering[0],
+                                            self._tile_is_hovering[1],
+                                        )
+                                    ],
+                                )
+                                self.__decorationGetClick = i
+                            else:
+                                RangeSystem.append_position(
+                                    0, (_decoration.x, _decoration.y)
+                                )
 
                 # 当有角色被点击时
                 if self.characterGetClick is not None and not self.__is_waiting:
@@ -1177,7 +1174,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     },
                     self.characterInControl.kind,
                     self.friendsCanSave,
-                    self.thingsCanReact,
+                    self.__thingsCanReact,
                 )
                 # 左下角的角色信息
                 if self.selectMenuUI.is_visible():
@@ -1340,8 +1337,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             # 结束动画--胜利
             if self.__whose_round == "result_win":
                 if self.__ResultBoardUI is None:
-                    self.__statistics["total_time"] = time.localtime(
-                        time.time() - self.__statistics["total_time"]
+                    self.__statistics["total_time"] = int(
+                        time.time() - self.__statistics["starting_time"]
                     )
                     self.__ResultBoardUI = ResultBoard(
                         self.__statistics, screen.get_width() // 96
@@ -1352,29 +1349,27 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             self.__is_battle_mode = False
                             self.stop()
                             if self._project_name is None:
-                                current_main_chapter_unlock = linpg.PersistentData.get(
-                                    "main_chapter_unlock"
-                                )
                                 max_unlock: int = max(
                                     self._chapter_id,
-                                    0
-                                    if current_main_chapter_unlock is None
-                                    else int(current_main_chapter_unlock),
+                                    linpg.PersistentData.get(
+                                        "main_chapter_unlock", _default=0
+                                    ),
                                 )
                                 linpg.PersistentData.set(
-                                    "main_chapter_unlock", max_unlock
+                                    "main_chapter_unlock", value=max_unlock
                                 )
                                 if max_unlock >= 1:
-                                    linpg.PersistentData.set("enable_workshop", True)
-                                linpg.PersistentData.save()
+                                    linpg.PersistentData.set(
+                                        "enable_workshop", value=True
+                                    )
                             linpg.global_variables.set("currentMode", "dialog")
                             linpg.global_variables.set("section", "dialog_after_battle")
                 self.__add_on_screen_object(self.__ResultBoardUI)
             # 结束动画--失败
             elif self.__whose_round == "result_fail":
                 if self.__ResultBoardUI is None:
-                    self.__statistics["total_time"] = time.localtime(
-                        time.time() - self.__statistics["total_time"]
+                    self.__statistics["total_time"] = int(
+                        time.time() - self.__statistics["starting_time"]
                     )
                     self.__ResultBoardUI = ResultBoard(
                         self.__statistics, screen.get_width() // 96, False
@@ -1383,13 +1378,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     if event.type == linpg.keys.DOWN:
                         if event.key == linpg.keys.SPACE:
                             linpg.media.unload()
-                            TurnBasedBattleSystem.__init__(self)
-                            chapter_info: dict = self.get_data_of_parent_game_system()
-                            self.new(
-                                chapter_info["chapter_type"],
-                                chapter_info["chapter_id"],
-                                chapter_info["project_name"],
+                            parameters: tuple = (
+                                self._chapter_type,
+                                self._chapter_id,
+                                self._project_name,
                             )
+                            TurnBasedBattleSystem.__init__(self)
+                            self.new(parameters[0], parameters[1], parameters[2])
                             break
                         elif event.key == linpg.keys.BACKSPACE:
                             linpg.media.unload()

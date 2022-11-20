@@ -210,7 +210,7 @@ class AbstractBattleSystemWithInGameDialog(
     """其他"""
 
     def _get_dialog_file_location(self) -> str:
-        return self.__DIALOG.get_dialog_file_location()
+        return self.__DIALOG.get_data_file_path()
 
     # 初始化视觉小说系统
     def _init_dialog(self, _data: dict) -> None:
