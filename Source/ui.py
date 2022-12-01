@@ -1,13 +1,13 @@
 import time
 from collections import deque
-from typing import Union
+
 from .dolls import *
 
 
 # 中心展示模块1：接受两个item和item2的x和y，将item1展示在item2的中心位置,但不展示item2：
 def display_in_center(
     item1: linpg.ImageSurface,
-    item2: Union[linpg.ImageSurface, linpg.GameObject2d],
+    item2: linpg.ImageSurface | linpg.GameObject2d,
     x: int,
     y: int,
     screen: linpg.ImageSurface,
@@ -653,13 +653,13 @@ class LoadingTitle:
 class ItemNeedBlit(linpg.GameObject2point5d):
     def __init__(
         self,
-        image: Union[linpg.ImageSurface, linpg.GameObject2d],
+        image: linpg.ImageSurface | linpg.GameObject2d,
         weight: int,
         pos: tuple[int, int],
         offSet: tuple[int, int],
     ):
         super().__init__(pos[0], pos[1], weight)
-        self.image: Union[linpg.ImageSurface, linpg.GameObject2d] = image
+        self.image: linpg.ImageSurface | linpg.GameObject2d = image
         self.offSet: tuple[int, int] = offSet
 
     def draw(self, surface: linpg.ImageSurface) -> None:

@@ -1,5 +1,7 @@
 from copy import deepcopy
+
 from .ui import *
+
 
 # 篝火
 class CampfireObject(linpg.DecorationObject):

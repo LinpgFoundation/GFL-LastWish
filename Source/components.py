@@ -1,6 +1,4 @@
-from .api import *
-from .character import FriendlyCharacter, HostileCharacter, Optional
-from .tbs import TurnBasedBattleSystem, LoadingModule, threading
+from .tbs import *
 
 # 地图编辑器系统
 class _MapEditor(LoadingModule, linpg.AbstractMapEditor):
@@ -56,7 +54,7 @@ class _VisualNovelSystem(linpg.VisualNovelSystem):
             self._content.get_section() == "dialog_before_battle"
             and self._has_reached_the_end() is True
         ):
-            linpg.global_variables.set("currentMode", "battle")
+            linpg.global_variables.set("currentMode", value="battle")
         else:
             linpg.global_variables.remove("currentMode")
 
@@ -64,10 +62,10 @@ class _VisualNovelSystem(linpg.VisualNovelSystem):
         self, chapterType: str, chapterId: int, projectName: Optional[str]
     ) -> None:
         super()._initialize(chapterType, chapterId, projectName)
-        linpg.global_variables.set("currentMode", "dialog")
-        linpg.global_variables.set("chapterType", self._chapter_type)
-        linpg.global_variables.set("chapterId", self._chapter_id)
-        linpg.global_variables.set("projectName", self._project_name)
+        linpg.global_variables.set("currentMode", value="dialog")
+        linpg.global_variables.set("chapterType", value=self._chapter_type)
+        linpg.global_variables.set("chapterId", value=self._chapter_id)
+        linpg.global_variables.set("projectName", value=self._project_name)
 
     def load_progress(self, _data: dict) -> None:
         if _data.get("type") == "dialog":
@@ -76,11 +74,11 @@ class _VisualNovelSystem(linpg.VisualNovelSystem):
             self.stop()
             # 设置参数
             linpg.global_variables.remove("section")
-            linpg.global_variables.set("currentMode", "battle")
+            linpg.global_variables.set("currentMode", value="battle")
             linpg.global_variables.remove("chapterType")
-            linpg.global_variables.set("chapterId", 0)
+            linpg.global_variables.set("chapterId", value=0)
             linpg.global_variables.remove("projectName")
-            linpg.global_variables.set("saveData", _data)
+            linpg.global_variables.set("saveData", value=_data)
 
 
 # 控制台
@@ -116,12 +114,13 @@ class _Console(linpg.Console):
 
 # 根据设定决定是否启用控制台
 CONSOLE: Optional[_Console] = None
-if linpg.setting.try_get("EnableConsole") is True:
+if linpg.setting.try_get_bool("EnableConsole") is True:
     CONSOLE = _Console(
         linpg.display.get_width() // 10, linpg.display.get_height() * 4 // 5
     )
-    if linpg.debug.get_developer_mode() is True:
-        CONSOLE.start()
+    # if linpg.debug.get_developer_mode() is True:
+    #    CONSOLE.start()
+linpg.global_variables.set("CONSOLE", value=CONSOLE)
 
 
 class GameMode:

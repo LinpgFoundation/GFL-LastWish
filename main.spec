@@ -16,6 +16,7 @@ a = Analysis(
     ],
     hiddenimports = [
         "linpg",
+        "linpgassets",
         "cv2",
         "yaml",
     ],

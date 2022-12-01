@@ -146,12 +146,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         else:
             self.stop()
             # 设置参数
-            linpg.global_variables.set("currentMode", "dialog")
+            linpg.global_variables.set("currentMode", value="dialog")
             linpg.global_variables.remove("chapterType")
-            linpg.global_variables.set("chapterId", 0)
+            linpg.global_variables.set("chapterId", value=0)
             linpg.global_variables.remove("projectName")
             linpg.global_variables.remove("section")
-            linpg.global_variables.set("saveData", _data)
+            linpg.global_variables.set("saveData", value=_data)
 
     # 角色动画
     def _display_entities(self, screen: linpg.ImageSurface) -> None:
@@ -294,10 +294,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self, chapterType: str, chapterId: int, projectName: Optional[str]
     ) -> None:
         super()._initialize(chapterType, chapterId, projectName)
-        linpg.global_variables.set("currentMode", "battle")
-        linpg.global_variables.set("chapterType", self._chapter_type)
-        linpg.global_variables.set("chapterId", self._chapter_id)
-        linpg.global_variables.set("projectName", self._project_name)
+        linpg.global_variables.set("currentMode", value="battle")
+        linpg.global_variables.set("chapterType", value=self._chapter_type)
+        linpg.global_variables.set("chapterId", value=self._chapter_id)
+        linpg.global_variables.set("projectName", value=self._project_name)
 
     def __start_loading(self, _data: dict) -> None:
         # 初始化剧情模块
@@ -422,7 +422,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
     # 新增需要在屏幕上画出的物品
     def __add_on_screen_object(
         self,
-        image: Union[linpg.ImageSurface, linpg.GameObject2d],
+        image: linpg.ImageSurface | linpg.GameObject2d,
         weight: int = -1,
         pos: tuple[int, int] = (0, 0),
         offSet: tuple[int, int] = (0, 0),
@@ -1234,20 +1234,14 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             # 检测玩家是否胜利或失败
             """检测失败条件"""
             # 如果有回合限制
-            _round_limitation: Optional[int] = self.__mission_objectives.get(
-                "round_limitation"
-            )
+            _round_limitation: int = self.__mission_objectives.get("round_limitation", -1)
             if (
-                _round_limitation is not None
-                and _round_limitation > 0
+                _round_limitation > 0
                 and self.__statistics["total_rounds"] > _round_limitation
             ):
                 self.__whose_round = "result_fail"
             # 如果不允许失去任何一位同伴
-            _allow_any_one_die: Optional[bool] = self.__mission_objectives.get(
-                "allow_any_one_die"
-            )
-            if _allow_any_one_die is None or not _allow_any_one_die:
+            if not self.__mission_objectives.get("allow_any_one_die", False):
                 for character in self.alliances:
                     if self.alliances[character].is_dead():
                         self.__whose_round = "result_fail"
@@ -1255,7 +1249,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             """检测胜利条件"""
             # 歼灭模式
             if self.__mission_objectives["type"] == "annihilation":
-                _target: Optional[Union[str, Sequence]] = self.__mission_objectives.get(
+                _target: Optional[str | Sequence] = self.__mission_objectives.get(
                     "target"
                 )
                 # 检测是否所有敌人都已经被消灭
@@ -1278,6 +1272,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             break
                     if not find_one:
                         self.__whose_round = "result_win"
+            """开发使用"""
+            if linpg.global_variables.try_get_str("endBattleAs") == "win":
+                self.__whose_round = "result_win"
+                linpg.global_variables.remove("endBattleAs")
+            elif linpg.global_variables.try_get_str("endBattleAs") == "lose":
+                self.__whose_round = "result_fail"
+                linpg.global_variables.remove("endBattleAs")
 
             # 显示获取到的物资
             if self.__supply_board.has_reached_target():
@@ -1348,12 +1349,15 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         if event.key == linpg.keys.SPACE:
                             self.__is_battle_mode = False
                             self.stop()
+                            main_chapter_unlock: Optional[
+                                int
+                            ] = linpg.PersistentData.try_get_int("main_chapter_unlock")
                             if self._project_name is None:
                                 max_unlock: int = max(
                                     self._chapter_id,
-                                    linpg.PersistentData.get(
-                                        "main_chapter_unlock", _default=0
-                                    ),
+                                    main_chapter_unlock
+                                    if main_chapter_unlock is not None
+                                    else 0,
                                 )
                                 linpg.PersistentData.set(
                                     "main_chapter_unlock", value=max_unlock
@@ -1362,8 +1366,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                     linpg.PersistentData.set(
                                         "enable_workshop", value=True
                                     )
-                            linpg.global_variables.set("currentMode", "dialog")
-                            linpg.global_variables.set("section", "dialog_after_battle")
+                            linpg.global_variables.set("currentMode", value="dialog")
+                            linpg.global_variables.set(
+                                "section", value="dialog_after_battle"
+                            )
                 self.__add_on_screen_object(self.__ResultBoardUI)
             # 结束动画--失败
             elif self.__whose_round == "result_fail":
@@ -1402,5 +1408,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             LoadingTitle.draw(screen, self.__txt_alpha)
             self.__draw_battle_info(screen, self.__txt_alpha)
             self.__txt_alpha -= 5
+
+        # 展示控制台
+        _CONSOLE: Optional[linpg.Console] = linpg.global_variables.get(
+            "CONSOLE", _deepcopy=False
+        )
+        if _CONSOLE is not None:
+            _CONSOLE.draw(screen)
+
         # 刷新画面
         self.__update_scene(screen)
