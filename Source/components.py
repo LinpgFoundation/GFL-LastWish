@@ -38,7 +38,7 @@ class _MapEditor(LoadingModule, linpg.AbstractMapEditor):
         _task.start()
         # 显示加载过程
         while _task.is_alive():
-            linpg.display.get_window().fill(linpg.color.BLACK)
+            linpg.display.get_window().fill(linpg.colors.BLACK)
             self._show_current_loading_progress(linpg.display.get_window())
             linpg.display.flip()
         # 加载完成，释放初始化模块占用的内存

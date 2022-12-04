@@ -1,5 +1,6 @@
 import time
 from collections import deque
+from typing import Any
 
 from .dolls import *
 
@@ -449,11 +450,11 @@ class CharacterInfoBoard:
             self.__board.blits(
                 (
                     (
-                        linpg.Font.render("HP: ", linpg.color.BLACK, _height // 10),
+                        linpg.Font.render("HP: ", linpg.colors.BLACK, _height // 10),
                         (_padding_x, _info_rect.y + _width // 10),
                     ),
                     (
-                        linpg.Font.render("AP: ", linpg.color.BLACK, _height // 10),
+                        linpg.Font.render("AP: ", linpg.colors.BLACK, _height // 10),
                         (_padding_x, _info_rect.y + _width * 0.225),
                     ),
                 )
@@ -528,73 +529,11 @@ class CharacterInfoBoard:
         )
 
 
-# 计分板
-class ResultBoard(linpg.GameObject2d):
-    def __init__(self, finalResult: dict, font_size: int, is_win: bool = True) -> None:
-        super().__init__(int(font_size * 10), int(font_size * 10))
-        resultTxt: dict = linpg.lang.get_texts("ResultBoard")
-        self.txt_x = int(font_size * 12)
-        self.boardImg = linpg.load.img(
-            r"Assets/image/UI/score.png", (font_size * 16, font_size * 32)
-        )
-        self.total_kills = linpg.font.render(
-            resultTxt["total_kills"] + ": " + str(finalResult["total_kills"]),
-            "white",
-            font_size,
-        )
-        self.total_time = linpg.font.render(
-            resultTxt["total_time"]
-            + ": "
-            + time.strftime("%H:%M", time.localtime(finalResult["total_time"])),
-            "white",
-            font_size,
-        )
-        self.total_rounds_txt = linpg.font.render(
-            resultTxt["total_rounds"] + ": " + str(finalResult["total_rounds"]),
-            "white",
-            font_size,
-        )
-        self.characters_down = linpg.font.render(
-            resultTxt["characters_down"]
-            + ": "
-            + str(finalResult["times_characters_down"]),
-            "white",
-            font_size,
-        )
-        self.player_rate = linpg.font.render(
-            resultTxt["rank"] + ": " + "A", "white", font_size
-        )
-        self.pressKeyContinue = (
-            linpg.font.render(resultTxt["pressKeyContinue"], "white", font_size)
-            if is_win
-            else linpg.font.render(resultTxt["pressKeyRestart"], "white", font_size)
-        )
-
-    def get_width(self) -> int:
-        return 0
-
-    def get_height(self) -> int:
-        return 0
-
-    def draw(self, screen: linpg.ImageSurface) -> None:
-        screen.blits(
-            (
-                (self.boardImg, (self.x, self.y)),
-                (self.total_kills, (self.txt_x, 300)),
-                (self.total_time, (self.txt_x, 350)),
-                (self.total_rounds_txt, (self.txt_x, 400)),
-                (self.characters_down, (self.txt_x, 450)),
-                (self.player_rate, (self.txt_x, 500)),
-                (self.pressKeyContinue, (self.txt_x, 700)),
-            )
-        )
-
-
 # 章节标题(在加载时显示)
 class LoadingTitle:
 
     black_bg: linpg.StaticImage = linpg.StaticImage(
-        linpg.surfaces.colored(linpg.display.get_size(), linpg.color.BLACK), 0, 0
+        linpg.surfaces.colored(linpg.display.get_size(), linpg.colors.BLACK), 0, 0
     )
     title_chapterNum: Optional[linpg.StaticImage] = None
     title_chapterName: Optional[linpg.StaticImage] = None
@@ -768,3 +707,284 @@ class RangeSystem:
                 xTemp, yTemp = map_prt.calculate_position(_position[0], _position[1])
                 cls.__images[i].set_pos(xTemp + map_prt.tile_width // 10, yTemp)
                 cls.__images[i].draw(screen)
+
+
+# 战斗系统数据统计struct
+class BattleStatistics:
+    def __init__(self) -> None:
+        self.total_rounds: int = 1
+        self.total_kills: int = 0
+        self.starting_time: float = time.time()
+        self.total_time: int = 0
+        self.times_characters_down: int = 0
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "total_rounds": self.total_rounds,
+            "total_kills": self.total_kills,
+            "starting_time": self.starting_time,
+            "total_time": self.total_time,
+            "times_characters_down": self.times_characters_down,
+        }
+
+    def update(self, _data: dict[str, Any]) -> None:
+        self.total_rounds = int(_data["total_rounds"])
+        self.total_kills = int(_data["total_kills"])
+        self.starting_time = float(_data["starting_time"])
+        self.total_time = int(_data["total_time"])
+        self.times_characters_down = int(_data["times_characters_down"])
+
+
+# 战斗系统数据计分板
+class ScoreBoard:
+    # 主题颜色
+    __COLOR: tuple[int, int, int, int] = (255, 192, 0, 150)
+    # 黑色帘幕
+    __DARK_CURTAIN: linpg.ImageSurface = linpg.surfaces.colored(
+        linpg.display.get_size(), linpg.colors.BLACK
+    )
+    # 黑色帘幕的透明度
+    __DARK_CURTAIN_ALPHA: int = 0
+    # 右边黄色帘幕
+    __YELLOW_RIGHT_CURTAIN: linpg.MovableStaticImage = linpg.MovableStaticImage(
+        linpg.surfaces.colored(
+            (linpg.display.get_width() * 3 // 7, linpg.display.get_height()), __COLOR
+        ),
+        linpg.display.get_width(),
+        0,
+        linpg.display.get_width() * 4 // 7,
+        0,
+        linpg.display.get_width() // 20,
+        0,
+    )
+    __YELLOW_RIGHT_CURTAIN.set_alpha(150)
+    __YELLOW_RIGHT_CURTAIN.move_toward()
+    # 左边数据栏的Rectangle数据
+    __INFO_BOX_RECT: linpg.Rectangle = linpg.Rectangle(
+        linpg.display.get_width() * 1 // 7,
+        linpg.display.get_height() // 4,
+        linpg.display.get_width() * 2 // 7,
+        linpg.display.get_height() // 2,
+    )
+    # 间距
+    __PADDING: int = __INFO_BOX_RECT.height // 10
+    # 大字字体大小
+    __CONTENT_FONT_BIG: int = __INFO_BOX_RECT.height // 10
+    # 小字字体大小
+    __CONTENT_FONT_SMALL: int = __INFO_BOX_RECT.height // 15
+    # 参数
+    __NPC_NAME: str = "kalina_1"
+    __CHAPTER_NUM: int = 0
+    __TITLE: str = "Unknown Area"
+    __RESULT_WIN: bool = False
+    __STATISTICS: BattleStatistics = BattleStatistics()
+    __RATING: str = "S"
+    # 图层
+    __NPC_IMAGE: Optional[linpg.StaticImage] = None
+    __CHAPTER_NUM_TXT: Optional[linpg.ImageSurface] = None
+    __NEXT_STEP_INSTRUCTION: Optional[linpg.ImageSurface] = None
+    __TITLE_TXT: Optional[linpg.ImageSurface] = None
+    __TIME_TXT: Optional[linpg.ImageSurface] = None
+    __TOTAL_ROUNDS_TXT: Optional[linpg.ImageSurface] = None
+    __TOTAL_KILLS_TXT: Optional[linpg.ImageSurface] = None
+    __RATING_TXT: Optional[linpg.ImageSurface] = None
+    __RATING_ICON: Optional[linpg.ImageSurface] = None
+    # 是否已经更新
+    __is_updated: bool = False
+
+    # 更新数据
+    @classmethod
+    def update(
+        cls,
+        _npc_name: str,
+        _chapter_num: int,
+        _title: str,
+        _result_win: bool,
+        _statistics: BattleStatistics,
+        _rating: str,
+    ) -> None:
+        # 重置部分数据
+        cls.__DARK_CURTAIN_ALPHA = 0
+        cls.__YELLOW_RIGHT_CURTAIN.reset_position()
+        cls.__YELLOW_RIGHT_CURTAIN.move_toward()
+        # 更新参数
+        cls.__NPC_NAME = _npc_name
+        cls.__CHAPTER_NUM = _chapter_num
+        cls.__TITLE = _title
+        cls.__RESULT_WIN = _result_win
+        cls.__STATISTICS = _statistics
+        cls.__RATING = _rating
+        # 清空无用的图层，在需要时重新加载
+        cls.__NPC_IMAGE = None
+        cls.__CHAPTER_NUM_TXT = None
+        cls.__NEXT_STEP_INSTRUCTION = None
+        cls.__TITLE_TXT = None
+        cls.__TIME_TXT = None
+        cls.__TOTAL_ROUNDS_TXT = None
+        cls.__TOTAL_KILLS_TXT = None
+        cls.__RATING_TXT = None
+        cls.__RATING_ICON = None
+        # 切换更新的flag
+        cls.__is_updated = True
+
+    # 是否已经更新
+    @classmethod
+    def is_updated(cls) -> bool:
+        return cls.__is_updated
+
+    # 切换flag以提醒更新
+    @classmethod
+    def need_updated(cls) -> None:
+        cls.__is_updated = False
+
+    # 渲染
+    @classmethod
+    def draw(cls, _surface: linpg.ImageSurface) -> None:
+        cls.__DARK_CURTAIN.set_alpha(cls.__DARK_CURTAIN_ALPHA)
+        _surface.blit(cls.__DARK_CURTAIN, (0, 0))
+        if cls.__DARK_CURTAIN_ALPHA < 150:
+            cls.__DARK_CURTAIN_ALPHA += 5
+        else:
+            cls.__YELLOW_RIGHT_CURTAIN.draw(_surface)
+            if cls.__NPC_IMAGE is None:
+                cls.__NPC_IMAGE = linpg.StaticImage(
+                    "Assets/image/npc/{}.png".format(cls.__NPC_NAME),
+                    linpg.display.get_width() // 2,
+                    0,
+                    -1,
+                    linpg.display.get_height(),
+                )
+            cls.__NPC_IMAGE.draw(_surface)
+            cls.__INFO_BOX_RECT.draw_outline(_surface, (0, 0, 0, 100), 0)
+            cls.__INFO_BOX_RECT.draw_outline(_surface, linpg.colors.WHITE, 5)
+            if cls.__NEXT_STEP_INSTRUCTION is None:
+                cls.__NEXT_STEP_INSTRUCTION = linpg.font.render(
+                    linpg.lang.get_text(
+                        "ScoreBoard",
+                        "pressKeyContinue"
+                        if cls.__RESULT_WIN is True
+                        else "pressKeyRestart",
+                    ),
+                    linpg.colors.WHITE,
+                    linpg.display.get_width() // 80,
+                )
+            _surface.blit(
+                cls.__NEXT_STEP_INSTRUCTION,
+                (
+                    (
+                        linpg.display.get_width() * 4 // 7
+                        - cls.__NEXT_STEP_INSTRUCTION.get_width()
+                    )
+                    // 2,
+                    cls.__INFO_BOX_RECT.bottom + cls.__PADDING,
+                ),
+            )
+            if cls.__CHAPTER_NUM_TXT is None:
+                cls.__CHAPTER_NUM_TXT = linpg.font.render(
+                    linpg.lang.get_text("Battle_UI", "numChapter").format(
+                        cls.__CHAPTER_NUM
+                    )
+                    + ":",
+                    linpg.colors.WHITE,
+                    cls.__CONTENT_FONT_BIG,
+                )
+            _surface.blit(
+                cls.__CHAPTER_NUM_TXT,
+                (
+                    cls.__INFO_BOX_RECT.x + cls.__PADDING // 2,
+                    cls.__INFO_BOX_RECT.y + cls.__PADDING // 2,
+                ),
+            )
+            if cls.__TITLE_TXT is None:
+                cls.__TITLE_TXT = linpg.font.render(
+                    cls.__TITLE, linpg.colors.WHITE, cls.__CONTENT_FONT_BIG
+                )
+            title_text_y: int = cls.__INFO_BOX_RECT.y + int(cls.__PADDING * 2)
+            title_text_shadow: tuple[int, int, int, int] = (
+                cls.__INFO_BOX_RECT.x + cls.__PADDING - 2,
+                title_text_y + cls.__PADDING // 2,
+                cls.__TITLE_TXT.get_width() * 5 // 6,
+                cls.__TITLE_TXT.get_height() * 3 // 5,
+            )
+            linpg.Draw.rect(_surface, cls.__COLOR, title_text_shadow)
+            _surface.blit(
+                cls.__TITLE_TXT, (cls.__INFO_BOX_RECT.x + cls.__PADDING, title_text_y)
+            )
+            if cls.__TIME_TXT is None:
+                cls.__TIME_TXT = linpg.font.render(
+                    linpg.lang.get_text("ScoreBoard", "total_time").format(
+                        time.strftime(
+                            "%H:%M", time.localtime(cls.__STATISTICS.total_time)
+                        )
+                    ),
+                    linpg.colors.WHITE,
+                    cls.__CONTENT_FONT_SMALL,
+                )
+            if cls.__TOTAL_ROUNDS_TXT is None:
+                cls.__TOTAL_ROUNDS_TXT = linpg.font.render(
+                    linpg.lang.get_text("ScoreBoard", "total_rounds").format(
+                        cls.__STATISTICS.total_rounds
+                    ),
+                    linpg.colors.WHITE,
+                    cls.__CONTENT_FONT_SMALL,
+                )
+            if cls.__TOTAL_KILLS_TXT is None:
+                cls.__TOTAL_KILLS_TXT = linpg.font.render(
+                    linpg.lang.get_text("ScoreBoard", "total_kills").format(
+                        cls.__STATISTICS.total_kills
+                    ),
+                    linpg.colors.WHITE,
+                    cls.__CONTENT_FONT_SMALL,
+                )
+            if cls.__RATING_TXT is None:
+                cls.__RATING_TXT = linpg.font.render(
+                    linpg.lang.get_text("ScoreBoard", "rank"),
+                    linpg.colors.WHITE,
+                    cls.__CONTENT_FONT_SMALL,
+                )
+            _surface.blit(
+                cls.__TIME_TXT,
+                (
+                    cls.__INFO_BOX_RECT.x + cls.__PADDING + cls.__CONTENT_FONT_SMALL,
+                    title_text_y + cls.__PADDING + cls.__CONTENT_FONT_SMALL,
+                ),
+            )
+            _surface.blit(
+                cls.__TOTAL_ROUNDS_TXT,
+                (
+                    cls.__INFO_BOX_RECT.x + cls.__PADDING + cls.__CONTENT_FONT_SMALL,
+                    title_text_y + cls.__PADDING * 2 + cls.__CONTENT_FONT_SMALL,
+                ),
+            )
+            _surface.blit(
+                cls.__TOTAL_KILLS_TXT,
+                (
+                    cls.__INFO_BOX_RECT.x + cls.__PADDING + cls.__CONTENT_FONT_SMALL,
+                    title_text_y + cls.__PADDING * 3 + cls.__CONTENT_FONT_SMALL,
+                ),
+            )
+            rating_text_y: int = (
+                title_text_y + cls.__PADDING * 4 + cls.__CONTENT_FONT_SMALL
+            )
+            icon_size: int = cls.__INFO_BOX_RECT.bottom - rating_text_y
+            if cls.__RATING_ICON is None:
+                cls.__RATING_ICON = linpg.images.load(
+                    "Assets/image/UI/ratings/{}.png".format(cls.__RATING),
+                    (None, icon_size),
+                )
+            _surface.blit(
+                cls.__RATING_TXT,
+                (
+                    cls.__INFO_BOX_RECT.x + cls.__PADDING + cls.__CONTENT_FONT_SMALL,
+                    rating_text_y,
+                ),
+            )
+            _surface.blit(
+                cls.__RATING_ICON,
+                (
+                    cls.__INFO_BOX_RECT.x
+                    + cls.__PADDING * 2
+                    + cls.__RATING_TXT.get_width(),
+                    rating_text_y,
+                ),
+            )

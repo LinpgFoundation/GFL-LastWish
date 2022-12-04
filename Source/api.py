@@ -14,7 +14,7 @@ linpg.LinpgVersionChecker(
 )
 
 # 设置引擎的标准文字大小
-linpg.font.set_global_font("medium", int(linpg.display.get_width() / 40))
+linpg.font.set_global_font("medium", linpg.display.get_width() // 40)
 
 # alpha构建警告
 ALPHA_BUILD_WARNING = linpg.load.text(

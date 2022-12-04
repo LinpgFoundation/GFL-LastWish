@@ -13,7 +13,7 @@ class MainMenu(linpg.AbstractSystem):
         self.__loading_screen: Optional[linpg.ImageSurface] = linpg.surfaces.new(
             screen.get_size()
         )
-        self.__loading_screen.fill(linpg.color.BLACK)
+        self.__loading_screen.fill(linpg.colors.BLACK)
         # 渲染健康游戏忠告
         HealthyGamingAdvice: list[linpg.ImageSurface] = (
             [
@@ -71,7 +71,7 @@ class MainMenu(linpg.AbstractSystem):
         """开始加载"""
         # 载入页面 - 渐入
         for index in range(0, 250, int(2 * linpg.display.get_delta_time())):
-            screen.fill(linpg.color.BLACK)
+            screen.fill(linpg.colors.BLACK)
             self.__loading_screen.set_alpha(index)
             screen.blit(self.__loading_screen, linpg.ORIGIN)
             linpg.display.flip()
@@ -140,7 +140,7 @@ class MainMenu(linpg.AbstractSystem):
         for i in range(len(self.workshop_files)):
             self.workshop_files[i] = linpg.load.resize_when_hovered_text(
                 self.workshop_files[i],
-                linpg.color.WHITE,
+                linpg.colors.WHITE,
                 (txt_location, txt_y),
                 linpg.font.get_global_font_size("medium"),
             )
@@ -226,7 +226,7 @@ class MainMenu(linpg.AbstractSystem):
         for i in range(len(self.chapter_select)):
             self.chapter_select[i] = linpg.load.resize_when_hovered_text(
                 self.chapter_select[i],
-                linpg.color.WHITE,
+                linpg.colors.WHITE,
                 (txt_x, txt_y),
                 linpg.font.get_global_font_size("medium"),
             )
@@ -365,7 +365,7 @@ class MainMenu(linpg.AbstractSystem):
                     "0_continue"
                 ] = linpg.load.resize_when_hovered_text(
                     linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
-                    linpg.color.WHITE,
+                    linpg.colors.WHITE,
                     self.__main_menu_txt["menu_main"]["0_continue"].get_pos(),
                     linpg.font.get_global_font_size("medium"),
                 )
@@ -375,7 +375,7 @@ class MainMenu(linpg.AbstractSystem):
                 "0_continue"
             ] = linpg.load.resize_when_hovered_text(
                 linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
-                linpg.color.GRAY,
+                linpg.colors.GRAY,
                 self.__main_menu_txt["menu_main"]["0_continue"].get_pos(),
                 linpg.font.get_global_font_size("medium"),
             )
@@ -389,7 +389,7 @@ class MainMenu(linpg.AbstractSystem):
                 "3_workshop"
             ] = linpg.load.resize_when_hovered_text(
                 linpg.lang.get_text("MainMenu", "menu_main", "3_workshop"),
-                linpg.color.GRAY,
+                linpg.colors.GRAY,
                 self.__main_menu_txt["menu_main"]["3_workshop"].get_pos(),
                 linpg.font.get_global_font_size("medium"),
             )
@@ -414,9 +414,9 @@ class MainMenu(linpg.AbstractSystem):
         txt_y = (screen_size[1] - len(self.__main_menu_txt["menu_main"]) * font_size) / 2
         for key, txt in self.__main_menu_txt["menu_main"].items():
             color_of_text = (
-                linpg.color.WHITE
+                linpg.colors.WHITE
                 if key not in self.__disabled_options
-                else linpg.color.GRAY
+                else linpg.colors.GRAY
             )
             self.__main_menu_txt["menu_main"][key] = linpg.load.resize_when_hovered_text(
                 txt,
@@ -443,7 +443,7 @@ class MainMenu(linpg.AbstractSystem):
                 key
             ] = linpg.load.resize_when_hovered_text(
                 txt,
-                linpg.color.WHITE,
+                linpg.colors.WHITE,
                 (txt_location, txt_y),
                 linpg.font.get_global_font_size("medium"),
             )
