@@ -51,12 +51,12 @@ PhotosensitiveSeizureWarning:
 - 如果你出现任何症状，请立即停止游玩该游戏并咨询医生
 ResultBoard:
   characters_down: 友方角色被击倒
-  pressKeyContinue: 按空格继续
-  pressKeyRestart: 按空格重新开始，按Backspace返回主菜单
-  rank: 评价
-  total_kills: 总消灭
-  total_rounds: 回合数
-  total_time: 通关时间
+  pressKeyContinue: 按 <空格> 继续
+  pressKeyRestart: 按 <空格> 重新开始，或按 <Backspace> 返回主菜单
+  rank: '评价:'
+  total_kills: '总消灭: {}'
+  total_rounds: '回合数: {}'
+  total_time: '通关时间: {}'
 SelectMenu:
   attack: 攻击
   interact: 互动

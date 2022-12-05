@@ -1,7 +1,6 @@
 from shutil import copyfile
 
-from .components import GameMode, CONSOLE, Optional
-from .api import *
+from .components import *
 
 
 # 主菜单系统
@@ -14,7 +13,7 @@ class MainMenu(linpg.AbstractSystem):
         self.__loading_screen: Optional[linpg.ImageSurface] = linpg.surfaces.new(
             screen.get_size()
         )
-        self.__loading_screen.fill(linpg.color.BLACK)
+        self.__loading_screen.fill(linpg.colors.BLACK)
         # 渲染健康游戏忠告
         HealthyGamingAdvice: list[linpg.ImageSurface] = (
             [
@@ -72,18 +71,18 @@ class MainMenu(linpg.AbstractSystem):
         """开始加载"""
         # 载入页面 - 渐入
         for index in range(0, 250, int(2 * linpg.display.get_delta_time())):
-            screen.fill(linpg.color.BLACK)
+            screen.fill(linpg.colors.BLACK)
             self.__loading_screen.set_alpha(index)
             screen.blit(self.__loading_screen, linpg.ORIGIN)
             linpg.display.flip()
-        # 检测继续按钮是否可用的参数
-        self.continueButtonIsOn: bool = False
         # 主菜单文字
         self.__main_menu_txt: dict = {}
         # 退出确认窗口
         self.__exit_confirm_menu: linpg.ConfirmMessageWindow = linpg.ConfirmMessageWindow(
             linpg.lang.get_text("Global", "tip"), ""
         )
+        # 当前禁用的按钮
+        self.__disabled_options: set[str] = set()
         # 加载主菜单文字
         self.__reset_menu_text(screen.get_size())
         # 数值初始化
@@ -106,7 +105,7 @@ class MainMenu(linpg.AbstractSystem):
         self.hover_sound_play_on: int = -1
         self.last_hover_sound_play_on: int = -2
         # 初始化返回菜单判定参数
-        linpg.global_variables.set("BackToMainMenu", False)
+        linpg.global_variables.set("BackToMainMenu", value=False)
 
     # 当前在Data/workshop文件夹中可以读取的文件夹的名字（font的形式）
     def __reload_workshop_files_list(
@@ -141,7 +140,7 @@ class MainMenu(linpg.AbstractSystem):
         for i in range(len(self.workshop_files)):
             self.workshop_files[i] = linpg.load.resize_when_hovered_text(
                 self.workshop_files[i],
-                linpg.color.WHITE,
+                linpg.colors.WHITE,
                 (txt_location, txt_y),
                 linpg.font.get_global_font_size("medium"),
             )
@@ -227,7 +226,7 @@ class MainMenu(linpg.AbstractSystem):
         for i in range(len(self.chapter_select)):
             self.chapter_select[i] = linpg.load.resize_when_hovered_text(
                 self.chapter_select[i],
-                linpg.color.WHITE,
+                linpg.colors.WHITE,
                 (txt_x, txt_y),
                 linpg.font.get_global_font_size("medium"),
             )
@@ -332,7 +331,7 @@ class MainMenu(linpg.AbstractSystem):
 
     # 循环播放
     def __loop_scenes(self, screen: linpg.ImageSurface) -> None:
-        while linpg.global_variables.is_not_none("currentMode"):
+        while linpg.global_variables.exists_not_none("currentMode"):
             if linpg.global_variables.get_str("currentMode") == "battle":
                 GameMode.battle(
                     screen,
@@ -360,44 +359,64 @@ class MainMenu(linpg.AbstractSystem):
     def __reset_menu(self) -> None:
         self.__restart_background()
         # 是否可以继续游戏了（save文件是否被创建）
-        if os.path.exists("Save/save.yaml") and not self.continueButtonIsOn:
+        if linpg.saves.any_progress_exists() is True:
+            if "0_continue" in self.__disabled_options:
+                self.__main_menu_txt["menu_main"][
+                    "0_continue"
+                ] = linpg.load.resize_when_hovered_text(
+                    linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
+                    linpg.colors.WHITE,
+                    self.__main_menu_txt["menu_main"]["0_continue"].get_pos(),
+                    linpg.font.get_global_font_size("medium"),
+                )
+                self.__disabled_options.remove("0_continue")
+        elif "0_continue" not in self.__disabled_options:
             self.__main_menu_txt["menu_main"][
                 "0_continue"
             ] = linpg.load.resize_when_hovered_text(
                 linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
-                linpg.color.WHITE,
+                linpg.colors.GRAY,
                 self.__main_menu_txt["menu_main"]["0_continue"].get_pos(),
                 linpg.font.get_global_font_size("medium"),
             )
-            self.continueButtonIsOn = True
-        elif not os.path.exists("Save/save.yaml") and self.continueButtonIsOn is True:
+            self.__disabled_options.add("0_continue")
+        # 是否创意工坊启用
+        if (
+            "3_workshop" in self.__disabled_options
+            and linpg.PersistentData.try_get_bool("enable_workshop") is True
+        ):
             self.__main_menu_txt["menu_main"][
-                "0_continue"
+                "3_workshop"
             ] = linpg.load.resize_when_hovered_text(
-                linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
-                linpg.color.GRAY,
-                self.__main_menu_txt["menu_main"]["0_continue"].get_pos(),
+                linpg.lang.get_text("MainMenu", "menu_main", "3_workshop"),
+                linpg.colors.GRAY,
+                self.__main_menu_txt["menu_main"]["3_workshop"].get_pos(),
                 linpg.font.get_global_font_size("medium"),
             )
-            self.continueButtonIsOn = False
+            self.__disabled_options.remove("3_workshop")
 
     # 重新加载主菜单文字
     def __reset_menu_text(self, screen_size: tuple) -> None:
         self.__main_menu_txt = linpg.lang.get_texts("MainMenu")
-        # 当前不可用的菜单选项
-        disabled_option = ["6_developer_team", "2_dlc", "4_collection"]
-        if not os.path.exists("Save/save.yaml"):
-            disabled_option.append("0_continue")
-            self.continueButtonIsOn = False
-        else:
-            self.continueButtonIsOn = True
+        # 默认不可用的菜单选项
+        self.__disabled_options = set(
+            ("0_continue", "2_dlc", "3_workshop", "4_collection", "6_developer_team")
+        )
+        # 是否启用继续游戏按钮
+        if linpg.saves.any_progress_exists() is True:
+            self.__disabled_options.remove("0_continue")
+        # 是否启用创意工坊按钮
+        if linpg.PersistentData.try_get_bool("enable_workshop") is True:
+            self.__disabled_options.remove("3_workshop")
         # 加载主菜单页面的文字设置
         txt_location = int(screen_size[0] * 2 / 3)
         font_size = linpg.font.get_global_font_size("medium") * 2
         txt_y = (screen_size[1] - len(self.__main_menu_txt["menu_main"]) * font_size) / 2
         for key, txt in self.__main_menu_txt["menu_main"].items():
             color_of_text = (
-                linpg.color.WHITE if key not in disabled_option else linpg.color.GRAY
+                linpg.colors.WHITE
+                if key not in self.__disabled_options
+                else linpg.colors.GRAY
             )
             self.__main_menu_txt["menu_main"][key] = linpg.load.resize_when_hovered_text(
                 txt,
@@ -410,9 +429,9 @@ class MainMenu(linpg.AbstractSystem):
         self.__main_menu_txt["menu_workshop_choice"]["map_editor"] = linpg.lang.get_text(
             "General", "map_editor"
         )
-        self.__main_menu_txt["menu_workshop_choice"]["dialog_editor"] = linpg.lang.get_text(
-            "General", "dialog_editor"
-        )
+        self.__main_menu_txt["menu_workshop_choice"][
+            "dialog_editor"
+        ] = linpg.lang.get_text("General", "dialog_editor")
         self.__main_menu_txt["menu_workshop_choice"]["back"] = linpg.lang.get_text(
             "Global", "back"
         )
@@ -424,7 +443,7 @@ class MainMenu(linpg.AbstractSystem):
                 key
             ] = linpg.load.resize_when_hovered_text(
                 txt,
-                linpg.color.WHITE,
+                linpg.colors.WHITE,
                 (txt_location, txt_y),
                 linpg.font.get_global_font_size("medium"),
             )
@@ -494,6 +513,7 @@ class MainMenu(linpg.AbstractSystem):
                 self.__reload_workshop_files_list(screen.get_size(), False)
                 self.__reload_chapter_select_list(screen.get_size(), "workshop")
         # 展示控制台
+        global CONSOLE
         if CONSOLE is not None:
             CONSOLE.draw(screen)
         # 判断按键
@@ -505,20 +525,19 @@ class MainMenu(linpg.AbstractSystem):
             # 主菜单
             if self.menu_type == 0:
                 # 继续游戏
-                if self.__main_menu_txt["menu_main"][
-                    "0_continue"
-                ].is_hovered() and os.path.exists("Save/save.yaml"):
-                    # 加载最近一个存档点的数据
-                    SAVE: dict = dict(linpg.config.load("Save/save.yaml"))
-                    # 设置参数
-                    linpg.global_variables.set("currentMode", SAVE["type"])
-                    linpg.global_variables.remove("section")
-                    linpg.global_variables.remove("chapterType")
-                    linpg.global_variables.set("chapterId", 0)
-                    linpg.global_variables.remove("projectName")
-                    linpg.global_variables.set("saveData", SAVE)
-                    # 开始播放场景
-                    self.__loop_scenes(screen)
+                if self.__main_menu_txt["menu_main"]["0_continue"].is_hovered():
+                    if linpg.saves.any_progress_exists() is True:
+                        # 加载最近一个存档点的数据
+                        SAVE: dict = linpg.saves.get_latest_progresses().data
+                        # 设置参数
+                        linpg.global_variables.set("currentMode", value=SAVE["type"])
+                        linpg.global_variables.remove("section")
+                        linpg.global_variables.remove("chapterType")
+                        linpg.global_variables.set("chapterId", value=0)
+                        linpg.global_variables.remove("projectName")
+                        linpg.global_variables.set("saveData", value=SAVE)
+                        # 开始播放场景
+                        self.__loop_scenes(screen)
                 # 选择章节
                 elif self.__main_menu_txt["menu_main"]["1_chooseChapter"].is_hovered():
                     # 加载菜单章节选择页面的文字
@@ -529,7 +548,8 @@ class MainMenu(linpg.AbstractSystem):
                     pass
                 # 创意工坊
                 elif self.__main_menu_txt["menu_main"]["3_workshop"].is_hovered():
-                    self.menu_type = 2
+                    if "3_workshop" not in self.__disabled_options:
+                        self.menu_type = 2
                 # 收集物
                 elif self.__main_menu_txt["menu_main"]["4_collection"].is_hovered():
                     pass
@@ -559,11 +579,15 @@ class MainMenu(linpg.AbstractSystem):
                         # 章节选择
                         if self.chapter_select[i].is_hovered():
                             # 设置参数
-                            linpg.global_variables.set("currentMode", "dialog")
-                            linpg.global_variables.set("section", "dialog_before_battle")
-                            linpg.global_variables.set("chapterType", "main_chapter")
-                            linpg.global_variables.set("chapterId", i + 1)
-                            linpg.global_variables.set("projectName", None)
+                            linpg.global_variables.set("currentMode", value="dialog")
+                            linpg.global_variables.set(
+                                "section", value="dialog_before_battle"
+                            )
+                            linpg.global_variables.set(
+                                "chapterType", value="main_chapter"
+                            )
+                            linpg.global_variables.set("chapterId", value=i + 1)
+                            linpg.global_variables.set("projectName", value=None)
                             # 开始播放场景
                             self.__loop_scenes(screen)
                             break
@@ -651,12 +675,15 @@ class MainMenu(linpg.AbstractSystem):
                         # 章节选择
                         if self.chapter_select[i].is_hovered():
                             # 设置参数
-                            linpg.global_variables.set("currentMode", "dialog")
-                            linpg.global_variables.set("section", "dialog_before_battle")
-                            linpg.global_variables.set("chapterType", "workshop")
-                            linpg.global_variables.set("chapterId", i + 1)
+                            linpg.global_variables.set("currentMode", value="dialog")
                             linpg.global_variables.set(
-                                "projectName", self.current_selected_workshop_project
+                                "section", value="dialog_before_battle"
+                            )
+                            linpg.global_variables.set("chapterType", value="workshop")
+                            linpg.global_variables.set("chapterId", value=i + 1)
+                            linpg.global_variables.set(
+                                "projectName",
+                                value=self.current_selected_workshop_project,
                             )
                             # 开始播放场景
                             self.__loop_scenes(screen)

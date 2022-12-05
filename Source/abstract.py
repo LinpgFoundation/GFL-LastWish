@@ -52,7 +52,7 @@ class LoadingModule:
     # 更新当前正在加载的数据的信息
     def __update_loading_info(self, text: str) -> None:
         self.__THREADING_LOCK.acquire()
-        self.__now_loading = self.__FONT.render(text, linpg.color.WHITE)
+        self.__now_loading = self.__FONT.render(text, linpg.colors.WHITE)
         self.__THREADING_LOCK.release()
 
     # 根据key更新当前正在加载的数据的信息
@@ -210,7 +210,7 @@ class AbstractBattleSystemWithInGameDialog(
     """其他"""
 
     def _get_dialog_file_location(self) -> str:
-        return self.__DIALOG.get_dialog_file_location()
+        return self.__DIALOG.get_data_file_path()
 
     # 初始化视觉小说系统
     def _init_dialog(self, _data: dict) -> None:

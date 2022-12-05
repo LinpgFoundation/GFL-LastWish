@@ -11,7 +11,7 @@ if __name__ == "__main__":
         or input("Do you want to recompile source files (Y/n):") == "Y"
     ):
         Builder.delete_file_if_exist("src")
-        Builder.compile("Source")
+        Builder.compile("Source", smart_auto_module_combine=True)
 
     # 更新所有第三方库
     if input("Do you want to update all third party packages (Y/n):") == "Y":
@@ -20,8 +20,8 @@ if __name__ == "__main__":
                 subprocess.check_call(
                     ["pip", "install", "--upgrade", pkg.project_name], shell=True
                 )
-            except subprocess.CalledProcessError:
-                pass
+            except Exception:
+                print("Warning: fail to update third party package <{}>".format(pkg.project_name))
 
     # 删除dist文件夹
     Builder.delete_file_if_exist("dist")
