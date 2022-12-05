@@ -20,8 +20,8 @@ if __name__ == "__main__":
                 subprocess.check_call(
                     ["pip", "install", "--upgrade", pkg.project_name], shell=True
                 )
-            except subprocess.CalledProcessError:
-                pass
+            except Exception:
+                print("Warning: fail to update third party package <{}>".format(pkg.project_name))
 
     # 删除dist文件夹
     Builder.delete_file_if_exist("dist")
