@@ -1,85 +1,4 @@
-from .tbs import *
-
-# 地图编辑器系统
-class _MapEditor(LoadingModule, linpg.AbstractMapEditor):
-    def __init__(self) -> None:
-        LoadingModule.__init__(self)
-        linpg.AbstractMapEditor.__init__(self)
-
-    # 获取角色数据 - 子类需实现
-    def get_entities_data(self) -> dict[str, dict[str, linpg.Entity]]:
-        return self._entities_data
-
-    # 更新特定角色
-    def update_entity(self, faction: str, key: str, data: dict) -> None:
-        if faction == "GriffinKryuger":
-            self._entities_data[faction][key] = FriendlyCharacter(data, "dev")
-        if faction == "SangvisFerri":
-            self._entities_data[faction][key] = HostileCharacter(data, "dev")
-
-    # 加载图片 - 重写使其更新加载信息
-    def _load_map(self, _data: dict) -> None:
-        self._update_loading_info("now_loading_map")
-        super()._load_map(_data)
-
-    # 加载数据 - 重写使其以多线程的形式进行
-    def new(
-        self,
-        chapterType: str,
-        chapterId: int,
-        projectName: Optional[str] = None,
-    ) -> None:
-        # 初始化加载模块
-        self._initialize_loading_module()
-        _task: threading.Thread = threading.Thread(
-            target=super().new, args=(chapterType, chapterId, projectName)
-        )
-        # 开始加载
-        _task.start()
-        # 显示加载过程
-        while _task.is_alive():
-            linpg.display.get_window().fill(linpg.colors.BLACK)
-            self._show_current_loading_progress(linpg.display.get_window())
-            linpg.display.flip()
-        # 加载完成，释放初始化模块占用的内存
-        self._finish_loading()
-
-
-# 重写视觉小说模组使其正确地调用和修改全局变量
-class _VisualNovelSystem(linpg.VisualNovelSystem):
-    def stop(self) -> None:
-        super().stop()
-        linpg.global_variables.remove("section")
-        if (
-            self._content.get_section() == "dialog_before_battle"
-            and self._has_reached_the_end() is True
-        ):
-            linpg.global_variables.set("currentMode", value="battle")
-        else:
-            linpg.global_variables.remove("currentMode")
-
-    def _initialize(
-        self, chapterType: str, chapterId: int, projectName: Optional[str]
-    ) -> None:
-        super()._initialize(chapterType, chapterId, projectName)
-        linpg.global_variables.set("currentMode", value="dialog")
-        linpg.global_variables.set("chapterType", value=self._chapter_type)
-        linpg.global_variables.set("chapterId", value=self._chapter_id)
-        linpg.global_variables.set("projectName", value=self._project_name)
-
-    def load_progress(self, _data: dict) -> None:
-        if _data.get("type") == "dialog":
-            super().load_progress(_data)
-        else:
-            self.stop()
-            # 设置参数
-            linpg.global_variables.remove("section")
-            linpg.global_variables.set("currentMode", value="battle")
-            linpg.global_variables.remove("chapterType")
-            linpg.global_variables.set("chapterId", value=0)
-            linpg.global_variables.remove("projectName")
-            linpg.global_variables.set("saveData", value=_data)
-
+from .implementations import *
 
 # 控制台
 class _Console(linpg.Console):
@@ -186,7 +105,7 @@ class GameMode:
         # 卸载音乐
         linpg.media.unload()
         # 初始化对话系统模块
-        _DIALOG: _VisualNovelSystem = _VisualNovelSystem()
+        _DIALOG: VisualNovelSystem = VisualNovelSystem()
         if chapterType is not None:
             _DIALOG.new(chapterType, chapterId, part, projectName)
         else:
@@ -280,7 +199,7 @@ class GameMode:
         cls.VIDEO_BACKGROUND.stop()
         # 卸载音乐
         linpg.media.unload()
-        MAP_EDITOR: _MapEditor = _MapEditor()
+        MAP_EDITOR: MapEditor = MapEditor()
         MAP_EDITOR.new(chapterType, chapterId, projectName)
         # 改变标题
         linpg.display.set_caption(

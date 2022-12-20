@@ -383,7 +383,7 @@ class MainMenu(linpg.AbstractSystem):
         # 是否创意工坊启用
         if (
             "3_workshop" in self.__disabled_options
-            and linpg.PersistentData.try_get_bool("enable_workshop") is True
+            and linpg.PersistentVariables.try_get_bool("enable_workshop") is True
         ):
             self.__main_menu_txt["menu_main"][
                 "3_workshop"
@@ -406,7 +406,7 @@ class MainMenu(linpg.AbstractSystem):
         if linpg.saves.any_progress_exists() is True:
             self.__disabled_options.remove("0_continue")
         # 是否启用创意工坊按钮
-        if linpg.PersistentData.try_get_bool("enable_workshop") is True:
+        if linpg.PersistentVariables.try_get_bool("enable_workshop") is True:
             self.__disabled_options.remove("3_workshop")
         # 加载主菜单页面的文字设置
         txt_location = int(screen_size[0] * 2 / 3)

@@ -13,11 +13,10 @@ Decorations:
 Filters:
   communicating:
     crop:
-    - 0
-    - 7.5%
-    - 100%
-    - 85%
-    path: Assets/image/UI/communication.png
+    - 9.75%
+    - 2.25%
+    - 87.5%
+    - 89%
     rect:
     - 12.5%
     - 0

@@ -49,7 +49,7 @@ PhotosensitiveSeizureWarning:
 - 极小部分人可能会在看到特定视觉图像（包括可能出现在视频游戏中的闪烁效果或图案）时出现癫痫症状。
 - 甚至没有癫痫史的人也可能具有一些可能会在玩视频游戏时导致“光敏性癫痫发作”的未确诊症状。
 - 如果你出现任何症状，请立即停止游玩该游戏并咨询医生
-ResultBoard:
+ScoreBoard:
   characters_down: 友方角色被击倒
   pressKeyContinue: 按 <空格> 继续
   pressKeyRestart: 按 <空格> 重新开始，或按 <Backspace> 返回主菜单

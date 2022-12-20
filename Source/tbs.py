@@ -1357,7 +1357,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             self.stop()
                             main_chapter_unlock: Optional[
                                 int
-                            ] = linpg.PersistentData.try_get_int("main_chapter_unlock")
+                            ] = linpg.PersistentVariables.try_get_int(
+                                "main_chapter_unlock"
+                            )
                             if self._project_name is None:
                                 max_unlock: int = max(
                                     self._chapter_id,
@@ -1365,11 +1367,11 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                     if main_chapter_unlock is not None
                                     else 0,
                                 )
-                                linpg.PersistentData.set(
+                                linpg.PersistentVariables.set(
                                     "main_chapter_unlock", value=max_unlock
                                 )
                                 if max_unlock >= 1:
-                                    linpg.PersistentData.set(
+                                    linpg.PersistentVariables.set(
                                         "enable_workshop", value=True
                                     )
                             linpg.global_variables.set("currentMode", value="dialog")
