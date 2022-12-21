@@ -114,6 +114,7 @@ class _CharacterInCommunicationFilterEffect(
 # 初始化立绘滤镜
 _CharacterInCommunicationFilterEffect.init()
 
+
 # 重写视觉小说模组使其正确地调用和修改全局变量
 class VisualNovelSystem(linpg.VisualNovelSystem):
     def stop(self) -> None:

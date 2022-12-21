@@ -306,9 +306,21 @@ class MainMenu(linpg.AbstractSystem):
             )
             + 1
         )
-        # 复制视觉小说系统默认模板
+        # 复制关卡数据默认模板
         copyfile(
-            "Data/chapter_dialogs_example.yaml",
+            "Data/template/chapter_level_info_example.yaml",
+            os.path.join(
+                "Data",
+                "workshop",
+                self.current_selected_workshop_project,
+                "chapter{0}_level_info_{1}.yaml".format(
+                    chapterId, linpg.setting.get_language()
+                ),
+            ),
+        )
+        # 复制视觉小说数据默认模板
+        copyfile(
+            "Data/template/chapter_dialogs_example.yaml",
             os.path.join(
                 "Data",
                 "workshop",
@@ -318,9 +330,9 @@ class MainMenu(linpg.AbstractSystem):
                 ),
             ),
         )
-        # 复制战斗系统默认模板
+        # 复制地图数据默认模板
         copyfile(
-            "Data/chapter_map_example.yaml",
+            "Data/template/chapter_map_example.yaml",
             os.path.join(
                 "Data",
                 "workshop",

@@ -7,15 +7,20 @@ if __name__ == "__main__":
     else:
         from Source import MainMenu, linpg
 
-    # 读取并整理配置文件
-    for folderPath in (r"Lang/*.yaml", r"Data/*.yaml", r"Data/main_chapter/*.yaml"):
-        linpg.config.organize(folderPath)
+        # 读取并整理配置文件
+        for folderPath in (
+            r"Lang/*.yaml",
+            r"Data/*.yaml",
+            r"Data/main_chapter/*.yaml",
+            r"Data/template/*.yaml",
+        ):
+            linpg.config.organize(folderPath)
 
     # 是否启动游戏
-    GAMESTART: bool = True
+    GAME_START: bool = True
 
     # 游戏主进程
-    if GAMESTART is True:
+    if GAME_START is True:
         # 窗口标题图标
         linpg.display.set_icon(r"Assets/image/UI/icon.png")
         linpg.display.set_caption(linpg.lang.get_text("General", "game_title"))

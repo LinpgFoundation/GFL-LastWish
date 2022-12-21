@@ -1,8 +1,6 @@
 # GFL-Last Wish 少前-遗愿
 
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/TigeiaWorkshop/GirlsFrontLine-LastWish.svg?style=for-the-badge&logo=appveyor?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/TigeiaWorkshop/GirlsFrontLine-LastWish/alerts/) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/TigeiaWorkshop/GirlsFrontLine-LastWish.svg?style=for-the-badge&logo=appveyor?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/TigeiaWorkshop/GirlsFrontLine-LastWish/context:python)  ![GitHub](https://img.shields.io/github/license/TigeiaWorkshop/GirlsFrontLine-LastWish?style=for-the-badge&logo=appveyor)
-
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/TigeiaWorkshop/GirlsFrontLine-LastWish?include_prereleases&style=for-the-badge) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/linpg?style=for-the-badge&logo=appveyor)
+![GitHub](https://img.shields.io/github/license/TigeiaWorkshop/GirlsFrontLine-LastWish?style=for-the-badge&logo=appveyor) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/TigeiaWorkshop/GirlsFrontLine-LastWish?include_prereleases&style=for-the-badge) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/linpg?style=for-the-badge&logo=appveyor) ![GitHub](https://img.shields.io/badge/code%20style-black-black?style=for-the-badge&logo=appveyor)
 
 # :speech_balloon: Preamble / 前言
 
@@ -34,23 +32,23 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 # :date: ​R&D Roadmap / 研发路线图
 
-| 计划事宜                      | plans                                            | 时间 Date     |
-| ------------------------- | ------------------------------------------------ | ----------- |
-| 游戏立项                      | Project established                              | 2019.5      |
-| 游戏研发正式开始                  | Development started                              | 2019.9      |
-| 第一个可玩原型                   | First build was available                        | 2019.11     |
-| 游戏概念公布                    | Game Concept Released                            | 2020.2.13   |
-| 第一个alpha版本制作完成            | The first alpha version was available            | 2020.3.11   |
-| Linpg2引擎的所有预期研发工作完成       | All goals for Linpg2 were reached.               | 2020.3      |
-| Linpg引擎开始初期重构（即第三代）       | The reconfiguration of Linpg Engine started      | 2020.4      |
-| Linpg引擎初期重构完成，开始游戏本体的迁徙工作 | The reconfiguration of Linpg Engine was finished | 2020.6      |
-| 游戏本体迁徙工作基本完成              | The migrations completed                         | 2020.8      |
-| 游戏进行小范围测试                 | Small-scale testing                              | 2022.9      |
-| 第1至4章发布                   | The first to fourth chapter releases.            | 2022.10     |
-| 第5至8章发布                   | The fifth to eighth chapter releases.            | 2022.12     |
-| 第9至11章发布                  | The ninth to eleventh chapter releases.          | 2023 spring |
-| 最终章发布                     | Final chapter releases                           | 2023 spring |
-| 第一个DLC发布                  | First DLC releases                               | 2023 Summer |
+| 计划事宜                                      | plans                                               | 时间 Date  |
+| --------------------------------------------- | --------------------------------------------------- | ---------- |
+| 游戏立项                                      | Project established                                 | 2019.5     |
+| 游戏研发正式开始                              | Development started                                 | 2019.9     |
+| 第一个可玩原型                                | First build was available                           | 2019.11    |
+| 游戏概念公布                                  | Game Concept Released                               | 2020.2.13  |
+| 第一个alpha版本制作完成                       | The first alpha version was available               | 2020.3.11  |
+| Linpg2引擎的所有预期研发工作完成              | All development goals for Linpg2 were reached       | 2020.3     |
+| Linpg引擎开始初期重构（即第三代）             | The development of Linpg Engine 3.0 started         | 2020.4     |
+| Linpg引擎初期重构完成，开始游戏本体的迁徙工作 | The development of Linpg Engine 3.0 finished        | 2020.6     |
+| 游戏本体迁徙工作基本完成                      | The migrations from Linpg Engine 2 to 3.0 completed | 2020.8     |
+| 游戏进行小范围测试                            | Small-scale testing                                 | 2022.9     |
+| 第1至3章发布                                  | The first to fourth chapter releases.               | 2022.12.22 |
+| 第5至8章发布                                  | The fifth to eighth chapter releases.               | 2022.12    |
+| 第9至11章发布                                 | The ninth to eleventh chapter releases.             | Pending    |
+| 最终章发布                                    | Final chapter releases                              | Pending    |
+| 第一个DLC发布                                 | First DLC releases                                  | Pending    |
 
 # :memo: Chapters / 游戏章节
 
@@ -58,7 +56,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 | ----- | ---------------- | ---------------------------------------- | ------------------------------------ | ------------- |
 | 1     | 雪色的希望       | A wish likes snow                        | 2022.12.22                           | :hammer:      |
 | 2     | 迷离之下         | Beneath smoke                            | 2022.12.22                           | :hammer:      |
-| 3     | 琴弦之上         | Above string                             | 2022.12.22                           | :hammer:      |
+| 3     | 琴弦之上         | Above string                             | 2023.1                               | :hammer:      |
 | 4     | 喘息（暂定）     | A gasp for breath (Provisional)          |                                      |               |
 | 5     | 无人之防（暂定） | Make defense without dolls (Provisional) |                                      |               |
 | 6     | 机遇（暂定）     | The opportunity (Provisional)            |                                      |               |

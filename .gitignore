@@ -3,6 +3,7 @@
 .mypy_cache/
 .vs*/
 Cache/
+Data/main_chapter/chapter*_dialogs_*.yaml
 Data/workshop/
 Save/
 Source_pyd/

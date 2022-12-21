@@ -298,21 +298,21 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         # 初始化剧情模块
         self._init_dialog(dict(_data["dialogs"].get("data", {})))
         # 章节标题显示
-        DataTmp: dict = linpg.config.load_file(self._get_dialog_file_location())
+        levelInfo: dict = self._get_level_info()
         LoadingTitle.update(
             linpg.lang.get_texts("Battle_UI", "numChapter"),
             self._chapter_id,
-            DataTmp.get("title", linpg.lang.get_text("Global", "no_translation")),
-            DataTmp.get("description", linpg.lang.get_text("Global", "no_translation")),
+            levelInfo.get("title", linpg.lang.get_text("Global", "no_translation")),
+            levelInfo.get("description", linpg.lang.get_text("Global", "no_translation")),
         )
         # 加载关卡背景介绍信息文字
         self.__battle_info = tuple(
             [
                 self._FONT.render(_text, linpg.colors.WHITE)
-                for _text in DataTmp.get(
+                for _text in levelInfo.get(
                     "battle_info",
                     linpg.config.load(
-                        r"Data/chapter_dialogs_example.yaml", "battle_info"
+                        r"Data/template/chapter_level_info_example.yaml", "battle_info"
                     ),
                 )
             ]
@@ -1343,7 +1343,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     ScoreBoard.update(
                         random.choice(list(self.alliances.values())).type,
                         self._chapter_id,
-                        linpg.config.load_file(self._get_dialog_file_location()).get(
+                        self._get_level_info().get(
                             "title", linpg.lang.get_text("Global", "no_translation")
                         ),
                         True,
@@ -1388,7 +1388,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     ScoreBoard.update(
                         random.choice(list(self.alliances.values())).type,
                         self._chapter_id,
-                        linpg.config.load_file(self._get_dialog_file_location()).get(
+                        self._get_level_info().get(
                             "title", linpg.lang.get_text("Global", "no_translation")
                         ),
                         False,
