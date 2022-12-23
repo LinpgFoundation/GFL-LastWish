@@ -123,7 +123,6 @@ class GameMode:
         # 主循环
         while _DIALOG.is_playing():
             _DIALOG.draw(screen)
-            ALPHA_BUILD_WARNING.draw(screen)
             linpg.display.flip()
 
     # 对话编辑器
@@ -152,7 +151,6 @@ class GameMode:
         # 主循环
         while _DIALOG.is_playing():
             _DIALOG.draw(screen)
-            ALPHA_BUILD_WARNING.draw(screen)
             linpg.display.flip()
         # 改变标题回主菜单的样式
         linpg.display.set_caption(linpg.lang.get_text("General", "game_title"))
@@ -182,7 +180,6 @@ class GameMode:
         # 战斗系统主要loop
         while _BATTLE.is_playing():
             _BATTLE.draw(screen)
-            ALPHA_BUILD_WARNING.draw(screen)
             linpg.display.flip()
         # 暂停声效 - 尤其是环境声
         linpg.media.unload()
@@ -211,7 +208,6 @@ class GameMode:
         # 战斗系统主要loop
         while MAP_EDITOR.is_playing():
             MAP_EDITOR.draw(screen)
-            ALPHA_BUILD_WARNING.draw(screen)
             linpg.display.flip()
         # 改变标题回主菜单的样式
         linpg.display.set_caption(linpg.lang.get_text("General", "game_title"))

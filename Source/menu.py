@@ -2,6 +2,8 @@ from shutil import copyfile
 
 from .components import *
 
+# 设置引擎的标准文字大小
+linpg.font.set_global_font("medium", linpg.display.get_width() // 40)
 
 # 主菜单系统
 class MainMenu(linpg.AbstractSystem):
@@ -179,9 +181,7 @@ class MainMenu(linpg.AbstractSystem):
         else:
             chapter_title = linpg.lang.get_text("Global", "no_translation")
         return "{0}: {1}".format(
-            linpg.lang.get_text("Battle_UI", "numChapter").format(
-                linpg.lang.get_num_in_local_text(chapterId)
-            ),
+            linpg.lang.get_text("Battle_UI", "numChapter").format(chapterId),
             chapter_title,
         )
 
@@ -244,6 +244,13 @@ class MainMenu(linpg.AbstractSystem):
                 i += 1
         # 选择主线的章节
         elif self.menu_type == 1:
+            max_right: int = 0
+            for button in self.chapter_select:
+                max_right = max(button.right, max_right)
+            _right_limit: int = linpg.display.get_width() * 9 // 10
+            if max_right > _right_limit:
+                for button in self.chapter_select:
+                    button.set_right(button.right - max_right + _right_limit)
             for button in self.chapter_select:
                 button.draw(screen)
                 if button.is_hovered():
@@ -739,7 +746,6 @@ class MainMenu(linpg.AbstractSystem):
                             )
                             self.__restart_background()
                             break
-        ALPHA_BUILD_WARNING.draw(screen)
         if self.__loading_screen is not None:
             alpha_t: Optional[int] = self.__loading_screen.get_alpha()
             if alpha_t is None or alpha_t <= 0:
