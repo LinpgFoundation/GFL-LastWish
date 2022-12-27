@@ -1,7 +1,7 @@
 Battle_UI:
+  bullets: bullets
   endRound: Round Ends
   enemyRound: Enemy Round
-  getBullets: Get Bullets
   getHealth: Gain Health
   numChapter: Chapter {}
   numRound: Round {}

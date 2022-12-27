@@ -35,7 +35,7 @@ class MainMenu(linpg.AbstractSystem):
                 ),
             )
             index += 1
-        # 渲染获取光敏性癫痫警告
+        # 渲染光敏性癫痫警告
         PhotosensitiveSeizureWarning: list[linpg.ImageSurface] = (
             [
                 linpg.font.render(text_t, "white", font_size)
@@ -151,11 +151,11 @@ class MainMenu(linpg.AbstractSystem):
     # 获取章节id
     def __get_chapter_title(self, chapterType: str, chapterId: int) -> str:
         # 生成dialog文件的路径
-        dialog_file_path: str = (
+        level_info_file_path: str = (
             os.path.join(
                 "Data",
                 chapterType,
-                "chapter{0}_dialogs_{1}.yaml".format(
+                "chapter{0}_level_info_{1}.yaml".format(
                     chapterId, linpg.setting.get_language()
                 ),
             )
@@ -164,22 +164,14 @@ class MainMenu(linpg.AbstractSystem):
                 "Data",
                 chapterType,
                 self.current_selected_workshop_project,
-                "chapter{0}_dialogs_{1}.yaml".format(
+                "chapter{0}_level_info_{1}.yaml".format(
                     chapterId, linpg.setting.get_language()
                 ),
             )
         )
-        chapter_title: str
-        if os.path.exists(dialog_file_path):
-            dialog_data = linpg.config.load(dialog_file_path)
-            # 如果dialog文件中有title，则读取
-            chapter_title = (
-                dialog_data["title"]
-                if "title" in dialog_data
-                else linpg.lang.get_text("Global", "no_translation")
-            )
-        else:
-            chapter_title = linpg.lang.get_text("Global", "no_translation")
+        chapter_title: str = linpg.config.try_load_file_if_exists(
+            level_info_file_path
+        ).get("title", linpg.lang.get_text("Global", "no_translation"))
         return "{0}: {1}".format(
             linpg.lang.get_text("Battle_UI", "numChapter").format(chapterId),
             chapter_title,

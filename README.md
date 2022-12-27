@@ -1,6 +1,6 @@
 # GFL-Last Wish 少前-遗愿
 
-![GitHub](https://img.shields.io/github/license/TigeiaWorkshop/GirlsFrontLine-LastWish?style=for-the-badge&logo=appveyor) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/TigeiaWorkshop/GirlsFrontLine-LastWish?include_prereleases&style=for-the-badge) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/linpg?style=for-the-badge&logo=appveyor) ![GitHub](https://img.shields.io/badge/code%20style-black-black?style=for-the-badge&logo=appveyor)
+![GitHub](https://img.shields.io/github/license/TigeiaWorkshop/GirlsFrontLine-LastWish?style=for-the-badge&logo=appveyor) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/TigeiaWorkshop/GirlsFrontLine-LastWish?include_prereleases&style=for-the-badge) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/linpg?style=for-the-badge&logo=appveyor) ![Style](https://img.shields.io/badge/code%20style-black-black?style=for-the-badge&logo=appveyor)
 
 # :speech_balloon: Preamble / 前言
 
@@ -54,8 +54,8 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 | Index | 名称             | Name                                     | Expected release date / 预计发布时间 | Status / 状态 |
 | ----- | ---------------- | ---------------------------------------- | ------------------------------------ | ------------- |
-| 1     | 雪色的希望       | A wish likes snow                        | 2022.12.22                           | :hammer:      |
-| 2     | 迷离之下         | Beneath smoke                            | 2022.12.22                           | :hammer:      |
+| 1     | 雪色的希望       | A wish likes snow                        | 2022.12.31                           | :hammer:      |
+| 2     | 迷离之下         | Beneath smoke                            | 2022.12.31                           | :hammer:      |
 | 3     | 琴弦之上         | Above string                             | 2023.1                               | :hammer:      |
 | 4     | 喘息（暂定）     | A gasp for breath (Provisional)          |                                      |               |
 | 5     | 无人之防（暂定） | Make defense without dolls (Provisional) |                                      |               |

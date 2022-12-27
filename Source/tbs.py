@@ -62,9 +62,6 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self.__end_round_button: linpg.StaticImage = linpg.StaticImage.new_place_holder()
         # 关卡背景信息
         self.__battle_info: tuple[linpg.ImageSurface, ...] = tuple()
-        # 补给信息
-        self.__supply_board_items: list = []
-        self.__supply_board_stayingTime: int = 0
         # 加载用于渲染电影效果的上下黑色帘幕
         black_curtain: linpg.ImageSurface = linpg.surfaces.colored(
             (linpg.display.get_width(), linpg.display.get_height() // 7),
@@ -346,12 +343,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         # 加载按钮的文字
         self.selectMenuUI = SelectMenu()
         WarningMessageSystem.init(linpg.display.get_height() // 33)
-        # 背景音乐路径
-        self._background_music_folder_path: str = "Assets/music"
         # 设置背景音乐
-        self.set_bgm(
-            os.path.join(self._background_music_folder_path, _data["background_music"])
-        )
+        self.set_bgm(os.path.join("Assets", "music", _data["background_music"]))
         # 加载胜利目标
         self.__mission_objectives.clear()
         self.__mission_objectives.update(_data["mission_objectives"])
@@ -383,19 +376,6 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self.__end_round_button.set_right(linpg.display.get_width() * 0.95)
         # 加载子弹图片
         # bullet_img = load.img("Assets/image/UI/bullet.png", get_tile_width()/6, self._MAP.tile_height/12)
-        # 加载显示获取到补给后的信息栏
-        supply_board_width: int = int(linpg.display.get_width() / 3)
-        supply_board_height: int = int(linpg.display.get_height() / 12)
-        supply_board_x: int = int((linpg.display.get_width() - supply_board_width) / 2)
-        self.__supply_board = linpg.load.movable_static_image(
-            r"Assets/image/UI/score.png",
-            (supply_board_x, -supply_board_height),
-            (supply_board_x, 0),
-            (0, int(linpg.display.get_height() * 0.005)),
-            (supply_board_width, supply_board_height),
-        )
-        self.__supply_board_items.clear()
-        self.__supply_board_stayingTime = 0
         RangeSystem.update_size(self._MAP.tile_width * 4 // 5)
         # 角色信息UI管理
         self.__characterInfoBoard = CharacterInfoBoard()
@@ -932,8 +912,6 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 isinstance(_decorationOnPos, ChestObject)
                                 and self.characterGetClick in _decorationOnPos.whitelist
                             ):
-                                # 清空储存列表
-                                self.__supply_board_items.clear()
                                 # 将物品按照类型放入列表
                                 for (
                                     itemType,
@@ -943,31 +921,24 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                         self.characterInControl.add_bullets_carried(
                                             itemData
                                         )
-                                        self.__supply_board_items.append(
-                                            self._FONT.render(
+                                        self.__damage_do_to_characters[
+                                            self.characterGetClick
+                                        ] = self._FONT.render(
+                                            "+ {0} {1}".format(
+                                                itemData,
                                                 linpg.lang.get_texts(
-                                                    "Battle_UI", "getBullets"
-                                                )
-                                                + ": "
-                                                + str(itemData),
-                                                linpg.colors.WHITE,
-                                            )
+                                                    "Battle_UI", "bullets"
+                                                ),
+                                            ),
+                                            linpg.colors.ORANGE,
                                         )
                                     elif itemType == "hp":
                                         self.characterInControl.heal(itemData)
-                                        self.__supply_board_items.append(
-                                            self._FONT.render(
-                                                linpg.lang.get_texts(
-                                                    "Battle_UI", "getHealth"
-                                                )
-                                                + ": "
-                                                + str(itemData),
-                                                linpg.colors.WHITE,
-                                            )
+                                        self.__damage_do_to_characters[
+                                            self.characterGetClick
+                                        ] = self._FONT.render(
+                                            "+ {} hp".format(itemData), linpg.colors.GREEN
                                         )
-                                # 如果UI已经回到原位
-                                if len(self.__supply_board_items) > 0:
-                                    self.__supply_board.move_toward()
                                 # 移除箱子
                                 self._MAP.remove_decoration(_decorationOnPos)
                             # 检测当前所在点是否应该触发对话
@@ -1028,7 +999,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                     self.__damage_do_to_characters[
                                         key
                                     ] = self._FONT.render(
-                                        "-" + str(the_damage), linpg.colors.RED
+                                        "- {} hp".format(the_damage), linpg.colors.RED
                                     )
                                     self.enemies[key].alert(100)
                                 else:
@@ -1057,7 +1028,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                         self.__damage_do_to_characters[
                                             key
                                         ] = self._FONT.render(
-                                            "-" + str(value), linpg.colors.RED
+                                            "- {} hp".format(value), linpg.colors.RED
                                         )
                                         self.enemies[key].alert(100)
                                     else:
@@ -1072,7 +1043,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                     self.__damage_do_to_characters[
                                         key
                                     ] = self._FONT.render(
-                                        "+" + str(value), linpg.colors.GREEN
+                                        "+ {} hp".format(value), linpg.colors.GREEN
                                     )
                         elif (
                             self.characterInControl.get_imgId("skill")
@@ -1138,7 +1109,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 self.__damage_do_to_characters[
                                     self.current_instruction.target
                                 ] = self._FONT.render(
-                                    "-" + str(the_damage), linpg.colors.RED
+                                    "- {} hp".format(the_damage), linpg.colors.RED
                                 )
                             else:
                                 self.__damage_do_to_characters[
@@ -1274,41 +1245,6 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             elif linpg.global_variables.try_get_str("endBattleAs") == "lose":
                 self.__whose_round = "result_fail"
                 linpg.global_variables.remove("endBattleAs")
-
-            # 显示获取到的物资
-            if self.__supply_board.has_reached_target():
-                if self.__supply_board.is_moving_toward_target():
-                    if self.__supply_board_stayingTime >= 30:
-                        self.__supply_board.move_back()
-                        self.__supply_board_stayingTime = 0
-                    else:
-                        self.__supply_board_stayingTime += 1
-                elif len(self.__supply_board_items) > 0:
-                    self.__supply_board_items.clear()
-            if len(self.__supply_board_items) > 0:
-                self.__add_on_screen_object(self.__supply_board)
-                lenTemp = 0
-                for i in range(len(self.__supply_board_items)):
-                    lenTemp += self.__supply_board_items[i].get_width() * 1.5
-                start_point: int = round((screen.get_width() - lenTemp) / 2)
-                for i in range(len(self.__supply_board_items)):
-                    start_point += self.__supply_board_items[i].get_width() * 0.25
-                    self.__add_on_screen_object(
-                        self.__supply_board_items[i],
-                        -1,
-                        (
-                            start_point,
-                            int(
-                                (
-                                    self.__supply_board.get_height()
-                                    - self.__supply_board_items[i].get_height()
-                                )
-                                / 2
-                            ),
-                        ),
-                        (0, self.__supply_board.y),
-                    )
-                    start_point += self.__supply_board_items[i].get_width() * 1.25
 
             if self.__whose_round == "player":
                 # 加载结束回合的按钮
