@@ -491,6 +491,11 @@ class CharacterInfoBoard:
                 _info_rect.y + int(_padding * 1.5),
                 _info_rect.bottom - _padding - character_image.get_height(),
             )
+            linpg.Draw.rect(
+                self.__board,
+                (255, 235, 200, 255),
+                (character_image_dest, character_image.get_size()),
+            )
             self.__board.blit(character_image, character_image_dest)
             linpg.Draw.rect(
                 self.__board,
@@ -586,29 +591,6 @@ class LoadingTitle:
         if cls.title_description is not None:
             cls.title_description.set_alpha(alpha)
             cls.title_description.draw(screen)
-
-
-# 需要被打印的物品
-class ItemNeedBlit(linpg.GameObject2point5d):
-    def __init__(
-        self,
-        image: linpg.ImageSurface | linpg.GameObject2d,
-        weight: int,
-        pos: tuple[int, int],
-        offSet: tuple[int, int],
-    ):
-        super().__init__(pos[0], pos[1], weight)
-        self.image: linpg.ImageSurface | linpg.GameObject2d = image
-        self.offSet: tuple[int, int] = offSet
-
-    def draw(self, surface: linpg.ImageSurface) -> None:
-        if isinstance(self.image, linpg.ImageSurface):
-            surface.blit(self.image, linpg.coordinates.add(self.pos, self.offSet))
-        else:
-            try:
-                self.image.display(surface, self.offSet)
-            except Exception:
-                self.image.draw(surface)
 
 
 class RangeSystem:

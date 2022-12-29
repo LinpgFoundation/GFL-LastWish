@@ -1,5 +1,6 @@
 Battle_UI:
   bullets: bullets
+  currentRound: 'Current Round: {}'
   endRound: Round Ends
   enemyRound: Enemy Round
   getHealth: Gain Health

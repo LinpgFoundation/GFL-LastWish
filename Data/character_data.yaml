@@ -32,41 +32,38 @@ aegis:
   attack_coverage: 1
   effective_range:
   - 2
-  - 2
-  - 2
+  - 1
   faction: SangvisFerri
   kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
+  magazine_capacity: 8
+  max_action_point: 15
+  max_damage: 80
+  max_hp: 1200
+  min_damage: 50
 aegis_ga:
   attack_coverage: 1
   effective_range:
   - 2
   - 2
-  - 2
   faction: SangvisFerri
   kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
+  magazine_capacity: 8
+  max_action_point: 15
+  max_damage: 85
+  max_hp: 1500
+  min_damage: 50
 aegis_swap:
   attack_coverage: 1
   effective_range:
   - 2
   - 2
-  - 2
   faction: SangvisFerri
   kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
+  magazine_capacity: 8
+  max_action_point: 15
+  max_damage: 80
+  max_hp: 1600
+  min_damage: 50
 asval:
   attack_coverage: 1
   effective_range:
@@ -87,16 +84,15 @@ asval:
 brute:
   attack_coverage: 1
   effective_range:
-  - 2
-  - 2
+  - 1
   - 2
   faction: SangvisFerri
   kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
+  magazine_capacity: 10
+  max_action_point: 30
+  max_damage: 80
+  max_hp: 670
+  min_damage: 60
 contender:
   attack_coverage: 1
   effective_range:
@@ -115,42 +111,41 @@ contender:
 dinergate:
   attack_coverage: 1
   effective_range:
-  - 2
-  - 2
-  - 2
+  - 1
+  - 1
   faction: SangvisFerri
   kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
+  magazine_capacity: 10
+  max_action_point: 30
+  max_damage: 100
+  max_hp: 300
+  min_damage: 60
 dragoon:
   attack_coverage: 1
   effective_range:
-  - 2
-  - 2
+  - 1
+  - 1
   - 2
   faction: SangvisFerri
   kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
+  magazine_capacity: 5
+  max_action_point: 20
+  max_damage: 120
+  max_hp: 1000
+  min_damage: 70
 dragoon_swap:
   attack_coverage: 1
   effective_range:
   - 2
-  - 2
+  - 1
   - 2
   faction: SangvisFerri
   kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
+  magazine_capacity: 5
+  max_action_point: 20
+  max_damage: 125
+  max_hp: 1250
+  min_damage: 80
 fnfnc:
   attack_coverage: 1
   effective_range:
@@ -211,32 +206,6 @@ g41:
   min_damage: 1
   skill_coverage: 1
   skill_effective_range: []
-golyat:
-  attack_coverage: 1
-  effective_range:
-  - 2
-  - 2
-  - 2
-  faction: SangvisFerri
-  kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
-golyatplus:
-  attack_coverage: 1
-  effective_range:
-  - 2
-  - 2
-  - 2
-  faction: SangvisFerri
-  kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
 grizzly:
   attack_coverage: 1
   effective_range:
@@ -271,24 +240,28 @@ gsh18:
 guard:
   attack_coverage: 1
   effective_range:
-  - 5
+  - 1
+  - 1
+  - 1
   faction: SangvisFerri
   kind: HG
-  magazine_capacity: 20
-  max_action_point: 20
+  magazine_capacity: 10
+  max_action_point: 10
   max_damage: 100
-  max_hp: 800
-  min_damage: 50
+  max_hp: 1000
+  min_damage: 80
 guard_swap:
   attack_coverage: 1
   effective_range:
-  - 6
+  - 2
+  - 1
+  - 1
   faction: SangvisFerri
   kind: HG
-  magazine_capacity: 20
-  max_action_point: 20
+  magazine_capacity: 10
+  max_action_point: 10
   max_damage: 150
-  max_hp: 1000
+  max_hp: 1200
   min_damage: 100
 hk416:
   attack_coverage: 1
@@ -308,55 +281,42 @@ hk416:
 jaeger:
   attack_coverage: 1
   effective_range:
-  - 3
-  - 1
+  - 4
+  - 2
   - 1
   faction: SangvisFerri
   kind: RF
-  magazine_capacity: 20
-  max_action_point: 20
-  max_damage: 500
-  max_hp: 200
-  min_damage: 450
+  magazine_capacity: 10
+  max_action_point: 15
+  max_damage: 110
+  max_hp: 800
+  min_damage: 100
 jaeger_swap:
   attack_coverage: 1
   effective_range:
   - 4
-  - 1
-  - 1
+  - 2
+  - 2
   faction: SangvisFerri
   kind: RF
-  magazine_capacity: 20
-  max_action_point: 20
-  max_damage: 600
-  max_hp: 200
-  min_damage: 400
+  magazine_capacity: 10
+  max_action_point: 15
+  max_damage: 120
+  max_hp: 850
+  min_damage: 110
 jaguar:
   attack_coverage: 1
   effective_range:
   - 2
   - 2
-  - 2
+  - 1
   faction: SangvisFerri
   kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
-jupiter:
-  attack_coverage: 1
-  effective_range:
-  - 2
-  - 2
-  - 2
-  faction: SangvisFerri
-  kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
+  magazine_capacity: 12
+  max_action_point: 10
+  max_damage: 80
+  max_hp: 450
+  min_damage: 60
 kp31:
   attack_coverage: 1
   effective_range:
@@ -435,16 +395,16 @@ m1928a1:
 manticore:
   attack_coverage: 1
   effective_range:
-  - 2
+  - 1
   - 2
   - 2
   faction: SangvisFerri
   kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
+  magazine_capacity: 4
+  max_action_point: 10
+  max_damage: 700
+  max_hp: 1525
+  min_damage: 600
 mg4:
   attack_coverage: 1
   effective_range:
@@ -478,18 +438,18 @@ negev:
 nemeum:
   attack_coverage: 1
   effective_range:
-  - 2
-  - 2
+  - 1
+  - 1
   - 2
   faction: SangvisFerri
   kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
+  magazine_capacity: 10
+  max_action_point: 10
+  max_damage: 185
+  max_hp: 950
+  min_damage: 110
 pp1901:
-  attack_coverage: 2
+  attack_coverage: 1
   effective_range:
   - 1
   - 1
@@ -513,11 +473,11 @@ prowler:
   - 1
   faction: SangvisFerri
   kind: SMG
-  magazine_capacity: 20
-  max_action_point: 10
-  max_damage: 200
-  max_hp: 250
-  min_damage: 100
+  magazine_capacity: 18
+  max_action_point: 15
+  max_damage: 100
+  max_hp: 800
+  min_damage: 80
 prowler_swap:
   attack_coverage: 1
   effective_range:
@@ -526,11 +486,11 @@ prowler_swap:
   - 1
   faction: SangvisFerri
   kind: SMG
-  magazine_capacity: 20
-  max_action_point: 10
-  max_damage: 300
-  max_hp: 250
-  min_damage: 200
+  magazine_capacity: 18
+  max_action_point: 15
+  max_damage: 110
+  max_hp: 900
+  min_damage: 80
 ripper:
   attack_coverage: 1
   effective_range:
@@ -539,10 +499,10 @@ ripper:
   faction: SangvisFerri
   kind: SMG
   magazine_capacity: 20
-  max_action_point: 10
-  max_damage: 400
-  max_hp: 400
-  min_damage: 300
+  max_action_point: 20
+  max_damage: 85
+  max_hp: 860
+  min_damage: 55
 saiga12:
   attack_coverage: 1
   effective_range:
@@ -576,16 +536,16 @@ sat8:
 scouts:
   attack_coverage: 1
   effective_range:
-  - 2
-  - 2
+  - 1
+  - 1
   - 2
   faction: SangvisFerri
   kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
+  magazine_capacity: 15
+  max_action_point: 15
+  max_damage: 90
+  max_hp: 650
+  min_damage: 60
 sr3mp:
   attack_coverage: 1
   effective_range:
@@ -621,16 +581,16 @@ sv98:
 tarantula:
   attack_coverage: 1
   effective_range:
-  - 2
+  - 1
   - 2
   - 2
   faction: SangvisFerri
   kind: null
-  magazine_capacity: 1
-  max_action_point: 1
-  max_damage: 1
-  max_hp: 1
-  min_damage: 1
+  magazine_capacity: 10
+  max_action_point: 30
+  max_damage: 130
+  max_hp: 335
+  min_damage: 90
 ump45:
   attack_coverage: 1
   effective_range:
@@ -671,9 +631,9 @@ vespid:
   kind: AR
   magazine_capacity: 20
   max_action_point: 15
-  max_damage: 450
-  max_hp: 350
-  min_damage: 400
+  max_damage: 150
+  max_hp: 560
+  min_damage: 110
 wa2000:
   attack_coverage: 1
   effective_range:

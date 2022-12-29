@@ -1,5 +1,6 @@
 Battle_UI:
   bullets: 备弹
+  currentRound: '当前回合: {}'
   endRound: 回合结束
   enemyRound: 敌方回合
   getHealth: 获得血量

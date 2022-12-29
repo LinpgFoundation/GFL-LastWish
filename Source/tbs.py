@@ -52,14 +52,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self.__thingsCanReact: list[linpg.DecorationObject] = []
         # 需要救助的角色列表
         self.friendsCanSave: list = []
-        # 每次需要更新的物品
-        self.__items_to_blit: list = []
-        # 物品比重
-        self.__max_item_weight: int = 0
         # 胜利目标
         self.__mission_objectives: dict = {}
         # 结束回合的图片
         self.__end_round_button: linpg.StaticImage = linpg.StaticImage.new_place_holder()
+        # 当前回合的字体
+        self.__current_round_txt: linpg.StaticImage = linpg.StaticImage.new_place_holder()
         # 关卡背景信息
         self.__battle_info: tuple[linpg.ImageSurface, ...] = tuple()
         # 加载用于渲染电影效果的上下黑色帘幕
@@ -88,22 +86,46 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
 
     """关键重写或实现"""
 
+    # 初始化ui
+    def __init_ui(self) -> None:
+        # 切换回合时的UI
+        self.__RoundSwitchUI = RoundSwitch(
+            linpg.display.get_width(), linpg.display.get_height()
+        )
+        # 加载结束回合的文字
+        self.__end_round_txt = self._FONT.render(
+            linpg.lang.get_text("Battle_UI", "endRound"), linpg.colors.WHITE
+        )
+        # 加载结束回合的按钮
+        self.__end_round_button = linpg.load.static_image(
+            r"Assets/image/UI/end_round_button.png",
+            (0, linpg.display.get_height() * 0.8),
+            (self.__end_round_txt.get_width() * 2, self.__end_round_txt.get_height() * 3),
+        )
+        self.__end_round_button.set_right(linpg.display.get_width() * 0.95)
+        # 加载当前回合提示的文字
+        self.__current_round_txt = linpg.StaticImage(
+            linpg.ArtisticFont.render_with_outline(
+                linpg.lang.get_text("Battle_UI", "currentRound").format(
+                    self.__statistics.total_rounds
+                ),
+                linpg.colors.WHITE,
+                self._FONT.size,
+            ),
+            self.__end_round_button.left,
+            self.__end_round_button.bottom,
+        )
+        self.__current_round_txt.set_width_with_original_image_size_locked(
+            self.__end_round_button.width
+        )
+        self.__current_round_txt.set_right(self.__end_round_button.right)
+
     # 更新语言
     def update_language(self) -> None:
         super().update_language()
         self.selectMenuUI.update()
-        self.__RoundSwitchUI = RoundSwitch(
-            linpg.display.get_width(), linpg.display.get_height()
-        )
-        self.end_round_txt = self._FONT.render(
-            linpg.lang.get_text("Battle_UI", "endRound"), linpg.colors.WHITE
-        )
-        self.__end_round_button = linpg.load.static_image(
-            r"Assets/image/UI/end_round_button.png",
-            (0, linpg.display.get_height() * 0.8),
-            (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 3),
-        )
-        self.__end_round_button.set_right(linpg.display.get_width() * 0.95)
+        # 初始化ui
+        self.__init_ui()
         WarningMessageSystem.update_language()
 
     # 返回需要保存数据
@@ -249,7 +271,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
     def _display_map(self, screen: linpg.ImageSurface) -> None:
         super()._display_map(screen)
         # 展示天气
-        self._weather_system.draw(screen, self._MAP.tile_width)
+        self._weather_system.draw(screen, self._MAP.tile_size)
         # 展示所有角色Ui
         if self.__is_battle_mode is True or not self._is_any_dialog_playing():
             # 角色UI
@@ -364,25 +386,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         super()._process_data(_data)
         # 重新计算光亮区域
         self._update_darkness()
-        # 加载结束回合的图片
-        self.end_round_txt = self._FONT.render(
-            linpg.lang.get_text("Battle_UI", "endRound"), linpg.colors.WHITE
-        )
-        self.__end_round_button = linpg.load.static_image(
-            r"Assets/image/UI/end_round_button.png",
-            (0, linpg.display.get_height() * 0.8),
-            (self.end_round_txt.get_width() * 2, self.end_round_txt.get_height() * 3),
-        )
-        self.__end_round_button.set_right(linpg.display.get_width() * 0.95)
+        # 初始化ui
+        self.__init_ui()
         # 加载子弹图片
         # bullet_img = load.img("Assets/image/UI/bullet.png", get_tile_width()/6, self._MAP.tile_height/12)
-        RangeSystem.update_size(self._MAP.tile_width * 4 // 5)
+        RangeSystem.update_size(self._MAP.tile_size * 4 // 5)
         # 角色信息UI管理
         self.__characterInfoBoard = CharacterInfoBoard()
-        # 切换回合时的UI
-        self.__RoundSwitchUI = RoundSwitch(
-            linpg.display.get_width(), linpg.display.get_height()
-        )
         """-----加载音效-----"""
         # 更新所有音效的音量
         self._update_sound_volume()
@@ -394,28 +404,6 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             self._footstep_sounds.add(walkingSoundPath)
 
     """画面"""
-    # 新增需要在屏幕上画出的物品
-    def __add_on_screen_object(
-        self,
-        image: linpg.ImageSurface | linpg.GameObject2d,
-        weight: int = -1,
-        pos: tuple[int, int] = (0, 0),
-        offSet: tuple[int, int] = (0, 0),
-    ) -> None:
-        if weight < 0:
-            self.__max_item_weight += 1
-            weight = self.__max_item_weight
-        elif weight > self.__max_item_weight:
-            self.__max_item_weight = weight
-        self.__items_to_blit.append(ItemNeedBlit(image, weight, pos, offSet))
-
-    # 更新屏幕
-    def __update_scene(self, screen: linpg.ImageSurface) -> None:
-        self.__items_to_blit.sort()
-        for item in self.__items_to_blit:
-            item.draw(screen)
-        self.__items_to_blit.clear()
-        self.__max_item_weight = 0
 
     # 更新音量
     def _update_sound_volume(self) -> None:
@@ -473,11 +461,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             elif self.__zoomIntoBe > self.__zoomIn:
                 self.__zoomIn += 10
             self._MAP.set_tile_size(
-                self._standard_tile_width * self.__zoomIn / 100,
-                self._standard_tile_height * self.__zoomIn / 100,
+                self._standard_tile_size * self.__zoomIn / 100,
             )
             # 根据block尺寸重新加载对应尺寸的UI
-            RangeSystem.update_size(self._MAP.tile_width * 4 // 5)
+            RangeSystem.update_size(self._MAP.tile_size * 4 // 5)
             self.selectMenuUI.update()
         # 画出地图
         self._display_map(screen)
@@ -1131,12 +1118,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 # 显示选择菜单
                 self.selectMenuUI.draw(
                     screen,
-                    round(self._MAP.tile_width / 10),
+                    round(self._MAP.tile_size / 10),
                     {
                         "xStart": the_coord[0],
-                        "xEnd": the_coord[0] + self._MAP.tile_width,
+                        "xEnd": the_coord[0] + self._MAP.tile_size,
                         "yStart": the_coord[1],
-                        "yEnd": the_coord[1] + self._MAP.tile_width * 0.5,
+                        "yEnd": the_coord[1] + self._MAP.tile_size * 0.5,
                     },
                     self.characterInControl.kind,
                     self.friendsCanSave,
@@ -1246,23 +1233,6 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 self.__whose_round = "result_fail"
                 linpg.global_variables.remove("endBattleAs")
 
-            if self.__whose_round == "player":
-                # 加载结束回合的按钮
-                self.__add_on_screen_object(self.__end_round_button)
-                self.__add_on_screen_object(
-                    self.end_round_txt,
-                    -1,
-                    self.__end_round_button.pos,
-                    (
-                        int(self.__end_round_button.get_width() * 0.35),
-                        (
-                            self.__end_round_button.get_height()
-                            - self.end_round_txt.get_height()
-                        )
-                        // 2,
-                    ),
-                )
-
             # 显示警告
             WarningMessageSystem.draw(screen)
 
@@ -1369,5 +1339,21 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         if _CONSOLE is not None:
             _CONSOLE.draw(screen)
 
-        # 刷新画面
-        self.__update_scene(screen)
+        # 结束回合的按钮
+        if self.__whose_round == "player":
+            self.__end_round_button.draw(screen)
+            screen.blit(
+                self.__end_round_txt,
+                linpg.coordinates.add(
+                    self.__end_round_button.pos,
+                    (
+                        int(self.__end_round_button.get_width() * 0.35),
+                        (
+                            self.__end_round_button.get_height()
+                            - self.__end_round_txt.get_height()
+                        )
+                        // 2,
+                    ),
+                ),
+            )
+            self.__current_round_txt.draw(screen)
