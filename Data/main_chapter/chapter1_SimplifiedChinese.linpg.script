@@ -95,7 +95,7 @@ sv98:
 [section]dialog_after_battle
 
 [bgi]research.jpg
-[bgm]Room_1.ogg
+[bgm]Room_1.mp3
 [display]kalina_5.png
 
 null:

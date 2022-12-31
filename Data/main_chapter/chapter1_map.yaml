@@ -2,7 +2,7 @@ at_night: false
 background_image: snowfield.jpg
 background_music: Combat_02_RemnantFantasyPackage_Synari.ogg
 chapter_id: 1
-chapter_type: workshop
+chapter_type: main_chapter
 decoration:
 - id: tree:1
   x: 0
@@ -984,7 +984,7 @@ map:
   - water:39
 mission_objectives:
   allow_any_one_die: false
-  round_limitation: 10
+  round_limitation: -1
   target: null
   type: annihilation
 project_name: main_chapter

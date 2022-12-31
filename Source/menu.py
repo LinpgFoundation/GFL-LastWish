@@ -480,7 +480,7 @@ class MainMenu(linpg.AbstractSystem):
         if cover_path is not None:
             if self.__cover_img_surface is None:
                 self.__cover_img_surface = linpg.load.static_image(
-                    cover_path, (0, 0), screen.get_size(), cover_path
+                    cover_path, (0, 0), tag=cover_path
                 )
                 self.__cover_img_surface.set_alpha(10)
             elif cover_path != self.__cover_img_surface.tag:
@@ -498,6 +498,10 @@ class MainMenu(linpg.AbstractSystem):
             GameMode.VIDEO_BACKGROUND.draw(screen)
         # 封面
         if self.__cover_img_surface is not None:
+            self.__cover_img_surface.set_width_with_original_image_size_locked(
+                screen.get_width()
+            )
+            self.__cover_img_surface.set_centery(screen.get_height() // 2)
             self.__cover_img_surface.draw(screen)
 
     # 画出主菜单

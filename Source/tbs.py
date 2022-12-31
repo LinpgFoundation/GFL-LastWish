@@ -23,7 +23,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         # 是否是死亡的那个
         self.the_dead_one: dict = {}
         # 谁的回合
-        self.__whose_round: str = "sangvisFerrisToPlayer"
+        self.__whose_round: WhoseRound = WhoseRound.sangvisFerrisToPlayer
         # 技能对象
         self.__skill_target: tuple[str, ...] = tuple()
         # 被救助的那个角色
@@ -86,6 +86,24 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
 
     """关键重写或实现"""
 
+    # 更新当前回合提示文字
+    def __update_current_round_text(self) -> None:
+        self.__current_round_txt = linpg.StaticImage(
+            linpg.ArtisticFont.render_with_outline(
+                linpg.lang.get_text("Battle_UI", "currentRound").format(
+                    self.__statistics.total_rounds
+                ),
+                linpg.colors.WHITE,
+                self._FONT.size,
+            ),
+            self.__end_round_button.left,
+            self.__end_round_button.bottom,
+        )
+        self.__current_round_txt.set_width_with_original_image_size_locked(
+            self.__end_round_button.width
+        )
+        self.__current_round_txt.set_right(self.__end_round_button.right)
+
     # 初始化ui
     def __init_ui(self) -> None:
         # 切换回合时的UI
@@ -104,21 +122,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         )
         self.__end_round_button.set_right(linpg.display.get_width() * 0.95)
         # 加载当前回合提示的文字
-        self.__current_round_txt = linpg.StaticImage(
-            linpg.ArtisticFont.render_with_outline(
-                linpg.lang.get_text("Battle_UI", "currentRound").format(
-                    self.__statistics.total_rounds
-                ),
-                linpg.colors.WHITE,
-                self._FONT.size,
-            ),
-            self.__end_round_button.left,
-            self.__end_round_button.bottom,
-        )
-        self.__current_round_txt.set_width_with_original_image_size_locked(
-            self.__end_round_button.width
-        )
-        self.__current_round_txt.set_right(self.__end_round_button.right)
+        self.__update_current_round_text()
 
     # 更新语言
     def update_language(self) -> None:
@@ -501,11 +505,11 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     self.action_choice = None
                     RangeSystem.clear()
             # 玩家回合
-            if self.__whose_round == "player":
+            if self.__whose_round is WhoseRound.player:
                 if linpg.controller.get_event("confirm"):
                     # 如果点击了回合结束的按钮
                     if self.__end_round_button.is_hovered() and self.__is_waiting is True:
-                        self.__whose_round = "playerToSangvisFerris"
+                        self.__whose_round = WhoseRound.playerToSangvisFerris
                         self.characterGetClick = None
                         RangeSystem.set_visible(True)
                         RangeSystem.clear()
@@ -612,12 +616,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         for key in self.__skill_target:
                             if key in self.alliances:
                                 self.characterInControl.set_flip_based_on_pos(
-                                    self.alliances[key]
+                                    self.alliances[key].get_pos()
                                 )
                             elif key in self.enemies:
                                 self.characterInControl.notice()
                                 self.characterInControl.set_flip_based_on_pos(
-                                    self.enemies[key]
+                                    self.enemies[key].get_pos()
                                 )
                         self.characterInControl.try_reduce_action_point(8)
                         self.characterInControl.play_sound("skill")
@@ -1041,7 +1045,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             self.action_choice = None
 
             # 敌方回合
-            if self.__whose_round == "sangvisFerris":
+            if self.__whose_round is WhoseRound.sangvisFerris:
                 # 如果当前角色还没做出决定
                 if self.enemy_instructions is None:
                     # 生成决定
@@ -1064,7 +1068,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             )
                         elif self.current_instruction.action == "attack":
                             self.enemyInControl.set_flip_based_on_pos(
-                                self.alliances[self.current_instruction.target]
+                                self.alliances[self.current_instruction.target].get_pos()
                             )
                             self.enemyInControl.set_action("attack")
                     # 根据选择调整动画
@@ -1109,7 +1113,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     self.enemy_instructions = None
                     self.current_instruction = None
                     if self.enemies_in_control_id >= len(self.sangvisFerris_name_list):
-                        self.__whose_round = "sangvisFerrisToPlayer"
+                        self.__whose_round = WhoseRound.sangvisFerrisToPlayer
 
             if self.characterGetClick is not None:
                 the_coord: tuple[int, int] = self._MAP.calculate_position(
@@ -1140,13 +1144,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             self.__down_black_curtain.draw(screen)
             # 检测回合是否结束
             if (
-                self.__whose_round == "playerToSangvisFerris"
-                or self.__whose_round == "sangvisFerrisToPlayer"
+                self.__whose_round is WhoseRound.playerToSangvisFerris
+                or self.__whose_round is WhoseRound.sangvisFerrisToPlayer
             ):
                 if self.__RoundSwitchUI is not None and self.__RoundSwitchUI.draw(
                     screen, self.__whose_round, self.__statistics.total_rounds
                 ):
-                    if self.__whose_round == "playerToSangvisFerris":
+                    if self.__whose_round is WhoseRound.playerToSangvisFerris:
                         self.enemies_in_control_id = 0
                         self.sangvisFerris_name_list.clear()
                         any_is_alert = False
@@ -1164,8 +1168,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             if self.alliances[key].is_dying():
                                 self.alliances[key].get_closer_to_death()
                         # 现在是铁血的回合！
-                        self.__whose_round = "sangvisFerris"
-                    elif self.__whose_round == "sangvisFerrisToPlayer":
+                        self.__whose_round = WhoseRound.sangvisFerris
+                    elif self.__whose_round is WhoseRound.sangvisFerrisToPlayer:
                         for key in self.alliances:
                             self.alliances[key].reset_action_point()
                             if not self.alliances[key].is_detected:
@@ -1182,8 +1186,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         # 更新可视区域
                         self._update_darkness()
                         # 到你了，Good luck, you need it!
-                        self.__whose_round = "player"
+                        self.__whose_round = WhoseRound.player
                         self.__statistics.total_rounds += 1
+                        # 更新当前回合文字
+                        self.__update_current_round_text()
             # 检测玩家是否胜利或失败
             """检测失败条件"""
             # 如果有回合限制
@@ -1192,12 +1198,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 _round_limitation > 0
                 and self.__statistics.total_rounds > _round_limitation
             ):
-                self.__whose_round = "result_fail"
+                self.__whose_round = WhoseRound.result_fail
             # 如果不允许失去任何一位同伴
             if not self.__mission_objectives.get("allow_any_one_die", False):
                 for character in self.alliances:
                     if self.alliances[character].is_dead():
-                        self.__whose_round = "result_fail"
+                        self.__whose_round = WhoseRound.result_fail
                         break
             """检测胜利条件"""
             # 歼灭模式
@@ -1210,12 +1216,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     if len(self.enemies) == 0:
                         self.characterGetClick = None
                         RangeSystem.set_visible(False)
-                        self.__whose_round = "result_win"
+                        self.__whose_round = WhoseRound.result_win
                     else:
                         pass
                 # 检测是否特定敌人已经被消灭
                 elif isinstance(_target, str) and _target not in self.enemies:
-                    self.__whose_round = "result_win"
+                    self.__whose_round = WhoseRound.result_win
                 # 检测是否所有给定的目标都已经被歼灭
                 elif isinstance(_target, Sequence):
                     find_one = False
@@ -1224,20 +1230,20 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             find_one = True
                             break
                     if not find_one:
-                        self.__whose_round = "result_win"
+                        self.__whose_round = WhoseRound.result_win
             """开发使用"""
             if linpg.global_variables.try_get_str("endBattleAs") == "win":
-                self.__whose_round = "result_win"
+                self.__whose_round = WhoseRound.result_win
                 linpg.global_variables.remove("endBattleAs")
             elif linpg.global_variables.try_get_str("endBattleAs") == "lose":
-                self.__whose_round = "result_fail"
+                self.__whose_round = WhoseRound.result_fail
                 linpg.global_variables.remove("endBattleAs")
 
             # 显示警告
             WarningMessageSystem.draw(screen)
 
             # 结束动画--胜利
-            if self.__whose_round == "result_win":
+            if self.__whose_round is WhoseRound.result_win:
                 # 更新战后总结的数据栏
                 if not ScoreBoard.is_updated():
                     self.__statistics.total_time = int(
@@ -1285,7 +1291,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 "section", value="dialog_after_battle"
                             )
             # 结束动画--失败
-            elif self.__whose_round == "result_fail":
+            elif self.__whose_round is WhoseRound.result_fail:
                 # 更新战后总结的数据栏
                 if not ScoreBoard.is_updated():
                     self.__statistics.total_time = int(
@@ -1340,7 +1346,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             _CONSOLE.draw(screen)
 
         # 结束回合的按钮
-        if self.__whose_round == "player":
+        if self.__whose_round is WhoseRound.player:
             self.__end_round_button.draw(screen)
             screen.blit(
                 self.__end_round_txt,
