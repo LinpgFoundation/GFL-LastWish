@@ -55,20 +55,9 @@ class MainMenu(linpg.AbstractSystem):
             )
             index += 1
         # 渲染载入页面需要的数据
-        self.__loading_screen.blits(
-            (
-                (
-                    linpg.font.render(linpg.lang.get_text("title1"), "white", font_size),
-                    (font_size * 2, screen.get_height() * 0.9),
-                ),
-                (
-                    linpg.font.render(linpg.lang.get_text("title2"), "white", font_size),
-                    (
-                        font_size * 2,
-                        screen.get_height() * 0.9 - screen.get_width() / 32,
-                    ),
-                ),
-            )
+        self.__loading_screen.blit(
+            linpg.font.render(linpg.lang.get_text("presentBy"), "white", font_size),
+            (font_size * 2, screen.get_height() * 0.9),
         )
         """开始加载"""
         # 载入页面 - 渐入

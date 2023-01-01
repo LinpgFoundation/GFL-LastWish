@@ -212,7 +212,7 @@ class AbstractBattleSystemWithInGameDialog(
     def _get_level_info(self) -> dict:
         return linpg.config.try_load_file_if_exists(
             self.get_data_file_path().replace(
-                "_map", "_level_info_" + linpg.lang.get_current_language()
+                "_map", "_level_info_" + linpg.setting.get_language()
             )
         )
 
@@ -334,7 +334,7 @@ class AbstractBattleSystemWithInGameDialog(
                     self.__dialog_parameters["dialogId"] += 1
                     self.__dialog_is_route_generated = False
             # 改变方向
-            elif "direction" in currentDialog and currentDialog["direction"] is not None:
+            elif currentDialog.get("direction") is not None:
                 for key, value in currentDialog["direction"].items():
                     if key in self.alliances:
                         self.alliances[key].set_flip(value)
@@ -344,7 +344,7 @@ class AbstractBattleSystemWithInGameDialog(
                         raise Exception("Error: Cannot find character {}!".format(key))
                 self.__dialog_parameters["dialogId"] += 1
             # 改变动作（一次性）
-            elif "action" in currentDialog and currentDialog["action"] is not None:
+            elif currentDialog.get("action") is not None:
                 for key, action in currentDialog["action"].items():
                     if key in self.alliances:
                         self.alliances[key].set_action(action, False)
@@ -352,9 +352,7 @@ class AbstractBattleSystemWithInGameDialog(
                         self.enemies[key].set_action(action, False)
                 self.__dialog_parameters["dialogId"] += 1
             # 改变动作（长期）
-            elif (
-                "actionLoop" in currentDialog and currentDialog["actionLoop"] is not None
-            ):
+            elif currentDialog.get("actionLoop") is not None:
                 for key, action in currentDialog["actionLoop"].items():
                     if key in self.alliances:
                         self.alliances[key].set_action(action)
@@ -362,7 +360,7 @@ class AbstractBattleSystemWithInGameDialog(
                         self.enemies[key].set_action(action)
                 self.__dialog_parameters["dialogId"] += 1
             # 开始对话
-            elif "dialog" in currentDialog:
+            elif currentDialog.get("dialog") is not None:
                 # 如果当前段落的对话数据还没被更新
                 if not self.__is_dialog_updated:
                     self.__DIALOG.continue_scene(currentDialog["dialog"])
@@ -374,7 +372,7 @@ class AbstractBattleSystemWithInGameDialog(
                     self.__dialog_parameters["dialogId"] += 1
                     self.__is_dialog_updated = False
             # 闲置一定时间（秒）
-            elif "idle" in currentDialog and currentDialog["idle"] is not None:
+            elif currentDialog.get("idle") is not None:
                 if self.__dialog_parameters["secondsToIdle"] is None:
                     self.__dialog_parameters["secondsToIdle"] = (
                         currentDialog["idle"] * linpg.display.get_fps()
@@ -390,23 +388,25 @@ class AbstractBattleSystemWithInGameDialog(
                         self.__dialog_parameters["secondsAlreadyIdle"] = 0
                         self.__dialog_parameters["secondsToIdle"] = None
             # 调整窗口位置
-            elif "changePos" in currentDialog and currentDialog["changePos"] is not None:
-                if (
-                    self._screen_to_move_speed_x is None
-                    or self._screen_to_move_speed_y is None
-                ):
-                    tempX, tempY = self._MAP.calculate_position(
-                        currentDialog["changePos"]["x"], currentDialog["changePos"]["y"]
-                    )
-                    self._screen_to_move_speed_x = int(screen.get_width() / 2 - tempX)
-                    self._screen_to_move_speed_y = int(screen.get_height() / 2 - tempY)
-                if (
-                    self._screen_to_move_speed_x == 0
-                    and self._screen_to_move_speed_y == 0
-                ):
-                    self._screen_to_move_speed_x = None
-                    self._screen_to_move_speed_y = None
-                    self.__dialog_parameters["dialogId"] += 1
+            elif currentDialog.get("changePos") is not None:
+                tempX, tempY = self._MAP.calculate_position(
+                    currentDialog["changePos"]["x"], currentDialog["changePos"]["y"]
+                )
+                tempX -= self._MAP.local_x
+                tempY -= self._MAP.local_y
+                self._MAP.set_local_pos(
+                    linpg.numbers.keep_int_in_range(
+                        screen.get_width() // 2 - tempX,
+                        screen.get_width() - self._MAP.get_width(),
+                        0,
+                    ),
+                    linpg.numbers.keep_int_in_range(
+                        screen.get_height() // 2 - tempY,
+                        screen.get_height() - self._MAP.get_height(),
+                        0,
+                    ),
+                )
+                self.__dialog_parameters["dialogId"] += 1
             else:
                 raise Exception(
                     "Error: Dialog Data on '{0}' with id '{1}' cannot pass through any statement!".format(

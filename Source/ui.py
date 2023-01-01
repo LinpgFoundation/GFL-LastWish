@@ -75,7 +75,7 @@ class RoundSwitch:
         if self.now_total_rounds_surface is None:
             self.now_total_rounds_surface = linpg.font.render(
                 self.now_total_rounds_text.format(
-                    linpg.lang.get_num_in_local_text(total_rounds)
+                    linpg.lang.get_num_in_local_text(total_rounds + 1)
                 ),
                 "white",
                 screen.get_width() / 38,
@@ -705,7 +705,7 @@ class RangeSystem:
 # 战斗系统数据统计struct
 class BattleStatistics:
     def __init__(self) -> None:
-        self.total_rounds: int = 1
+        self.total_rounds: int = 0
         self.total_kills: int = 0
         self.starting_time: float = time.time()
         self.total_time: int = 0

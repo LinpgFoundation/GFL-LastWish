@@ -52,20 +52,20 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 # :memo: Chapters / 游戏章节
 
-| Index | 名称             | Name                                     | Expected release date / 预计发布时间 | Status / 状态 |
-| ----- | ---------------- | ---------------------------------------- | ------------------------------------ | ------------- |
-| 1     | 雪色的希望       | A wish likes snow                        | 2022.12.31                           | :hammer:      |
-| 2     | 迷离之下         | Beneath smoke                            | 2022.12.31                           | :hammer:      |
-| 3     | 琴弦之上         | Above string                             | 2023.1                               | :hammer:      |
-| 4     | 喘息（暂定）     | A gasp for breath (Provisional)          |                                      |               |
-| 5     | 无人之防（暂定） | Make defense without dolls (Provisional) |                                      |               |
-| 6     | 机遇（暂定）     | The opportunity (Provisional)            |                                      |               |
-| 7     | 强敌（暂定）     | Formidable enemies (Provisional)         |                                      |               |
-| 8     | 仅存的星火       | The only starburst                       |                                      |               |
-| 9     | 极夜前的黎光     | Light before long night                  |                                      |               |
-| 10    | 冲破黑暗与迷雾   | Through fog and darkness                 |                                      |               |
-| 11    | 拜托了，活下去！ | Please, stay alive!                      |                                      |               |
-| Final | 为了能看到的明天 | For a tomorrow that can be seen          |                                      |               |
+| Index | 名称             | Name                                     | Expected release date / 预计发布时间 | Status / 状态      |
+| ----- | ---------------- | ---------------------------------------- | ------------------------------------ | ------------------ |
+| 1     | 雪色的希望       | A wish likes snow                        | 2022.12.31                           | :white_check_mark: |
+| 2     | 迷离之下         | Beneath smoke                            | 2022.12.31                           | :white_check_mark: |
+| 3     | 琴弦之上         | Above string                             | 2023.1                               | :hammer:           |
+| 4     | 喘息（暂定）     | A gasp for breath (Provisional)          |                                      |                    |
+| 5     | 无人之防（暂定） | Make defense without dolls (Provisional) |                                      |                    |
+| 6     | 机遇（暂定）     | The opportunity (Provisional)            |                                      |                    |
+| 7     | 强敌（暂定）     | Formidable enemies (Provisional)         |                                      |                    |
+| 8     | 仅存的星火       | The only starburst                       |                                      |                    |
+| 9     | 极夜前的黎光     | Light before long night                  |                                      |                    |
+| 10    | 冲破黑暗与迷雾   | Through fog and darkness                 |                                      |                    |
+| 11    | 拜托了，活下去！ | Please, stay alive!                      |                                      |                    |
+| Final | 为了能看到的明天 | For a tomorrow that can be seen          |                                      |                    |
 
 # :white_check_mark: Dependencies / 运行库
 
@@ -124,11 +124,11 @@ https://discord.gg/3wz6bs5jvu
 
 # 📢 Credits / 特别鸣谢
 
-[自贡芒果Channel](https://space.bilibili.com/115351260) - 授权了主菜单页面的使用
+[自贡芒果Channel](https://space.bilibili.com/115351260) - 授权了主菜单页面的使用 / Authorized the use of the main menu background
 
 <img src="Assets\image\screenshot\credits_zgmg.png"/>
 
-[命运の乐章](https://space.bilibili.com/8453668) - 授于了制作组在该游戏中暂时地使用其制作的GMV作为过场动画的权利
+[命运の乐章](https://space.bilibili.com/8453668) - 授于了制作组在该游戏中暂时地使用其制作的GMV作为过场动画的权利 / Granted the right to temporarily use their GMV as in-game cutsence
 
 <img src="Assets\image\screenshot\credits_mydyz.png"/>
 

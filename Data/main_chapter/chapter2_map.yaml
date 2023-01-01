@@ -1,6 +1,6 @@
-at_night: false
+at_night: true
 background_image: snowfield.jpg
-background_music: BGM_Battle.wav
+background_music: BGM_Battle.ogg
 chapter_id: 2
 chapter_type: workshop
 cover_image: WildBattle.png
@@ -188,12 +188,12 @@ decoration:
 - id: tree:1
   x: 11
   y: 5
-- id: tree:1
-  x: 12
-  y: 4
 - id: log:2
   x: 2
   y: 14
+- id: tree:1
+  x: 12
+  y: 4
 - id: tree:1
   x: 11
   y: 6
@@ -213,11 +213,11 @@ decoration:
   x: 1
   y: 17
 - id: tree:1
-  x: 7
-  y: 12
-- id: tree:1
   x: 6
   y: 13
+- id: tree:1
+  x: 7
+  y: 12
 - id: tree:1
   x: 8
   y: 12
@@ -410,9 +410,6 @@ decoration:
 - id: tree:1
   x: 7
   y: 20
-- id: tree:2
-  x: 9
-  y: 18
 - id: skull:1
   x: 2
   y: 25
@@ -434,6 +431,9 @@ decoration:
 - id: tree:1
   x: 26
   y: 1
+- id: tree:1
+  x: 9
+  y: 18
 - id: tree:1
   x: 12
   y: 16
@@ -495,9 +495,6 @@ decoration:
   x: 24
   y: 5
 - id: tree:1
-  x: 12
-  y: 18
-- id: tree:1
   x: 10
   y: 20
 - id: tree:1
@@ -518,6 +515,9 @@ decoration:
 - id: campfire:1
   x: 22
   y: 8
+- id: tree:1
+  x: 12
+  y: 18
 - id: tree:1
   x: 12
   y: 19
@@ -734,6 +734,9 @@ decoration:
 - id: fence:19
   x: 23
   y: 20
+- id: campfire:1
+  x: 18
+  y: 25
 - id: chest
   x: 25
   y: 19
@@ -763,9 +766,6 @@ decoration:
 - id: fence:19
   x: 26
   y: 19
-- id: campfire:1
-  x: 19
-  y: 26
 - id: tree:1
   x: 29
   y: 17
@@ -916,24 +916,22 @@ decoration:
 dialogs:
   data:
     initial_dialog:
-    - move:
-        gsh18:
-          x: 8
-          y: 4
-        pp1901:
-          x: 8
-          y: 3
+    - changePos:
+        x: 12
+        y: 12
     - dialog: head
     - changePos:
         x: 19
         y: 25
     - idle: 1
     - changePos:
-        x: 0
-        y: 0
+        x: 12
+        y: 12
     - dialog: id_03
+    tutorial1:
+    - dialog: id_07
   dictionary:
-    initial: head
+    initial: initial_dialog
     move:
       19-25:
         dialog_key: tutorial1
@@ -942,26 +940,26 @@ dialogs:
         - sv98
 entities:
   GriffinKryuger:
-    asval_0:
+    asval:
       bullets_carried: 100
       type: asval
       x: 12
-      y: 18
-    pp1901_0:
+      y: 6
+    gsh18:
+      bullets_carried: 100
+      type: gsh18
+      x: 12
+      y: 12
+    pp1901:
       bullets_carried: 100
       type: pp1901
-      x: 9
-      y: 13
-    pp1901_1:
-      bullets_carried: 100
-      type: pp1901
-      x: 9
-      y: 18
-    sv98_0:
-      bullets_carried: 100
+      x: 11
+      y: 15
+    sv98:
+      bullets_carried: 0
       type: sv98
       x: 12
-      y: 4
+      y: 20
   SangvisFerri:
     dinergate_0:
       kind: None

@@ -81,7 +81,11 @@ sv98:
 pp1901:
 - sv98，铁血似乎在守着什么
 
+[hide]*
+
 [block]
+
+[display]sv98.png gsh18.png asval.png pp1901.png
 
 sv98:
 - 看起来是物资箱，这里似乎是铁血的临时据点，主力应该不在这里
@@ -110,18 +114,28 @@ sv98:
 
 null:
 - (过了很久之后)
+
+[bgi]snowfield.jpg
+
 飞行员:
 - 后勤第十小队，我看到你们了. 即将着陆，请做好登机准备
+
+[display]sv98.png
+
 sv98:
 - 各位，别再节省弹药了，无论是手雷还是烟雾弹全丢出去，我们要准备撤离了
 众人:
 - 知道了！
+
+[hide]*
+
 null:
 - 硝烟弥漫之季，众人快速登上直升机
 - 在发动机的轰鸣声和子弹撞击钢板声中，直升机快速飞离了铁血控制的空域
 
 [scene]Transport.png
-[bgm]Casual.wav
+[bgm]Casual.ogg
+[display]sv98.png gsh18.png asval.png pp1901.png
 
 null:
 - (机舱内)

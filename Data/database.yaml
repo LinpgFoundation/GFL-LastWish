@@ -24,6 +24,16 @@ Filters:
     - 30%
     type: image
 Npc:
+  Kalina:
+  - kalina_0.png
+  - kalina_1.png
+  - kalina_2.png
+  - kalina_3.png
+  - kalina_4.png
+  - kalina_5.png
+  - kalina_6.png
+  - kalina_7.png
+  - kalina_8.png
   aa12:
   - aa12.png
   - aa12_hurt.png
@@ -61,16 +71,6 @@ Npc:
   - hk416_hurt.png
   k:
   - k.png
-  kalina:
-  - kalina_0.png
-  - kalina_1.png
-  - kalina_2.png
-  - kalina_3.png
-  - kalina_4.png
-  - kalina_5.png
-  - kalina_6.png
-  - kalina_7.png
-  - kalina_8.png
   kp31:
   - kp31.png
   - kp31_hurt.png
