@@ -1,6 +1,7 @@
 import time
 from collections import deque
 from typing import Any
+from enum import IntEnum, auto
 
 from .dolls import *
 
@@ -22,6 +23,16 @@ def display_in_center(
             y + (item2.get_height() - item1.get_height()) / 2 + off_set_y,
         ),
     )
+
+
+# 谁的回合？
+class WhoseRound(IntEnum):
+    player = auto()
+    sangvisFerrisToPlayer = auto()
+    sangvisFerris = auto()
+    playerToSangvisFerris = auto()
+    result_win = auto()
+    result_fail = auto()
 
 
 # 显示回合切换的UI
@@ -58,13 +69,13 @@ class RoundSwitch:
         self.enemy_round_txt_surface.set_alpha(0)
 
     def draw(
-        self, screen: linpg.ImageSurface, whose_round: str, total_rounds: int
+        self, screen: linpg.ImageSurface, whose_round: WhoseRound, total_rounds: int
     ) -> bool:
         # 如果“第N回合”的文字surface还没有初始化，则初始化该文字
         if self.now_total_rounds_surface is None:
             self.now_total_rounds_surface = linpg.font.render(
                 self.now_total_rounds_text.format(
-                    linpg.lang.get_num_in_local_text(total_rounds)
+                    linpg.lang.get_num_in_local_text(total_rounds + 1)
                 ),
                 "white",
                 screen.get_width() / 38,
@@ -93,7 +104,7 @@ class RoundSwitch:
                     self.now_total_rounds_surface.set_alpha(alphaTemp + 10)
                 else:
                     # 然后“谁的回合”的文字渐入
-                    if whose_round == "playerToSangvisFerris":
+                    if whose_round is WhoseRound.playerToSangvisFerris:
                         alphaTemp = self.enemy_round_txt_surface.get_alpha()
                         if alphaTemp is None:
                             self.enemy_round_txt_surface.set_alpha(0)
@@ -101,7 +112,7 @@ class RoundSwitch:
                             self.enemy_round_txt_surface.set_alpha(alphaTemp + 10)
                         else:
                             self.TxtAlphaUp = False
-                    if whose_round == "sangvisFerrisToPlayer":
+                    if whose_round is WhoseRound.sangvisFerrisToPlayer:
                         alphaTemp = self.your_round_txt_surface.get_alpha()
                         if alphaTemp is None:
                             self.your_round_txt_surface.set_alpha(0)
@@ -121,19 +132,19 @@ class RoundSwitch:
                     alphaTemp -= 10
                     self.baseImg.set_alpha(alphaTemp)
                     self.now_total_rounds_surface.set_alpha(alphaTemp)
-                    if whose_round == "playerToSangvisFerris":
+                    if whose_round is WhoseRound.playerToSangvisFerris:
                         self.lineRedUp.set_alpha(alphaTemp)
                         self.lineRedDown.set_alpha(alphaTemp)
                         self.enemy_round_txt_surface.set_alpha(alphaTemp)
-                    elif whose_round == "sangvisFerrisToPlayer":
+                    elif whose_round is WhoseRound.sangvisFerrisToPlayer:
                         self.lineGreenUp.set_alpha(alphaTemp)
                         self.lineGreenDown.set_alpha(alphaTemp)
                         self.your_round_txt_surface.set_alpha(alphaTemp)
                 else:
-                    if whose_round == "playerToSangvisFerris":
+                    if whose_round is WhoseRound.playerToSangvisFerris:
                         self.lineRedUp.set_alpha(255)
                         self.lineRedDown.set_alpha(255)
-                    elif whose_round == "sangvisFerrisToPlayer":
+                    elif whose_round is WhoseRound.sangvisFerrisToPlayer:
                         self.lineGreenUp.set_alpha(255)
                         self.lineGreenDown.set_alpha(255)
                     # 淡出完成，重置部分参数，UI播放结束
@@ -160,7 +171,7 @@ class RoundSwitch:
                 ),
             )
         )
-        if whose_round == "playerToSangvisFerris":
+        if whose_round is WhoseRound.playerToSangvisFerris:
             screen.blits(
                 (
                     (self.lineRedUp, (abs(self.x), self.y)),
@@ -171,7 +182,7 @@ class RoundSwitch:
                     ),
                 )
             )
-        elif whose_round == "sangvisFerrisToPlayer":
+        elif whose_round is WhoseRound.sangvisFerrisToPlayer:
             screen.blits(
                 (
                     (self.lineGreenUp, (abs(self.x), self.y)),
@@ -491,6 +502,11 @@ class CharacterInfoBoard:
                 _info_rect.y + int(_padding * 1.5),
                 _info_rect.bottom - _padding - character_image.get_height(),
             )
+            linpg.Draw.rect(
+                self.__board,
+                (255, 235, 200, 255),
+                (character_image_dest, character_image.get_size()),
+            )
             self.__board.blit(character_image, character_image_dest)
             linpg.Draw.rect(
                 self.__board,
@@ -586,29 +602,6 @@ class LoadingTitle:
         if cls.title_description is not None:
             cls.title_description.set_alpha(alpha)
             cls.title_description.draw(screen)
-
-
-# 需要被打印的物品
-class ItemNeedBlit(linpg.GameObject2point5d):
-    def __init__(
-        self,
-        image: linpg.ImageSurface | linpg.GameObject2d,
-        weight: int,
-        pos: tuple[int, int],
-        offSet: tuple[int, int],
-    ):
-        super().__init__(pos[0], pos[1], weight)
-        self.image: linpg.ImageSurface | linpg.GameObject2d = image
-        self.offSet: tuple[int, int] = offSet
-
-    def draw(self, surface: linpg.ImageSurface) -> None:
-        if isinstance(self.image, linpg.ImageSurface):
-            surface.blit(self.image, linpg.coordinates.add(self.pos, self.offSet))
-        else:
-            try:
-                self.image.display(surface, self.offSet)
-            except Exception:
-                self.image.draw(surface)
 
 
 class RangeSystem:
@@ -712,7 +705,7 @@ class RangeSystem:
 # 战斗系统数据统计struct
 class BattleStatistics:
     def __init__(self) -> None:
-        self.total_rounds: int = 1
+        self.total_rounds: int = 0
         self.total_kills: int = 0
         self.starting_time: float = time.time()
         self.total_time: int = 0

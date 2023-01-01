@@ -1,7 +1,8 @@
 Battle_UI:
+  bullets: 备弹
+  currentRound: '当前回合: {}'
   endRound: 回合结束
   enemyRound: 敌方回合
-  getBullets: 获得备弹
   getHealth: 获得血量
   numChapter: 第{}章
   numRound: 第{}回合
@@ -49,7 +50,7 @@ PhotosensitiveSeizureWarning:
 - 极小部分人可能会在看到特定视觉图像（包括可能出现在视频游戏中的闪烁效果或图案）时出现癫痫症状。
 - 甚至没有癫痫史的人也可能具有一些可能会在玩视频游戏时导致“光敏性癫痫发作”的未确诊症状。
 - 如果你出现任何症状，请立即停止游玩该游戏并咨询医生
-ResultBoard:
+ScoreBoard:
   characters_down: 友方角色被击倒
   pressKeyContinue: 按 <空格> 继续
   pressKeyRestart: 按 <空格> 重新开始，或按 <Backspace> 返回主菜单
@@ -75,5 +76,4 @@ Warnings:
   no_enough_ap_to_rescue: 当前角色没有足够的行动值进行救助
   no_enough_ap_to_use_skill: 当前角色没有足够的行动值使用技能
 alpha_build_warning: '测试版本: 不代表最终效果'
-title1: 缇吉娅工坊 呈现
-title2: 警告：所有内容仍处于研发阶段，不代表最终效果
+presentBy: 缇吉娅工坊 呈现

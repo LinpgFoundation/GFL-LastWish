@@ -1,2 +1,5 @@
 ConfigFileType: yaml
+DefaultFont:
+  font: MicrosoftYaHei-2
+  type: custom
 ExtraAssets: true

@@ -2,6 +2,8 @@ from shutil import copyfile
 
 from .components import *
 
+# 设置引擎的标准文字大小
+linpg.font.set_global_font("medium", linpg.display.get_width() // 40)
 
 # 主菜单系统
 class MainMenu(linpg.AbstractSystem):
@@ -33,7 +35,7 @@ class MainMenu(linpg.AbstractSystem):
                 ),
             )
             index += 1
-        # 渲染获取光敏性癫痫警告
+        # 渲染光敏性癫痫警告
         PhotosensitiveSeizureWarning: list[linpg.ImageSurface] = (
             [
                 linpg.font.render(text_t, "white", font_size)
@@ -53,20 +55,9 @@ class MainMenu(linpg.AbstractSystem):
             )
             index += 1
         # 渲染载入页面需要的数据
-        self.__loading_screen.blits(
-            (
-                (
-                    linpg.font.render(linpg.lang.get_text("title1"), "white", font_size),
-                    (font_size * 2, screen.get_height() * 0.9),
-                ),
-                (
-                    linpg.font.render(linpg.lang.get_text("title2"), "white", font_size),
-                    (
-                        font_size * 2,
-                        screen.get_height() * 0.9 - screen.get_width() / 32,
-                    ),
-                ),
-            )
+        self.__loading_screen.blit(
+            linpg.font.render(linpg.lang.get_text("presentBy"), "white", font_size),
+            (font_size * 2, screen.get_height() * 0.9),
         )
         """开始加载"""
         # 载入页面 - 渐入
@@ -149,11 +140,11 @@ class MainMenu(linpg.AbstractSystem):
     # 获取章节id
     def __get_chapter_title(self, chapterType: str, chapterId: int) -> str:
         # 生成dialog文件的路径
-        dialog_file_path: str = (
+        level_info_file_path: str = (
             os.path.join(
                 "Data",
                 chapterType,
-                "chapter{0}_dialogs_{1}.yaml".format(
+                "chapter{0}_level_info_{1}.yaml".format(
                     chapterId, linpg.setting.get_language()
                 ),
             )
@@ -162,26 +153,16 @@ class MainMenu(linpg.AbstractSystem):
                 "Data",
                 chapterType,
                 self.current_selected_workshop_project,
-                "chapter{0}_dialogs_{1}.yaml".format(
+                "chapter{0}_level_info_{1}.yaml".format(
                     chapterId, linpg.setting.get_language()
                 ),
             )
         )
-        chapter_title: str
-        if os.path.exists(dialog_file_path):
-            dialog_data = linpg.config.load(dialog_file_path)
-            # 如果dialog文件中有title，则读取
-            chapter_title = (
-                dialog_data["title"]
-                if "title" in dialog_data
-                else linpg.lang.get_text("Global", "no_translation")
-            )
-        else:
-            chapter_title = linpg.lang.get_text("Global", "no_translation")
+        chapter_title: str = linpg.config.try_load_file_if_exists(
+            level_info_file_path
+        ).get("title", linpg.lang.get_text("Global", "no_translation"))
         return "{0}: {1}".format(
-            linpg.lang.get_text("Battle_UI", "numChapter").format(
-                linpg.lang.get_num_in_local_text(chapterId)
-            ),
+            linpg.lang.get_text("Battle_UI", "numChapter").format(chapterId),
             chapter_title,
         )
 
@@ -244,6 +225,13 @@ class MainMenu(linpg.AbstractSystem):
                 i += 1
         # 选择主线的章节
         elif self.menu_type == 1:
+            max_right: int = 0
+            for button in self.chapter_select:
+                max_right = max(button.right, max_right)
+            _right_limit: int = linpg.display.get_width() * 9 // 10
+            if max_right > _right_limit:
+                for button in self.chapter_select:
+                    button.set_right(button.right - max_right + _right_limit)
             for button in self.chapter_select:
                 button.draw(screen)
                 if button.is_hovered():
@@ -306,9 +294,21 @@ class MainMenu(linpg.AbstractSystem):
             )
             + 1
         )
-        # 复制视觉小说系统默认模板
+        # 复制关卡数据默认模板
         copyfile(
-            "Data/chapter_dialogs_example.yaml",
+            "Data/template/chapter_level_info_example.yaml",
+            os.path.join(
+                "Data",
+                "workshop",
+                self.current_selected_workshop_project,
+                "chapter{0}_level_info_{1}.yaml".format(
+                    chapterId, linpg.setting.get_language()
+                ),
+            ),
+        )
+        # 复制视觉小说数据默认模板
+        copyfile(
+            "Data/template/chapter_dialogs_example.yaml",
             os.path.join(
                 "Data",
                 "workshop",
@@ -318,9 +318,9 @@ class MainMenu(linpg.AbstractSystem):
                 ),
             ),
         )
-        # 复制战斗系统默认模板
+        # 复制地图数据默认模板
         copyfile(
-            "Data/chapter_map_example.yaml",
+            "Data/template/chapter_map_example.yaml",
             os.path.join(
                 "Data",
                 "workshop",
@@ -383,7 +383,7 @@ class MainMenu(linpg.AbstractSystem):
         # 是否创意工坊启用
         if (
             "3_workshop" in self.__disabled_options
-            and linpg.PersistentData.try_get_bool("enable_workshop") is True
+            and linpg.PersistentVariables.try_get_bool("enable_workshop") is True
         ):
             self.__main_menu_txt["menu_main"][
                 "3_workshop"
@@ -406,7 +406,7 @@ class MainMenu(linpg.AbstractSystem):
         if linpg.saves.any_progress_exists() is True:
             self.__disabled_options.remove("0_continue")
         # 是否启用创意工坊按钮
-        if linpg.PersistentData.try_get_bool("enable_workshop") is True:
+        if linpg.PersistentVariables.try_get_bool("enable_workshop") is True:
             self.__disabled_options.remove("3_workshop")
         # 加载主菜单页面的文字设置
         txt_location = int(screen_size[0] * 2 / 3)
@@ -469,7 +469,7 @@ class MainMenu(linpg.AbstractSystem):
         if cover_path is not None:
             if self.__cover_img_surface is None:
                 self.__cover_img_surface = linpg.load.static_image(
-                    cover_path, (0, 0), screen.get_size(), cover_path
+                    cover_path, (0, 0), tag=cover_path
                 )
                 self.__cover_img_surface.set_alpha(10)
             elif cover_path != self.__cover_img_surface.tag:
@@ -487,6 +487,10 @@ class MainMenu(linpg.AbstractSystem):
             GameMode.VIDEO_BACKGROUND.draw(screen)
         # 封面
         if self.__cover_img_surface is not None:
+            self.__cover_img_surface.set_width_with_original_image_size_locked(
+                screen.get_width()
+            )
+            self.__cover_img_surface.set_centery(screen.get_height() // 2)
             self.__cover_img_surface.draw(screen)
 
     # 画出主菜单
@@ -727,7 +731,6 @@ class MainMenu(linpg.AbstractSystem):
                             )
                             self.__restart_background()
                             break
-        ALPHA_BUILD_WARNING.draw(screen)
         if self.__loading_screen is not None:
             alpha_t: Optional[int] = self.__loading_screen.get_alpha()
             if alpha_t is None or alpha_t <= 0:

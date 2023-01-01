@@ -3,7 +3,7 @@ if __name__ == "__main__":
     from shutil import move as MOVE
     import subprocess
     import pkg_resources
-    from linpgtoolbox.builder import Builder  # type: ignore
+    from linpgtoolbox.builder import Builder, SmartAutoModuleCombineMode  # type: ignore
 
     # 编译游戏本体
     if (
@@ -11,7 +11,9 @@ if __name__ == "__main__":
         or input("Do you want to recompile source files (Y/n):") == "Y"
     ):
         Builder.delete_file_if_exist("src")
-        Builder.compile("Source", smart_auto_module_combine=True)
+        Builder.compile(
+            "Source", smart_auto_module_combine=SmartAutoModuleCombineMode.ALL_INTO_ONE
+        )
 
     # 更新所有第三方库
     if input("Do you want to update all third party packages (Y/n):") == "Y":
@@ -21,7 +23,11 @@ if __name__ == "__main__":
                     ["pip", "install", "--upgrade", pkg.project_name], shell=True
                 )
             except Exception:
-                print("Warning: fail to update third party package <{}>".format(pkg.project_name))
+                print(
+                    "Warning: fail to update third party package <{}>".format(
+                        pkg.project_name
+                    )
+                )
 
     # 删除dist文件夹
     Builder.delete_file_if_exist("dist")
