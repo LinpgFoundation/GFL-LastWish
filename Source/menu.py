@@ -85,11 +85,11 @@ class MainMenu(linpg.AbstractSystem):
         # 关卡选择的封面
         self.__cover_img_surface: Optional[linpg.StaticImage] = None
         # 音效
-        self.click_button_sound = linpg.sound.load(
+        self.click_button_sound = linpg.sounds.load(
             r"Assets/sound/ui/main_menu_click_button.ogg",
             linpg.volume.get_effects() / 100.0,
         )
-        self.hover_on_button_sound = linpg.sound.load(
+        self.hover_on_button_sound = linpg.sounds.load(
             r"Assets/sound/ui/main_menu_hover_on_button.ogg",
             linpg.volume.get_effects() / 100.0,
         )
@@ -500,13 +500,17 @@ class MainMenu(linpg.AbstractSystem):
         # 菜单选项
         self.__draw_buttons(screen)
         # 展示设置UI
-        linpg.option_menu.draw(screen)
+        linpg.PauseMenuModuleForGameSystem.OPTION_MENU.draw(screen)
         # 更新音量
-        if linpg.option_menu.need_update.get("volume") is True:
+        if (
+            linpg.PauseMenuModuleForGameSystem.OPTION_MENU.need_update.get("volume")
+            is True
+        ):
             self.updated_volume()
         # 更新语言
         if (
-            linpg.option_menu.need_update.get("language") is True
+            linpg.PauseMenuModuleForGameSystem.OPTION_MENU.need_update.get("language")
+            is True
             or self.language_need_update() is True
         ):
             self.update_language()
@@ -523,7 +527,7 @@ class MainMenu(linpg.AbstractSystem):
         # 判断按键
         if (
             linpg.controller.get_event("confirm") is True
-            and linpg.option_menu.is_hidden()
+            and linpg.PauseMenuModuleForGameSystem.OPTION_MENU.is_hidden()
         ):
             self.click_button_sound.play()
             # 主菜单
@@ -559,7 +563,7 @@ class MainMenu(linpg.AbstractSystem):
                     pass
                 # 设置
                 elif self.__main_menu_txt["menu_main"]["5_setting"].is_hovered():
-                    linpg.option_menu.set_visible(True)
+                    linpg.PauseMenuModuleForGameSystem.OPTION_MENU.set_visible(True)
                 # 制作组
                 elif self.__main_menu_txt["menu_main"]["6_developer_team"].is_hovered():
                     pass

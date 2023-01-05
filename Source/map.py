@@ -103,7 +103,38 @@ class ChestObject(linpg.DecorationObject):
 
 
 # 自定义的地图
-class AdvancedTileMap(linpg.TileMap):
+class AdvancedTileMap(linpg.AbstractTileMap):
+
+    # 计算在地图中的方块
+    def calculate_coordinate(
+        self, on_screen_pos: Optional[tuple[int, int]] = None
+    ) -> Optional[tuple[int, int]]:
+        if on_screen_pos is None:
+            on_screen_pos = linpg.controller.mouse.get_pos()
+        guess_x: int = int(
+            (on_screen_pos[0] - self.local_x) / self.tile_width
+            + (on_screen_pos[1] - self.local_y) / self.tile_height
+            - self.row / 2
+        )
+        guess_y: int = int(
+            (on_screen_pos[1] - self.local_y) / self.tile_height
+            - (on_screen_pos[0] - self.local_x) / self.tile_width
+            + self.row / 2
+        )
+        return (
+            (guess_x, guess_y)
+            if self.column > guess_x >= 0 and self.row > guess_y >= 0
+            else None
+        )
+
+    # 计算在地图中的位置
+    def calculate_position(self, x: linpg.int_f, y: linpg.int_f) -> tuple[int, int]:
+        return (
+            round((x - y + self.row - 1) * self.tile_width / 2) + self.local_x,
+            round((y + x) * self.tile_height / 2) + self.local_y,
+        )
+
+    # 新增装饰物
     def add_decoration(self, _data: dict) -> None:
         _type: str = str(_data["id"]).split(":")[0]
         if _type == "campfire":

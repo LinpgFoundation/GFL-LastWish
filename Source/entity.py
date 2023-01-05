@@ -33,35 +33,35 @@ class AttackingSoundManager:
                 # 突击步枪
                 "AR": tuple(
                     [
-                        linpg.sound.load(_path)
+                        linpg.sounds.load(_path)
                         for _path in glob(os.path.join(*path_p, "ar_*.ogg"))
                     ]
                 ),
                 # 手枪
                 "HG": tuple(
                     [
-                        linpg.sound.load(_path)
+                        linpg.sounds.load(_path)
                         for _path in glob(os.path.join(*path_p, "hg_*.ogg"))
                     ]
                 ),
                 # 机枪
                 "MG": tuple(
                     [
-                        linpg.sound.load(_path)
+                        linpg.sounds.load(_path)
                         for _path in glob(os.path.join(*path_p, "mg_*.ogg"))
                     ]
                 ),
                 # 步枪
                 "RF": tuple(
                     [
-                        linpg.sound.load(_path)
+                        linpg.sounds.load(_path)
                         for _path in glob(os.path.join(*path_p, "rf_*.ogg"))
                     ]
                 ),
                 # 冲锋枪
                 "SMG": tuple(
                     [
-                        linpg.sound.load(_path)
+                        linpg.sounds.load(_path)
                         for _path in glob(os.path.join(*path_p, "smg_*.ogg"))
                     ]
                 ),
@@ -74,7 +74,7 @@ class AttackingSoundManager:
         if (sounds_c := cls.__SOUNDS.get(kind)) is not None:
             sound_to_play = sounds_c[linpg.numbers.get_random_int(0, len(sounds_c) - 1)]
             sound_to_play.set_volume(linpg.volume.get_effects() / 100.0)
-            linpg.sound.play(sound_to_play, cls.__channel_id)
+            linpg.sounds.play(sound_to_play, cls.__channel_id)
 
     # 释放内存
     @classmethod
@@ -195,6 +195,21 @@ class BasicEntity(linpg.Entity):
         self.__status_font: linpg.TextSurface = linpg.TextSurface(
             "", 0, 0, linpg.display.get_width() / 192
         )
+        # 角色的攻击范围
+        self.__effective_range_coordinates: Optional[list[list[tuple[int, int]]]] = None
+
+    def _need_update(self) -> None:
+        self.__effective_range_coordinates = None
+
+    def set_x(self, value: linpg.number) -> None:
+        if round(value) != round(self.x):
+            self._need_update()
+        super().set_x(value)
+
+    def set_y(self, value: linpg.number) -> None:
+        if round(value) != round(self.y):
+            self._need_update()
+        super().set_y(value)
 
     # 当前行动值
     @property
@@ -231,6 +246,106 @@ class BasicEntity(linpg.Entity):
         # 没有足够的行动值来减去
         return False
 
+    # 根据给定的坐标和范围列表生成范围坐标列表
+    @classmethod
+    def _generate_range_coordinates(
+        cls,
+        _x: int,
+        _y: int,
+        _ranges: tuple[int, ...],
+        MAP_P: linpg.AbstractTileMap,
+        ifFlip: bool,
+        ifHalfMode: bool = False,
+    ) -> list[list[tuple[int, int]]]:
+        # 初始化数据
+        start_point: int
+        end_point: int
+        max_effective_range: int = sum(_ranges)
+        # 确定范围
+        if not ifHalfMode:
+            start_point = _y - max_effective_range
+            end_point = _y + max_effective_range + 1
+        elif not ifFlip:
+            start_point = _y - max_effective_range
+            end_point = _y + 1
+        else:
+            start_point = _y
+            end_point = _y + max_effective_range + 1
+        # 所在的区域
+        attack_range: list[list[tuple[int, int]]] = [[] for _ in range(len(_ranges))]
+        the_range_in: int
+        row_start: int = _x - max_effective_range
+        row_end: int = _x + max_effective_range + 1
+        # append坐标
+        for y in range(start_point, end_point):
+            y_offset: int = abs(y - _y)
+            for x in range(row_start + y_offset, row_end - y_offset):
+                if (
+                    MAP_P.row > y >= 0
+                    and MAP_P.column > x >= 0
+                    and (
+                        the_range_in := cls._identify_range(
+                            _ranges, abs(x - _x) + abs(y - _y)
+                        )
+                    )
+                    >= 0
+                ):
+                    attack_range[the_range_in].append((x, y))
+        return attack_range
+
+    # 获取角色的攻击范围
+    def get_effective_range_coordinates(
+        self, MAP_P: linpg.AbstractTileMap, ifHalfMode: bool = False
+    ) -> list[list[tuple[int, int]]]:
+        if self.__effective_range_coordinates is None:
+            self.__effective_range_coordinates = self._generate_range_coordinates(
+                round(self.x),
+                round(self.y),
+                self.__effective_range,
+                MAP_P,
+                self._if_flip,
+                ifHalfMode,
+            )
+        return self.__effective_range_coordinates
+
+    # 根据给定的坐标和半径生成覆盖范围坐标列表
+    @staticmethod
+    def _generate_coverage_coordinates(
+        _x: int, _y: int, _radius: int, MAP_P: linpg.AbstractTileMap
+    ) -> list[tuple[int, int]]:
+        return list(
+            filter(
+                lambda pos: MAP_P.is_passable(pos[0], pos[1])
+                and MAP_P.row > pos[1] >= 0
+                and MAP_P.column > pos[0] >= 0,
+                linpg.coordinates.get_in_diamond_shaped(_x, _y, _radius),
+            )
+        )
+
+    # 获取角色的攻击覆盖范围
+    def get_attack_coverage_coordinates(
+        self, _x: int, _y: int, MAP_P: linpg.AbstractTileMap
+    ) -> list[tuple[int, int]]:
+        if (
+            self._identify_range(
+                self.__effective_range, abs(_x - round(self.x)) + abs(_y - round(self.y))
+            )
+            >= 0
+        ):
+            return list(
+                filter(
+                    lambda pos: self._identify_range(
+                        self.__effective_range,
+                        abs(pos[0] - round(self.x)) + abs(pos[1] - round(self.y)),
+                    )
+                    >= 0,
+                    self._generate_coverage_coordinates(
+                        _x, _y, self.__attack_coverage, MAP_P
+                    ),
+                )
+            )
+        return []
+
     def to_dict(self) -> dict:
         # 获取父类信息
         _data: dict = super().to_dict()
@@ -239,11 +354,28 @@ class BasicEntity(linpg.Entity):
             _data["current_action_point"] = self.__current_action_point
         return _data
 
+    # 画出角色
+    def render(self, _surface: linpg.ImageSurface, MAP_P: linpg.AbstractTileMap, pos: Optional[tuple[int, int]] = None, size: Optional[tuple[int, int]] = None, action: Optional[str] = None, alpha: Optional[int] = None) -> None:  # type: ignore[override]
+        if size is None:
+            img_width: int = linpg.TileMapImagesModule.TILE_TEMPLE_WIDTH * 2
+            size = (img_width, img_width)
+        # 如果没有指定pos,则默认使用当前的动作
+        if pos is None:
+            pos = MAP_P.calculate_position(self.x, self.y)
+        pos = linpg.Coordinates.subtract(
+            pos,
+            (
+                linpg.TileMapImagesModule.TILE_TEMPLE_WIDTH // 2,
+                int(linpg.TileMapImagesModule.TILE_TEMPLE_HEIGHT * 2.1),
+            ),
+        )
+        return super().render(_surface, pos, size, action, alpha)
+
     # 把角色ui画到屏幕上
     def _drawUI(
         self,
         surface: linpg.ImageSurface,
-        MAP_POINTER: linpg.TileMap,
+        MAP_POINTER: linpg.AbstractTileMap,
         customHpData: Optional[tuple] = None,
     ) -> tuple:
         xTemp, yTemp = MAP_POINTER.calculate_position(self.x, self.y)

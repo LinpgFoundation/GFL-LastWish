@@ -157,6 +157,43 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
         LoadingModule.__init__(self)
         linpg.AbstractMapEditor.__init__(self)
 
+    # 实现父类需要实现的方法 - 画出所有角色
+    def _display_entities(self, _surface: linpg.ImageSurface) -> None:
+        # 展示范围
+        if self._tile_is_hovering is not None and self.__no_container_is_hovered is True:
+            if self.__delete_mode is True:
+                xTemp, yTemp = self.get_map().calculate_position(
+                    self._tile_is_hovering[0], self._tile_is_hovering[1]
+                )
+                _surface.blit(
+                    self.__range_red,
+                    (
+                        xTemp
+                        + (self.get_map().tile_width - self.__range_red.get_width()) // 2,
+                        yTemp,
+                    ),
+                )
+            elif len(self.__object_to_put_down) > 0:
+                xTemp, yTemp = self.get_map().calculate_position(
+                    self._tile_is_hovering[0], self._tile_is_hovering[1]
+                )
+                _surface.blit(
+                    self.__range_green,
+                    (
+                        xTemp
+                        + (self.get_map().tile_width - self.__range_green.get_width())
+                        // 2,
+                        yTemp,
+                    ),
+                )
+        # 角色动画
+        for faction in self._entities_data:
+            for value in self._entities_data[faction].values():
+                assert isinstance(value, BasicEntity)
+                value.render(_surface, self.get_map())
+                if len(self.__select_pos) > 0:
+                    value.set_selected(value.is_overlapped_with(self.__select_rect))
+
     # 获取角色数据 - 子类需实现
     def get_entities_data(self) -> dict[str, dict[str, linpg.Entity]]:
         return self._entities_data
