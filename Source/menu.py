@@ -5,6 +5,7 @@ from .components import *
 # 设置引擎的标准文字大小
 linpg.font.set_global_font("medium", linpg.display.get_width() // 40)
 
+
 # 主菜单系统
 class MainMenu(linpg.AbstractSystem):
     def __init__(self, screen: linpg.ImageSurface):

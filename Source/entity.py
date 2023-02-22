@@ -20,7 +20,6 @@ linpg.LinpgVersionChecker(
 
 # 射击音效
 class AttackingSoundManager:
-
     __channel_id: int = 2
     __SOUNDS: dict[str, tuple] = {}
 
@@ -84,7 +83,6 @@ class AttackingSoundManager:
 
 # 友方角色被察觉的图标管理模块
 class FriendlyCharacterDynamicProgressBarSurface(linpg.DynamicProgressBarSurface):
-
     # 指向储存角色被察觉图标的指针
     __FULLY_EXPOSED_IMG: linpg.ImageSurface = linpg.images.quickly_load(
         "<&ui>eye_red.png"
@@ -99,7 +97,6 @@ class FriendlyCharacterDynamicProgressBarSurface(linpg.DynamicProgressBarSurface
 
 # 敌方角色警觉度的图标管理模块
 class HostileCharacterDynamicProgressBarSurface(linpg.DynamicProgressBarSurface):
-
     # 指向储存敌方角色警觉程度图标的指针
     __ORANGE_VIGILANCE_IMG: linpg.ImageSurface = linpg.images.quickly_load(
         "<&ui>vigilance_orange.png"
@@ -122,7 +119,6 @@ class HostileCharacterDynamicProgressBarSurface(linpg.DynamicProgressBarSurface)
 
 # 角色血条图片管理模块
 class EntityHpBar(linpg.DynamicProgressBarSurface):
-
     # 指向储存血条图片的指针
     __HP_GREEN_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>hp_green.png")
     __HP_RED_IMG: linpg.ImageSurface = linpg.images.quickly_load("<&ui>hp_red.png")
@@ -144,7 +140,6 @@ class EntityHpBar(linpg.DynamicProgressBarSurface):
 
 # 角色受伤立绘图形模块
 class EntityGetHurtImage(linpg.Square):
-
     # 存储角色受伤立绘的常量
     __CHARACTERS_GET_HURT_IMAGE_DICT: dict = {}
 
@@ -175,7 +170,6 @@ class EntityGetHurtImage(linpg.Square):
 
 # 基础角色类
 class BasicEntity(linpg.Entity):
-
     # 攻击所需的AP
     AP_IS_NEEDED_TO_ATTACK: int = 5
     AP_IS_NEEDED_TO_MOVE_ONE_BLOCK: int = 2
@@ -301,7 +295,7 @@ class BasicEntity(linpg.Entity):
             self.__effective_range_coordinates = self._generate_range_coordinates(
                 round(self.x),
                 round(self.y),
-                self.__effective_range,
+                self.effective_range,
                 MAP_P,
                 self._if_flip,
                 ifHalfMode,
@@ -328,19 +322,19 @@ class BasicEntity(linpg.Entity):
     ) -> list[tuple[int, int]]:
         if (
             self._identify_range(
-                self.__effective_range, abs(_x - round(self.x)) + abs(_y - round(self.y))
+                self.effective_range, abs(_x - round(self.x)) + abs(_y - round(self.y))
             )
             >= 0
         ):
             return list(
                 filter(
                     lambda pos: self._identify_range(
-                        self.__effective_range,
+                        self.effective_range,
                         abs(pos[0] - round(self.x)) + abs(pos[1] - round(self.y)),
                     )
                     >= 0,
                     self._generate_coverage_coordinates(
-                        _x, _y, self.__attack_coverage, MAP_P
+                        _x, _y, self.attack_coverage, MAP_P
                     ),
                 )
             )

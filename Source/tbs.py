@@ -1,6 +1,7 @@
 import random
 from .abstract import *
 
+
 # 回合制游戏战斗系统
 class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
     def __init__(self) -> None:

@@ -1,6 +1,7 @@
 import threading
 from .map import *
 
+
 # 加载模块
 class LoadingModule:
     def __init__(self) -> None:
@@ -142,6 +143,7 @@ class AbstractBattleSystemWithInGameDialog(
         self._enable_pause_menu()
 
     """Quick Reference"""
+
     # 格里芬角色数据
     @property
     def alliances(self) -> dict[str, FriendlyCharacter]:

@@ -2,6 +2,7 @@ from collections import deque
 from typing import Sequence
 from .entity import *
 
+
 # 友方角色类
 class FriendlyCharacter(BasicEntity):
     def __init__(self, characterData: dict, mode: str) -> None:
@@ -317,7 +318,6 @@ class FriendlyCharacter(BasicEntity):
 
 # 敌对角色类
 class HostileCharacter(BasicEntity):
-
     # 用于存放角色做出的决定
     class DecisionHolder:
         def __init__(self, action: str, data: Sequence):

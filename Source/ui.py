@@ -199,7 +199,6 @@ class RoundSwitch:
 
 # 警告系统
 class WarningMessageSystem:
-
     __all_warnings: deque = deque()
     __warnings_msg: dict = {}
     __font_size: int = 0
@@ -547,7 +546,6 @@ class CharacterInfoBoard:
 
 # 章节标题(在加载时显示)
 class LoadingTitle:
-
     black_bg: linpg.StaticImage = linpg.StaticImage(
         linpg.surfaces.colored(linpg.display.get_size(), linpg.colors.BLACK), 0, 0
     )
@@ -605,7 +603,6 @@ class LoadingTitle:
 
 
 class RangeSystem:
-
     # 区域坐标
     __areas: tuple[list[tuple[int, int]], ...] = ([], [], [], [], [])
     # 用于表示范围的方框图片

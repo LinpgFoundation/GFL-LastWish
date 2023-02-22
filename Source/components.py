@@ -1,5 +1,6 @@
 from .implementations import *
 
+
 # 控制台
 class _Console(linpg.Console):
     def _check_command(self, conditions: list) -> None:
@@ -43,7 +44,6 @@ linpg.global_variables.set("CONSOLE", value=CONSOLE)
 
 
 class GameMode:
-
     # 储存闸门动画的图片素材
     __GateImgAbove: Optional[linpg.StaticImage] = None
     __GateImgBelow: Optional[linpg.StaticImage] = None

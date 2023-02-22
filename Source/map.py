@@ -10,7 +10,6 @@ class CampfireObject(linpg.DecorationObject):
     ) -> None:
         super().__init__(x, y, _type, _variation, status)
         self.__range: int = status.get("range", 3)
-        self.__alpha: int = 255
         self.__img_id: int = linpg.Numbers.get_random_int(0, 90)
         if not self._has_status("lit"):
             self.set_status("lit", True)
@@ -50,22 +49,24 @@ class CampfireObject(linpg.DecorationObject):
             else []
         )
 
-    # 画出篝火（注意，alpha不会被使用，它只因为兼容性和一致性而存在）
-    def blit(self, _surface: linpg.ImageSurface, pos: tuple[int, int], is_dark: bool, alpha: int) -> None:  # type: ignore[override]
+    # 画出篝火
+    def display(
+        self, _surface: linpg.ImageSurface, offSet: tuple[int, int] = linpg.ORIGIN
+    ) -> None:
         # 查看篝火的状态是否正在变化，并调整对应的alpha值
         if self.get_status("lit") is True:
-            if self.__alpha < 255:
-                self.__alpha += 15
-        elif self.__alpha > 0:
-            self.__alpha -= 15
+            if self.get_alpha() < 255:
+                self.set_alpha(self.get_alpha() + 15)
+        elif self.get_alpha() > 0:
+            self.set_alpha(self.get_alpha() - 15)
         # 底层 - 未燃烧的图片
-        if self.__alpha < 255:
+        if self.get_alpha() < 255:
             self._variation = 0
-            super().blit(_surface, pos, is_dark, 255)
+            super().display(_surface, offSet)
         # 顶层 - 燃烧的图片
-        if self.__alpha > 0:
+        if self.get_alpha() > 0:
             self._variation = self.__img_id // 10
-            super().blit(_surface, pos, is_dark, self.__alpha)
+            super().display(_surface, offSet)
             if (
                 self._variation
                 < linpg.DecorationImagesModule.count_variations(self.type) - 1
@@ -104,7 +105,6 @@ class ChestObject(linpg.DecorationObject):
 
 # 自定义的地图
 class AdvancedTileMap(linpg.AbstractTileMap):
-
     # 计算在地图中的方块
     def calculate_coordinate(
         self, on_screen_pos: Optional[tuple[int, int]] = None
