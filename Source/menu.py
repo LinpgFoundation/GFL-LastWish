@@ -62,9 +62,9 @@ class MainMenu(linpg.AbstractSystem):
         )
         """开始加载"""
         # 载入页面 - 渐入
-        for index in range(0, 250, int(2 * linpg.display.get_delta_time())):
+        for index in range(0, 2500, linpg.display.get_delta_time() * 10):
             screen.fill(linpg.colors.BLACK)
-            self.__loading_screen.set_alpha(index)
+            self.__loading_screen.set_alpha(index // 10)
             screen.blit(self.__loading_screen, linpg.ORIGIN)
             linpg.display.flip()
         # 主菜单文字
@@ -741,7 +741,5 @@ class MainMenu(linpg.AbstractSystem):
             if alpha_t is None or alpha_t <= 0:
                 self.__loading_screen = None
             else:
-                self.__loading_screen.set_alpha(
-                    max(0, alpha_t - int(5 * linpg.display.get_delta_time()))
-                )
+                self.__loading_screen.set_alpha(max(0, alpha_t - 2))
                 screen.blit(self.__loading_screen, linpg.ORIGIN)
