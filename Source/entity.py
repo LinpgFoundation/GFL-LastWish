@@ -277,6 +277,7 @@ class BasicEntity(linpg.Entity):
                 if (
                     MAP_P.row > y >= 0
                     and MAP_P.column > x >= 0
+                    and MAP_P.is_passable(x, y)
                     and (
                         the_range_in := cls._identify_range(
                             _ranges, abs(x - _x) + abs(y - _y)

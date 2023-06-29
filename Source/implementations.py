@@ -202,6 +202,56 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
                         yTemp,
                     ),
                 )
+        if self._show_barrier_mask is True or self._delete_mode is True:
+            for y in range(self.get_map().row):
+                for x in range(self.get_map().column):
+                    posTupleTemp: tuple[int, int] = self.get_map().calculate_position(
+                        x, y
+                    )
+                    if (
+                        -self.get_map().tile_width
+                        <= posTupleTemp[0]
+                        < _surface.get_width()
+                        and -self.get_map().tile_width
+                        <= posTupleTemp[1]
+                        < _surface.get_height()
+                    ):
+                        _surface.blit(
+                            self.__range_green
+                            if self.get_map().is_passable(x, y)
+                            else self.__range_red,
+                            (
+                                posTupleTemp[0]
+                                + (
+                                    self.get_map().tile_width
+                                    - self.__range_green.get_width()
+                                )
+                                // 2,
+                                posTupleTemp[1],
+                            ),
+                        )
+                    elif (
+                        posTupleTemp[0] >= _surface.get_width()
+                        or posTupleTemp[1] >= _surface.get_height()
+                    ):
+                        break
+                if (
+                    self.get_map().calculate_position(0, y + 1)[1]
+                    >= _surface.get_height()
+                ):
+                    break
+            if self._tile_is_hovering is not None:
+                xTemp, yTemp = self.get_map().calculate_position(
+                    self._tile_is_hovering[0], self._tile_is_hovering[1]
+                )
+                _surface.blit(
+                    self.__range_red,
+                    (
+                        xTemp
+                        + (self.get_map().tile_width - self.__range_red.get_width()) // 2,
+                        yTemp,
+                    ),
+                )
         # 角色动画
         for faction in self._entities_data:
             for value in self._entities_data[faction].values():

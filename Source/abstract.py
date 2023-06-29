@@ -377,7 +377,7 @@ class AbstractBattleSystemWithInGameDialog(
             elif currentDialog.get("idle") is not None:
                 if self.__dialog_parameters["secondsToIdle"] is None:
                     self.__dialog_parameters["secondsToIdle"] = (
-                        currentDialog["idle"] * linpg.display.get_fps()
+                        currentDialog["idle"] * linpg.display.get_current_fps()
                     )
                 else:
                     if (

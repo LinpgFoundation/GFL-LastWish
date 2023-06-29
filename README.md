@@ -82,7 +82,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 | Type             | 类型     | Minimum / 最低要求               | Recommended / 推荐配置                 |
 | ---------------- | -------- | -------------------------------- | -------------------------------------- |
-| Operating System | 操作系统 | Windows® 10 64 bit, Ubuntu 22.04 | Windows® 11                            |
+| Operating System | 操作系统 | Windows® 10 64 bit, Ubuntu 22.04 | Windows® 11,  Fedora 38                |
 | CPU              | 处理器   | Intel® or AMD® 3+ GHz processor  | Intel® or AMD® 3.5+ GHz processor      |
 | Memory           | 内存     | 4 GB RAM                         | 6GB RAM                                |
 | Graphics Cards   | 显卡     | Integrated Graphics              | GTX 960 or AMD RX 560                  |
