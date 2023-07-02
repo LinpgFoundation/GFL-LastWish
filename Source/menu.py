@@ -145,23 +145,21 @@ class MainMenu(linpg.AbstractSystem):
             os.path.join(
                 "Data",
                 chapterType,
-                "chapter{0}_level_info_{1}.yaml".format(
-                    chapterId, linpg.setting.get_language()
-                ),
+                f"chapter{chapterId}_level_info.yaml",
             )
             if chapterType == "main_chapter"
             else os.path.join(
                 "Data",
                 chapterType,
                 self.current_selected_workshop_project,
-                "chapter{0}_level_info_{1}.yaml".format(
-                    chapterId, linpg.setting.get_language()
-                ),
+                f"chapter{chapterId}_level_info.yaml",
             )
         )
-        chapter_title: str = linpg.config.try_load_file_if_exists(
-            level_info_file_path
-        ).get("title", linpg.lang.get_text("Global", "no_translation"))
+        chapter_title: str = (
+            linpg.config.try_load_file_if_exists(level_info_file_path)
+            .get(linpg.setting.get_language(), {})
+            .get("title", linpg.lang.get_text("Global", "no_translation"))
+        )
         return "{0}: {1}".format(
             linpg.lang.get_text("Battle_UI", "numChapter").format(chapterId),
             chapter_title,
@@ -170,7 +168,7 @@ class MainMenu(linpg.AbstractSystem):
     # 重新加载章节选择菜单的选项
     def __reload_chapter_select_list(
         self,
-        screen_size: tuple,
+        screen_size: tuple[int, int],
         chapterType: str = "main_chapter",
         createMode: bool = False,
     ) -> None:
@@ -180,13 +178,13 @@ class MainMenu(linpg.AbstractSystem):
             self.chapter_select.append(self.__main_menu_txt["other"]["new_chapter"])
         # 历遍路径下的所有章节文件
         for path in glob(
-            os.path.join("Data", chapterType, "*_map.yaml")
+            os.path.join("Data", chapterType, "*_level_info.yaml")
             if chapterType == "main_chapter"
             else os.path.join(
                 "Data",
                 chapterType,
                 self.current_selected_workshop_project,
-                "*_map.yaml",
+                "*_level_info.yaml",
             )
         ):
             self.chapter_select.append(
@@ -196,14 +194,11 @@ class MainMenu(linpg.AbstractSystem):
             )
         # 将返回按钮放到菜单列表中
         self.chapter_select.append(linpg.lang.get_text("Global", "back"))
-        txt_y: int = int(
-            (
-                screen_size[1]
-                - len(self.chapter_select) * linpg.font.get_global_font_size("medium") * 2
-            )
-            / 2
-        )
-        txt_x: int = int(screen_size[0] * 2 / 3)
+        txt_y: int = (
+            screen_size[1]
+            - len(self.chapter_select) * linpg.font.get_global_font_size("medium") * 2
+        ) // 2
+        txt_x: int = screen_size[0] * 2 // 3
         # 将菜单列表中的文字转换成文字surface
         for i in range(len(self.chapter_select)):
             self.chapter_select[i] = linpg.load.resize_when_hovered_text(
@@ -275,7 +270,7 @@ class MainMenu(linpg.AbstractSystem):
         fileName = fileDefaultName
         # 循环确保名称不重复
         while os.path.exists(os.path.join("Data", "workshop", fileName)):
-            fileName = "{0} ({1})".format(fileDefaultName, avoidDuplicateId)
+            fileName = f"{fileDefaultName} ({avoidDuplicateId})"
             avoidDuplicateId += 1
         # 创建项目模板
         linpg.create_new_project(os.path.join("Data", "workshop", fileName), "yaml")
@@ -289,7 +284,7 @@ class MainMenu(linpg.AbstractSystem):
                         "Data",
                         "workshop",
                         self.current_selected_workshop_project,
-                        "*_dialogs_{}.yaml".format(linpg.setting.get_language()),
+                        f"*_dialogs_{linpg.setting.get_language()}.yaml",
                     )
                 )
             )
@@ -297,36 +292,32 @@ class MainMenu(linpg.AbstractSystem):
         )
         # 复制关卡数据默认模板
         copyfile(
-            "Data/template/chapter_level_info_example.yaml",
+            r"Data/template/chapter_level_info_example.yaml",
             os.path.join(
                 "Data",
                 "workshop",
                 self.current_selected_workshop_project,
-                "chapter{0}_level_info_{1}.yaml".format(
-                    chapterId, linpg.setting.get_language()
-                ),
+                f"chapter{chapterId}_level_info.yaml",
             ),
         )
         # 复制视觉小说数据默认模板
         copyfile(
-            "Data/template/chapter_dialogs_example.yaml",
+            r"Data/template/chapter_dialogs_example.yaml",
             os.path.join(
                 "Data",
                 "workshop",
                 self.current_selected_workshop_project,
-                "chapter{0}_dialogs_{1}.yaml".format(
-                    chapterId, linpg.setting.get_language()
-                ),
+                f"chapter{chapterId}_dialogs_{linpg.setting.get_language()}.yaml",
             ),
         )
         # 复制地图数据默认模板
         copyfile(
-            "Data/template/chapter_map_example.yaml",
+            r"Data/template/chapter_map_example.yaml",
             os.path.join(
                 "Data",
                 "workshop",
                 self.current_selected_workshop_project,
-                "chapter{}_map.yaml".format(chapterId),
+                f"chapter{chapterId}_map.yaml",
             ),
         )
 

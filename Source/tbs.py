@@ -341,7 +341,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 for _text in levelInfo.get(
                     "battle_info",
                     linpg.config.load(
-                        r"Data/template/chapter_level_info_example.yaml", "battle_info"
+                        r"Data/template/chapter_level_info_example.yaml",
+                        linpg.setting.get_language(),
+                        "battle_info",
                     ),
                 )
             ]

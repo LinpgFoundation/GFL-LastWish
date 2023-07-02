@@ -1,9 +1,19 @@
-battle_info:
-- line 1
-- line 2
-- put some information here
-- such as date, time, weather...
-- 5 lines are the maximum
-description: The description of the chapter, will be displayed during the loading
-  screen
-title: The title of this chapter
+English:
+  battle_info:
+  - line 1
+  - line 2
+  - put some information here
+  - such as date, time, weather...
+  - 5 lines are the maximum
+  description: The description of this chapter, will be displayed during the loading
+    screen
+  title: The title of this chapter
+SimplifiedChinese:
+  battle_info:
+  - 第一行
+  - 第二行
+  - 写点东西在这里
+  - 比如说日期，时间，天气，等等...
+  - 但确保最多5行
+  description: 本章的描述，将在加载屏幕上显示
+  title: 本章的标题
