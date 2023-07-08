@@ -904,7 +904,7 @@ class ScoreBoard:
                 cls.__TIME_TXT = linpg.font.render(
                     linpg.lang.get_text("ScoreBoard", "total_time").format(
                         time.strftime(
-                            "%H:%M", time.localtime(cls.__STATISTICS.total_time)
+                            "%H:%M:%S", time.localtime(cls.__STATISTICS.total_time)
                         )
                     ),
                     linpg.colors.WHITE,

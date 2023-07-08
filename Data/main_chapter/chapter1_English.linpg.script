@@ -5,100 +5,98 @@
 [section]dialog_before_battle
 
 null:
-- When I took on this task, I was a little uneasy,
-- but thought to myself that I was probably overthinking it
+- When I took on this task, I was a little uneasy.
+- But I thought to myself that I was probably thinking too much about it.
 null:
-- But it turns out that I was so naive, so optimistic... sow... foolish...
+- But it turns out that, I was so naive, so optimistic... so... foolish...
 null:
-- Because now... Everything that can go wrong, has gone wrong
+- Because now... Everything that can go wrong, has gone wrong.
 
 [bgi]research.jpg
 [bgm]BGM_Boss_1.ogg
 [display]kalina_5.png
 
 Kalina:
-- Commander, the Sangvis Ferri's attack is getting more and more intense
-- If this continues, the remaining forces will be crushed soon
-- It's time to execute plan ES-2, and organize the evacuation of all forces as soon as possible!
+- Commander, the Sangvis Ferri's attack is getting more and more intense.
+- If this continues, it is only a matter of time that the remaining forces will be crushed.
+- It's time to execute plan ES-2, and carry out the evacuation of all forces as soon as possible!
 Commander:
 - Still no news about them?
-- 10th Logistics Team...
+- The 10th Logistics Team...
 Kalina:
 - We've been trying to get in touch with them since they were confirmed lost,
-- and we don't know what happened... It's worrying
-- But if we keep on delaying, this place will be surrounded by Sangvis Ferri sooner or later
-Kalina:
-- Please make up your mind as soon as possible
+- and we don't know what happened... It is concerning.
+- But if we keep on delaying the evacuation, this place will be surrounded by Sangvis Ferri
+- sooner or later, so please make up your mind as soon as possible
 Commander:
 - Where are the coordinates of the last communication with them?
 Kalina:
-- On a plain about 50 kilometers east of here
+- On a plain field located approximately 50 kilometers east.
 - It fell under Sangvis Ferri's control 13 hours ago
 Commander:
 - Can you send someone out there to conduct a search?
 Kalina:
-- All the combat-ready squads are currently in the second line of defense
-- It's already a miracle that we can barely stop the Sangvis Ferri' attack
-- Let alone breakthrough
+- All the squads that are capable to fight are now in the second line of defense.
+- It is a remarkable feat that we are able to halt the Sangvis Ferri's attack with a mere halt,
+- let alone breakthrough
 Kalina:
-- If we pull out any more men at this point,
-- the defense will be crushed by the Sangvis Ferri in hours
+- At this point, if we pull out any more dolls,
+- the Sangvis Ferri will crush our defense within hours.
 Commander:
-- When we were talking about business, they said it was a search that will be easy as pie
-- Now we're thankful to get out of here, not to mention completing the mission
+- When we were discussing this business, they tole me this would be easy as pie.
+- Now we're thankful to get out of here, not to mention completing the mission.
 Kalina:
-- Commander, please stop blaming yourself
-- No one would have thought things would get so bad all of a sudden
-- But for now, let's prioritize what we do next and keep the big picture in mind
+- Commander, please stop blaming yourself.
+- No one would have thought things would get so bad all of a sudden.
+- But for now, let's prioritize what we do next and keep the big picture in mind.
 Commander:
 - ...
 - Kalina
 Kalina:
-- Yes
+- Yes!?
 Commander:
 - ...
-Commander:
-- Start the evacuation procedure, and get me K. I need to talk to him
+- Please go ahead and start the evacuation procedure, and get me K.
+- I need to speak to him.
 Kalina:
-- Okay, I'm on my way.
+- Okay, I'll get right on it.
 
 [hide]*
 
 null:
-- At this moment, I am very uneasy inside
-- Whether sv98 and her team can come back before the evacuation is one thing
-null:
-- But I always feel that this island,
-- There are mysteries that Griffin and even the Security Bureau itself do not know yet
+- Right now, I feel very uneasy inside.
+- It's one thing that sv98 and her team can't return before the evacuation.
+- But I always feel like there are still secrets on the island that Griffin
+- and even the East German Ministry for State Security don't know.
 
 [scene]snowfield.jpg
 [bgm]BGM_Brain_1.ogg
 [display]sv98.png
 
 sv98:
-- Gsh18, what's the status? Can you get a signal from the base?
+- Gsh18, what's the status? Are you able to pick up any signal from the base?
 
 [show]gsh18.png
 
 gsh18:
-- The communication was at least intermittent a few hours ago, 
-- but now it has been several hours without a response.
-- It seems like that the Sangvis Ferri has completely cut off our signal
+- At least the communication was sporadic a few hours ago.
+- But it's been a few hours without a response.
+- The Sangvis Ferri seems to have completely halted our transmission.
 
 [show]asval.png pp1901.png
 
 sv98:
 - Asval, pp1901, you're finally back!
-- How's it going?
+- What's the situation?
 asval:
 - Sv98, pp1901 and I found a signal tower-like facility nearby.
-- It's likely to have blocked our communication with the base
+- It's likely to have blocked our communication with the base.
 sv98:
 - Any good news?
 pp1901:
-- The only good news is that there are only a few Sangvis Ferri units guarding this facility.
-- If we can take this place down, we can not only get in touch with the base,
-- but also effectively block the counterattack of the Sangvis Ferri
+- Only a few Sangvis Ferri units are guarding this facility, which is good news.
+- If we can take down this place, we will not only be able to get in touch with the base,
+- but also slowed down the Sangvis Ferris counter-attack.
 sv98:
 - All right then, let's get ready.
 - It's time for a big fight.
@@ -118,47 +116,48 @@ null:
 [show]k.png&communicating
 
 K:
-- Commander, according to our plan, this is not the time for communication
+- According to our plan, commander, this is not the time for communication.
 Commander:
-- I think you know better than I do what the situation is right now
-- My forces has almost collapsed, so I'd like to know when the "assistance" you mentioned will arrive
+- I think you know better than I do what's happening right now.
+- My forces have almost collapsed,
+- so I'd like to know when the "assistance" you mentioned will arrive.
 K:
-- I think you should have sensed that the "assistance" I mentioned was right next to you.
-- But I won't let them out if I don't have the stuff
+- I think you should have figured out that the "assistance" I mentioned was right next to you.
+- But I won't let them come out if I don't have the stuff.
 Commander:
-- Then I want to know why the information you provided at the beginning
-- didn't contain any information regarding Sangvis Ferri
+- Then I want to know why the information you gave me at the beginning
+- didn't say anything about Sangvis Ferri.
 - And where did you get the information that was so wrong?
 K:
-- Commander, of course I can't tell you the answer to the question you're asking.
-- Everyone loves eggs, but no one ever asks where they come from
+- Commander, of course, I cannot provide you with the answer to the question you're asking.
+- Everyone likes having eggs for breakfast, but no one ever asks where the eggs came from.
 K:
-- Our source of information is very reliable
-- By all rights, Sangvis Ferri should not know about it
-- But as things stand now, someone within our circle must have leaked this information
+- Our source of information is extremely reliable.
+- Surely, Sangvis Ferri should not be aware of this.
+- However, it appears that someone within our circle may have leaked this information.
 Commander:
-- Without any support, our defense will not last for long
-- How can we possibly find what you're asking for
+- Without any support, our defense will not be able to last long.
+- How can we possibly find what you're asking for?!
 K:
-- That doesn't matter
-- If the dolls under your command can do nothing but standing, then keep going
-- I will try to find a way out
+- That doesn't matter.
+- If the dolls under your command are unable to do anything other than stand still,
+- then keep going, and I will try to find a way out for you.
 
 [hide]k.png
 
 null:
-- End of communication
+- End of communication.
 Commander:
-- Damn it, I should have known better than to accept this commission in the first place
+- Damn it, I should have known better than to accept this commission in the first place.
 
 [display]kalina_5.png
 
 Kalina:
 - Commander, what's the situation?
 Commander:
-- Not so good.
+- Not good.
 - Any good news?
 Kalina:
-- I thought you'd like to hear it.
+- I thought you'd like to hear this.
 
 [end]
