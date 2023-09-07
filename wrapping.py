@@ -9,17 +9,17 @@ if __name__ == "__main__":
         not PATH.exists("src")
         or input("Do you want to recompile source files (Y/n):") == "Y"
     ):
-        Builder.delete_file_if_exist("src")
+        Builder.remove("src")
         Builder.compile(
             "Source", smart_auto_module_combine=SmartAutoModuleCombineMode.ALL_INTO_ONE
         )
 
     # 更新所有第三方库
     if input("Do you want to update all third party packages (Y/n):") == "Y":
-        PackageInstaller.upgrade_all()
+        PackageInstaller.upgrade()
 
     # 删除dist文件夹
-    Builder.delete_file_if_exist("dist")
+    Builder.remove("dist")
 
     # 打包main文件
     PackageInstaller.install("pyinstaller")
@@ -34,4 +34,4 @@ if __name__ == "__main__":
     # 移除移除的缓存文件
     folders_need_remove: tuple[str, ...] = ("build", "logs", "__pycache__")
     for folder_p in folders_need_remove:
-        Builder.delete_file_if_exist(folder_p)
+        Builder.remove(folder_p)

@@ -56,16 +56,16 @@ Their stories may be forgotten by history, but what they have done will be remem
 | ----- | ---------------- | ---------------------------------------- | ------------------------------------ | ------------------ |
 | 1     | 雪色的希望       | A Wish Like Snow                         | 2022.12.31                           | :white_check_mark: |
 | 2     | 迷离之下         | Beneath the Bewilderment                 | 2022.12.31                           | :white_check_mark: |
-| 3     | 琴弦之上         | Above string                             | 2023.8                               | :hammer:           |
-| 4     | 喘息（暂定）     | A gasp for breath (Provisional)          |                                      |                    |
-| 5     | 无人之防（暂定） | Make defense without dolls (Provisional) |                                      |                    |
-| 6     | 机遇（暂定）     | The opportunity (Provisional)            |                                      |                    |
-| 7     | 强敌（暂定）     | Formidable enemies (Provisional)         |                                      |                    |
-| 8     | 仅存的星火       | The only starburst                       |                                      |                    |
-| 9     | 极夜前的黎光     | Light before long night                  |                                      |                    |
-| 10    | 冲破黑暗与迷雾   | Through fog and darkness                 |                                      |                    |
-| 11    | 拜托了，活下去！ | Please, stay alive!                      |                                      |                    |
-| Final | 为了能看到的明天 | For a tomorrow that can be seen          |                                      |                    |
+| 3     | 琴弦之上         | Above string                             | 2023.10                              | :hammer:           |
+| 4     | 喘息     | A gasp for breath          | Unknown | ❓                  |
+| 5     | 无人之防 | Make defense without dolls | Cancelled                            | ❌ |
+| 6     | 机遇     | The opportunity            | Cancelled | ❌ |
+| 7     | 强敌     | Formidable enemies         | Cancelled |❌|
+| 8     | 仅存的星火       | The only starburst                       | Cancelled | ❌ |
+| 9     | 极夜前的黎光     | Light before long night                  | Cancelled | ❌ |
+| 10    | 冲破黑暗与迷雾   | Through fog and darkness                 | Cancelled | ❌ |
+| 11    | 拜托了，活下去！ | Please, stay alive!                      | Cancelled | ❌ |
+| Final | 为了能看到的明天 | For a tomorrow that can be seen          | Cancelled | ❌ |
 
 # :white_check_mark: Dependencies / 运行库
 

@@ -927,9 +927,9 @@ dialogs:
     - changePos:
         x: 12
         y: 12
-    - dialog: id_03
+    - dialog: noticeSupply
     tutorial1:
-    - dialog: id_07
+    - dialog: gotSupply
   dictionary:
     initial: initial_dialog
     move:

@@ -26,7 +26,7 @@ if __name__ == "__main__":
         linpg.display.set_caption(linpg.lang.get_text("General", "game_title"))
         # compile all the dialogue scripts in Data directory
         # 编译Data文件夹内的所有原始视觉小说脚本文件
-        linpg.ScriptCompiler.compile_files_in_directory("Data")
+        linpg.ScriptCompiler.compile("Data")
         # 主菜单模块
         mainMenu = MainMenu(linpg.display.get_window())
         # 主循环

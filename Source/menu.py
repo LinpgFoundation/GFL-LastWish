@@ -455,7 +455,7 @@ class MainMenu(linpg.AbstractSystem):
             for i in range(len(self.chapter_select) - 1):
                 if self.chapter_select[i].is_hovered():
                     cover_path = linpg.config.load(
-                        r"Data/main_chapter/info.yaml", "cover_image"
+                        r"Data/main_chapter/info.yaml", "cover_images"
                     )[i]
                     break
         if cover_path is not None:

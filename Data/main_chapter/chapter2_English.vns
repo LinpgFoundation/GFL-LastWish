@@ -89,6 +89,8 @@ pp1901:
 
 [block]
 
+[entry]noticeSupply
+
 [display]sv98.png gsh18.png asval.png pp1901.png
 
 sv98:
@@ -106,6 +108,8 @@ null:
 - Dive in or let your teammates draw fire, please make your own choice
 
 [block]
+
+[entry]gotSupply
 
 [display]sv98.png
 
