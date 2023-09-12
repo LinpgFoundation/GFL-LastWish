@@ -1,21 +1,7 @@
 import os
 from glob import glob
-from typing import Optional
 
-import linpg
-
-# 初始化linpg系统模块
-linpg.display.init()
-
-# 加载版本信息
-version_info: dict = linpg.config.load_file("Data/version.yaml")
-
-# 确认linpg的版本是推荐版本
-linpg.LinpgVersionChecker(
-    ">=",
-    version_info["recommended_linpg_revision"],
-    version_info["recommended_linpg_patch"],
-)
+from .map import *
 
 
 # 射击音效
@@ -247,7 +233,7 @@ class BasicEntity(linpg.Entity):
         _x: int,
         _y: int,
         _ranges: tuple[int, ...],
-        MAP_P: linpg.AbstractTileMap,
+        MAP_P: AdvancedTileMap,
         ifFlip: bool,
         ifHalfMode: bool = False,
     ) -> list[list[tuple[int, int]]]:
@@ -290,7 +276,7 @@ class BasicEntity(linpg.Entity):
 
     # 获取角色的攻击范围
     def get_effective_range_coordinates(
-        self, MAP_P: linpg.AbstractTileMap, ifHalfMode: bool = False
+        self, MAP_P: AdvancedTileMap, ifHalfMode: bool = False
     ) -> list[list[tuple[int, int]]]:
         if self.__effective_range_coordinates is None:
             self.__effective_range_coordinates = self._generate_range_coordinates(
@@ -306,7 +292,7 @@ class BasicEntity(linpg.Entity):
     # 根据给定的坐标和半径生成覆盖范围坐标列表
     @staticmethod
     def _generate_coverage_coordinates(
-        _x: int, _y: int, _radius: int, MAP_P: linpg.AbstractTileMap
+        _x: int, _y: int, _radius: int, MAP_P: AdvancedTileMap
     ) -> list[tuple[int, int]]:
         return list(
             filter(
@@ -319,7 +305,7 @@ class BasicEntity(linpg.Entity):
 
     # 获取角色的攻击覆盖范围
     def get_attack_coverage_coordinates(
-        self, _x: int, _y: int, MAP_P: linpg.AbstractTileMap
+        self, _x: int, _y: int, MAP_P: AdvancedTileMap
     ) -> list[tuple[int, int]]:
         if (
             self._identify_range(
@@ -350,7 +336,7 @@ class BasicEntity(linpg.Entity):
         return _data
 
     # 画出角色
-    def render(self, _surface: linpg.ImageSurface, MAP_P: linpg.AbstractTileMap, pos: Optional[tuple[int, int]] = None, size: Optional[tuple[int, int]] = None, action: Optional[str] = None, alpha: Optional[int] = None) -> None:  # type: ignore[override]
+    def render(self, _surface: linpg.ImageSurface, MAP_P: AdvancedTileMap, pos: Optional[tuple[int, int]] = None, size: Optional[tuple[int, int]] = None, action: Optional[str] = None, alpha: Optional[int] = None) -> None:  # type: ignore[override]
         if size is None:
             img_width: int = linpg.TileMapImagesModule.TILE_TEMPLE_WIDTH * 2
             size = (img_width, img_width)
@@ -370,7 +356,7 @@ class BasicEntity(linpg.Entity):
     def _drawUI(
         self,
         surface: linpg.ImageSurface,
-        MAP_POINTER: linpg.AbstractTileMap,
+        MAP_POINTER: AdvancedTileMap,
         customHpData: Optional[tuple] = None,
     ) -> tuple:
         xTemp, yTemp = MAP_POINTER.calculate_position(self.x, self.y)

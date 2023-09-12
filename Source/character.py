@@ -166,7 +166,7 @@ class FriendlyCharacter(BasicEntity):
 
     # 获取技能有效范围内的所有坐标
     def get_skill_effective_range_coordinates(
-        self, MAP_P: linpg.AbstractTileMap, ifHalfMode: bool = False
+        self, MAP_P: AdvancedTileMap, ifHalfMode: bool = False
     ) -> list[list[tuple[int, int]]]:
         if self.__skill_effective_range_coordinates is None:
             self.__skill_effective_range_coordinates = self._generate_range_coordinates(
@@ -200,7 +200,7 @@ class FriendlyCharacter(BasicEntity):
 
     # 获取技能覆盖范围
     def get_skill_coverage_coordinates(
-        self, _x: int, _y: int, MAP_P: linpg.AbstractTileMap
+        self, _x: int, _y: int, MAP_P: AdvancedTileMap
     ) -> list[tuple[int, int]]:
         return (
             self._generate_coverage_coordinates(_x, _y, self.__skill_coverage, MAP_P)
@@ -281,9 +281,7 @@ class FriendlyCharacter(BasicEntity):
             self.__down_time = -1
             self._if_play_action_in_reversing = True
 
-    def drawUI(
-        self, surface: linpg.ImageSurface, MAP_POINTER: linpg.AbstractTileMap
-    ) -> None:
+    def drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: AdvancedTileMap) -> None:
         customHpData: Optional[tuple] = (
             None
             if self.__down_time < 0
@@ -397,9 +395,7 @@ class HostileCharacter(BasicEntity):
         return self.__vigilance >= 100
 
     # 画UI - 列如血条
-    def drawUI(
-        self, surface: linpg.ImageSurface, MAP_POINTER: linpg.AbstractTileMap
-    ) -> None:
+    def drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: AdvancedTileMap) -> None:
         blit_pos = super()._drawUI(surface, MAP_POINTER)
         # 展示警觉的程度
         if self.__vigilance > 0:
@@ -418,7 +414,7 @@ class HostileCharacter(BasicEntity):
 
     def make_decision(
         self,
-        MAP_POINTER: linpg.AbstractTileMap,
+        MAP_POINTER: AdvancedTileMap,
         friendlyCharacters: dict[str, FriendlyCharacter],
         hostileCharacters: dict[str, "HostileCharacter"],
         characters_detected_last_round: dict,

@@ -161,6 +161,11 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
         self.__range_green: linpg.ImageSurface = linpg.Surfaces.NULL
         self.__range_red: linpg.ImageSurface = linpg.Surfaces.NULL
 
+    def get_map(self) -> AdvancedTileMap:  # type: ignore[override]
+        _map: linpg.AbstractTileMap = super().get_map()
+        assert isinstance(_map, AdvancedTileMap)
+        return _map
+
     def _init_ui(self) -> None:
         super()._init_ui()
         # 绿色方块/方块标准
@@ -259,6 +264,14 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
                 value.render(_surface, self.get_map())
                 if len(self._select_pos) > 0:
                     value.set_selected(value.is_overlapped_with(self._select_rect))
+        # 检测角色所占据的装饰物（即需要透明化，方便玩家看到角色）
+        charactersPos: list = []
+        for value1 in self._entities_data.values():
+            for dataDict in value1.values():
+                charactersPos.append((round(dataDict.x), round(dataDict.y)))
+                charactersPos.append((round(dataDict.x) + 1, round(dataDict.y) + 1))
+        # 展示场景装饰物
+        self.get_map().display_decoration(_surface, tuple(charactersPos))
 
     # 获取角色数据 - 子类需实现
     def get_entities_data(self) -> dict[str, dict[str, linpg.Entity]]:

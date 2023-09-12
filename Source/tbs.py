@@ -278,6 +278,14 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
 
     def _display_map(self, screen: linpg.ImageSurface) -> None:
         super()._display_map(screen)
+        # 检测角色所占据的装饰物（即需要透明化，方便玩家看到角色）
+        charactersPos: list = []
+        for value in self._entities_data.values():
+            for dataDict in value.values():
+                charactersPos.append((round(dataDict.x), round(dataDict.y)))
+                charactersPos.append((round(dataDict.x) + 1, round(dataDict.y) + 1))
+        # 展示场景装饰物
+        self.get_map().display_decoration(screen, tuple(charactersPos))
         # 展示天气
         self._weather_system.draw(screen, self.get_map().tile_size)
         # 展示所有角色Ui

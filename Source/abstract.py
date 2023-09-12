@@ -1,5 +1,5 @@
 import threading
-from .map import *
+from .ui import *
 
 
 # 加载模块
@@ -165,6 +165,11 @@ class AbstractBattleSystemWithInGameDialog(
         return self._entities_data["SangvisFerri"][self.sangvisFerris_name_list[self.enemies_in_control_id]]  # type: ignore
 
     """关键重写或实现"""
+
+    def get_map(self) -> AdvancedTileMap:  # type: ignore[override]
+        _map: linpg.AbstractTileMap = super().get_map()
+        assert isinstance(_map, AdvancedTileMap)
+        return _map
 
     # 加载图片 - 重写使其更新加载信息
     def _load_map(self, _data: dict) -> None:
