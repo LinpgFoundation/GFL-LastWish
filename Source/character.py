@@ -511,11 +511,11 @@ class HostileCharacter(BasicEntity):
                     else:
                         actions.append(self.DecisionHolder("move", the_route))
                 else:
-                    raise Exception(
-                        "A hostile character cannot find a valid path when trying to attack {}!".format(
-                            target
-                        )
-                    )
+                    err_msg: str = f"A hostile character {self.type} at {self.get_pos()} cannot find a valid path when trying to attack {target}!"
+                    if linpg.debug.get_developer_mode() is True:
+                        raise Exception(err_msg)
+                    else:
+                        print(err_msg)
         # 如果角色没有可以攻击的对象，则查看角色是否需要巡逻
         elif len(self.__patrol_path) > 0:
             # 如果巡逻坐标点只有一个（意味着角色需要在该坐标上长期镇守）

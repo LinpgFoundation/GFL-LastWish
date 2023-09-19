@@ -177,9 +177,12 @@ class BasicEntity(linpg.Entity):
         )
         # 角色的攻击范围
         self.__effective_range_coordinates: Optional[list[list[tuple[int, int]]]] = None
+        # 角色的可视范围
+        self.__visual_range_coordinates: Optional[list[list[tuple[int, int]]]] = None
 
     def _need_update(self) -> None:
         self.__effective_range_coordinates = None
+        self.__visual_range_coordinates = None
 
     def set_x(self, value: linpg.number) -> None:
         if round(value) != round(self.x):
@@ -236,6 +239,7 @@ class BasicEntity(linpg.Entity):
         MAP_P: AdvancedTileMap,
         ifFlip: bool,
         ifHalfMode: bool = False,
+        checkPassable: bool = True,
     ) -> list[list[tuple[int, int]]]:
         # 初始化数据
         start_point: int
@@ -263,7 +267,7 @@ class BasicEntity(linpg.Entity):
                 if (
                     MAP_P.row > y >= 0
                     and MAP_P.column > x >= 0
-                    and MAP_P.is_passable(x, y)
+                    and (MAP_P.is_passable(x, y) if checkPassable is True else True)
                     and (
                         the_range_in := cls._identify_range(
                             _ranges, abs(x - _x) + abs(y - _y)
@@ -288,6 +292,22 @@ class BasicEntity(linpg.Entity):
                 ifHalfMode,
             )
         return self.__effective_range_coordinates
+
+    # 获取角色的可见范围
+    def get_visual_range_coordinates(
+        self, MAP_P: AdvancedTileMap, ifHalfMode: bool = False
+    ) -> list[list[tuple[int, int]]]:
+        if self.__visual_range_coordinates is None:
+            self.__visual_range_coordinates = self._generate_range_coordinates(
+                round(self.x),
+                round(self.y),
+                self.effective_range,
+                MAP_P,
+                self._if_flip,
+                ifHalfMode,
+                False,
+            )
+        return self.__visual_range_coordinates
 
     # 根据给定的坐标和半径生成覆盖范围坐标列表
     @staticmethod

@@ -975,7 +975,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                         "repeat" not in dialog_to_check
                                         or not dialog_to_check["repeat"]
                                     ):
-                                        del dialog_to_check
+                                        del self.__dialog_dictionary["move"][
+                                            name_from_by_pos
+                                        ]
                             # 玩家可以继续选择需要进行的操作
                             self.__is_waiting = True
                             self.characterGetClick = None

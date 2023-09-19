@@ -77,8 +77,11 @@ class CampfireObject(linpg.DecorationObject):
             self.set_alpha(self.get_alpha() - 15)
         # 底层 - 未燃烧的图片
         if self.get_alpha() < 255:
+            alpha_temp: int = self.get_alpha()
+            self.set_alpha(255)
             self._variation = 0
             super().display(_surface, offSet)
+            self.set_alpha(alpha_temp)
         # 顶层 - 燃烧的图片
         if self.get_alpha() > 0:
             self._variation = self.__img_id // 10
@@ -149,7 +152,7 @@ class AdvancedTileMap(linpg.AbstractTileMap):
     def _get_lit_area(self, alliances_data: dict) -> set:
         lightArea: set[tuple[int, int]] = set()
         for _alliance in alliances_data.values():
-            for _area in _alliance.get_effective_range_coordinates(self):
+            for _area in _alliance.get_visual_range_coordinates(self):
                 for _pos in _area:
                     lightArea.add(_pos)
             lightArea.add((round(_alliance.x), round(_alliance.y)))
@@ -226,16 +229,17 @@ class AdvancedTileMap(linpg.AbstractTileMap):
                 and screen_min <= thePosInMap[1] < _surface.get_height()
             ):
                 # 透明度
-                _item.set_alpha(
-                    100
-                    if (
-                        self._DECORATION_DATABASE[_item.type].get("hidable", False)
-                        is True
-                        and _item.get_pos() in occupied_coordinates
-                        and self.is_coordinate_in_lit_area(_item.x, _item.y)
+                if not isinstance(_item, CampfireObject):
+                    _item.set_alpha(
+                        100
+                        if (
+                            self._DECORATION_DATABASE[_item.type].get("hidable", False)
+                            is True
+                            and _item.get_pos() in occupied_coordinates
+                            and self.is_coordinate_in_lit_area(_item.x, _item.y)
+                        )
+                        else 255
                     )
-                    else 255
-                )
                 # 画出
                 _item.set_dark_mode(not self.is_coordinate_in_lit_area(_item.x, _item.y))
                 _item.blit(_surface, thePosInMap)
