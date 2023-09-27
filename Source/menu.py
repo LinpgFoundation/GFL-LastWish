@@ -96,6 +96,10 @@ class MainMenu(linpg.AbstractSystem):
         )
         self.hover_sound_play_on: int = -1
         self.last_hover_sound_play_on: int = -2
+        # 存档选择
+        self.__select_progress_menu: linpg.SaveOrLoadSelectedProgressMenu = (
+            linpg.SaveOrLoadSelectedProgressMenu()
+        )
         # 初始化返回菜单判定参数
         linpg.global_variables.set("BackToMainMenu", value=False)
 
@@ -490,7 +494,8 @@ class MainMenu(linpg.AbstractSystem):
         # 背景
         self.__draw_background(screen)
         # 菜单选项
-        self.__draw_buttons(screen)
+        if not self.__select_progress_menu.is_visible():
+            self.__draw_buttons(screen)
         # 展示设置UI
         linpg.PauseMenuModuleForGameSystem.OPTION_MENU.draw(screen)
         # 更新音量
@@ -526,18 +531,8 @@ class MainMenu(linpg.AbstractSystem):
             if self.menu_type == 0:
                 # 继续游戏
                 if self.__main_menu_txt["menu_main"]["0_continue"].is_hovered():
-                    if linpg.saves.any_progress_exists() is True:
-                        # 加载最近一个存档点的数据
-                        SAVE: dict = linpg.saves.get_latest_progresses().data
-                        # 设置参数
-                        linpg.global_variables.set("currentMode", value=SAVE["type"])
-                        linpg.global_variables.remove("section")
-                        linpg.global_variables.remove("chapterType")
-                        linpg.global_variables.set("chapterId", value=0)
-                        linpg.global_variables.remove("projectName")
-                        linpg.global_variables.set("saveData", value=SAVE)
-                        # 开始播放场景
-                        self.__loop_scenes(screen)
+                    self.__select_progress_menu.set_visible(True)
+                    linpg.controller.set_event("confirm", False)
                 # 选择章节
                 elif self.__main_menu_txt["menu_main"]["1_chooseChapter"].is_hovered():
                     # 加载菜单章节选择页面的文字
@@ -727,6 +722,27 @@ class MainMenu(linpg.AbstractSystem):
                             )
                             self.__restart_background()
                             break
+        # 存档选择系统
+        if self.__select_progress_menu.is_visible():
+            self.__select_progress_menu.draw(screen)
+            # 读取存档
+            if self.__select_progress_menu.get_selected_slot() >= 0:
+                _save: linpg.Saves.Progress | None = (
+                    self.__select_progress_menu.get_selected_save()
+                )
+                if _save is not None:
+                    self.__select_progress_menu.set_visible(False)
+                    # 加载最近一个存档点的数据
+                    SAVE: dict = _save.data
+                    # 设置参数
+                    linpg.global_variables.set("currentMode", value=SAVE["type"])
+                    linpg.global_variables.remove("section")
+                    linpg.global_variables.remove("chapterType")
+                    linpg.global_variables.set("chapterId", value=0)
+                    linpg.global_variables.remove("projectName")
+                    linpg.global_variables.set("saveData", value=SAVE)
+                    # 开始播放场景
+                    self.__loop_scenes(screen)
         if self.__loading_screen is not None:
             alpha_t: Optional[int] = self.__loading_screen.get_alpha()
             if alpha_t is None or alpha_t <= 0:
