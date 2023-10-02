@@ -62,13 +62,15 @@ class GameMode:
     def draw_loading_chapter_ui(cls, screen: linpg.ImageSurface, percent: int) -> None:
         if cls.__GateImgAbove is not None and cls.__GateImgBelow is not None:
             cls.__GateImgAbove.set_size(screen.get_width() + 4, screen.get_height() / 1.7)
-            cls.__GateImgAbove.set_bottom(cls.__GateImgAbove.get_height() / 100 * percent)
+            cls.__GateImgAbove.set_bottom(
+                cls.__GateImgAbove.get_height() * percent // 100
+            )
             cls.__GateImgAbove.draw(screen)
             cls.__GateImgBelow.set_size(
                 screen.get_width() + 4, screen.get_height() / 2.05
             )
             cls.__GateImgBelow.set_top(
-                screen.get_height() - cls.__GateImgBelow.get_height() / 100 * percent
+                screen.get_height() - cls.__GateImgBelow.get_height() * percent // 100
             )
             cls.__GateImgBelow.draw(screen)
         else:

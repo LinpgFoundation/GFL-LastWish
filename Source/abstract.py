@@ -13,7 +13,7 @@ class LoadingModule:
         self.__loading_info_msg: dict[str, str] = {}
         # 文字模块
         self.__FONT: linpg.FontGenerator = linpg.font.create(
-            linpg.display.get_width() / 76
+            linpg.display.get_width() // 76
         )
         # 正在加载的gif动态图标
         self.__loading_icon: Optional[linpg.AnimatedImage] = None
@@ -33,6 +33,7 @@ class LoadingModule:
                 int(linpg.display.get_width() * 0.003 * 15),
                 int(linpg.display.get_width() * 0.003 * 21),
             ),
+            60,
         )
         self.__initialized = True
         # 开始加载

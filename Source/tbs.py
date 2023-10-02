@@ -381,7 +381,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
     # 加载游戏进程
     def _process_data(self, _data: dict) -> None:
         # 生成标准文字渲染器
-        self._FONT.update(linpg.display.get_width() / 76)
+        self._FONT.update(linpg.display.get_width() // 76)
         # 加载按钮的文字
         self.selectMenuUI = SelectMenu()
         WarningMessageSystem.init(linpg.display.get_height() // 33)
@@ -755,8 +755,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     if self.action_choice == "move":
                         if self._tile_is_hovering is not None:
                             # 根据行动值计算最远可以移动的距离
-                            max_blocks_can_move = int(
-                                self.characterInControl.current_action_point / 2
+                            max_blocks_can_move = (
+                                self.characterInControl.current_action_point // 2
                             )
                             self.the_route = self.get_map().find_path(
                                 self.characterInControl.get_coordinate(),

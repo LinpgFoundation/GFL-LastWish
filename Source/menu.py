@@ -12,7 +12,7 @@ class MainMenu(linpg.AbstractSystem):
         # 初始化系统模块
         super().__init__()
         """生成加载页面"""
-        font_size: int = int(screen.get_width() / 64)
+        font_size: int = screen.get_width() // 64
         self.__loading_screen: Optional[linpg.ImageSurface] = linpg.surfaces.new(
             screen.get_size()
         )
@@ -125,7 +125,7 @@ class MainMenu(linpg.AbstractSystem):
                 )
             )
         self.workshop_files.append(linpg.lang.get_text("Global", "back"))
-        txt_location: int = int(screen_size[0] * 2 / 3)
+        txt_location: int = screen_size[0] * 2 // 3
         txt_y: int = int(
             (
                 screen_size[1]
@@ -405,7 +405,7 @@ class MainMenu(linpg.AbstractSystem):
         if linpg.PersistentVariables.try_get_bool("enable_workshop") is True:
             self.__disabled_options.remove("3_workshop")
         # 加载主菜单页面的文字设置
-        txt_location = int(screen_size[0] * 2 / 3)
+        txt_location = screen_size[0] * 2 // 3
         font_size = linpg.font.get_global_font_size("medium") * 2
         txt_y = (screen_size[1] - len(self.__main_menu_txt["menu_main"]) * font_size) / 2
         for key, txt in self.__main_menu_txt["menu_main"].items():

@@ -291,8 +291,8 @@ class FriendlyCharacter(BasicEntity):
         # 展示被察觉的程度
         if self.__detection > 0:
             # 参数
-            eyeImgWidth: int = round(MAP_POINTER.tile_width / 6)
-            eyeImgHeight: int = round(MAP_POINTER.tile_width / 10)
+            eyeImgWidth: int = MAP_POINTER.tile_width // 6
+            eyeImgHeight: int = MAP_POINTER.tile_width // 10
             numberX: float = (eyeImgWidth - MAP_POINTER.tile_width / 6) / 2
             numberY: float = (eyeImgHeight - MAP_POINTER.tile_width / 10) / 2
             # 根据参数调整图片
@@ -400,8 +400,8 @@ class HostileCharacter(BasicEntity):
         # 展示警觉的程度
         if self.__vigilance > 0:
             # 参数
-            eyeImgWidth: int = round(MAP_POINTER.tile_width / 6)
-            eyeImgHeight: int = round(MAP_POINTER.tile_width / 6)
+            eyeImgWidth: int = MAP_POINTER.tile_width // 6
+            eyeImgHeight: int = MAP_POINTER.tile_width // 6
             numberX: float = (eyeImgWidth - MAP_POINTER.tile_width / 6) / 2
             numberY: float = (eyeImgHeight - MAP_POINTER.tile_width / 10) / 2
             # 根据参数调整图片

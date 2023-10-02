@@ -173,7 +173,7 @@ class BasicEntity(linpg.Entity):
         # 血条图片
         self.__hp_bar: EntityHpBar = EntityHpBar()
         self.__status_font: linpg.TextSurface = linpg.TextSurface(
-            "", 0, 0, linpg.display.get_width() / 192
+            "", 0, 0, linpg.display.get_width() // 192
         )
         # 角色的攻击范围
         self.__effective_range_coordinates: Optional[list[list[tuple[int, int]]]] = None
@@ -382,7 +382,7 @@ class BasicEntity(linpg.Entity):
         xTemp, yTemp = MAP_POINTER.calculate_position(self.x, self.y)
         xTemp += MAP_POINTER.tile_width // 4
         yTemp -= MAP_POINTER.tile_width // 5
-        self.__hp_bar.set_size(MAP_POINTER.tile_width / 2, MAP_POINTER.tile_width / 10)
+        self.__hp_bar.set_size(MAP_POINTER.tile_width // 2, MAP_POINTER.tile_width // 10)
         self.__hp_bar.set_pos(xTemp, yTemp)
         # 预处理血条图片
         if customHpData is None:
