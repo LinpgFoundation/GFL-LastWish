@@ -11,7 +11,10 @@ if __name__ == "__main__":
     ):
         Builder.remove("src")
         Builder.compile(
-            "Source", smart_auto_module_combine=SmartAutoModuleCombineMode.ALL_INTO_ONE
+            "Source",
+            smart_auto_module_combine=SmartAutoModuleCombineMode.ALL_INTO_ONE,
+            update_the_one_in_sitepackages=False,
+            include_pyinstaller_program=False,
         )
 
     # 更新所有第三方库
