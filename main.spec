@@ -11,7 +11,6 @@ a = Analysis(
         ('Data','Data'),
         ('Lang','Lang'),
         ('src','src'),
-        ('ThirdPartyLibraries','ThirdPartyLibraries'),
         ('icon.ico','.')
     ],
     hiddenimports = [

@@ -1,5 +1,6 @@
 import threading
-from .map import *
+from .ui import *
+
 
 # 加载模块
 class LoadingModule:
@@ -12,7 +13,7 @@ class LoadingModule:
         self.__loading_info_msg: dict[str, str] = {}
         # 文字模块
         self.__FONT: linpg.FontGenerator = linpg.font.create(
-            linpg.display.get_width() / 76
+            linpg.display.get_width() // 76
         )
         # 正在加载的gif动态图标
         self.__loading_icon: Optional[linpg.AnimatedImage] = None
@@ -32,6 +33,7 @@ class LoadingModule:
                 int(linpg.display.get_width() * 0.003 * 15),
                 int(linpg.display.get_width() * 0.003 * 21),
             ),
+            60,
         )
         self.__initialized = True
         # 开始加载
@@ -122,7 +124,7 @@ class AbstractBattleSystemWithInGameDialog(
         LoadingModule.__init__(self)
         linpg.AbstractBattleSystem.__init__(self)
         linpg.PauseMenuModuleForGameSystem.__init__(self)
-        self._MAP = AdvancedTileMap()
+        self.set_map(AdvancedTileMap())
         # 视觉小说模块与参数
         self.__DIALOG: linpg.VisualNovelSystem = linpg.VisualNovelSystem()
         self.__DIALOG.disable_basic_features()
@@ -137,11 +139,12 @@ class AbstractBattleSystemWithInGameDialog(
         # 对话-动作是否被设置
         self.__dialog_is_route_generated: bool = False
         # 行走的音效 -- 频道0
-        self._footstep_sounds: linpg.SoundManagement = linpg.SoundManagement(0)
+        self._footstep_sounds: linpg.SoundsManager = linpg.SoundsManager(0)
         # 启用暂停菜单
         self._enable_pause_menu()
 
     """Quick Reference"""
+
     # 格里芬角色数据
     @property
     def alliances(self) -> dict[str, FriendlyCharacter]:
@@ -163,6 +166,11 @@ class AbstractBattleSystemWithInGameDialog(
         return self._entities_data["SangvisFerri"][self.sangvisFerris_name_list[self.enemies_in_control_id]]  # type: ignore
 
     """关键重写或实现"""
+
+    def get_map(self) -> AdvancedTileMap:  # type: ignore[override]
+        _map: linpg.AbstractTileMap = super().get_map()
+        assert isinstance(_map, AdvancedTileMap)
+        return _map
 
     # 加载图片 - 重写使其更新加载信息
     def _load_map(self, _data: dict) -> None:
@@ -187,7 +195,7 @@ class AbstractBattleSystemWithInGameDialog(
     def _get_data_need_to_save(self) -> dict:
         return (
             super()._get_data_need_to_save()
-            | self._MAP.get_local_pos_in_percentage()
+            | self.get_map().get_local_pos_in_percentage()
             | {
                 "dialog_key": self.__dialog_key,
                 "dialog_parameters": self.__dialog_parameters,
@@ -197,10 +205,10 @@ class AbstractBattleSystemWithInGameDialog(
     # 角色动画
     def _display_entities(self, screen: linpg.ImageSurface) -> None:
         for _alliance in self.alliances.values():
-            _alliance.draw(screen, self._MAP)
+            _alliance.render(screen, self.get_map())
         for _enemy in self.enemies.values():
-            if self._MAP.is_coordinate_in_lit_area(_enemy.x, _enemy.y):
-                _enemy.draw(screen, self._MAP)
+            if self.get_map().is_coordinate_in_lit_area(_enemy.x, _enemy.y):
+                _enemy.render(screen, self.get_map())
 
     # 更新音量
     def _update_sound_volume(self) -> None:
@@ -211,10 +219,8 @@ class AbstractBattleSystemWithInGameDialog(
 
     def _get_level_info(self) -> dict:
         return linpg.config.try_load_file_if_exists(
-            self.get_data_file_path().replace(
-                "_map", "_level_info_" + linpg.setting.get_language()
-            )
-        )
+            self.get_data_file_path().replace("_map", "_level_info")
+        ).get(linpg.setting.get_language(), {})
 
     # 初始化视觉小说系统
     def _init_dialog(self, _data: dict) -> None:
@@ -246,7 +252,7 @@ class AbstractBattleSystemWithInGameDialog(
 
     # 更新正在被照亮的区域
     def _update_darkness(self) -> None:
-        self._MAP.refresh_lit_area(self.alliances)
+        self.get_map().refresh_lit_area(self.alliances)
 
     # 渲染到屏幕上
     def draw(self, screen: linpg.ImageSurface) -> None:
@@ -274,7 +280,7 @@ class AbstractBattleSystemWithInGameDialog(
                     routeTmp: list
                     for key, pos in currentDialog["move"].items():
                         if key in self.alliances:
-                            routeTmp = self._MAP.find_path(
+                            routeTmp = self.get_map().find_path(
                                 self.alliances[key].get_coordinate(),
                                 linpg.Coordinates.convert(pos),
                                 self.alliances,
@@ -290,7 +296,7 @@ class AbstractBattleSystemWithInGameDialog(
                                     )
                                 )
                         elif key in self.enemies:
-                            routeTmp = self._MAP.find_path(
+                            routeTmp = self.get_map().find_path(
                                 self.enemies[key].get_coordinate(),
                                 linpg.Coordinates.convert(pos),
                                 self.enemies,
@@ -375,7 +381,7 @@ class AbstractBattleSystemWithInGameDialog(
             elif currentDialog.get("idle") is not None:
                 if self.__dialog_parameters["secondsToIdle"] is None:
                     self.__dialog_parameters["secondsToIdle"] = (
-                        currentDialog["idle"] * linpg.display.get_fps()
+                        currentDialog["idle"] * linpg.display.get_current_fps()
                     )
                 else:
                     if (
@@ -389,20 +395,20 @@ class AbstractBattleSystemWithInGameDialog(
                         self.__dialog_parameters["secondsToIdle"] = None
             # 调整窗口位置
             elif currentDialog.get("changePos") is not None:
-                tempX, tempY = self._MAP.calculate_position(
+                tempX, tempY = self.get_map().calculate_position(
                     currentDialog["changePos"]["x"], currentDialog["changePos"]["y"]
                 )
-                tempX -= self._MAP.local_x
-                tempY -= self._MAP.local_y
-                self._MAP.set_local_pos(
+                tempX -= self.get_map().local_x
+                tempY -= self.get_map().local_y
+                self.get_map().set_local_pos(
                     linpg.numbers.keep_int_in_range(
                         screen.get_width() // 2 - tempX,
-                        screen.get_width() - self._MAP.get_width(),
+                        screen.get_width() - self.get_map().get_width(),
                         0,
                     ),
                     linpg.numbers.keep_int_in_range(
                         screen.get_height() // 2 - tempY,
-                        screen.get_height() - self._MAP.get_height(),
+                        screen.get_height() - self.get_map().get_height(),
                         0,
                     ),
                 )

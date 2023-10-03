@@ -2,6 +2,7 @@ from collections import deque
 from typing import Sequence
 from .entity import *
 
+
 # 友方角色类
 class FriendlyCharacter(BasicEntity):
     def __init__(self, characterData: dict, mode: str) -> None:
@@ -165,7 +166,7 @@ class FriendlyCharacter(BasicEntity):
 
     # 获取技能有效范围内的所有坐标
     def get_skill_effective_range_coordinates(
-        self, MAP_P: linpg.TileMap, ifHalfMode: bool = False
+        self, MAP_P: AdvancedTileMap, ifHalfMode: bool = False
     ) -> list[list[tuple[int, int]]]:
         if self.__skill_effective_range_coordinates is None:
             self.__skill_effective_range_coordinates = self._generate_range_coordinates(
@@ -199,7 +200,7 @@ class FriendlyCharacter(BasicEntity):
 
     # 获取技能覆盖范围
     def get_skill_coverage_coordinates(
-        self, _x: int, _y: int, MAP_P: linpg.TileMap
+        self, _x: int, _y: int, MAP_P: AdvancedTileMap
     ) -> list[tuple[int, int]]:
         return (
             self._generate_coverage_coordinates(_x, _y, self.__skill_coverage, MAP_P)
@@ -280,7 +281,7 @@ class FriendlyCharacter(BasicEntity):
             self.__down_time = -1
             self._if_play_action_in_reversing = True
 
-    def drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: linpg.TileMap) -> None:
+    def drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: AdvancedTileMap) -> None:
         customHpData: Optional[tuple] = (
             None
             if self.__down_time < 0
@@ -290,8 +291,8 @@ class FriendlyCharacter(BasicEntity):
         # 展示被察觉的程度
         if self.__detection > 0:
             # 参数
-            eyeImgWidth: int = round(MAP_POINTER.tile_width / 6)
-            eyeImgHeight: int = round(MAP_POINTER.tile_width / 10)
+            eyeImgWidth: int = MAP_POINTER.tile_width // 6
+            eyeImgHeight: int = MAP_POINTER.tile_width // 10
             numberX: float = (eyeImgWidth - MAP_POINTER.tile_width / 6) / 2
             numberY: float = (eyeImgHeight - MAP_POINTER.tile_width / 10) / 2
             # 根据参数调整图片
@@ -315,7 +316,6 @@ class FriendlyCharacter(BasicEntity):
 
 # 敌对角色类
 class HostileCharacter(BasicEntity):
-
     # 用于存放角色做出的决定
     class DecisionHolder:
         def __init__(self, action: str, data: Sequence):
@@ -395,13 +395,13 @@ class HostileCharacter(BasicEntity):
         return self.__vigilance >= 100
 
     # 画UI - 列如血条
-    def drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: linpg.TileMap) -> None:
+    def drawUI(self, surface: linpg.ImageSurface, MAP_POINTER: AdvancedTileMap) -> None:
         blit_pos = super()._drawUI(surface, MAP_POINTER)
         # 展示警觉的程度
         if self.__vigilance > 0:
             # 参数
-            eyeImgWidth: int = round(MAP_POINTER.tile_width / 6)
-            eyeImgHeight: int = round(MAP_POINTER.tile_width / 6)
+            eyeImgWidth: int = MAP_POINTER.tile_width // 6
+            eyeImgHeight: int = MAP_POINTER.tile_width // 6
             numberX: float = (eyeImgWidth - MAP_POINTER.tile_width / 6) / 2
             numberY: float = (eyeImgHeight - MAP_POINTER.tile_width / 10) / 2
             # 根据参数调整图片
@@ -414,7 +414,7 @@ class HostileCharacter(BasicEntity):
 
     def make_decision(
         self,
-        MAP_POINTER: linpg.TileMap,
+        MAP_POINTER: AdvancedTileMap,
         friendlyCharacters: dict[str, FriendlyCharacter],
         hostileCharacters: dict[str, "HostileCharacter"],
         characters_detected_last_round: dict,
@@ -511,11 +511,11 @@ class HostileCharacter(BasicEntity):
                     else:
                         actions.append(self.DecisionHolder("move", the_route))
                 else:
-                    raise Exception(
-                        "A hostile character cannot find a valid path when trying to attack {}!".format(
-                            target
-                        )
-                    )
+                    err_msg: str = f"A hostile character {self.type} at {self.get_pos()} cannot find a valid path when trying to attack {target}!"
+                    if linpg.debug.get_developer_mode() is True:
+                        raise Exception(err_msg)
+                    else:
+                        print(err_msg)
         # 如果角色没有可以攻击的对象，则查看角色是否需要巡逻
         elif len(self.__patrol_path) > 0:
             # 如果巡逻坐标点只有一个（意味着角色需要在该坐标上长期镇守）

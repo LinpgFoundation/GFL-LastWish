@@ -1,5 +1,6 @@
 from .implementations import *
 
+
 # 控制台
 class _Console(linpg.Console):
     def _check_command(self, conditions: list) -> None:
@@ -43,7 +44,6 @@ linpg.global_variables.set("CONSOLE", value=CONSOLE)
 
 
 class GameMode:
-
     # 储存闸门动画的图片素材
     __GateImgAbove: Optional[linpg.StaticImage] = None
     __GateImgBelow: Optional[linpg.StaticImage] = None
@@ -62,13 +62,15 @@ class GameMode:
     def draw_loading_chapter_ui(cls, screen: linpg.ImageSurface, percent: int) -> None:
         if cls.__GateImgAbove is not None and cls.__GateImgBelow is not None:
             cls.__GateImgAbove.set_size(screen.get_width() + 4, screen.get_height() / 1.7)
-            cls.__GateImgAbove.set_bottom(cls.__GateImgAbove.get_height() / 100 * percent)
+            cls.__GateImgAbove.set_bottom(
+                cls.__GateImgAbove.get_height() * percent // 100
+            )
             cls.__GateImgAbove.draw(screen)
             cls.__GateImgBelow.set_size(
                 screen.get_width() + 4, screen.get_height() / 2.05
             )
             cls.__GateImgBelow.set_top(
-                screen.get_height() - cls.__GateImgBelow.get_height() / 100 * percent
+                screen.get_height() - cls.__GateImgBelow.get_height() * percent // 100
             )
             cls.__GateImgBelow.draw(screen)
         else:

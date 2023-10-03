@@ -78,7 +78,7 @@ class RoundSwitch:
                     linpg.lang.get_num_in_local_text(total_rounds + 1)
                 ),
                 "white",
-                screen.get_width() / 38,
+                screen.get_width() // 38,
             )
             self.now_total_rounds_surface.set_alpha(0)
         alphaTemp: Optional[int] = None
@@ -91,7 +91,9 @@ class RoundSwitch:
             elif alphaTemp > 250 and self.x >= 0:
                 self.baseAlphaUp = False
             elif alphaTemp <= 250:
-                self.baseImg.set_alpha(alphaTemp + 5)
+                self.baseImg.set_alpha(
+                    alphaTemp + max(linpg.display.get_delta_time() // 3, 1)
+                )
         # 如果UI底的alpha值在淡出阶段
         elif not self.baseAlphaUp:
             # 如果文字不在淡出阶段
@@ -101,7 +103,9 @@ class RoundSwitch:
                 if alphaTemp is None:
                     self.now_total_rounds_surface.set_alpha(0)
                 elif alphaTemp < 250:
-                    self.now_total_rounds_surface.set_alpha(alphaTemp + 10)
+                    self.now_total_rounds_surface.set_alpha(
+                        alphaTemp + max(linpg.display.get_delta_time() // 2, 1)
+                    )
                 else:
                     # 然后“谁的回合”的文字渐入
                     if whose_round is WhoseRound.playerToSangvisFerris:
@@ -109,7 +113,9 @@ class RoundSwitch:
                         if alphaTemp is None:
                             self.enemy_round_txt_surface.set_alpha(0)
                         elif alphaTemp < 250:
-                            self.enemy_round_txt_surface.set_alpha(alphaTemp + 10)
+                            self.enemy_round_txt_surface.set_alpha(
+                                alphaTemp + max(linpg.display.get_delta_time() // 2, 1)
+                            )
                         else:
                             self.TxtAlphaUp = False
                     if whose_round is WhoseRound.sangvisFerrisToPlayer:
@@ -117,7 +123,9 @@ class RoundSwitch:
                         if alphaTemp is None:
                             self.your_round_txt_surface.set_alpha(0)
                         elif alphaTemp < 250:
-                            self.your_round_txt_surface.set_alpha(alphaTemp + 10)
+                            self.your_round_txt_surface.set_alpha(
+                                alphaTemp + max(linpg.display.get_delta_time() // 2, 1)
+                            )
                         else:
                             self.TxtAlphaUp = False
             # 如果2个文字都渐入完了，会进入idle时间
@@ -156,7 +164,9 @@ class RoundSwitch:
                     return True
         # 横条移动
         if self.x < 0:
-            self.x = min(self.x + screen.get_width() // 35, 0)
+            self.x = min(
+                self.x + screen.get_width() * linpg.display.get_delta_time() // 500, 0
+            )
         # 展示UI
         screen.blits(
             (
@@ -199,7 +209,6 @@ class RoundSwitch:
 
 # 警告系统
 class WarningMessageSystem:
-
     __all_warnings: deque = deque()
     __warnings_msg: dict = {}
     __font_size: int = 0
@@ -316,15 +325,12 @@ class SelectMenu(linpg.GameObjectsDictContainer):
                     txt_temp2 = linpg.font.render(
                         button_data_t["ap_text"], "black", small_font_size
                     )
-                    top: int = int(
-                        (
-                            selectButtonBase.get_height()
-                            - txt_temp.get_height()
-                            - txt_temp2.get_height()
-                            - padding
-                        )
-                        / 2
-                    )
+                    top: int = (
+                        selectButtonBase.get_height()
+                        - txt_temp.get_height()
+                        - txt_temp2.get_height()
+                        - padding
+                    ) // 2
                     button_data_t["button"].blit(
                         txt_temp,
                         (
@@ -547,7 +553,6 @@ class CharacterInfoBoard:
 
 # 章节标题(在加载时显示)
 class LoadingTitle:
-
     black_bg: linpg.StaticImage = linpg.StaticImage(
         linpg.surfaces.colored(linpg.display.get_size(), linpg.colors.BLACK), 0, 0
     )
@@ -566,27 +571,27 @@ class LoadingTitle:
         # 黑色Void帘幕
         cls.black_bg.set_size(linpg.display.get_width(), linpg.display.get_height())
         title_chapterNum = linpg.font.render(
-            numChapter_txt.format(chapterId), "white", linpg.display.get_width() / 38
+            numChapter_txt.format(chapterId), "white", linpg.display.get_width() // 38
         )
         cls.title_chapterNum = linpg.StaticImage(
             title_chapterNum,
-            (linpg.display.get_width() - title_chapterNum.get_width()) / 2,
+            (linpg.display.get_width() - title_chapterNum.get_width()) // 2,
             linpg.display.get_height() * 0.37,
         )
         title_chapterName = linpg.font.render(
-            chapterTitle_txt, "white", linpg.display.get_width() / 38
+            chapterTitle_txt, "white", linpg.display.get_width() // 38
         )
         cls.title_chapterName = linpg.StaticImage(
             title_chapterName,
-            (linpg.display.get_width() - title_chapterName.get_width()) / 2,
+            (linpg.display.get_width() - title_chapterName.get_width()) // 2,
             linpg.display.get_height() * 0.46,
         )
         title_description = linpg.font.render(
-            chapterDesc_txt, "white", linpg.display.get_width() / 76
+            chapterDesc_txt, "white", linpg.display.get_width() // 76
         )
         cls.title_description = linpg.StaticImage(
             title_description,
-            (linpg.display.get_width() - title_description.get_width()) / 2,
+            (linpg.display.get_width() - title_description.get_width()) // 2,
             linpg.display.get_height() * 0.6,
         )
 
@@ -605,7 +610,6 @@ class LoadingTitle:
 
 
 class RangeSystem:
-
     # 区域坐标
     __areas: tuple[list[tuple[int, int]], ...] = ([], [], [], [], [])
     # 用于表示范围的方框图片
@@ -689,7 +693,7 @@ class RangeSystem:
 
     # 渲染到屏幕上
     @classmethod
-    def draw(cls, map_prt: linpg.TileMap, screen: linpg.ImageSurface) -> None:
+    def draw(cls, map_prt: AdvancedTileMap, screen: linpg.ImageSurface) -> None:
         for prt in cls.__images:
             if prt.get_alpha() > cls.__target_alpha:
                 prt.subtract_alpha(17)
@@ -907,7 +911,7 @@ class ScoreBoard:
                 cls.__TIME_TXT = linpg.font.render(
                     linpg.lang.get_text("ScoreBoard", "total_time").format(
                         time.strftime(
-                            "%H:%M", time.localtime(cls.__STATISTICS.total_time)
+                            "%H:%M:%S", time.localtime(cls.__STATISTICS.total_time)
                         )
                     ),
                     linpg.colors.WHITE,

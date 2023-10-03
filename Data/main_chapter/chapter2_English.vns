@@ -1,0 +1,178 @@
+# Fundamental parameters
+[id]2
+[lang]English
+
+[section]dialog_before_battle
+
+null:
+- I dreamed of mountains and seas, of towering cities and barren deserts...
+- I dreamed of a shadowy past, and an untouchable future...
+null:
+- I dreamed of...
+??:
+- Sv98!!!
+null:
+- It seems like... Someone is calling me...
+??:
+- Sv98!! Wake up!
+Null:
+- Hmm...
+
+[bgi]snowfield.jpg
+[display]sv98.png
+
+null:
+- (sv98 wakes up)
+
+[bgm]BGM_Brain_1.ogg
+[show]gsh18.png
+
+gsh18:
+- sv98!! Come on, get up!
+- The sun, ah wait, the moon has raised... Anyway, get up!
+sv98:
+- Well... Asval, how long did I sleep for?
+
+[show]asval.png
+
+asval:
+- About 8 hours...
+
+[show]pp1901.png
+
+pp1901:
+- 8 hours, 12 minutes and 43 seconds to be exact.
+asval:
+- Come on, pp1901, you don't have to be that serious.
+pp1901:
+- It's not serious, it's rigorous!
+sv98:
+- Asval, didn't I tell you to wake me up before sunset?
+asval:
+- Ah, sorry, I saw you sleeping so well so I did not want to wake you up.
+sv98:
+- Hey, let's not talk about that.
+- Asval, did you get any messages from the commander?
+asval:
+- Ah, this is not urgent.
+pp1901:
+- The commander has sent the latest orders an hour ago.
+sv98:
+- Is the commander ready for a new attack?
+pp1901:
+- On the contrary, the commander has already made plans to retreat.
+- The temporary stronghold has entered a stalemate phase.
+pp1901:
+- Since the coordinates were leaked,
+- the main forces of the Sangvis Ferri are flocking to where the commander at.
+sv98:
+- Well, then we should unite with the commander as soon as possible.
+asval:
+- The commander said that the helicopter are on its way to pick us up.
+- They are expected to be here within 2 hours.
+sv98:
+- All right, let's pack up and get ready to evacuate!
+
+[section]dialog_during_battle
+
+[display]sv98.png gsh18.png asval.png pp1901.png
+
+asval:
+- Oh no, the Sangvis Ferri has blocked the way forward.
+- It's going to be difficult to get around.
+sv98:
+- Damn it, I'm short on ammunition as well.
+pp1901:
+- Sv98, Sangvis Ferri seems to be guarding something.
+
+[hide]*
+
+[block]
+
+[entry]noticeSupply
+
+[display]sv98.png gsh18.png asval.png pp1901.png
+
+sv98:
+- Looks like a supply crate.
+- This seems to be a temporary stronghold, so hopefully the main force is not here.
+gsh18:
+- Sv98, I think we should clear this stronghold before the rescue helicopters arrive,
+- so that the helicopters can land safely.
+sv98:
+- You're right. Get ready, team!
+
+[hide]*
+
+null:
+- Currently sv98 doesn't have any bullets and can't attack.
+- Sneak in quietly or let your teammates draw fire, it's your choice.
+
+[block]
+
+[entry]gotSupply
+
+[display]sv98.png
+
+sv98:
+- I got the supplies!
+Tip:
+- Please remember to reload!
+
+
+[section]dialog_after_battle
+
+null:
+- (after a long time)
+
+[bgi]snowfield.jpg
+
+Pilot:
+- 10th Logistics Team, I have your location in sight.
+- About to land, be ready to board.
+
+[display]sv98.png
+
+sv98:
+- Sisters, stop saving ammunition!
+- Just through everything out, it's time to get out!
+Everyone else:
+- Got it!
+
+[hide]*
+
+null:
+- As the smoke fills the air, everyone quickly boards the helicopter.
+- In the roar of engines and the sound of bullets hitting steel plates,
+- the helicopter quickly flew away from the airspace controlled by the Sangvis Ferri.
+
+[scene]Transport.png
+[bgm]Casual.ogg
+[display]sv98.png gsh18.png asval.png pp1901.png
+
+null:
+- (inside the cabin)
+gsh18:
+- Ah, finally got away, I thought I was going to be dead again.
+pp1901:
+- Gsh18, dolls don't die.
+- If you got caught by the Sangvis Ferri, we'll have a new gsh18 in a few days.
+gsh18:
+- Eh...!!!?
+sv98:
+- Pp1901, I don't think it's a fun thing to say.
+pp1901:
+- Ah... Sorry. But then again, when was the last time we backed up the mind cloud?
+- It seems like we haven't backed up our minds since the mission started.
+asval:
+- True, our communication with the commander is interrupted by the Sangvis Ferri,
+- so we can't upload the latest backups.
+gsh18:
+- But we can finally get back to base, so we should be able to upload data safely by then.
+Pilot:
+- It will take a while to fly back.
+- So get some rest, I'll let you know in advance when we get to the base.
+Everyone:
+- Okay.
+
+[end]

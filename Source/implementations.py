@@ -1,11 +1,11 @@
 from typing import Final
 from .tbs import *
 
+
 # 正在通讯中的立绘效果
 class _CharacterInCommunicationFilterEffect(
     linpg.AbstractVisualNovelCharacterImageFilterEffect
 ):
-
     __KEYWORD: Final[str] = "communicating"
 
     def __init__(self, _x: int, _y: int, _width: int, _height: int) -> None:
@@ -156,6 +156,122 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
     def __init__(self) -> None:
         LoadingModule.__init__(self)
         linpg.AbstractMapEditor.__init__(self)
+        self.set_map(AdvancedTileMap())
+        # 绿色方块/方块标准
+        self.__range_green: linpg.ImageSurface = linpg.Surfaces.NULL
+        self.__range_red: linpg.ImageSurface = linpg.Surfaces.NULL
+
+    def get_map(self) -> AdvancedTileMap:  # type: ignore[override]
+        _map: linpg.AbstractTileMap = super().get_map()
+        assert isinstance(_map, AdvancedTileMap)
+        return _map
+
+    def _init_ui(self) -> None:
+        super()._init_ui()
+        # 绿色方块/方块标准
+        self.__range_green = linpg.Images.load(
+            "<&ui>range_green.png", (self.get_map().tile_width, None)
+        )
+        self.__range_green.set_alpha(150)
+        self.__range_red = linpg.Images.load(
+            "<&ui>range_red.png", (self.get_map().tile_width, None)
+        )
+        self.__range_red.set_alpha(150)
+
+    # 实现父类需要实现的方法 - 画出所有角色
+    def _display_entities(self, _surface: linpg.ImageSurface) -> None:
+        # 展示范围
+        if self._tile_is_hovering is not None and self._no_container_is_hovered is True:
+            if self._delete_mode is True:
+                xTemp, yTemp = self.get_map().calculate_position(
+                    self._tile_is_hovering[0], self._tile_is_hovering[1]
+                )
+                _surface.blit(
+                    self.__range_red,
+                    (
+                        xTemp
+                        + (self.get_map().tile_width - self.__range_red.get_width()) // 2,
+                        yTemp,
+                    ),
+                )
+            elif self.isAnyObjectSelected() is True:
+                xTemp, yTemp = self.get_map().calculate_position(
+                    self._tile_is_hovering[0], self._tile_is_hovering[1]
+                )
+                _surface.blit(
+                    self.__range_green,
+                    (
+                        xTemp
+                        + (self.get_map().tile_width - self.__range_green.get_width())
+                        // 2,
+                        yTemp,
+                    ),
+                )
+        if self._show_barrier_mask is True or self._delete_mode is True:
+            for y in range(self.get_map().row):
+                for x in range(self.get_map().column):
+                    posTupleTemp: tuple[int, int] = self.get_map().calculate_position(
+                        x, y
+                    )
+                    if (
+                        -self.get_map().tile_width
+                        <= posTupleTemp[0]
+                        < _surface.get_width()
+                        and -self.get_map().tile_width
+                        <= posTupleTemp[1]
+                        < _surface.get_height()
+                    ):
+                        _surface.blit(
+                            self.__range_green
+                            if self.get_map().is_passable(x, y)
+                            else self.__range_red,
+                            (
+                                posTupleTemp[0]
+                                + (
+                                    self.get_map().tile_width
+                                    - self.__range_green.get_width()
+                                )
+                                // 2,
+                                posTupleTemp[1],
+                            ),
+                        )
+                    elif (
+                        posTupleTemp[0] >= _surface.get_width()
+                        or posTupleTemp[1] >= _surface.get_height()
+                    ):
+                        break
+                if (
+                    self.get_map().calculate_position(0, y + 1)[1]
+                    >= _surface.get_height()
+                ):
+                    break
+            if self._tile_is_hovering is not None:
+                xTemp, yTemp = self.get_map().calculate_position(
+                    self._tile_is_hovering[0], self._tile_is_hovering[1]
+                )
+                _surface.blit(
+                    self.__range_red,
+                    (
+                        xTemp
+                        + (self.get_map().tile_width - self.__range_red.get_width()) // 2,
+                        yTemp,
+                    ),
+                )
+        # 角色动画
+        for faction in self._entities_data:
+            for value in self._entities_data[faction].values():
+                assert isinstance(value, BasicEntity)
+                value.render(_surface, self.get_map())
+                if len(self._select_pos) > 0:
+                    value.set_selected(value.is_overlapped_with(self._select_rect))
+        # 检测角色所占据的装饰物（即需要透明化，方便玩家看到角色）
+        charactersPos: list = []
+        for value1 in self._entities_data.values():
+            for dataDict in value1.values():
+                charactersPos.append((round(dataDict.x), round(dataDict.y)))
+                charactersPos.append((round(dataDict.x) + 1, round(dataDict.y) + 1))
+        # 展示场景装饰物
+        self.get_map().display_decoration(_surface, tuple(charactersPos))
 
     # 获取角色数据 - 子类需实现
     def get_entities_data(self) -> dict[str, dict[str, linpg.Entity]]:

@@ -5,13 +5,14 @@ from .components import *
 # 设置引擎的标准文字大小
 linpg.font.set_global_font("medium", linpg.display.get_width() // 40)
 
+
 # 主菜单系统
 class MainMenu(linpg.AbstractSystem):
     def __init__(self, screen: linpg.ImageSurface):
         # 初始化系统模块
         super().__init__()
         """生成加载页面"""
-        font_size: int = int(screen.get_width() / 64)
+        font_size: int = screen.get_width() // 64
         self.__loading_screen: Optional[linpg.ImageSurface] = linpg.surfaces.new(
             screen.get_size()
         )
@@ -61,9 +62,9 @@ class MainMenu(linpg.AbstractSystem):
         )
         """开始加载"""
         # 载入页面 - 渐入
-        for index in range(0, 250, int(2 * linpg.display.get_delta_time())):
+        for index in range(0, 2500, linpg.display.get_delta_time() * 10):
             screen.fill(linpg.colors.BLACK)
-            self.__loading_screen.set_alpha(index)
+            self.__loading_screen.set_alpha(index // 10)
             screen.blit(self.__loading_screen, linpg.ORIGIN)
             linpg.display.flip()
         # 主菜单文字
@@ -85,16 +86,20 @@ class MainMenu(linpg.AbstractSystem):
         # 关卡选择的封面
         self.__cover_img_surface: Optional[linpg.StaticImage] = None
         # 音效
-        self.click_button_sound = linpg.sound.load(
+        self.click_button_sound = linpg.sounds.load(
             r"Assets/sound/ui/main_menu_click_button.ogg",
             linpg.volume.get_effects() / 100.0,
         )
-        self.hover_on_button_sound = linpg.sound.load(
+        self.hover_on_button_sound = linpg.sounds.load(
             r"Assets/sound/ui/main_menu_hover_on_button.ogg",
             linpg.volume.get_effects() / 100.0,
         )
         self.hover_sound_play_on: int = -1
         self.last_hover_sound_play_on: int = -2
+        # 存档选择
+        self.__select_progress_menu: linpg.SaveOrLoadSelectedProgressMenu = (
+            linpg.SaveOrLoadSelectedProgressMenu()
+        )
         # 初始化返回菜单判定参数
         linpg.global_variables.set("BackToMainMenu", value=False)
 
@@ -120,7 +125,7 @@ class MainMenu(linpg.AbstractSystem):
                 )
             )
         self.workshop_files.append(linpg.lang.get_text("Global", "back"))
-        txt_location: int = int(screen_size[0] * 2 / 3)
+        txt_location: int = screen_size[0] * 2 // 3
         txt_y: int = int(
             (
                 screen_size[1]
@@ -144,23 +149,21 @@ class MainMenu(linpg.AbstractSystem):
             os.path.join(
                 "Data",
                 chapterType,
-                "chapter{0}_level_info_{1}.yaml".format(
-                    chapterId, linpg.setting.get_language()
-                ),
+                f"chapter{chapterId}_level_info.yaml",
             )
             if chapterType == "main_chapter"
             else os.path.join(
                 "Data",
                 chapterType,
                 self.current_selected_workshop_project,
-                "chapter{0}_level_info_{1}.yaml".format(
-                    chapterId, linpg.setting.get_language()
-                ),
+                f"chapter{chapterId}_level_info.yaml",
             )
         )
-        chapter_title: str = linpg.config.try_load_file_if_exists(
-            level_info_file_path
-        ).get("title", linpg.lang.get_text("Global", "no_translation"))
+        chapter_title: str = (
+            linpg.config.try_load_file_if_exists(level_info_file_path)
+            .get(linpg.setting.get_language(), {})
+            .get("title", linpg.lang.get_text("Global", "no_translation"))
+        )
         return "{0}: {1}".format(
             linpg.lang.get_text("Battle_UI", "numChapter").format(chapterId),
             chapter_title,
@@ -169,7 +172,7 @@ class MainMenu(linpg.AbstractSystem):
     # 重新加载章节选择菜单的选项
     def __reload_chapter_select_list(
         self,
-        screen_size: tuple,
+        screen_size: tuple[int, int],
         chapterType: str = "main_chapter",
         createMode: bool = False,
     ) -> None:
@@ -179,13 +182,13 @@ class MainMenu(linpg.AbstractSystem):
             self.chapter_select.append(self.__main_menu_txt["other"]["new_chapter"])
         # 历遍路径下的所有章节文件
         for path in glob(
-            os.path.join("Data", chapterType, "*_map.yaml")
+            os.path.join("Data", chapterType, "*_level_info.yaml")
             if chapterType == "main_chapter"
             else os.path.join(
                 "Data",
                 chapterType,
                 self.current_selected_workshop_project,
-                "*_map.yaml",
+                "*_level_info.yaml",
             )
         ):
             self.chapter_select.append(
@@ -195,14 +198,11 @@ class MainMenu(linpg.AbstractSystem):
             )
         # 将返回按钮放到菜单列表中
         self.chapter_select.append(linpg.lang.get_text("Global", "back"))
-        txt_y: int = int(
-            (
-                screen_size[1]
-                - len(self.chapter_select) * linpg.font.get_global_font_size("medium") * 2
-            )
-            / 2
-        )
-        txt_x: int = int(screen_size[0] * 2 / 3)
+        txt_y: int = (
+            screen_size[1]
+            - len(self.chapter_select) * linpg.font.get_global_font_size("medium") * 2
+        ) // 2
+        txt_x: int = screen_size[0] * 2 // 3
         # 将菜单列表中的文字转换成文字surface
         for i in range(len(self.chapter_select)):
             self.chapter_select[i] = linpg.load.resize_when_hovered_text(
@@ -274,7 +274,7 @@ class MainMenu(linpg.AbstractSystem):
         fileName = fileDefaultName
         # 循环确保名称不重复
         while os.path.exists(os.path.join("Data", "workshop", fileName)):
-            fileName = "{0} ({1})".format(fileDefaultName, avoidDuplicateId)
+            fileName = f"{fileDefaultName} ({avoidDuplicateId})"
             avoidDuplicateId += 1
         # 创建项目模板
         linpg.create_new_project(os.path.join("Data", "workshop", fileName), "yaml")
@@ -288,7 +288,7 @@ class MainMenu(linpg.AbstractSystem):
                         "Data",
                         "workshop",
                         self.current_selected_workshop_project,
-                        "*_dialogs_{}.yaml".format(linpg.setting.get_language()),
+                        f"*_dialogs_{linpg.setting.get_language()}.yaml",
                     )
                 )
             )
@@ -296,36 +296,32 @@ class MainMenu(linpg.AbstractSystem):
         )
         # 复制关卡数据默认模板
         copyfile(
-            "Data/template/chapter_level_info_example.yaml",
+            r"Data/template/chapter_level_info_example.yaml",
             os.path.join(
                 "Data",
                 "workshop",
                 self.current_selected_workshop_project,
-                "chapter{0}_level_info_{1}.yaml".format(
-                    chapterId, linpg.setting.get_language()
-                ),
+                f"chapter{chapterId}_level_info.yaml",
             ),
         )
         # 复制视觉小说数据默认模板
         copyfile(
-            "Data/template/chapter_dialogs_example.yaml",
+            r"Data/template/chapter_dialogs_example.yaml",
             os.path.join(
                 "Data",
                 "workshop",
                 self.current_selected_workshop_project,
-                "chapter{0}_dialogs_{1}.yaml".format(
-                    chapterId, linpg.setting.get_language()
-                ),
+                f"chapter{chapterId}_dialogs_{linpg.setting.get_language()}.yaml",
             ),
         )
         # 复制地图数据默认模板
         copyfile(
-            "Data/template/chapter_map_example.yaml",
+            r"Data/template/chapter_map_example.yaml",
             os.path.join(
                 "Data",
                 "workshop",
                 self.current_selected_workshop_project,
-                "chapter{}_map.yaml".format(chapterId),
+                f"chapter{chapterId}_map.yaml",
             ),
         )
 
@@ -409,7 +405,7 @@ class MainMenu(linpg.AbstractSystem):
         if linpg.PersistentVariables.try_get_bool("enable_workshop") is True:
             self.__disabled_options.remove("3_workshop")
         # 加载主菜单页面的文字设置
-        txt_location = int(screen_size[0] * 2 / 3)
+        txt_location = screen_size[0] * 2 // 3
         font_size = linpg.font.get_global_font_size("medium") * 2
         txt_y = (screen_size[1] - len(self.__main_menu_txt["menu_main"]) * font_size) / 2
         for key, txt in self.__main_menu_txt["menu_main"].items():
@@ -463,7 +459,7 @@ class MainMenu(linpg.AbstractSystem):
             for i in range(len(self.chapter_select) - 1):
                 if self.chapter_select[i].is_hovered():
                     cover_path = linpg.config.load(
-                        r"Data/main_chapter/info.yaml", "cover_image"
+                        r"Data/main_chapter/info.yaml", "cover_images"
                     )[i]
                     break
         if cover_path is not None:
@@ -498,15 +494,20 @@ class MainMenu(linpg.AbstractSystem):
         # 背景
         self.__draw_background(screen)
         # 菜单选项
-        self.__draw_buttons(screen)
+        if not self.__select_progress_menu.is_visible():
+            self.__draw_buttons(screen)
         # 展示设置UI
-        linpg.option_menu.draw(screen)
+        linpg.PauseMenuModuleForGameSystem.OPTION_MENU.draw(screen)
         # 更新音量
-        if linpg.option_menu.need_update.get("volume") is True:
+        if (
+            linpg.PauseMenuModuleForGameSystem.OPTION_MENU.need_update.get("volume")
+            is True
+        ):
             self.updated_volume()
         # 更新语言
         if (
-            linpg.option_menu.need_update.get("language") is True
+            linpg.PauseMenuModuleForGameSystem.OPTION_MENU.need_update.get("language")
+            is True
             or self.language_need_update() is True
         ):
             self.update_language()
@@ -523,25 +524,15 @@ class MainMenu(linpg.AbstractSystem):
         # 判断按键
         if (
             linpg.controller.get_event("confirm") is True
-            and linpg.option_menu.is_hidden()
+            and linpg.PauseMenuModuleForGameSystem.OPTION_MENU.is_hidden()
         ):
             self.click_button_sound.play()
             # 主菜单
             if self.menu_type == 0:
                 # 继续游戏
                 if self.__main_menu_txt["menu_main"]["0_continue"].is_hovered():
-                    if linpg.saves.any_progress_exists() is True:
-                        # 加载最近一个存档点的数据
-                        SAVE: dict = linpg.saves.get_latest_progresses().data
-                        # 设置参数
-                        linpg.global_variables.set("currentMode", value=SAVE["type"])
-                        linpg.global_variables.remove("section")
-                        linpg.global_variables.remove("chapterType")
-                        linpg.global_variables.set("chapterId", value=0)
-                        linpg.global_variables.remove("projectName")
-                        linpg.global_variables.set("saveData", value=SAVE)
-                        # 开始播放场景
-                        self.__loop_scenes(screen)
+                    self.__select_progress_menu.set_visible(True)
+                    linpg.controller.set_event("confirm", False)
                 # 选择章节
                 elif self.__main_menu_txt["menu_main"]["1_chooseChapter"].is_hovered():
                     # 加载菜单章节选择页面的文字
@@ -559,7 +550,7 @@ class MainMenu(linpg.AbstractSystem):
                     pass
                 # 设置
                 elif self.__main_menu_txt["menu_main"]["5_setting"].is_hovered():
-                    linpg.option_menu.set_visible(True)
+                    linpg.PauseMenuModuleForGameSystem.OPTION_MENU.set_visible(True)
                 # 制作组
                 elif self.__main_menu_txt["menu_main"]["6_developer_team"].is_hovered():
                     pass
@@ -731,12 +722,31 @@ class MainMenu(linpg.AbstractSystem):
                             )
                             self.__restart_background()
                             break
+        # 存档选择系统
+        if self.__select_progress_menu.is_visible():
+            self.__select_progress_menu.draw(screen)
+            # 读取存档
+            if self.__select_progress_menu.get_selected_slot() >= 0:
+                _save: linpg.Saves.Progress | None = (
+                    self.__select_progress_menu.get_selected_save()
+                )
+                if _save is not None:
+                    self.__select_progress_menu.set_visible(False)
+                    # 加载最近一个存档点的数据
+                    SAVE: dict = _save.data
+                    # 设置参数
+                    linpg.global_variables.set("currentMode", value=SAVE["type"])
+                    linpg.global_variables.remove("section")
+                    linpg.global_variables.remove("chapterType")
+                    linpg.global_variables.set("chapterId", value=0)
+                    linpg.global_variables.remove("projectName")
+                    linpg.global_variables.set("saveData", value=SAVE)
+                    # 开始播放场景
+                    self.__loop_scenes(screen)
         if self.__loading_screen is not None:
             alpha_t: Optional[int] = self.__loading_screen.get_alpha()
             if alpha_t is None or alpha_t <= 0:
                 self.__loading_screen = None
             else:
-                self.__loading_screen.set_alpha(
-                    max(0, alpha_t - int(5 * linpg.display.get_delta_time()))
-                )
+                self.__loading_screen.set_alpha(max(0, alpha_t - 2))
                 screen.blit(self.__loading_screen, linpg.ORIGIN)
