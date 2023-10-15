@@ -9,13 +9,18 @@ import linpg
 linpg.display.init()
 
 # 加载版本信息
-version_info: dict = linpg.config.load_file(r"Data/version.yaml")
+_VERSION_INFO: dict = {
+    "recommended_linpg_patch": 1,
+    "recommended_linpg_revision": 7,
+    "revision": 2,
+    "version": 1,
+}
 
 # 确认linpg的版本是推荐版本
 linpg.LinpgVersionChecker(
     ">=",
-    version_info["recommended_linpg_revision"],
-    version_info["recommended_linpg_patch"],
+    _VERSION_INFO["recommended_linpg_revision"],
+    _VERSION_INFO["recommended_linpg_patch"],
 )
 
 
