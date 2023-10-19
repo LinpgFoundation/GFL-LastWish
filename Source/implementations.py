@@ -182,7 +182,7 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
     def _display_entities(self, _surface: linpg.ImageSurface) -> None:
         # 展示范围
         if self._tile_is_hovering is not None and self._no_container_is_hovered is True:
-            if self._delete_mode is True:
+            if self._delete_mode is self._Delete.BLOCK:
                 xTemp, yTemp = self.get_map().calculate_position(
                     self._tile_is_hovering[0], self._tile_is_hovering[1]
                 )
@@ -194,7 +194,35 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
                         yTemp,
                     ),
                 )
-            elif self.isAnyObjectSelected() is True:
+            elif self._delete_mode is self._Delete.ROW:
+                for i in range(self.get_map().column):
+                    xTemp, yTemp = self.get_map().calculate_position(
+                        i, self._tile_is_hovering[1]
+                    )
+                    _surface.blit(
+                        self.__range_red,
+                        (
+                            xTemp
+                            + (self.get_map().tile_width - self.__range_red.get_width())
+                            // 2,
+                            yTemp,
+                        ),
+                    )
+            elif self._delete_mode is self._Delete.COLUMN:
+                for i in range(self.get_map().row):
+                    xTemp, yTemp = self.get_map().calculate_position(
+                        self._tile_is_hovering[0], i
+                    )
+                    _surface.blit(
+                        self.__range_red,
+                        (
+                            xTemp
+                            + (self.get_map().tile_width - self.__range_red.get_width())
+                            // 2,
+                            yTemp,
+                        ),
+                    )
+            elif self.is_any_object_selected() is True:
                 xTemp, yTemp = self.get_map().calculate_position(
                     self._tile_is_hovering[0], self._tile_is_hovering[1]
                 )
@@ -207,7 +235,7 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
                         yTemp,
                     ),
                 )
-        if self._show_barrier_mask is True or self._delete_mode is True:
+        if self._show_barrier_mask is True or self._delete_mode is self._Delete.BLOCK:
             for y in range(self.get_map().row):
                 for x in range(self.get_map().column):
                     posTupleTemp: tuple[int, int] = self.get_map().calculate_position(

@@ -10,6 +10,7 @@ Decorations:
     harmful: false
     hidable: false
     passable: true
+DisableWorkshopByDefault: false
 Filters:
   communicating:
     crop:

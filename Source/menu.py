@@ -396,8 +396,11 @@ class MainMenu(linpg.AbstractSystem):
         self.__main_menu_txt = linpg.lang.get_texts("MainMenu")
         # 默认不可用的菜单选项
         self.__disabled_options = set(
-            ("0_continue", "2_dlc", "3_workshop", "4_collection", "6_developer_team")
+            ("0_continue", "2_dlc", "4_collection", "6_developer_team")
         )
+        # 默认不禁用3_workshop
+        if linpg.db.get_bool("DisableWorkshopByDefault"):
+            self.__disabled_options.add("3_workshop")
         # 是否启用继续游戏按钮
         if linpg.saves.any_progress_exists() is True:
             self.__disabled_options.remove("0_continue")
