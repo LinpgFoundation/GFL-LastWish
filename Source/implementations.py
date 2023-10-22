@@ -178,64 +178,82 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
         )
         self.__range_red.set_alpha(150)
 
+    # draw range image
+    def __draw_range(
+        self,
+        _surface: linpg.ImageSurface,
+        _image: linpg.ImageSurface,
+        _pos: tuple[int, int] | None = None,
+    ) -> None:
+        if _pos is None:
+            if self._tile_is_hovering is None:
+                return
+            _pos = self._tile_is_hovering
+        xTemp, yTemp = self.get_map().calculate_position(_pos[0], _pos[1])
+        _surface.blit(
+            _image,
+            (
+                xTemp + (self.get_map().tile_width - _image.get_width()) // 2,
+                yTemp,
+            ),
+        )
+
     # 实现父类需要实现的方法 - 画出所有角色
     def _display_entities(self, _surface: linpg.ImageSurface) -> None:
         # 展示范围
         if self._tile_is_hovering is not None and self._no_container_is_hovered is True:
-            if self._delete_mode is self._Delete.BLOCK:
-                xTemp, yTemp = self.get_map().calculate_position(
-                    self._tile_is_hovering[0], self._tile_is_hovering[1]
-                )
-                _surface.blit(
-                    self.__range_red,
-                    (
-                        xTemp
-                        + (self.get_map().tile_width - self.__range_red.get_width()) // 2,
-                        yTemp,
-                    ),
-                )
-            elif self._delete_mode is self._Delete.ROW:
-                for i in range(self.get_map().column):
-                    xTemp, yTemp = self.get_map().calculate_position(
-                        i, self._tile_is_hovering[1]
-                    )
-                    _surface.blit(
-                        self.__range_red,
-                        (
-                            xTemp
-                            + (self.get_map().tile_width - self.__range_red.get_width())
-                            // 2,
-                            yTemp,
-                        ),
-                    )
-            elif self._delete_mode is self._Delete.COLUMN:
-                for i in range(self.get_map().row):
-                    xTemp, yTemp = self.get_map().calculate_position(
-                        self._tile_is_hovering[0], i
-                    )
-                    _surface.blit(
-                        self.__range_red,
-                        (
-                            xTemp
-                            + (self.get_map().tile_width - self.__range_red.get_width())
-                            // 2,
-                            yTemp,
-                        ),
-                    )
-            elif self.is_any_object_selected() is True:
-                xTemp, yTemp = self.get_map().calculate_position(
-                    self._tile_is_hovering[0], self._tile_is_hovering[1]
-                )
-                _surface.blit(
-                    self.__range_green,
-                    (
-                        xTemp
-                        + (self.get_map().tile_width - self.__range_green.get_width())
-                        // 2,
-                        yTemp,
-                    ),
-                )
-        if self._show_barrier_mask is True or self._delete_mode is self._Delete.BLOCK:
+            match self._modify_mode:
+                case self._MODIFY.DELETE_BLOCK:
+                    self.__draw_range(_surface, self.__range_red)
+                case self._MODIFY.ADD_ROW_ABOVE:
+                    self.__draw_range(_surface, self.__range_red)
+                    for i in range(self.get_map().column):
+                        self.__draw_range(
+                            _surface,
+                            self.__range_green,
+                            (i, self._tile_is_hovering[1] - 1),
+                        )
+                case self._MODIFY.ADD_ROW_BELOW:
+                    self.__draw_range(_surface, self.__range_red)
+                    for i in range(self.get_map().column):
+                        self.__draw_range(
+                            _surface,
+                            self.__range_green,
+                            (i, self._tile_is_hovering[1] + 1),
+                        )
+                case self._MODIFY.ADD_COLUMN_BEFORE:
+                    self.__draw_range(_surface, self.__range_red)
+                    for i in range(self.get_map().row):
+                        self.__draw_range(
+                            _surface,
+                            self.__range_green,
+                            (self._tile_is_hovering[0] - 1, i),
+                        )
+                case self._MODIFY.ADD_COLUMN_AFTER:
+                    self.__draw_range(_surface, self.__range_red)
+                    for i in range(self.get_map().row):
+                        self.__draw_range(
+                            _surface,
+                            self.__range_green,
+                            (self._tile_is_hovering[0] + 1, i),
+                        )
+                case self._MODIFY.DELETE_ROW:
+                    for i in range(self.get_map().column):
+                        self.__draw_range(
+                            _surface, self.__range_green, (i, self._tile_is_hovering[1])
+                        )
+                case self._MODIFY.DELETE_COLUMN:
+                    for i in range(self.get_map().row):
+                        self.__draw_range(
+                            _surface, self.__range_green, (self._tile_is_hovering[0], i)
+                        )
+                case _:
+                    if self.is_any_object_selected() is True:
+                        self.__draw_range(_surface, self.__range_green)
+        if (
+            self._show_barrier_mask is True
+            or self._modify_mode is self._MODIFY.DELETE_BLOCK
+        ):
             for y in range(self.get_map().row):
                 for x in range(self.get_map().column):
                     posTupleTemp: tuple[int, int] = self.get_map().calculate_position(
