@@ -497,7 +497,10 @@ class MainMenu(linpg.AbstractSystem):
         # 背景
         self.__draw_background(screen)
         # 菜单选项
-        if not self.__select_progress_menu.is_visible():
+        if (
+            not self.__select_progress_menu.is_visible()
+            and not linpg.PauseMenuModuleForGameSystem.OPTION_MENU.is_visible()
+        ):
             self.__draw_buttons(screen)
         # 展示设置UI
         linpg.PauseMenuModuleForGameSystem.OPTION_MENU.draw(screen)

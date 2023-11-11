@@ -126,7 +126,7 @@ class AbstractBattleSystemWithInGameDialog(
         linpg.PauseMenuModuleForGameSystem.__init__(self)
         self.set_map(AdvancedTileMap())
         # 视觉小说模块与参数
-        self.__DIALOG: linpg.VisualNovelSystem = linpg.VisualNovelSystem()
+        self.__DIALOG: linpg.VisualNovelPlayer = linpg.VisualNovelPlayer()
         self.__DIALOG.disable_basic_features()
         # 视觉小说缓存参数
         self.__dialog_parameters: dict = {}

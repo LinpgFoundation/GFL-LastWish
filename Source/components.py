@@ -107,7 +107,7 @@ class GameMode:
         # 卸载音乐
         linpg.media.unload()
         # 初始化对话系统模块
-        _DIALOG: VisualNovelSystem = VisualNovelSystem()
+        _DIALOG: VisualNovelPlayer = VisualNovelPlayer()
         if chapterType is not None:
             _DIALOG.new(chapterType, chapterId, part, projectName)
         else:
@@ -148,7 +148,7 @@ class GameMode:
             )
         )
         # 加载对话
-        _DIALOG: linpg.DialogEditor = linpg.DialogEditor()
+        _DIALOG: VisualNovelEditor = VisualNovelEditor()
         _DIALOG.new(chapterType, chapterId, part, projectName)
         # 主循环
         while _DIALOG.is_playing():

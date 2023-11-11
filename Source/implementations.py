@@ -116,7 +116,7 @@ _CharacterInCommunicationFilterEffect.init()
 
 
 # 重写视觉小说模组使其正确地调用和修改全局变量
-class VisualNovelSystem(linpg.VisualNovelSystem):
+class VisualNovelPlayer(linpg.VisualNovelPlayer):
     def stop(self) -> None:
         super().stop()
         linpg.global_variables.remove("section")
@@ -127,6 +127,11 @@ class VisualNovelSystem(linpg.VisualNovelSystem):
             linpg.global_variables.set("currentMode", value="battle")
         else:
             linpg.global_variables.remove("currentMode")
+
+    def _load_template(self) -> None:
+        self._content.update(
+            linpg.config.load_file(r"Data/template/chapter_dialogs_example.yaml")
+        )
 
     def _initialize(
         self, chapterType: str, chapterId: int, projectName: Optional[str]
@@ -203,7 +208,7 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
         # 展示范围
         if self._tile_is_hovering is not None and self._no_container_is_hovered is True:
             match self._modify_mode:
-                case self._MODIFY.DELETE_BLOCK:
+                case self._MODIFY.DELETE_ENTITY:
                     self.__draw_range(_surface, self.__range_red)
                 case self._MODIFY.ADD_ROW_ABOVE:
                     self.__draw_range(_surface, self.__range_red)
@@ -240,19 +245,19 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
                 case self._MODIFY.DELETE_ROW:
                     for i in range(self.get_map().column):
                         self.__draw_range(
-                            _surface, self.__range_green, (i, self._tile_is_hovering[1])
+                            _surface, self.__range_red, (i, self._tile_is_hovering[1])
                         )
                 case self._MODIFY.DELETE_COLUMN:
                     for i in range(self.get_map().row):
                         self.__draw_range(
-                            _surface, self.__range_green, (self._tile_is_hovering[0], i)
+                            _surface, self.__range_red, (self._tile_is_hovering[0], i)
                         )
                 case _:
                     if self.is_any_object_selected() is True:
                         self.__draw_range(_surface, self.__range_green)
         if (
             self._show_barrier_mask is True
-            or self._modify_mode is self._MODIFY.DELETE_BLOCK
+            or self._modify_mode is self._MODIFY.DELETE_ENTITY
         ):
             for y in range(self.get_map().row):
                 for x in range(self.get_map().column):
@@ -356,3 +361,12 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
             linpg.display.flip()
         # 加载完成，释放初始化模块占用的内存
         self._finish_loading()
+
+
+# 重写视觉小说编辑器以自定义某些功能
+class VisualNovelEditor(linpg.VisualNovelEditor):
+    # 加载默认模板
+    def _load_template(self) -> None:
+        self._content.update(
+            linpg.config.load(r"Data/template/chapter_dialogs_example.yaml", "dialogs")
+        )
