@@ -17,3 +17,12 @@ SimplifiedChinese:
   - '地点: 临时据点以东约46公里'
   description: 充满希望的人，总能看到明天... 至少，我希望如此...
   title: 迷离之下
+TraditionalChinese:
+  battle_info:
+  - '日期: 206X年7月3日'
+  - '當地時間: 19:14'
+  - '氣溫: -12°C'
+  - '能見度: 0.61公裏'
+  - '地點: 臨時據點以東約46公裏'
+  description: 充滿希望的人，總能看到明天... 至少，我希望如此...
+  title: 迷離之下

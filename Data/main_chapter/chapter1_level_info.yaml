@@ -17,3 +17,12 @@ SimplifiedChinese:
   - '地点: 临时据点以东约50公里'
   description: 茫茫雪原之上，刺骨的寒风拂过我的脸颊。但至少，还有你们的陪伴
   title: 雪色的希望
+TraditionalChinese:
+  battle_info:
+  - '日期: 206X年7月3日'
+  - '當地時間: 11:52'
+  - 氣溫：-3°C
+  - '能見度: 3.78公裏'
+  - '地點: 臨時據點以東約50公裏'
+  description: 茫茫雪原之上，刺骨的寒風拂過我的臉頰。但至少，還有你們的陪伴
+  title: 雪色的希望
