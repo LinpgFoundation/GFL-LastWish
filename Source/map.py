@@ -210,14 +210,16 @@ class AdvancedTileMap(linpg.AbstractTileMap):
         )
 
     # 新增装饰物
-    def add_decoration(self, _data: dict) -> None:
-        _type: str = str(_data["id"]).split(":")[0]
-        if _type == "campfire":
-            self._add_decoration(CampfireObject.from_dict(_data))
-        elif _type == "chest":
-            self._add_decoration(ChestObject.from_dict(_data))
-        else:
-            super().add_decoration(_data)
+    def add_decoration(self, _item: dict | linpg.DecorationObject) -> None:
+        if isinstance(_item, dict):
+            match str(_item["id"]).split(":")[0]:
+                case "campfire":
+                    super().add_decoration(CampfireObject.from_dict(_item))
+                    return
+                case "chest":
+                    super().add_decoration(ChestObject.from_dict(_item))
+                    return
+        super().add_decoration(_item)
 
     # 把装饰物画到屏幕上
     def display_decoration(

@@ -340,6 +340,31 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
         self._update_loading_info("now_loading_map")
         super()._load_map(_data)
 
+    # 更新正在被照亮的区域
+    def _update_darkness(self) -> None:
+        self.get_map().refresh_lit_area(self._entities_data["GriffinKryuger"])
+
+    def _process_data(self, _data: dict) -> None:
+        super()._process_data(_data)
+        self._update_darkness()
+
+    def set_decoration(self, _item: str, _pos: tuple[int, int]) -> None:
+        super().set_decoration(_item, _pos)
+        self._update_darkness()
+
+    def delete_entity(self, _filter: Callable[[linpg.Entity], bool]) -> bool:
+        b: bool = super().delete_entity(_filter)
+        self._update_darkness()
+        return b
+
+    def set_entity(self, _item: str | None, _pos: tuple[int, int]) -> None:
+        super().set_entity(_item, _pos)
+        self._update_darkness()
+
+    def set_tile(self, _item: str, _pos: tuple[int, int]) -> None:
+        super().set_tile(_item, _pos)
+        self._update_darkness()
+
     # 加载数据 - 重写使其以多线程的形式进行
     def new(
         self,
