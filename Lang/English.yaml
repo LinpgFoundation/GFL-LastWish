@@ -51,9 +51,9 @@ PhotosensitiveSeizureWarning:
 - Immediately stop playing and consult a doctor if you experience any symptoms.
 ScoreBoard:
   characters_down: Friendly character down
-  pressKeyContinue: Press <Space> to continue
-  pressKeyRestart: Press <Space> to restart, or press <Backspace> go back to main
-    menu
+  pressKeyContinue: Press <Space> or <Mouse Scroll Wheel> to continue
+  pressKeyRestart: Press <Space> or <Mouse Scroll Wheel> restart, or press <Backspace>
+    go back to main menu
   rank: 'Rank:'
   total_kills: 'Total elimination: {}'
   total_rounds: 'Rounds: {}'

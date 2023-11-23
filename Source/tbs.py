@@ -1280,34 +1280,30 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.__statistics,
                         _rate,
                     )
-                for event in linpg.controller.get_events():
-                    if event.type == linpg.Events.KEY_DOWN:
-                        if event.key == linpg.keys.SPACE:
-                            self.__is_battle_mode = False
-                            self.stop()
-                            main_chapter_unlock: Optional[
-                                int
-                            ] = linpg.PersistentVariables.try_get_int(
-                                "main_chapter_unlock"
+                if linpg.keys.get_pressed(
+                    linpg.keys.SPACE
+                ) or linpg.controller.get_event("hard_confirm"):
+                    self.__is_battle_mode = False
+                    self.stop()
+                    main_chapter_unlock: Optional[
+                        int
+                    ] = linpg.PersistentVariables.try_get_int("main_chapter_unlock")
+                    if self._project_name is None:
+                        max_unlock: int = max(
+                            self._chapter_id,
+                            main_chapter_unlock
+                            if main_chapter_unlock is not None
+                            else 0,
+                        )
+                        linpg.PersistentVariables.set(
+                            "main_chapter_unlock", value=max_unlock
+                        )
+                        if max_unlock >= 1:
+                            linpg.PersistentVariables.set(
+                                "enable_workshop", value=True
                             )
-                            if self._project_name is None:
-                                max_unlock: int = max(
-                                    self._chapter_id,
-                                    main_chapter_unlock
-                                    if main_chapter_unlock is not None
-                                    else 0,
-                                )
-                                linpg.PersistentVariables.set(
-                                    "main_chapter_unlock", value=max_unlock
-                                )
-                                if max_unlock >= 1:
-                                    linpg.PersistentVariables.set(
-                                        "enable_workshop", value=True
-                                    )
-                            linpg.global_variables.set("currentMode", value="dialog")
-                            linpg.global_variables.set(
-                                "section", value="dialog_after_battle"
-                            )
+                    linpg.global_variables.set("currentMode", value="dialog")
+                    linpg.global_variables.set("section", value="dialog_after_battle")
             # 结束动画--失败
             elif self.__whose_round is WhoseRound.result_fail:
                 # 更新战后总结的数据栏
@@ -1325,23 +1321,21 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.__statistics,
                         "C",
                     )
-                for event in linpg.controller.get_events():
-                    if event.type == linpg.Events.KEY_DOWN:
-                        if event.key == linpg.keys.SPACE:
-                            linpg.media.unload()
-                            parameters: tuple = (
-                                self._chapter_type,
-                                self._chapter_id,
-                                self._project_name,
-                            )
-                            TurnBasedBattleSystem.__init__(self)
-                            self.new(parameters[0], parameters[1], parameters[2])
-                            break
-                        elif event.key == linpg.keys.BACKSPACE:
-                            linpg.media.unload()
-                            self.stop()
-                            self.__is_battle_mode = False
-                            break
+                if linpg.keys.get_pressed(linpg.keys.SPACE) or linpg.controller.get_event(
+                    "hard_confirm"
+                ):
+                    linpg.media.unload()
+                    parameters: tuple = (
+                        self._chapter_type,
+                        self._chapter_id,
+                        self._project_name,
+                    )
+                    TurnBasedBattleSystem.__init__(self)
+                    self.new(parameters[0], parameters[1], parameters[2])
+                elif linpg.keys.get_pressed(linpg.keys.BACKSPACE):
+                    linpg.media.unload()
+                    self.stop()
+                    self.__is_battle_mode = False
 
         # 渐变效果：一次性的
         if self.__txt_alpha is None:

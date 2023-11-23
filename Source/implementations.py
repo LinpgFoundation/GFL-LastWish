@@ -348,7 +348,7 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
         super()._process_data(_data)
         self._update_darkness()
 
-    def set_decoration(self, _item: str, _pos: tuple[int, int]) -> None:
+    def set_decoration(self, _item: str | None, _pos: tuple[int, int]) -> None:
         super().set_decoration(_item, _pos)
         self._update_darkness()
 

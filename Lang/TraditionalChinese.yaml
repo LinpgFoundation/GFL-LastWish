@@ -52,8 +52,8 @@ PhotosensitiveSeizureWarning:
 - 如果你出現任何癥狀，請立即停止遊玩該遊戲並咨詢醫生
 ScoreBoard:
   characters_down: 友方角色被擊倒
-  pressKeyContinue: 按 <空格> 繼續
-  pressKeyRestart: 按 <空格> 重新開始，或按 <Backspace> 返回主菜單
+  pressKeyContinue: 按 <空格> 或 <鼠標滾輪> 繼續
+  pressKeyRestart: 按 <空格> 或 <鼠標滾輪> 重新開始，或按 <Backspace> 返回主菜單
   rank: '評價:'
   total_kills: '總消滅: {}'
   total_rounds: '回合數: {}'
