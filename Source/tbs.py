@@ -1208,8 +1208,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.__statistics.total_rounds += 1
                         # 更新当前回合文字
                         self.__update_current_round_text()
+
             # 检测玩家是否胜利或失败
             """检测失败条件"""
+            # 如果全部友方倒下
+            if not any(e.is_alive() for e in self.alliances.values()):
+                self.__whose_round = WhoseRound.result_fail
             # 如果有回合限制
             _round_limitation: int = self.__mission_objectives.get("round_limitation", -1)
             if (
@@ -1280,9 +1284,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.__statistics,
                         _rate,
                     )
-                if linpg.keys.get_pressed(
-                    linpg.keys.SPACE
-                ) or linpg.controller.get_event("hard_confirm"):
+                if linpg.keys.get_pressed(linpg.keys.SPACE) or linpg.controller.get_event(
+                    "hard_confirm"
+                ):
                     self.__is_battle_mode = False
                     self.stop()
                     main_chapter_unlock: Optional[
@@ -1291,17 +1295,13 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     if self._project_name is None:
                         max_unlock: int = max(
                             self._chapter_id,
-                            main_chapter_unlock
-                            if main_chapter_unlock is not None
-                            else 0,
+                            main_chapter_unlock if main_chapter_unlock is not None else 0,
                         )
                         linpg.PersistentVariables.set(
                             "main_chapter_unlock", value=max_unlock
                         )
                         if max_unlock >= 1:
-                            linpg.PersistentVariables.set(
-                                "enable_workshop", value=True
-                            )
+                            linpg.PersistentVariables.set("enable_workshop", value=True)
                     linpg.global_variables.set("currentMode", value="dialog")
                     linpg.global_variables.set("section", value="dialog_after_battle")
             # 结束动画--失败

@@ -206,6 +206,32 @@ g41:
   min_damage: 1
   skill_coverage: 1
   skill_effective_range: []
+golyat:
+  attack_coverage: 3
+  effective_range:
+  - 1
+  faction: SangvisFerri
+  kind: null
+  magazine_capacity: 1
+  max_action_point: 20
+  max_damage: 1000
+  max_hp: 200
+  min_damage: 800
+  skill_coverage: 1
+  skill_effective_range: []
+golyatplus:
+  attack_coverage: 4
+  effective_range:
+  - 1
+  faction: SangvisFerri
+  kind: null
+  magazine_capacity: 1
+  max_action_point: 20
+  max_damage: 1500
+  max_hp: 300
+  min_damage: 1000
+  skill_coverage: 1
+  skill_effective_range: []
 grizzly:
   attack_coverage: 1
   effective_range:
