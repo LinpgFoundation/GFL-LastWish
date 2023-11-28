@@ -159,8 +159,6 @@ class BasicEntity(linpg.Entity):
     # 攻击所需的AP
     AP_IS_NEEDED_TO_ATTACK: int = 5
     AP_IS_NEEDED_TO_MOVE_ONE_BLOCK: int = 2
-    # 濒死回合限制
-    DYING_ROUND_LIMIT: int = 3
 
     def __init__(self, characterData: dict, mode: str) -> None:
         super().__init__(characterData, mode)

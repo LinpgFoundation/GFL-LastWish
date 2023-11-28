@@ -37,7 +37,6 @@ MainMenu:
     3_workshop: 創意工坊
     4_collection: 收集物
     5_setting: 設置
-    6_developer_team: 製作組
     7_exit: 退出
   menu_workshop_choice:
     0_play: 遊玩

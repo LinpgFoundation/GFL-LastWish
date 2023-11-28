@@ -32,7 +32,6 @@ MainMenu:
     3_workshop: Workshop
     4_collection: Collection
     5_setting: Setting
-    6_developer_team: Development Team
     7_exit: Exit
   menu_workshop_choice:
     0_play: Play

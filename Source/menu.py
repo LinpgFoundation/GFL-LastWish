@@ -395,9 +395,7 @@ class MainMenu(linpg.AbstractSystem):
     def __reset_menu_text(self, screen_size: tuple) -> None:
         self.__main_menu_txt = linpg.lang.get_texts("MainMenu")
         # 默认不可用的菜单选项
-        self.__disabled_options = set(
-            ("0_continue", "2_dlc", "4_collection", "6_developer_team")
-        )
+        self.__disabled_options = set(("0_continue", "2_dlc", "4_collection"))
         # 默认不禁用3_workshop
         if linpg.db.get_bool("DisableWorkshopByDefault"):
             self.__disabled_options.add("3_workshop")
@@ -565,11 +563,6 @@ class MainMenu(linpg.AbstractSystem):
                             linpg.PauseMenuModuleForGameSystem.OPTION_MENU.set_visible(
                                 True
                             )
-                        # 制作组
-                        elif self.__main_menu_txt["menu_main"][
-                            "6_developer_team"
-                        ].is_hovered():
-                            pass
                         # 退出
                         elif self.__main_menu_txt["menu_main"]["7_exit"].is_hovered():
                             self.__exit_confirm_menu.update_message(

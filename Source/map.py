@@ -136,6 +136,10 @@ class AdvancedTileMap(linpg.AbstractTileMap):
 
     def update(self, _data: dict, _block_size: linpg.int_f) -> None:
         super().update(_data, _block_size)
+        # 暗度（仅黑夜场景有效）
+        linpg.TileMapImagesModule.DARKNESS = (
+            155 if bool(_data.get("at_night", False)) is True else 0
+        )
         # 处于光处的区域
         self.__lit_area = (
             tuple()

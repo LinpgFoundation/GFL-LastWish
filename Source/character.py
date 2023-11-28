@@ -5,13 +5,15 @@ from .entity import *
 
 # 友方角色类
 class FriendlyCharacter(BasicEntity):
+    __DYING_ROUND_LIMIT: int = 3
+
     def __init__(self, characterData: dict, mode: str) -> None:
         super().__init__(characterData, mode)
         # 是否濒死
         self.__down_time: int = (
             int(characterData["down_time"])
             if "down_time" in characterData
-            else (-1 if self.is_alive() else self.DYING_ROUND_LIMIT)
+            else (-1 if self.is_alive() else self.__DYING_ROUND_LIMIT)
         )
         # 弹夹容量
         self.__magazine_capacity: int = int(characterData["magazine_capacity"])
@@ -241,7 +243,7 @@ class FriendlyCharacter(BasicEntity):
 
     # 更加面临死亡
     def get_closer_to_death(self) -> None:
-        self.__down_time -= 1
+        self.__down_time = max(self.__down_time - 1, 0)
 
     # 角色彻底死亡
     def is_dead(self) -> bool:
@@ -268,7 +270,7 @@ class FriendlyCharacter(BasicEntity):
         super().injury(damage)
         # 如果角色在被攻击后处于濒死状态
         if not self.is_alive() and self.__down_time < 0 and self.kind != "HOC":
-            self.__down_time = self.DYING_ROUND_LIMIT
+            self.__down_time = self.__DYING_ROUND_LIMIT
             if self.__getHurtImage is not None:
                 self.__getHurtImage.move_left(self.__getHurtImage.width)
                 self.__getHurtImage.alpha = 255
@@ -285,7 +287,13 @@ class FriendlyCharacter(BasicEntity):
         customHpData: Optional[tuple] = (
             None
             if self.__down_time < 0
-            else (self.__down_time, self.DYING_ROUND_LIMIT, True)
+            else (
+                self.__down_time,
+                self.__DYING_ROUND_LIMIT
+                if self.__down_time <= self.__DYING_ROUND_LIMIT
+                else self.__down_time,
+                True,
+            )
         )
         blit_pos = super()._drawUI(surface, MAP_POINTER, customHpData)
         # 展示被察觉的程度

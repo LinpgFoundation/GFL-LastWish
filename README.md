@@ -45,7 +45,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 | 游戏本体迁徙工作基本完成                      | The migrations from Linpg Engine 2 to 3.0 completed | 2020.8     |
 | 游戏进行小范围测试                            | Small-scale testing                                 | 2022.9     |
 | 第1至3章发布                                  | The first to fourth chapter releases.               | 2022.12.22 |
-| 第5至8章发布                                  | The fifth to eighth chapter releases.               | 2022.12    |
+| 第5至8章发布                                  | The fifth to eighth chapter releases.               | Pending    |
 | 第9至11章发布                                 | The ninth to eleventh chapter releases.             | Pending    |
 | 最终章发布                                    | Final chapter releases                              | Pending    |
 | 第一个DLC发布                                 | First DLC releases                                  | Pending    |
