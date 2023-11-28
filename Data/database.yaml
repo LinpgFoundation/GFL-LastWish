@@ -112,6 +112,8 @@ Npc:
   sv98:
   - sv98.png
   - sv98_hurt.png
+  svd:
+  - svd.png
   ump45:
   - ump45.png
   - ump45_hurt.png
@@ -134,3 +136,5 @@ Npc:
   - kalina_6.png
   - kalina_7.png
   - kalina_8.png
+  铁血人形:
+  - Guard.png
