@@ -1,8 +1,8 @@
 at_night: true
 background_image: snowfield.jpg
-background_music: Combat_02_RemnantFantasyPackage_Synari.ogg
-chapter_id: 1
-chapter_type: workshop
+background_music: Machines_Are_Talking.mp3
+chapter_id: 3
+chapter_type: main_chapter
 decoration:
 - id: tree:1
   x: 0
@@ -416,6 +416,12 @@ decoration:
   x: 7
   y: 17
 - id: chest
+  status:
+    items:
+      bullet: 20
+      hp: 400
+    whitelist:
+    - sv98
   x: 22
   y: 2
 - id: campfire:6
@@ -568,22 +574,44 @@ decoration:
 - id: fence:17
   x: 24
   y: 19
-dialogs: {}
+dialogs:
+  data:
+    asval_saved:
+    - dialog: asval_saved
+    initial_dialog:
+    - dialog: head
+    - changePos:
+        x: 21
+        y: 15
+    - idle: 1
+    - dialog: sf_notice_asval
+    - changePos:
+        x: 4
+        y: 10
+  dictionary:
+    initial: initial_dialog
+    move:
+      21-15:
+        dialog_key: asval_saved
+        repeat: false
+        whitelist:
+        - asval
 entities:
   GriffinKryuger:
-    asval_0:
+    asval:
       bullets_carried: 0
       current_action: die
       current_hp: 0
-      down_time: 20
+      down_time: 10
       if_action_loop: false
       if_play_action_in_reversing: false
       if_switch_to_idle_afterwards: false
       type: asval
       x: 21
       y: 15
-    sv98_0:
-      bullets_carried: 100
+    sv98:
+      bullets_carried: 0
+      current_hp: 100
       type: sv98
       x: 4
       y: 10
@@ -1974,9 +2002,7 @@ map:
   - water:11
   - dirt:5
 mission_objectives:
-  allow_any_one_die: false
-  round_limitation: 10
-  target: null
-  type: annihilation
+  target: asval
+  type: rescue
 project_name: example
 weather: snow

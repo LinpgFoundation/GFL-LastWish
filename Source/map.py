@@ -157,23 +157,23 @@ class AdvancedTileMap(linpg.AbstractTileMap):
         ]
         return _data
 
-    # 获取可视光亮区域
-    def _get_lit_area(self, alliances_data: dict) -> set:
+    # 刷新可视光亮区域
+    def refresh_lit_area(self, alliances_data: dict) -> None:
+        # 获取可视光亮区域
         lightArea: set[tuple[int, int]] = set()
         for _alliance in alliances_data.values():
             for _area in _alliance.get_visual_range_coordinates(self):
                 for _pos in _area:
-                    lightArea.add(_pos)
+                    if 0 <= _pos[0] < self.column and 0 <= _pos[1] < self.row:
+                        lightArea.add(_pos)
             lightArea.add((round(_alliance.x), round(_alliance.y)))
         for _item in self.decorations:
             if isinstance(_item, CampfireObject):
                 for _pos in _item.get_lit_coordinates():
-                    lightArea.add(_pos)
-        return lightArea
-
-    # 刷新可视光亮区域
-    def refresh_lit_area(self, alliances_data: dict) -> None:
-        self.__lit_area = tuple(self._get_lit_area(alliances_data))
+                    if 0 <= _pos[0] < self.column and 0 <= _pos[1] < self.row:
+                        lightArea.add(_pos)
+        self.__lit_area = tuple(lightArea)
+        # 刷新图层
         self._refresh()
 
     # 查看坐标是否在光亮范围内
