@@ -35,7 +35,6 @@ MainMenu:
     1_chooseChapter: 選擇章節
     2_dlc: 可下載內容
     3_workshop: 創意工坊
-    4_collection: 收集物
     5_setting: 設置
     7_exit: 退出
   menu_workshop_choice:

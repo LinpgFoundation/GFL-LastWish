@@ -52,12 +52,12 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 # :memo: Chapters / 游戏章节
 
-| Index | 名称             | Name                                     | Expected release date / 预计发布时间 | Status / 状态      |
+| Index | 名称             | Name                                     | （Expected) Release Date / 预计发布时间 | Status / 状态      |
 | ----- | ---------------- | ---------------------------------------- | ------------------------------------ | ------------------ |
 | 1     | 雪色的希望       | A Wish Like Snow                         | 2022.12.31                           | :white_check_mark: |
 | 2     | 迷离之下         | Beneath the Bewilderment                 | 2022.12.31                           | :white_check_mark: |
-| 3     | 琴弦之上         | Above string                             | 2023.10                              | :hammer:           |
-| 4     | 喘息     | A gasp for breath          | Unknown | ❓                  |
+| 3     | 与霜共舞 | Dancing with the Frost       | 2023.12                             | :white_check_mark: |
+| 4     | 喘息     | A gasp for breath          | Cancelled | ❌                 |
 | 5     | 无人之防 | Make defense without dolls | Cancelled                            | ❌ |
 | 6     | 机遇     | The opportunity            | Cancelled | ❌ |
 | 7     | 强敌     | Formidable enemies         | Cancelled |❌|
@@ -82,7 +82,7 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 | Type             | 类型     | Minimum / 最低要求               | Recommended / 推荐配置                 |
 | ---------------- | -------- | -------------------------------- | -------------------------------------- |
-| Operating System | 操作系统 | Windows® 10 64 bit, Ubuntu 22.04 | Windows® 11,  Fedora 38                |
+| Operating System | 操作系统 | Windows® 10 64 bit, Ubuntu 22.04 | Windows® 11                            |
 | CPU              | 处理器   | Intel® or AMD® 3+ GHz processor  | Intel® or AMD® 3.5+ GHz processor      |
 | Memory           | 内存     | 4 GB RAM                         | 6GB RAM                                |
 | Graphics Cards   | 显卡     | Integrated Graphics              | GTX 960 or AMD RX 560                  |

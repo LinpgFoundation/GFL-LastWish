@@ -416,12 +416,17 @@ decoration:
   x: 7
   y: 17
 - id: chest
+  items:
+    bullet: 20
+    hp: 400
   status:
     items:
       bullet: 20
       hp: 400
     whitelist:
     - sv98
+  whitelist:
+  - sv98
   x: 22
   y: 2
 - id: campfire:6
@@ -602,7 +607,7 @@ entities:
       bullets_carried: 0
       current_action: die
       current_hp: 0
-      down_time: 10
+      down_time: 12
       if_action_loop: false
       if_play_action_in_reversing: false
       if_switch_to_idle_afterwards: false
@@ -619,8 +624,8 @@ entities:
     dinergate_0:
       kind: None
       type: dinergate
-      x: 14
-      y: 15
+      x: 12
+      y: 14
     guard_0:
       type: guard
       x: 20
@@ -628,27 +633,27 @@ entities:
     jaguar_0:
       kind: None
       type: jaguar
-      x: 18
-      y: 10
+      x: 16
+      y: 9
     jaguar_1:
       kind: None
       type: jaguar
       x: 16
       y: 13
+    prowler_0:
+      type: prowler
+      x: 15
+      y: 16
     scouts_0:
       kind: None
       type: scouts
       x: 22
       y: 13
-    scouts_1:
-      kind: None
-      type: scouts
-      x: 16
-      y: 17
     vespid_0:
       type: vespid
       x: 15
       y: 10
+linpg: 3.7.3
 map:
   barrier:
   - - 0
@@ -1833,8 +1838,6 @@ map:
     - 15
   - - 24
     - 2
-  - - 25
-    - 1
   - - 19
     - 15
   - - 1
@@ -1891,14 +1894,12 @@ map:
     - 12
   - - 21
     - 1
-  - - 23
-    - -1
+  - - 15
+    - 15
   - - 6
     - 12
   - - 20
     - 11
-  - - 15
-    - 15
   - - 21
     - 10
   - - 21

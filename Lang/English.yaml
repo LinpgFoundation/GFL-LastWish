@@ -30,7 +30,6 @@ MainMenu:
     1_chooseChapter: Select Chapter
     2_dlc: DLC
     3_workshop: Workshop
-    4_collection: Collection
     5_setting: Setting
     7_exit: Exit
   menu_workshop_choice:
