@@ -85,7 +85,7 @@ pp1901:
 
 [block]
 
-[entry]noticeSupply
+[label]noticeSupply
 
 [display]sv98.png gsh18.png asval.png pp1901.png
 
@@ -104,7 +104,7 @@ null:
 
 [block]
 
-[entry]gotSupply
+[label]gotSupply
 
 [display]sv98.png
 

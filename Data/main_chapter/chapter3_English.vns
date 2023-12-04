@@ -1,0 +1,205 @@
+# Fundamental parameters
+[id]3
+[lang]English
+
+[section]dialog_before_battle
+
+null:
+- It's been a long time since I've slept so soundly.
+- When I think back to the days when I stayed up all night at the base,
+- I suddenly feel some inexplicable sadness and self-blame.
+null:
+- I don't know, how long I slept. And I don't know, how long they slept.
+- But the only thing I do know is that when the danger came, I wasn't ready for it.
+null:
+- I was awakened by an explosion.
+
+[scene]Transport.png
+[bgm]EV4_Boss1.wav
+
+pilot:
+- Uh no, we've been hit by an unidentified missile.
+pilot:
+- We're losing altitude, everyone prepare for impact!
+null:
+- I looked into their frightened eyes, trying to think of something to say to comfort them.
+null:
+- But all I heard was a BOOM, and I lost consciousness.
+
+[scene]null
+[bgm]null
+null:
+- I don't know how much time has passed...
+
+[display]sv98.png
+
+sv98:
+- Uh ah...
+
+[scene]CG4N.png
+[bgm]BGM_Brain_1.ogg
+null:
+- Battling against the weight of my exhaustion and disorientation,
+- I mustered every ounce of strength to rise from the ground.
+- As I slowly turned, my gaze fell upon a scene of chaos
+null:
+- The smoldering remains of the helicopter,
+- its once powerful form now twisted and scattered across the desolate landscape,
+- stood as a stark testament to the catastrophe that had unfolded.
+sv98:
+- Asval! Gsh-18! PP-19-01! Where are you?
+- Can you hear me!
+null:
+- I can't hear anything but the crackling of burning helicopter 
+sv98:
+- asval!
+
+[hide]*
+
+null:
+- I was about to continue shouting,
+- when I heard the footsteps of an Sangvis Ferri's doll not far away.
+- I rushed to hide.
+
+[display]guard.png
+
+Sangvis Ferri's doll:
+- Report, we're at the crash site.
+- Well, it is Griffin's helicopter.
+Sangvis Ferri's doll:
+- It doesn't look like anyone survived the explosion.
+- Or maybe there aren't any Griffin's doll left on the scene that have any salvage value.
+??:
+- Alright, regroup and head back to base at once.
+- Remain out of sight and exercise utmost caution.
+- It's crucial that Griffin doesn't catch even a hint of your trail.
+
+[hide]*
+
+null:
+- (Sangvis Ferri's doll left)
+
+[display]sv98.png
+
+null:
+- As soon as I saw the Sangvis Ferri's doll leave,
+- I ran over to the wreckage of the helicopter
+- to see if any of my teammates had survived the crash.
+null:
+- But after only a few minutes, I realized that my efforts were in vain.
+- I only found the pilot's body in the wreckage of the plane, but no sign of his teammates.
+null:
+- "Maybe they just got thrown off before the crash." I tought to myself.
+null:
+- But I knew that if I didn't find them soon, they'd be in greate danger.
+- So I got moving and ran in the direction of the helicopter before it crashed.
+
+[section]dialog_during_battle
+
+[display]sv98.png
+
+sv98:
+- I hope I'm not too late.
+
+[hide]*
+
+[block]
+
+[label]sf_notice_asval
+[display]guard.png
+Sangvis Ferri's doll:
+- Report. A Griffin's doll has been found. What should we do?
+??:
+- Stand by. Reinforcements are on the way.
+
+[hide]*
+[display]sv98.png
+
+sv98:
+- Damn it, we have to get asval out of there quickly
+- or we'll be in trouble when Sangvis Ferri's reinforcements arrive
+
+[block]
+
+[label]asval_saved
+[display]sv98.png
+sv98:
+- Asval, are you okay?
+null:
+- Helping Asval stand up.
+
+[show]asval_hurt.png
+
+asval:
+- I'm unharmed, thankfully. Your concern means a lot to me.
+- And what of PP-19-01 and GSH-18? Have they emerged unscathed from this ordeal?
+sv98:
+- Their status is unclear at the moment.
+- We must make haste and find them.
+
+[section]dialog_after_battle
+
+[bgi]ShootingRange.png
+[bgm]Memorial.wav
+
+null:
+- (Sounds of bullet hitting target)
+
+[display]svd.png sv98.png
+
+svd:
+- Hey, sv98, it is 1 AM already.
+- Still practicing your aim?
+null:
+- (Blazing shell casings fall to the ground with a crisp thud)
+svd:
+- I heard about it.
+- The commander's going to make you captain of the 10th squad.
+null:
+- The sv98 didn't respond,
+- but once again raised the gun in her hand and aimed at the distant target
+svd:
+- Well, when will I be a team leader just like you?
+null:
+- (Bullet exits the chamber and strikes the distant target with pinpoint accuracy)
+svd:
+- What's the matter, Sv98? Something bothering you again?
+null:
+- Sv98 let out a long sigh
+sv98:
+- Svd, you should know that the 10th squad has always been a logistical squad,
+- not directly involved in combat at all.
+svd:
+- So, you think the commander is looking down on you?
+null:
+- Sv98 looks like she has a lot to say, but she can't say it.
+svd:
+- Sv98, as you know, there's a lot at stake in the upcoming mission.
+- It's not the usual petty fight,
+- there's no telling who won't be able to return from such a dangerous mission.
+sv98:
+- That will never happen.
+- Trust me, I'll make sure all my teammates come back safely.
+svd:
+- This does look like the way a captain should act.
+- It seems the commander was right about your.
+- However, I want you to promise me one thing.
+sv98:
+- What?
+svd:
+- Please, come back safely.
+sv98:
+- ...
+svd:
+- Sv98?
+sv98:
+- I... I promise.
+
+[bgi]null
+[hide]*
+
+sv98:
+- I promise to return unscathed and in good spirits.
+- You can count on it.
+
+[end]

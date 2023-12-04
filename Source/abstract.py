@@ -126,7 +126,7 @@ class AbstractBattleSystemWithInGameDialog(
         linpg.PauseMenuModuleForGameSystem.__init__(self)
         self.set_map(AdvancedTileMap())
         # 视觉小说模块与参数
-        self.__DIALOG: linpg.VisualNovelSystem = linpg.VisualNovelSystem()
+        self.__DIALOG: linpg.VisualNovelPlayer = linpg.VisualNovelPlayer()
         self.__DIALOG.disable_basic_features()
         # 视觉小说缓存参数
         self.__dialog_parameters: dict = {}
@@ -218,9 +218,11 @@ class AbstractBattleSystemWithInGameDialog(
     """其他"""
 
     def _get_level_info(self) -> dict:
-        return linpg.config.try_load_file_if_exists(
-            self.get_data_file_path().replace("_map", "_level_info")
-        ).get(linpg.setting.get_language(), {})
+        return dict(
+            linpg.config.try_load_file_if_exists(
+                self.get_data_file_path().replace("_map", "_level_info")
+            ).get(linpg.setting.get_language(), {})
+        )
 
     # 初始化视觉小说系统
     def _init_dialog(self, _data: dict) -> None:

@@ -35,9 +35,7 @@ MainMenu:
     1_chooseChapter: 选择章节
     2_dlc: 可下载内容
     3_workshop: 创意工坊
-    4_collection: 收集物
     5_setting: 设置
-    6_developer_team: 制作组
     7_exit: 退出
   menu_workshop_choice:
     0_play: 游玩
@@ -52,8 +50,8 @@ PhotosensitiveSeizureWarning:
 - 如果你出现任何症状，请立即停止游玩该游戏并咨询医生
 ScoreBoard:
   characters_down: 友方角色被击倒
-  pressKeyContinue: 按 <空格> 继续
-  pressKeyRestart: 按 <空格> 重新开始，或按 <Backspace> 返回主菜单
+  pressKeyContinue: 按 <空格> 或 <鼠标滚轮> 继续
+  pressKeyRestart: 按 <空格> 或 <鼠标滚轮> 重新开始，或按 <Backspace> 返回主菜单
   rank: '评价:'
   total_kills: '总消灭: {}'
   total_rounds: '回合数: {}'
@@ -75,5 +73,4 @@ Warnings:
   no_enough_ap_to_reload: 当前角色没有足够的行动值用于换弹
   no_enough_ap_to_rescue: 当前角色没有足够的行动值进行救助
   no_enough_ap_to_use_skill: 当前角色没有足够的行动值使用技能
-alpha_build_warning: '测试版本: 不代表最终效果'
 presentBy: 缇吉娅工坊 呈现

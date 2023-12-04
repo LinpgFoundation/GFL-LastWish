@@ -2,9 +2,11 @@ author: TigeiaWorkshop
 cover_images:
 - Assets/image/dialog_background/research.jpg
 - Assets/image/dialog_background/WildBattle.png
+- Assets/image/dialog_background/CG4N.png
 default_lang: SimplifiedChinese
 link: https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish
 title:
   English: Main Chapter
   SimplifiedChinese: 主线章节
+  TraditionalChinese: 主線章節
 version: 0.0

@@ -116,7 +116,7 @@ _CharacterInCommunicationFilterEffect.init()
 
 
 # 重写视觉小说模组使其正确地调用和修改全局变量
-class VisualNovelSystem(linpg.VisualNovelSystem):
+class VisualNovelPlayer(linpg.VisualNovelPlayer):
     def stop(self) -> None:
         super().stop()
         linpg.global_variables.remove("section")
@@ -127,6 +127,11 @@ class VisualNovelSystem(linpg.VisualNovelSystem):
             linpg.global_variables.set("currentMode", value="battle")
         else:
             linpg.global_variables.remove("currentMode")
+
+    def _load_template(self) -> None:
+        self._content.update(
+            linpg.config.load_file(r"Data/template/chapter_dialogs_example.yaml")
+        )
 
     def _initialize(
         self, chapterType: str, chapterId: int, projectName: Optional[str]
@@ -178,36 +183,82 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
         )
         self.__range_red.set_alpha(150)
 
+    # draw range image
+    def __draw_range(
+        self,
+        _surface: linpg.ImageSurface,
+        _image: linpg.ImageSurface,
+        _pos: tuple[int, int] | None = None,
+    ) -> None:
+        if _pos is None:
+            if self._tile_is_hovering is None:
+                return
+            _pos = self._tile_is_hovering
+        xTemp, yTemp = self.get_map().calculate_position(_pos[0], _pos[1])
+        _surface.blit(
+            _image,
+            (
+                xTemp + (self.get_map().tile_width - _image.get_width()) // 2,
+                yTemp,
+            ),
+        )
+
     # 实现父类需要实现的方法 - 画出所有角色
     def _display_entities(self, _surface: linpg.ImageSurface) -> None:
         # 展示范围
         if self._tile_is_hovering is not None and self._no_container_is_hovered is True:
-            if self._delete_mode is True:
-                xTemp, yTemp = self.get_map().calculate_position(
-                    self._tile_is_hovering[0], self._tile_is_hovering[1]
-                )
-                _surface.blit(
-                    self.__range_red,
-                    (
-                        xTemp
-                        + (self.get_map().tile_width - self.__range_red.get_width()) // 2,
-                        yTemp,
-                    ),
-                )
-            elif self.isAnyObjectSelected() is True:
-                xTemp, yTemp = self.get_map().calculate_position(
-                    self._tile_is_hovering[0], self._tile_is_hovering[1]
-                )
-                _surface.blit(
-                    self.__range_green,
-                    (
-                        xTemp
-                        + (self.get_map().tile_width - self.__range_green.get_width())
-                        // 2,
-                        yTemp,
-                    ),
-                )
-        if self._show_barrier_mask is True or self._delete_mode is True:
+            match self._modify_mode:
+                case self._MODIFY.DELETE_ENTITY:
+                    self.__draw_range(_surface, self.__range_red)
+                case self._MODIFY.ADD_ROW_ABOVE:
+                    self.__draw_range(_surface, self.__range_red)
+                    for i in range(self.get_map().column):
+                        self.__draw_range(
+                            _surface,
+                            self.__range_green,
+                            (i, self._tile_is_hovering[1] - 1),
+                        )
+                case self._MODIFY.ADD_ROW_BELOW:
+                    self.__draw_range(_surface, self.__range_red)
+                    for i in range(self.get_map().column):
+                        self.__draw_range(
+                            _surface,
+                            self.__range_green,
+                            (i, self._tile_is_hovering[1] + 1),
+                        )
+                case self._MODIFY.ADD_COLUMN_BEFORE:
+                    self.__draw_range(_surface, self.__range_red)
+                    for i in range(self.get_map().row):
+                        self.__draw_range(
+                            _surface,
+                            self.__range_green,
+                            (self._tile_is_hovering[0] - 1, i),
+                        )
+                case self._MODIFY.ADD_COLUMN_AFTER:
+                    self.__draw_range(_surface, self.__range_red)
+                    for i in range(self.get_map().row):
+                        self.__draw_range(
+                            _surface,
+                            self.__range_green,
+                            (self._tile_is_hovering[0] + 1, i),
+                        )
+                case self._MODIFY.DELETE_ROW:
+                    for i in range(self.get_map().column):
+                        self.__draw_range(
+                            _surface, self.__range_red, (i, self._tile_is_hovering[1])
+                        )
+                case self._MODIFY.DELETE_COLUMN:
+                    for i in range(self.get_map().row):
+                        self.__draw_range(
+                            _surface, self.__range_red, (self._tile_is_hovering[0], i)
+                        )
+                case _:
+                    if self.is_any_object_selected() is True:
+                        self.__draw_range(_surface, self.__range_green)
+        if (
+            self._show_barrier_mask is True
+            or self._modify_mode is self._MODIFY.DELETE_ENTITY
+        ):
             for y in range(self.get_map().row):
                 for x in range(self.get_map().column):
                     posTupleTemp: tuple[int, int] = self.get_map().calculate_position(
@@ -289,6 +340,31 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
         self._update_loading_info("now_loading_map")
         super()._load_map(_data)
 
+    # 更新正在被照亮的区域
+    def _update_darkness(self) -> None:
+        self.get_map().refresh_lit_area(self._entities_data["GriffinKryuger"])
+
+    def _process_data(self, _data: dict) -> None:
+        super()._process_data(_data)
+        self._update_darkness()
+
+    def set_decoration(self, _item: str | None, _pos: tuple[int, int]) -> None:
+        super().set_decoration(_item, _pos)
+        self._update_darkness()
+
+    def delete_entity(self, _filter: Callable[[linpg.Entity], bool]) -> bool:
+        b: bool = super().delete_entity(_filter)
+        self._update_darkness()
+        return b
+
+    def set_entity(self, _item: str | None, _pos: tuple[int, int]) -> None:
+        super().set_entity(_item, _pos)
+        self._update_darkness()
+
+    def set_tile(self, _item: str, _pos: tuple[int, int]) -> None:
+        super().set_tile(_item, _pos)
+        self._update_darkness()
+
     # 加载数据 - 重写使其以多线程的形式进行
     def new(
         self,
@@ -310,3 +386,12 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
             linpg.display.flip()
         # 加载完成，释放初始化模块占用的内存
         self._finish_loading()
+
+
+# 重写视觉小说编辑器以自定义某些功能
+class VisualNovelEditor(linpg.VisualNovelEditor):
+    # 加载默认模板
+    def _load_template(self) -> None:
+        self._content.update(
+            linpg.config.load(r"Data/template/chapter_dialogs_example.yaml", "dialogs")
+        )

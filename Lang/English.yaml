@@ -30,9 +30,7 @@ MainMenu:
     1_chooseChapter: Select Chapter
     2_dlc: DLC
     3_workshop: Workshop
-    4_collection: Collection
     5_setting: Setting
-    6_developer_team: Development Team
     7_exit: Exit
   menu_workshop_choice:
     0_play: Play
@@ -51,9 +49,9 @@ PhotosensitiveSeizureWarning:
 - Immediately stop playing and consult a doctor if you experience any symptoms.
 ScoreBoard:
   characters_down: Friendly character down
-  pressKeyContinue: Press <Space> to continue
-  pressKeyRestart: Press <Space> to restart, or press <Backspace> go back to main
-    menu
+  pressKeyContinue: Press <Space> or <Mouse Scroll Wheel> to continue
+  pressKeyRestart: Press <Space> or <Mouse Scroll Wheel> restart, or press <Backspace>
+    go back to main menu
   rank: 'Rank:'
   total_kills: 'Total elimination: {}'
   total_rounds: 'Rounds: {}'
@@ -75,5 +73,4 @@ Warnings:
   no_enough_ap_to_reload: You don't have enough action points for reloading.
   no_enough_ap_to_rescue: You don't have enough action points for rescuing.
   no_enough_ap_to_use_skill: You don't have enough action points for using skill.
-alpha_build_warning: 'Alpha Build: Far From Finish'
 presentBy: Presents by TigeiaWorkshop

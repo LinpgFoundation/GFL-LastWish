@@ -17,3 +17,12 @@ SimplifiedChinese:
   - 但确保最多5行
   description: 本章的描述，将在加载屏幕上显示
   title: 本章的标题
+TraditionalChinese:
+  battle_info:
+  - 第一行
+  - 第二行
+  - 寫點東西在這裏
+  - 比如說日期，時間，天氣，等等...
+  - 但確保最多5行
+  description: 本章的描述，將在加載屏幕上顯示
+  title: 本章的標題

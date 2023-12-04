@@ -1,0 +1,76 @@
+Battle_UI:
+  bullets: 備彈
+  currentRound: '當前回合: {}'
+  endRound: 回合結束
+  enemyRound: 敵方回合
+  getHealth: 獲得血量
+  numChapter: 第{}章
+  numRound: 第{}回合
+  yourRound: 你的回合
+DiscordStatus:
+  game_is_initializing: 遊戲正在初始化...
+  now_playing: '正在遊玩:'
+  staying_at_main_menu: 正在瀏覽主菜單
+General:
+  GriffinKryuger: 格裏芬
+  SangvisFerri: 鐵血工造
+  dialog_editor: 對話編輯器
+  game_title: 少女前線-遺願
+  main_chapter: 主線章節
+  map_editor: 地圖編輯器
+  workshop: 創意工坊
+HealthyGamingAdvice:
+- 抵製不良遊戲，拒絕盜版遊戲。
+- 註意自我保護，謹防受騙上當。
+- 適度遊戲益腦，沈迷遊戲傷身。
+- 合理安排時間，享受健康生活。
+LoadingTxt:
+  now_loading: 正在加載
+  now_loading_characters: 正在加載角色信息...
+  now_loading_level: 正在加載關卡設定...
+  now_loading_map: 正在加載地圖...
+MainMenu:
+  menu_main:
+    0_continue: 繼續遊戲
+    1_chooseChapter: 選擇章節
+    2_dlc: 可下載內容
+    3_workshop: 創意工坊
+    5_setting: 設置
+    7_exit: 退出
+  menu_workshop_choice:
+    0_play: 遊玩
+  other:
+    new_chapter: 新建章節
+    new_project: 新建項目
+PhotosensitiveSeizureWarning:
+- 本遊戲已為有光敏性癲癇的玩家進行優化
+- 關於光敏性癲癇：
+- 極小部分人可能會在看到特定視覺圖像（包括可能出現在視頻遊戲中的閃爍效果或圖案）時出現癲癇癥狀。
+- 甚至沒有癲癇史的人也可能具有一些可能會在玩視頻遊戲時導致「光敏性癲癇發作」的未確診癥狀。
+- 如果你出現任何癥狀，請立即停止遊玩該遊戲並咨詢醫生
+ScoreBoard:
+  characters_down: 友方角色被擊倒
+  pressKeyContinue: 按 <空格> 或 <鼠標滾輪> 繼續
+  pressKeyRestart: 按 <空格> 或 <鼠標滾輪> 重新開始，或按 <Backspace> 返回主菜單
+  rank: '評價:'
+  total_kills: '總消滅: {}'
+  total_rounds: '回合數: {}'
+  total_time: '通關時間: {}'
+SelectMenu:
+  attack: 攻擊
+  interact: 互動
+  move: 移動
+  reload: 換彈
+  rescue: 救助
+  skill: 技能
+Warnings:
+  magazine_is_empty: 當前角色已經沒有子彈，請及時換彈
+  magazine_is_full: 當前彈夾已滿，無需換彈
+  no_bullets_left: 當前角色已經沒有備彈
+  no_enough_ap_to_attack: 當前角色沒有足夠的行動值進行攻擊
+  no_enough_ap_to_interact: 當前角色沒有足夠的行動值進行互動
+  no_enough_ap_to_move: 當前角色沒有足夠的行動值用於移動
+  no_enough_ap_to_reload: 當前角色沒有足夠的行動值用於換彈
+  no_enough_ap_to_rescue: 當前角色沒有足夠的行動值進行救助
+  no_enough_ap_to_use_skill: 當前角色沒有足夠的行動值使用技能
+presentBy: 緹吉婭工坊 呈現

@@ -276,6 +276,43 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 for key in the_dead_one_remove:
                     del self.the_dead_one[key]
 
+    def __check_entity_env_interaction(self, entityName: str) -> None:
+        entity_value: FriendlyCharacter = self.alliances[entityName]
+        # 检测是不是站在补给上
+        _decorationOnPos = self.get_map().get_decoration(entity_value.get_pos())
+        if (
+            isinstance(_decorationOnPos, ChestObject)
+            and entityName in _decorationOnPos.whitelist
+        ):
+            # 将物品按照类型放入列表
+            for itemType, itemData in _decorationOnPos.items.items():
+                if itemType == "bullet":
+                    entity_value.add_bullets_carried(itemData)
+                    self.__damage_do_to_characters[entityName] = self._FONT.render(
+                        f"+ {itemData} {itemData, linpg.lang.get_texts('Battle_UI', 'bullets')}",
+                        linpg.colors.ORANGE,
+                    )
+                elif itemType == "hp":
+                    entity_value.heal(itemData)
+                    self.__damage_do_to_characters[entityName] = self._FONT.render(
+                        f"+ {itemData} hp", linpg.colors.GREEN
+                    )
+            # 移除箱子
+            self.get_map().remove_decoration(_decorationOnPos)
+        # 检测当前所在点是否应该触发对话
+        name_from_by_pos: str = f"{entity_value.x}-{entity_value.y}"
+        dialog_to_check: dict | None = self.__dialog_dictionary.get("move", {}).get(
+            name_from_by_pos
+        )
+        if dialog_to_check is not None and entityName in dialog_to_check.get(
+            "whitelist", (entityName,)
+        ):
+            self._update_dialog(str(dialog_to_check["dialog_key"]))
+            self.__is_battle_mode = False
+            # 如果对话不重复，则删除（默认不重复）
+            if "repeat" not in dialog_to_check or not dialog_to_check["repeat"]:
+                del self.__dialog_dictionary["move"][name_from_by_pos]
+
     def _display_map(self, screen: linpg.ImageSurface) -> None:
         super()._display_map(screen)
         # 检测角色所占据的装饰物（即需要透明化，方便玩家看到角色）
@@ -659,6 +696,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.__is_waiting = True
                         RangeSystem.set_visible(True)
                         RangeSystem.clear()
+                        self.__check_entity_env_interaction(self.friendGetHelp)
                     elif (
                         self.action_choice == "interact"
                         and not RangeSystem.get_visible()
@@ -905,79 +943,16 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     if self.action_choice == "move":
                         if not self.characterInControl.is_idle():
                             # 播放脚步声
+                            self._footstep_sounds.set_volume(
+                                linpg.volume.get_effects() / 100.0
+                            )
                             self._footstep_sounds.play()
                             # 是否需要更新
                             if self.characterInControl.just_entered_a_new_tile():
                                 self.__alert_enemy_around(self.characterGetClick)
                         else:
                             self._footstep_sounds.stop()
-                            # 检测是不是站在补给上
-                            _decorationOnPos = self.get_map().get_decoration(
-                                self.characterInControl.get_pos()
-                            )
-                            if (
-                                isinstance(_decorationOnPos, ChestObject)
-                                and self.characterGetClick in _decorationOnPos.whitelist
-                            ):
-                                # 将物品按照类型放入列表
-                                for (
-                                    itemType,
-                                    itemData,
-                                ) in _decorationOnPos.items.items():
-                                    if itemType == "bullet":
-                                        self.characterInControl.add_bullets_carried(
-                                            itemData
-                                        )
-                                        self.__damage_do_to_characters[
-                                            self.characterGetClick
-                                        ] = self._FONT.render(
-                                            "+ {0} {1}".format(
-                                                itemData,
-                                                linpg.lang.get_texts(
-                                                    "Battle_UI", "bullets"
-                                                ),
-                                            ),
-                                            linpg.colors.ORANGE,
-                                        )
-                                    elif itemType == "hp":
-                                        self.characterInControl.heal(itemData)
-                                        self.__damage_do_to_characters[
-                                            self.characterGetClick
-                                        ] = self._FONT.render(
-                                            "+ {} hp".format(itemData), linpg.colors.GREEN
-                                        )
-                                # 移除箱子
-                                self.get_map().remove_decoration(_decorationOnPos)
-                            # 检测当前所在点是否应该触发对话
-                            name_from_by_pos = (
-                                str(self.characterInControl.x)
-                                + "-"
-                                + str(self.characterInControl.y)
-                            )
-                            if (
-                                "move" in self.__dialog_dictionary
-                                and name_from_by_pos in self.__dialog_dictionary["move"]
-                            ):
-                                dialog_to_check = self.__dialog_dictionary["move"][
-                                    name_from_by_pos
-                                ]
-                                if (
-                                    "whitelist" not in dialog_to_check
-                                    or self.characterGetClick
-                                    in dialog_to_check["whitelist"]
-                                ):
-                                    self._update_dialog(
-                                        str(dialog_to_check["dialog_key"])
-                                    )
-                                    self.__is_battle_mode = False
-                                    # 如果对话不重复，则删除（默认不重复）
-                                    if (
-                                        "repeat" not in dialog_to_check
-                                        or not dialog_to_check["repeat"]
-                                    ):
-                                        del self.__dialog_dictionary["move"][
-                                            name_from_by_pos
-                                        ]
+                            self.__check_entity_env_interaction(self.characterGetClick)
                             # 玩家可以继续选择需要进行的操作
                             self.__is_waiting = True
                             self.characterGetClick = None
@@ -1061,7 +1036,6 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             self.__is_waiting = True
                             self.characterGetClick = None
                             self.action_choice = None
-
             # 敌方回合
             if self.__whose_round is WhoseRound.sangvisFerris:
                 # 如果当前角色还没做出决定
@@ -1092,6 +1066,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     # 根据选择调整动画
                     if self.current_instruction.action == "move":
                         if not self.enemyInControl.is_idle():
+                            self._footstep_sounds.set_volume(
+                                linpg.volume.get_effects() / 100.0
+                            )
                             self._footstep_sounds.play()
                         else:
                             self._footstep_sounds.stop()
@@ -1208,8 +1185,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.__statistics.total_rounds += 1
                         # 更新当前回合文字
                         self.__update_current_round_text()
+
             # 检测玩家是否胜利或失败
             """检测失败条件"""
+            # 如果全部友方倒下
+            if not any(e.is_alive() for e in self.alliances.values()):
+                self.__whose_round = WhoseRound.result_fail
             # 如果有回合限制
             _round_limitation: int = self.__mission_objectives.get("round_limitation", -1)
             if (
@@ -1224,31 +1205,43 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.__whose_round = WhoseRound.result_fail
                         break
             """检测胜利条件"""
-            # 歼灭模式
-            if self.__mission_objectives["type"] == "annihilation":
-                _target: Optional[str | Sequence] = self.__mission_objectives.get(
-                    "target"
-                )
-                # 检测是否所有敌人都已经被消灭
-                if _target is None:
-                    if len(self.enemies) == 0:
-                        self.characterGetClick = None
-                        RangeSystem.set_visible(False)
-                        self.__whose_round = WhoseRound.result_win
-                    else:
-                        pass
-                # 检测是否特定敌人已经被消灭
-                elif isinstance(_target, str) and _target not in self.enemies:
-                    self.__whose_round = WhoseRound.result_win
-                # 检测是否所有给定的目标都已经被歼灭
-                elif isinstance(_target, Sequence):
-                    find_one = False
-                    for key in self.alliances:
-                        if key in _target:
-                            find_one = True
-                            break
-                    if not find_one:
-                        self.__whose_round = WhoseRound.result_win
+            if self.__is_battle_mode is True:
+                match self.__mission_objectives["type"]:
+                    # 歼灭模式
+                    case "annihilation":
+                        annihilation_target: Optional[
+                            str | Sequence
+                        ] = self.__mission_objectives.get("target")
+                        # 检测是否所有敌人都已经被消灭
+                        if annihilation_target is None:
+                            if len(self.enemies) == 0:
+                                self.characterGetClick = None
+                                RangeSystem.set_visible(False)
+                                self.__whose_round = WhoseRound.result_win
+                            else:
+                                pass
+                        # 检测是否特定敌人已经被消灭
+                        elif (
+                            isinstance(annihilation_target, str)
+                            and annihilation_target not in self.enemies
+                        ):
+                            self.__whose_round = WhoseRound.result_win
+                        # 检测是否所有给定的目标都已经被歼灭
+                        elif isinstance(annihilation_target, Sequence):
+                            find_one = False
+                            for key in self.alliances:
+                                if key in annihilation_target:
+                                    find_one = True
+                                    break
+                            if not find_one:
+                                self.__whose_round = WhoseRound.result_win
+                    # 营救模式
+                    case "rescue":
+                        rescue_target: str = str(self.__mission_objectives["target"])
+                        if self.alliances[rescue_target].current_hp > 0:
+                            self.characterGetClick = None
+                            RangeSystem.set_visible(False)
+                            self.__whose_round = WhoseRound.result_win
             """开发使用"""
             if linpg.global_variables.try_get_str("endBattleAs") == "win":
                 self.__whose_round = WhoseRound.result_win
@@ -1280,34 +1273,26 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.__statistics,
                         _rate,
                     )
-                for event in linpg.controller.get_events():
-                    if event.type == linpg.Events.KEY_DOWN:
-                        if event.key == linpg.keys.SPACE:
-                            self.__is_battle_mode = False
-                            self.stop()
-                            main_chapter_unlock: Optional[
-                                int
-                            ] = linpg.PersistentVariables.try_get_int(
-                                "main_chapter_unlock"
-                            )
-                            if self._project_name is None:
-                                max_unlock: int = max(
-                                    self._chapter_id,
-                                    main_chapter_unlock
-                                    if main_chapter_unlock is not None
-                                    else 0,
-                                )
-                                linpg.PersistentVariables.set(
-                                    "main_chapter_unlock", value=max_unlock
-                                )
-                                if max_unlock >= 1:
-                                    linpg.PersistentVariables.set(
-                                        "enable_workshop", value=True
-                                    )
-                            linpg.global_variables.set("currentMode", value="dialog")
-                            linpg.global_variables.set(
-                                "section", value="dialog_after_battle"
-                            )
+                if linpg.keys.get_pressed(linpg.keys.SPACE) or linpg.controller.get_event(
+                    "hard_confirm"
+                ):
+                    self.__is_battle_mode = False
+                    self.stop()
+                    main_chapter_unlock: Optional[
+                        int
+                    ] = linpg.PersistentVariables.try_get_int("main_chapter_unlock")
+                    if self._project_name is None:
+                        max_unlock: int = max(
+                            self._chapter_id,
+                            main_chapter_unlock if main_chapter_unlock is not None else 0,
+                        )
+                        linpg.PersistentVariables.set(
+                            "main_chapter_unlock", value=max_unlock
+                        )
+                        if max_unlock >= 1:
+                            linpg.PersistentVariables.set("enable_workshop", value=True)
+                    linpg.global_variables.set("currentMode", value="dialog")
+                    linpg.global_variables.set("section", value="dialog_after_battle")
             # 结束动画--失败
             elif self.__whose_round is WhoseRound.result_fail:
                 # 更新战后总结的数据栏
@@ -1325,23 +1310,21 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         self.__statistics,
                         "C",
                     )
-                for event in linpg.controller.get_events():
-                    if event.type == linpg.Events.KEY_DOWN:
-                        if event.key == linpg.keys.SPACE:
-                            linpg.media.unload()
-                            parameters: tuple = (
-                                self._chapter_type,
-                                self._chapter_id,
-                                self._project_name,
-                            )
-                            TurnBasedBattleSystem.__init__(self)
-                            self.new(parameters[0], parameters[1], parameters[2])
-                            break
-                        elif event.key == linpg.keys.BACKSPACE:
-                            linpg.media.unload()
-                            self.stop()
-                            self.__is_battle_mode = False
-                            break
+                if linpg.keys.get_pressed(linpg.keys.SPACE) or linpg.controller.get_event(
+                    "hard_confirm"
+                ):
+                    linpg.media.unload()
+                    parameters: tuple = (
+                        self._chapter_type,
+                        self._chapter_id,
+                        self._project_name,
+                    )
+                    TurnBasedBattleSystem.__init__(self)
+                    self.new(parameters[0], parameters[1], parameters[2])
+                elif linpg.keys.get_pressed(linpg.keys.BACKSPACE):
+                    linpg.media.unload()
+                    self.stop()
+                    self.__is_battle_mode = False
 
         # 渐变效果：一次性的
         if self.__txt_alpha is None:

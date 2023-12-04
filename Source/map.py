@@ -9,13 +9,18 @@ import linpg
 linpg.display.init()
 
 # 加载版本信息
-version_info: dict = linpg.config.load_file(r"Data/version.yaml")
+_VERSION_INFO: dict = {
+    "recommended_linpg_patch": 2,
+    "recommended_linpg_revision": 7,
+    "revision": 2,
+    "version": 1,
+}
 
 # 确认linpg的版本是推荐版本
 linpg.LinpgVersionChecker(
     ">=",
-    version_info["recommended_linpg_revision"],
-    version_info["recommended_linpg_patch"],
+    _VERSION_INFO["recommended_linpg_revision"],
+    _VERSION_INFO["recommended_linpg_patch"],
 )
 
 
@@ -131,6 +136,10 @@ class AdvancedTileMap(linpg.AbstractTileMap):
 
     def update(self, _data: dict, _block_size: linpg.int_f) -> None:
         super().update(_data, _block_size)
+        # 暗度（仅黑夜场景有效）
+        linpg.TileMapImagesModule.DARKNESS = (
+            155 if bool(_data.get("at_night", False)) is True else 0
+        )
         # 处于光处的区域
         self.__lit_area = (
             tuple()
@@ -148,23 +157,23 @@ class AdvancedTileMap(linpg.AbstractTileMap):
         ]
         return _data
 
-    # 获取可视光亮区域
-    def _get_lit_area(self, alliances_data: dict) -> set:
+    # 刷新可视光亮区域
+    def refresh_lit_area(self, alliances_data: dict) -> None:
+        # 获取可视光亮区域
         lightArea: set[tuple[int, int]] = set()
         for _alliance in alliances_data.values():
             for _area in _alliance.get_visual_range_coordinates(self):
                 for _pos in _area:
-                    lightArea.add(_pos)
+                    if 0 <= _pos[0] < self.column and 0 <= _pos[1] < self.row:
+                        lightArea.add(_pos)
             lightArea.add((round(_alliance.x), round(_alliance.y)))
         for _item in self.decorations:
             if isinstance(_item, CampfireObject):
                 for _pos in _item.get_lit_coordinates():
-                    lightArea.add(_pos)
-        return lightArea
-
-    # 刷新可视光亮区域
-    def refresh_lit_area(self, alliances_data: dict) -> None:
-        self.__lit_area = tuple(self._get_lit_area(alliances_data))
+                    if 0 <= _pos[0] < self.column and 0 <= _pos[1] < self.row:
+                        lightArea.add(_pos)
+        self.__lit_area = tuple(lightArea)
+        # 刷新图层
         self._refresh()
 
     # 查看坐标是否在光亮范围内
@@ -205,14 +214,16 @@ class AdvancedTileMap(linpg.AbstractTileMap):
         )
 
     # 新增装饰物
-    def add_decoration(self, _data: dict) -> None:
-        _type: str = str(_data["id"]).split(":")[0]
-        if _type == "campfire":
-            self._add_decoration(CampfireObject.from_dict(_data))
-        elif _type == "chest":
-            self._add_decoration(ChestObject.from_dict(_data))
-        else:
-            super().add_decoration(_data)
+    def add_decoration(self, _item: dict | linpg.DecorationObject) -> None:
+        if isinstance(_item, dict):
+            match str(_item["id"]).split(":")[0]:
+                case "campfire":
+                    super().add_decoration(CampfireObject.from_dict(_item))
+                    return
+                case "chest":
+                    super().add_decoration(ChestObject.from_dict(_item))
+                    return
+        super().add_decoration(_item)
 
     # 把装饰物画到屏幕上
     def display_decoration(
