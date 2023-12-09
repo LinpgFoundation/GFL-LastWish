@@ -1,8 +1,13 @@
 if __name__ == "__main__":
     from os import path as PATH
-    from shutil import move as MOVE
-    from subprocess import check_call
-    from linpgtoolbox.builder import Builder, PackageInstaller, SmartAutoModuleCombineMode
+    import shutil
+
+    from linpgtoolbox.builder import (
+        Builder,
+        PackageInstaller,
+        PyInstaller,
+        SmartAutoModuleCombineMode,
+    )
 
     # 编译游戏本体
     if (
@@ -25,14 +30,17 @@ if __name__ == "__main__":
     Builder.remove("dist")
 
     # 打包main文件
-    PackageInstaller.install("pyinstaller")
-    if input("If for dev purpose:").lower() == "y":
-        check_call(["pyinstaller", "main.spec"])
-    else:
-        check_call(["pyinstaller", "--noconsole", "main.spec"])
+    PyInstaller.pack("main.spec")
+
+    # 移动素材
+    _ADDITIONAL_ASSETS: tuple[str, ...] = ("Assets", "Data", "Lang")
+    for additional_dir in _ADDITIONAL_ASSETS:
+        shutil.copytree(
+            PATH.join(".", additional_dir), PATH.join("dist", "main", additional_dir)
+        )
 
     # 重命名文件
-    MOVE(PATH.join("dist", "main"), PATH.join("dist", "GirlsFrontLine-LastWish"))
+    shutil.move(PATH.join("dist", "main"), PATH.join("dist", "GirlsFrontLine-LastWish"))
 
     # 移除移除的缓存文件
     folders_need_remove: tuple[str, ...] = ("build", "logs", "__pycache__")

@@ -7,11 +7,8 @@ a = Analysis(
     pathex = [],
     binaries = [],
     datas = [
-        ('Assets','Assets'),
-        ('Data','Data'),
-        ('Lang','Lang'),
-        ('src','src'),
-        ('icon.ico','.')
+        ('src', 'src'),
+        ('icon.ico', '.')
     ],
     hiddenimports = [
         "linpg",
