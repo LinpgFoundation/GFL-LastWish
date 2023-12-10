@@ -468,7 +468,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         self.environment_sound.set_volume(linpg.volume.get_environment() / 100.0)
 
     # 警告某个角色周围的敌人
-    def __alert_enemy_around(self, name: str, value: int = 10) -> None:
+    def __alert_enemy_around(self, name: str, value: int = 20) -> None:
         enemies_need_check: list = []
         for key in self.enemies:
             if self.enemies[key].range_target_in(self.alliances[name]) >= 0:
@@ -1146,24 +1146,29 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     screen, self.__whose_round, self.__statistics.total_rounds
                 ):
                     if self.__whose_round is WhoseRound.playerToSangvisFerris:
-                        self.enemies_in_control_id = 0
-                        self.sangvisFerris_name_list.clear()
-                        any_is_alert = False
-                        for key in self.enemies:
-                            if self.enemies[key].is_alive():
-                                self.sangvisFerris_name_list.append(key)
-                                if self.enemies[key].is_alert:
-                                    any_is_alert = True
-                        # 如果有一个铁血角色已经处于完全察觉的状态，则让所有铁血角色进入警觉状态
-                        if any_is_alert:
+                        # if there are still enemies left
+                        if len(self.sangvisFerris_name_list) > 0:
+                            self.enemies_in_control_id = 0
+                            self.sangvisFerris_name_list.clear()
+                            any_is_alert = False
                             for key in self.enemies:
-                                self.enemies[key].alert(100)
-                        # 让倒地的角色更接近死亡
-                        for key in self.alliances:
-                            if self.alliances[key].is_dying():
-                                self.alliances[key].get_closer_to_death()
-                        # 现在是铁血的回合！
-                        self.__whose_round = WhoseRound.sangvisFerris
+                                if self.enemies[key].is_alive():
+                                    self.sangvisFerris_name_list.append(key)
+                                    if self.enemies[key].is_alert:
+                                        any_is_alert = True
+                            # 如果有一个铁血角色已经处于完全察觉的状态，则让所有铁血角色进入警觉状态
+                            if any_is_alert:
+                                for key in self.enemies:
+                                    self.enemies[key].alert(100)
+                            # 让倒地的角色更接近死亡
+                            for key in self.alliances:
+                                if self.alliances[key].is_dying():
+                                    self.alliances[key].get_closer_to_death()
+                            # 现在是铁血的回合！
+                            self.__whose_round = WhoseRound.sangvisFerris
+                        # if all enemies are eliminated
+                        else:
+                            self.__whose_round = WhoseRound.sangvisFerrisToPlayer
                     elif self.__whose_round is WhoseRound.sangvisFerrisToPlayer:
                         for key in self.alliances:
                             self.alliances[key].reset_action_point()
