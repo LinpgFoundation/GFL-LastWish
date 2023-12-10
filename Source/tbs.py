@@ -414,6 +414,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             LoadingTitle.draw(linpg.display.get_window())
             self.__draw_battle_info(linpg.display.get_window(), i)
             linpg.display.flip()
+        # 重置RangeSystem状态
+        RangeSystem.set_visible(True)
 
     # 加载游戏进程
     def _process_data(self, _data: dict) -> None:
