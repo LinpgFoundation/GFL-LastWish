@@ -256,7 +256,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         ):
                             the_alpha = self.enemies[key].get_imgAlpha("die")
                             if the_alpha > 0:
-                                self.enemies[key].set_imgAlpha("die", the_alpha - 5)
+                                self.enemies[key].set_imgAlpha(
+                                    "die", the_alpha - linpg.display.get_delta_time()
+                                )
                             else:
                                 del self.the_dead_one[key]
                                 del self.enemies[key]
@@ -268,7 +270,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         ):
                             the_alpha = self.alliances[key].get_imgAlpha("die")
                             if the_alpha > 0:
-                                self.alliances[key].set_imgAlpha("die", the_alpha - 5)
+                                self.alliances[key].set_imgAlpha(
+                                    "die", the_alpha - linpg.display.get_delta_time()
+                                )
                             else:
                                 del self.the_dead_one[key]
                                 del self.alliances[key]
@@ -1093,7 +1097,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             self.enemyInControl.set_flip_based_on_pos(
                                 self.alliances[self.current_instruction.target].get_pos()
                             )
-                            self.enemyInControl.set_action("attack")
+                            self.enemyInControl.set_action("attack", False)
                     # 根据选择调整动画
                     if self.current_instruction.action == "move":
                         if not self.enemyInControl.is_idle():
@@ -1111,12 +1115,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             f"{self.enemies_in_control_id}_attack_3"
                         ):
                             AttackingSoundManager.play(self.enemyInControl.kind)
-                        elif self.enemyInControl.get_imgId(
-                            "attack"
-                        ) >= self.enemyInControl.get_imgNum(
-                            "attack"
-                        ) - 1 and self.__is_action_frame_event_await_trigger(
-                            f"{self.enemies_in_control_id}_attack_last_1"
+                        elif (
+                            self.enemyInControl.get_imgId("attack")
+                            >= self.enemyInControl.get_imgNum("attack") - 1
                         ):
                             if (
                                 linpg.numbers.get_random_int(0, 100)
@@ -1184,16 +1185,16 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     screen, self.__whose_round, self.__statistics.total_rounds
                 ):
                     if self.__whose_round is WhoseRound.playerToSangvisFerris:
+                        self.enemies_in_control_id = 0
+                        self.sangvisFerris_name_list.clear()
+                        any_is_alert = False
+                        for key in self.enemies:
+                            if self.enemies[key].is_alive():
+                                self.sangvisFerris_name_list.append(key)
+                                if self.enemies[key].is_alert:
+                                    any_is_alert = True
                         # if there are still enemies left
                         if len(self.sangvisFerris_name_list) > 0:
-                            self.enemies_in_control_id = 0
-                            self.sangvisFerris_name_list.clear()
-                            any_is_alert = False
-                            for key in self.enemies:
-                                if self.enemies[key].is_alive():
-                                    self.sangvisFerris_name_list.append(key)
-                                    if self.enemies[key].is_alert:
-                                        any_is_alert = True
                             # 如果有一个铁血角色已经处于完全察觉的状态，则让所有铁血角色进入警觉状态
                             if any_is_alert:
                                 for key in self.enemies:
@@ -1376,7 +1377,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             LoadingTitle.black_bg.set_alpha(self.__txt_alpha)
             LoadingTitle.draw(screen, self.__txt_alpha)
             self.__draw_battle_info(screen, self.__txt_alpha)
-            self.__txt_alpha -= 5
+            self.__txt_alpha = max(0, self.__txt_alpha - linpg.display.get_delta_time())
 
         # 如果战后总结已被更新，则说明战斗结束，需要渲染战后总结到屏幕上
         if ScoreBoard.is_updated() is True:

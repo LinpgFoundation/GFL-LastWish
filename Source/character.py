@@ -319,7 +319,7 @@ class FriendlyCharacter(BasicEntity):
                 if self.__getHurtImage.delay > 0:
                     self.__getHurtImage.delay -= 5
                 elif self.__getHurtImage.alpha > 0:
-                    self.__getHurtImage.alpha -= 5
+                    self.__getHurtImage.alpha -= linpg.display.get_delta_time()
 
 
 # 敌对角色类
