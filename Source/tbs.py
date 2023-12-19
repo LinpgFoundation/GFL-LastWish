@@ -561,7 +561,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             elif linpg.controller.get_event("scroll_down") and self.__zoomIntoBe > 50:
                 self.__zoomIntoBe -= 10
             # 返回按钮
-            if linpg.controller.get_event("back"):
+            if linpg.controller.get_event("back") or (
+                linpg.controller.get_event("hard_confirm")
+                and self.__whose_round is WhoseRound.player
+            ):
                 # 如果没有角色被选中，则展示暂停页面
                 if self.characterGetClick is None:
                     self._show_pause_menu(screen)

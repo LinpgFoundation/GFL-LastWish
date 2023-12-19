@@ -15,6 +15,8 @@ a = Analysis(
         "linpgassets",
         "cv2",
         "yaml",
+        "SpeechRecognition",
+        "PyAudio"
     ],
     hookspath = [],
     runtime_hooks = [],

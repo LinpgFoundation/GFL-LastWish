@@ -616,6 +616,7 @@ entities:
       y: 15
     sv98:
       bullets_carried: 0
+      current_bullets: 6
       current_hp: 100
       type: sv98
       x: 4
