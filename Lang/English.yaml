@@ -28,7 +28,6 @@ MainMenu:
   menu_main:
     0_continue: Continue
     1_chooseChapter: Select Chapter
-    2_dlc: DLC
     3_workshop: Workshop
     5_setting: Setting
     7_exit: Exit
