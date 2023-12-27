@@ -52,11 +52,11 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 # :memo: Chapters / 游戏章节
 
-| Index | 名称             | Name                                     | （Expected) Release Date / 预计发布时间 | Status / 状态      |
+| Index | 名称             | Name                                     | Release Date / 发布时间 | Status / 状态      |
 | ----- | ---------------- | ---------------------------------------- | ------------------------------------ | ------------------ |
 | 1     | 雪色的希望       | A Wish Like Snow                         | 2022.12.31                           | :white_check_mark: |
 | 2     | 迷离之下         | Beneath the Bewilderment                 | 2022.12.31                           | :white_check_mark: |
-| 3     | 与霜共舞 | Dancing with the Frost       | 2023.12                             | :white_check_mark: |
+| 3     | 与霜共舞 | Dancing with Frost       | 2023.12                             | :white_check_mark: |
 | 4     | 喘息     | A gasp for breath          | Cancelled | ❌                 |
 | 5     | 无人之防 | Make defense without dolls | Cancelled                            | ❌ |
 | 6     | 机遇     | The opportunity            | Cancelled | ❌ |
@@ -80,13 +80,13 @@ Their stories may be forgotten by history, but what they have done will be remem
 
 # :computer: System Requirements / 系统需求
 
-| Type             | 类型     | Minimum / 最低要求               | Recommended / 推荐配置                 |
-| ---------------- | -------- | -------------------------------- | -------------------------------------- |
-| Operating System | 操作系统 | Windows® 10 64 bit, Ubuntu 22.04 | Windows® 11                            |
-| CPU              | 处理器   | Intel® or AMD® 3+ GHz processor  | Intel® or AMD® 3.5+ GHz processor      |
-| Memory           | 内存     | 4 GB RAM                         | 6GB RAM                                |
-| Graphics Cards   | 显卡     | Integrated Graphics              | GTX 960 or AMD RX 560                  |
-| Storage          | 硬盘空间 | 1 GB of free hard drive space    | 1.5 GB of free solid-state drive space |
+| Type             | 类型     | Minimum / 最低要求               | Recommended / 推荐配置              |
+| ---------------- | -------- | -------------------------------- | ----------------------------------- |
+| Operating System | 操作系统 | Windows® 10 64 bit, Ubuntu 22.04 | Windows® 11                         |
+| CPU              | 处理器   | Intel® or AMD® 3+ GHz processor  | Intel® or AMD® 3.5+ GHz processor   |
+| Memory           | 内存     | 4 GB RAM                         | 6GB RAM                             |
+| Graphics Cards   | 显卡     | Integrated Graphics              | GTX 960 or AMD RX 560               |
+| Storage          | 硬盘空间 | 1 GB of free hard drive space    | 1GB of free solid-state drive space |
 
 ***Q: Why is macOS not supported?***
 
@@ -99,6 +99,17 @@ A: So far, none of the developers in our development team has a device that runs
 ***Your little kindness can make a massive difference for our future.***
 
 ***您小小的善意可以改变我们的未来。***
+
+# 🕹️ Controls / 操作
+
+| Keys / 按键                              | Functions                                   | 功能                                 |
+| ---------------------------------------- | ------------------------------------------- | ------------------------------------ |
+| Mouser Left Click / 鼠标左键             | Confirm                                     | 确认                                 |
+| Mouser Scroll Wheel Click / 鼠标滚轮点击 | Back / Delete / Replace Title in Map Editor | 返回 / 删除 / 在地图编辑器中替换区块 |
+| Mouser Right Click / 鼠标右键            | Previous Dialogue / Selected / Dragged      | 前一对话 / 选中 / 拖拽               |
+| ESC                                      | Deselect / Show Option Menu                 | 取消选中 / 显示选项菜单              |
+| Delete                                   | Delete Object or Entity                     | 删除物体或实体                       |
+| Mouser Scroll Wheel Up / 鼠标上滚轮      | Deselect in Map Editor                      | 在地图编辑器中取消选中               |
 
 # :world_map: Branches / 分支​
 
@@ -136,6 +147,6 @@ https://discord.gg/3wz6bs5jvu
 
 Girls Front Line‘s character images and UI © 2018 Digital Sky Entertainment Limited & All rights reserved.
 
-This game's (python) codes are distributed under the [**GPL-3.0 License**](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE). However, all other digital contents used in this game, including but not limited to images, music, and videos, are authorized or contributed by third parties, and secondary distribution or commercialization without the authorization of the corresponding creators is strictly prohibited. The game by itself should only be used for non-commercial and educational purposes, and Tigeia Workshop (the developer of this game and the Linpg engine) is not responsible for any disputes and damages caused by the usage of neither this game nor the Linpg Engine.
+This game's (python) codes are distributed under the [**GPL-3.0 License**](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE). However, all other digital contents used in this game, including but not limited to images, music, and videos, are authorized or contributed by third parties, and secondary distribution or commercialization without the authorization of the corresponding creators is **strictly prohibited**. The game by itself should only be used for **non-commercial** and **educational** purposes, and Tigeia Workshop (the developer of this game and the Linpg engine) is not responsible for any disputes and damages caused by the usage of neither this game nor the Linpg Engine.
 
 本游戏的代码将采用 **[GPL-3.0 License](https://github.com/TigeiaWorkshop/GirlsFrontLine-LastWish/blob/master/LICENSE)** 进行分发。然而，需要注意的是，本游戏用到的所有其他数字媒体素材，包含但不仅限于图片，音乐，视频，均来自第三方授权或者贡献，严禁在没有对应创作者授权的情况下进行二次发布或者使用。游戏作为一个整体只能用于非商业的教育用途，且因使用该游戏或者linpg导致的任何形式的冲突（比如但不仅限法律冲突，经济冲突等）与缇吉娅工坊（本游戏和Linpg引擎的开发者）无关。一切缇吉娅工坊发布的非英文版本条款仅供参考，实际应以英文版本为准。
