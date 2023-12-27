@@ -33,7 +33,9 @@ class _Console(linpg.Console):
 
 
 # 1.3起控制台默认启动
-CONSOLE = _Console(linpg.display.get_width() // 10, linpg.display.get_height() * 4 // 5)
+CONSOLE: _Console = _Console(
+    linpg.display.get_width() // 10, linpg.display.get_height() * 4 // 5
+)
 # 如果启动实验性的多线程功能
 if linpg.setting.try_get_bool("EnableConsoleThreading") is True:
     CONSOLE.start()
