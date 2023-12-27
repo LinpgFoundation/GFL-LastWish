@@ -32,14 +32,13 @@ class _Console(linpg.Console):
             super()._check_command(conditions)
 
 
-# 根据设定决定是否启用控制台
-CONSOLE: Optional[_Console] = None
-if linpg.setting.try_get_bool("EnableConsole") is True:
-    CONSOLE = _Console(
-        linpg.display.get_width() // 10, linpg.display.get_height() * 4 // 5
-    )
-    # if linpg.debug.get_developer_mode() is True:
-    #    CONSOLE.start()
+# 1.3起控制台默认启动
+CONSOLE: _Console = _Console(
+    linpg.display.get_width() // 10, linpg.display.get_height() * 4 // 5
+)
+# 如果启动实验性的多线程功能
+if linpg.setting.try_get_bool("EnableConsoleThreading") is True:
+    CONSOLE.start()
 linpg.global_variables.set("CONSOLE", value=CONSOLE)
 
 

@@ -33,7 +33,6 @@ MainMenu:
   menu_main:
     0_continue: 继续游戏
     1_chooseChapter: 选择章节
-    2_dlc: 可下载内容
     3_workshop: 创意工坊
     5_setting: 设置
     7_exit: 退出

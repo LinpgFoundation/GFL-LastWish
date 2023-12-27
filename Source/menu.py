@@ -395,7 +395,7 @@ class MainMenu(linpg.AbstractSystem):
     def __reset_menu_text(self, screen_size: tuple) -> None:
         self.__main_menu_txt = linpg.lang.get_texts("MainMenu")
         # 默认不可用的菜单选项
-        self.__disabled_options = set(("0_continue", "2_dlc"))
+        self.__disabled_options = set(("0_continue",))
         # 默认不禁用3_workshop
         if linpg.db.get_bool("DisableWorkshopByDefault"):
             self.__disabled_options.add("3_workshop")
@@ -546,9 +546,6 @@ class MainMenu(linpg.AbstractSystem):
                             # 加载菜单章节选择页面的文字
                             self.__reload_chapter_select_list(screen.get_size())
                             self.menu_type = 1
-                        # dlc
-                        elif self.__main_menu_txt["menu_main"]["2_dlc"].is_hovered():
-                            pass
                         # 创意工坊
                         elif self.__main_menu_txt["menu_main"]["3_workshop"].is_hovered():
                             if "3_workshop" not in self.__disabled_options:

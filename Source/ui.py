@@ -137,7 +137,7 @@ class RoundSwitch:
                 if alphaTemp is None:
                     alphaTemp = 255
                 if alphaTemp > 0:
-                    alphaTemp -= 10
+                    alphaTemp = max(0, alphaTemp - linpg.display.get_delta_time())
                     self.baseImg.set_alpha(alphaTemp)
                     self.now_total_rounds_surface.set_alpha(alphaTemp)
                     if whose_round is WhoseRound.playerToSangvisFerris:
@@ -255,7 +255,9 @@ class WarningMessageSystem:
                         + i * cls.__all_warnings[i].get_height() * 1.2,
                     ),
                 )
-                cls.__all_warnings[i].set_alpha(img_alpha - 5)
+                cls.__all_warnings[i].set_alpha(
+                    img_alpha - max(linpg.display.get_delta_time() // 3, 1)
+                )
             else:
                 cls.__all_warnings.pop()
 
@@ -840,7 +842,7 @@ class ScoreBoard:
         cls.__DARK_CURTAIN.set_alpha(cls.__DARK_CURTAIN_ALPHA)
         _surface.blit(cls.__DARK_CURTAIN, (0, 0))
         if cls.__DARK_CURTAIN_ALPHA < 150:
-            cls.__DARK_CURTAIN_ALPHA += 5
+            cls.__DARK_CURTAIN_ALPHA += linpg.display.get_delta_time()
         else:
             cls.__YELLOW_RIGHT_CURTAIN.draw(_surface)
             if cls.__NPC_IMAGE is None:
