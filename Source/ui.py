@@ -860,9 +860,11 @@ class ScoreBoard:
                 cls.__NEXT_STEP_INSTRUCTION = linpg.font.render(
                     linpg.lang.get_text(
                         "ScoreBoard",
-                        "pressKeyContinue"
-                        if cls.__RESULT_WIN is True
-                        else "pressKeyRestart",
+                        (
+                            "pressKeyContinue"
+                            if cls.__RESULT_WIN is True
+                            else "pressKeyRestart"
+                        ),
                     ),
                     linpg.colors.WHITE,
                     linpg.display.get_width() // 80,

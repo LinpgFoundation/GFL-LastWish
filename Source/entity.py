@@ -145,11 +145,11 @@ class EntityGetHurtImage(linpg.Square):
 
     def add(self, characterType: str) -> None:
         if characterType not in self.__CHARACTERS_GET_HURT_IMAGE_DICT:
-            self.__CHARACTERS_GET_HURT_IMAGE_DICT[
-                characterType
-            ] = linpg.images.quickly_load(
-                linpg.Specification.get_directory(
-                    "character_image", "{}_hurt.png".format(characterType)
+            self.__CHARACTERS_GET_HURT_IMAGE_DICT[characterType] = (
+                linpg.images.quickly_load(
+                    linpg.Specification.get_directory(
+                        "character_image", "{}_hurt.png".format(characterType)
+                    )
                 )
             )
 

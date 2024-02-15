@@ -289,9 +289,11 @@ class FriendlyCharacter(BasicEntity):
             if self.__down_time < 0
             else (
                 self.__down_time,
-                self.__DYING_ROUND_LIMIT
-                if self.__down_time <= self.__DYING_ROUND_LIMIT
-                else self.__down_time,
+                (
+                    self.__DYING_ROUND_LIMIT
+                    if self.__down_time <= self.__DYING_ROUND_LIMIT
+                    else self.__down_time
+                ),
                 True,
             )
         )
@@ -519,7 +521,9 @@ class HostileCharacter(BasicEntity):
                     else:
                         actions.append(self.DecisionHolder("move", the_route))
                 else:
-                    err_msg: str = f"A hostile character {self.type} at {self.get_pos()} cannot find a valid path when trying to attack {target}!"
+                    err_msg: str = (
+                        f"A hostile character {self.type} at {self.get_pos()} cannot find a valid path when trying to attack {target}!"
+                    )
                     if linpg.debug.get_developer_mode() is True:
                         raise Exception(err_msg)
                     else:

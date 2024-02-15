@@ -3,7 +3,6 @@ from .character import *
 
 
 class Dolls:
-
     """
     特殊角色的实现
     """

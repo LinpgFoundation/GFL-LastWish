@@ -69,10 +69,6 @@ class MainMenu(linpg.AbstractSystem):
             linpg.display.flip()
         # 主菜单文字
         self.__main_menu_txt: dict = {}
-        # 退出确认窗口
-        self.__exit_confirm_menu: linpg.ConfirmMessageWindow = linpg.ConfirmMessageWindow(
-            linpg.lang.get_text("Global", "tip"), ""
-        )
         # 当前禁用的按钮
         self.__disabled_options: set[str] = set()
         # 加载主菜单文字
@@ -357,23 +353,23 @@ class MainMenu(linpg.AbstractSystem):
         # 是否可以继续游戏了（save文件是否被创建）
         if linpg.saves.any_progress_exists() is True:
             if "0_continue" in self.__disabled_options:
-                self.__main_menu_txt["menu_main"][
-                    "0_continue"
-                ] = linpg.load.resize_when_hovered_text(
-                    linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
-                    linpg.colors.WHITE,
-                    self.__main_menu_txt["menu_main"]["0_continue"].get_pos(),
-                    linpg.font.get_global_font_size("medium"),
+                self.__main_menu_txt["menu_main"]["0_continue"] = (
+                    linpg.load.resize_when_hovered_text(
+                        linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
+                        linpg.colors.WHITE,
+                        self.__main_menu_txt["menu_main"]["0_continue"].get_pos(),
+                        linpg.font.get_global_font_size("medium"),
+                    )
                 )
                 self.__disabled_options.remove("0_continue")
         elif "0_continue" not in self.__disabled_options:
-            self.__main_menu_txt["menu_main"][
-                "0_continue"
-            ] = linpg.load.resize_when_hovered_text(
-                linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
-                linpg.colors.GRAY,
-                self.__main_menu_txt["menu_main"]["0_continue"].get_pos(),
-                linpg.font.get_global_font_size("medium"),
+            self.__main_menu_txt["menu_main"]["0_continue"] = (
+                linpg.load.resize_when_hovered_text(
+                    linpg.lang.get_text("MainMenu", "menu_main", "0_continue"),
+                    linpg.colors.GRAY,
+                    self.__main_menu_txt["menu_main"]["0_continue"].get_pos(),
+                    linpg.font.get_global_font_size("medium"),
+                )
             )
             self.__disabled_options.add("0_continue")
         # 是否创意工坊启用
@@ -381,13 +377,13 @@ class MainMenu(linpg.AbstractSystem):
             "3_workshop" in self.__disabled_options
             and linpg.PersistentVariables.try_get_bool("enable_workshop") is True
         ):
-            self.__main_menu_txt["menu_main"][
-                "3_workshop"
-            ] = linpg.load.resize_when_hovered_text(
-                linpg.lang.get_text("MainMenu", "menu_main", "3_workshop"),
-                linpg.colors.GRAY,
-                self.__main_menu_txt["menu_main"]["3_workshop"].get_pos(),
-                linpg.font.get_global_font_size("medium"),
+            self.__main_menu_txt["menu_main"]["3_workshop"] = (
+                linpg.load.resize_when_hovered_text(
+                    linpg.lang.get_text("MainMenu", "menu_main", "3_workshop"),
+                    linpg.colors.GRAY,
+                    self.__main_menu_txt["menu_main"]["3_workshop"].get_pos(),
+                    linpg.font.get_global_font_size("medium"),
+                )
             )
             self.__disabled_options.remove("3_workshop")
 
@@ -429,9 +425,9 @@ class MainMenu(linpg.AbstractSystem):
         self.__main_menu_txt["menu_workshop_choice"]["map_editor"] = linpg.lang.get_text(
             "General", "map_editor"
         )
-        self.__main_menu_txt["menu_workshop_choice"][
-            "dialog_editor"
-        ] = linpg.lang.get_text("General", "dialog_editor")
+        self.__main_menu_txt["menu_workshop_choice"]["dialog_editor"] = (
+            linpg.lang.get_text("General", "dialog_editor")
+        )
         self.__main_menu_txt["menu_workshop_choice"]["back"] = linpg.lang.get_text(
             "Global", "back"
         )
@@ -439,13 +435,13 @@ class MainMenu(linpg.AbstractSystem):
             screen_size[1] - len(self.__main_menu_txt["menu_workshop_choice"]) * font_size
         ) / 2
         for key, txt in self.__main_menu_txt["menu_workshop_choice"].items():
-            self.__main_menu_txt["menu_workshop_choice"][
-                key
-            ] = linpg.load.resize_when_hovered_text(
-                txt,
-                linpg.colors.WHITE,
-                (txt_location, txt_y),
-                linpg.font.get_global_font_size("medium"),
+            self.__main_menu_txt["menu_workshop_choice"][key] = (
+                linpg.load.resize_when_hovered_text(
+                    txt,
+                    linpg.colors.WHITE,
+                    (txt_location, txt_y),
+                    linpg.font.get_global_font_size("medium"),
+                )
             )
             txt_y += font_size
 
@@ -557,15 +553,12 @@ class MainMenu(linpg.AbstractSystem):
                             )
                         # 退出
                         elif self.__main_menu_txt["menu_main"]["7_exit"].is_hovered():
-                            self.__exit_confirm_menu.update_message(
+                            if linpg.ConfirmationDialogBox(
+                                linpg.lang.get_text("Global", "tip"),
                                 linpg.lang.get_text(
                                     "LeavingWithoutSavingWarning", "exit_confirm"
-                                )
-                            )
-                            if (
-                                self.__exit_confirm_menu.show()
-                                == linpg.ConfirmMessageWindow.YES()
-                            ):
+                                ),
+                            ).show():
                                 GameMode.VIDEO_BACKGROUND.stop()
                                 self.stop()
                     # 选择主线章节

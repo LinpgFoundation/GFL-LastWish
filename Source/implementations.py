@@ -106,9 +106,9 @@ class _CharacterInCommunicationFilterEffect(
                     round(_rect.height * linpg.numbers.convert_percentage(_crop[3])),
                 )
             )
-        linpg.VisualNovelCharacterImageManager.FILTERS[
-            cls.__KEYWORD
-        ] = communicating_filter
+        linpg.VisualNovelCharacterImageManager.FILTERS[cls.__KEYWORD] = (
+            communicating_filter
+        )
 
 
 # 初始化立绘滤镜
@@ -129,7 +129,7 @@ class VisualNovelPlayer(linpg.VisualNovelPlayer):
             linpg.global_variables.remove("currentMode")
 
     def _load_template(self) -> None:
-        self._content.update(
+        self._content.set_data(
             linpg.config.load_file(r"Data/template/chapter_dialogs_example.yaml")
         )
 
@@ -273,9 +273,11 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
                         < _surface.get_height()
                     ):
                         _surface.blit(
-                            self.__range_green
-                            if self.get_map().is_passable(x, y)
-                            else self.__range_red,
+                            (
+                                self.__range_green
+                                if self.get_map().is_passable(x, y)
+                                else self.__range_red
+                            ),
                             (
                                 posTupleTemp[0]
                                 + (
@@ -392,6 +394,6 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
 class VisualNovelEditor(linpg.VisualNovelEditor):
     # 加载默认模板
     def _load_template(self) -> None:
-        self._content.update(
+        self._content.set_data(
             linpg.config.load(r"Data/template/chapter_dialogs_example.yaml", "dialogs")
         )

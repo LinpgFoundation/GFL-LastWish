@@ -847,12 +847,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         )
                         if self._tile_is_hovering is not None:
                             self.enemiesGetAttack.clear()
-                            _attack_coverage_area: list[
-                                tuple[int, int]
-                            ] = self.characterInControl.get_attack_coverage_coordinates(
-                                self._tile_is_hovering[0],
-                                self._tile_is_hovering[1],
-                                self.get_map(),
+                            _attack_coverage_area: list[tuple[int, int]] = (
+                                self.characterInControl.get_attack_coverage_coordinates(
+                                    self._tile_is_hovering[0],
+                                    self._tile_is_hovering[1],
+                                    self.get_map(),
+                                )
                             )
                             if len(_attack_coverage_area) > 0:
                                 RangeSystem.set_positions(4, _attack_coverage_area)
@@ -861,10 +861,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                         self.enemies[enemies].pos in _attack_coverage_area
                                         and self.enemies[enemies].is_alive()
                                     ):
-                                        self.enemiesGetAttack[
-                                            enemies
-                                        ] = self.characterInControl.range_target_in(
-                                            self.enemies[enemies]
+                                        self.enemiesGetAttack[enemies] = (
+                                            self.characterInControl.range_target_in(
+                                                self.enemies[enemies]
+                                            )
                                         )
                     # 显示技能范围
                     elif self.__action_choice == "skill":
@@ -1008,16 +1008,16 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                     the_damage = self.characterInControl.attack(
                                         self.enemies[key]
                                     )
-                                    self.__damage_do_to_characters[
-                                        key
-                                    ] = self._FONT.render(
-                                        "- {} hp".format(the_damage), linpg.colors.RED
+                                    self.__damage_do_to_characters[key] = (
+                                        self._FONT.render(
+                                            "- {} hp".format(the_damage), linpg.colors.RED
+                                        )
                                     )
                                     self.enemies[key].alert(100)
                                 else:
-                                    self.__damage_do_to_characters[
-                                        key
-                                    ] = self._FONT.render("Miss", linpg.colors.RED)
+                                    self.__damage_do_to_characters[key] = (
+                                        self._FONT.render("Miss", linpg.colors.RED)
+                                    )
                                     self.enemies[key].alert(50)
                         elif self.characterInControl.get_imgId(
                             "attack"
@@ -1043,25 +1043,25 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                     self.alliances, self.enemies, self.__skill_target
                                 ).items():
                                     if value > 0:
-                                        self.__damage_do_to_characters[
-                                            key
-                                        ] = self._FONT.render(
-                                            "- {} hp".format(value), linpg.colors.RED
+                                        self.__damage_do_to_characters[key] = (
+                                            self._FONT.render(
+                                                "- {} hp".format(value), linpg.colors.RED
+                                            )
                                         )
                                         self.enemies[key].alert(100)
                                     else:
-                                        self.__damage_do_to_characters[
-                                            key
-                                        ] = self._FONT.render("Miss", linpg.colors.RED)
+                                        self.__damage_do_to_characters[key] = (
+                                            self._FONT.render("Miss", linpg.colors.RED)
+                                        )
                                         self.enemies[key].alert(50)
                             else:
                                 for key, value in self.characterInControl.apply_skill(
                                     self.alliances, self.enemies, self.__skill_target
                                 ).items():
-                                    self.__damage_do_to_characters[
-                                        key
-                                    ] = self._FONT.render(
-                                        "+ {} hp".format(value), linpg.colors.GREEN
+                                    self.__damage_do_to_characters[key] = (
+                                        self._FONT.render(
+                                            "+ {} hp".format(value), linpg.colors.GREEN
+                                        )
                                     )
                         elif self.characterInControl.get_imgId(
                             "skill"
@@ -1256,9 +1256,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 match self.__mission_objectives["type"]:
                     # 歼灭模式
                     case "annihilation":
-                        annihilation_target: Optional[
-                            str | Sequence
-                        ] = self.__mission_objectives.get("target")
+                        annihilation_target: Optional[str | Sequence] = (
+                            self.__mission_objectives.get("target")
+                        )
                         # 检测是否所有敌人都已经被消灭
                         if annihilation_target is None:
                             if len(self.enemies) == 0:
@@ -1325,9 +1325,9 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 ):
                     self.__is_battle_mode = False
                     self.stop()
-                    main_chapter_unlock: Optional[
-                        int
-                    ] = linpg.PersistentVariables.try_get_int("main_chapter_unlock")
+                    main_chapter_unlock: Optional[int] = (
+                        linpg.PersistentVariables.try_get_int("main_chapter_unlock")
+                    )
                     if self._project_name is None:
                         max_unlock: int = max(
                             self._chapter_id,
