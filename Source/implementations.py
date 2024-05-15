@@ -1,4 +1,5 @@
 from typing import Final
+
 from .tbs import *
 
 
@@ -128,11 +129,6 @@ class VisualNovelPlayer(linpg.VisualNovelPlayer):
         else:
             linpg.global_variables.remove("currentMode")
 
-    def _load_template(self) -> None:
-        self._content.set_data(
-            linpg.config.load_file(r"Data/template/chapter_dialogs_example.yaml")
-        )
-
     def _initialize(
         self, chapterType: str, chapterId: int, projectName: Optional[str]
     ) -> None:
@@ -154,6 +150,20 @@ class VisualNovelPlayer(linpg.VisualNovelPlayer):
             linpg.global_variables.set("chapterId", value=0)
             linpg.global_variables.remove("projectName")
             linpg.global_variables.set("saveData", value=_data)
+
+    def _update_scene(self, dialog_id: str) -> None:
+        super()._update_scene(dialog_id)
+        if (
+            self._chapter_type == "main_chapter"
+            and self._content.get_current_dialogue_id() == "chapter_ends_here"
+        ):
+            match self._chapter_id:
+                case 1:
+                    linpg.Achievements.unlock("your_wish_has_been_granted")
+                case 2:
+                    linpg.Achievements.unlock("evacuation_successful")
+                case 3:
+                    linpg.Achievements.unlock("stay_warm_out_there")
 
 
 # 地图编辑器系统
@@ -394,6 +404,71 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
 class VisualNovelEditor(linpg.VisualNovelEditor):
     # 加载默认模板
     def _load_template(self) -> None:
-        self._content.set_data(
-            linpg.config.load(r"Data/template/chapter_dialogs_example.yaml", "dialogs")
+        for sect in (
+            "dialog_after_battle",
+            "dialog_before_battle",
+            "dialog_during_battle",
+        ):
+            self._content.set_dialogues(sect, {"head": self._get_template()})
+        self._content.set_section("dialog_before_battle")
+
+
+# display all achievements that player has obtain
+class AchievementsDisplay:
+    def __init__(self) -> None:
+        self.is_visible: bool = False
+        self.__exit_icon: linpg.Button = linpg.load.button(
+            "<&ui>back.png", (0, 0), (100, 100), 150
         )
+
+    def draw(self, _surface: linpg.ImageSurface) -> None:
+        _surface.blit(linpg.Filters.box_blur(_surface), (0, 0))
+        title_font: linpg.TextSurface = linpg.TextSurface(
+            "", 0, 0, linpg.font.get_global_font_size("small"), linpg.colors.WHITE, True
+        )
+        des_font: linpg.TextSurface = linpg.TextSurface(
+            "", 0, 0, linpg.font.get_global_font_size("small"), linpg.colors.WHITE
+        )
+        theOutlineRect: linpg.Rectangle = linpg.Rectangle(
+            _surface.get_width() // 10,
+            _surface.get_height() // 10,
+            _surface.get_width() * 4 // 5,
+            linpg.font.get_global_font_size("small") * 7,
+        )
+        text_x: int = theOutlineRect.left + linpg.font.get_global_font_size("small") * 2
+        for _achievement in linpg.Achievements.get_list():
+            theOutlineRect.draw_outline(_surface, (0, 0, 0, 50), -1)
+            theOutlineRect.draw_outline(_surface, "white", 8, 5)
+            if linpg.Achievements.has_achieved(_achievement):
+                title_font.set_color(linpg.colors.WHITE)
+                des_font.set_color(linpg.colors.WHITE)
+            else:
+                title_font.set_color(linpg.Colors.LIGHT_GRAY)
+                des_font.set_color(linpg.Colors.LIGHT_GRAY)
+            title_font.set_text(linpg.lang.get_text("Achievements", _achievement, "name"))
+            title_font.display(
+                _surface,
+                (
+                    text_x,
+                    theOutlineRect.top + linpg.font.get_global_font_size("small") * 2,
+                ),
+            )
+            des_font.set_text(
+                linpg.lang.get_text("Achievements", _achievement, "description")
+            )
+            des_font.display(
+                _surface,
+                (
+                    text_x,
+                    theOutlineRect.top + linpg.font.get_global_font_size("small") * 4,
+                ),
+            )
+            theOutlineRect.move_downward(linpg.font.get_global_font_size("small") * 9)
+
+        self.__exit_icon.set_height(_surface.get_height() // 10)
+        self.__exit_icon.set_width(self.__exit_icon.height)
+        self.__exit_icon.set_right(_surface.get_width() * 9 // 10)
+        self.__exit_icon.set_bottom(_surface.get_height() * 9 // 10)
+        self.__exit_icon.draw(_surface)
+        if self.__exit_icon.is_hovered() and linpg.controller.get_event("confirm"):
+            self.is_visible = False

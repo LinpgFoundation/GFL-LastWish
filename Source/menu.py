@@ -4,6 +4,7 @@ from .components import *
 
 # 设置引擎的标准文字大小
 linpg.font.set_global_font("medium", linpg.display.get_width() // 40)
+linpg.font.set_global_font("small", linpg.display.get_width() // 80)
 
 
 # 主菜单系统
@@ -98,6 +99,8 @@ class MainMenu(linpg.AbstractSystem):
         )
         # 初始化返回菜单判定参数
         linpg.global_variables.set("BackToMainMenu", value=False)
+        # display all achievements that player has obtain
+        self.__achievements_display = AchievementsDisplay()
 
     # 当前在Data/workshop文件夹中可以读取的文件夹的名字（font的形式）
     def __reload_workshop_files_list(
@@ -300,16 +303,6 @@ class MainMenu(linpg.AbstractSystem):
                 f"chapter{chapterId}_level_info.yaml",
             ),
         )
-        # 复制视觉小说数据默认模板
-        copyfile(
-            r"Data/template/chapter_dialogs_example.yaml",
-            os.path.join(
-                "Data",
-                "workshop",
-                self.current_selected_workshop_project,
-                f"chapter{chapterId}_dialogs_{linpg.setting.get_language()}.yaml",
-            ),
-        )
         # 复制地图数据默认模板
         copyfile(
             r"Data/template/chapter_map_example.yaml",
@@ -374,36 +367,36 @@ class MainMenu(linpg.AbstractSystem):
             self.__disabled_options.add("0_continue")
         # 是否创意工坊启用
         if (
-            "3_workshop" in self.__disabled_options
+            "2_workshop" in self.__disabled_options
             and linpg.PersistentVariables.try_get_bool("enable_workshop") is True
         ):
-            self.__main_menu_txt["menu_main"]["3_workshop"] = (
+            self.__main_menu_txt["menu_main"]["2_workshop"] = (
                 linpg.load.resize_when_hovered_text(
-                    linpg.lang.get_text("MainMenu", "menu_main", "3_workshop"),
+                    linpg.lang.get_text("MainMenu", "menu_main", "2_workshop"),
                     linpg.colors.GRAY,
-                    self.__main_menu_txt["menu_main"]["3_workshop"].get_pos(),
+                    self.__main_menu_txt["menu_main"]["2_workshop"].get_pos(),
                     linpg.font.get_global_font_size("medium"),
                 )
             )
-            self.__disabled_options.remove("3_workshop")
+            self.__disabled_options.remove("2_workshop")
 
     # 重新加载主菜单文字
     def __reset_menu_text(self, screen_size: tuple) -> None:
         self.__main_menu_txt = linpg.lang.get_texts("MainMenu")
         # 默认不可用的菜单选项
         self.__disabled_options = set(("0_continue",))
-        # 默认不禁用3_workshop
+        # 默认不禁用2_workshop
         if linpg.db.get_bool("DisableWorkshopByDefault"):
-            self.__disabled_options.add("3_workshop")
+            self.__disabled_options.add("2_workshop")
         # 是否启用继续游戏按钮
         if linpg.saves.any_progress_exists() is True:
             self.__disabled_options.remove("0_continue")
         # 是否启用创意工坊按钮
         if (
             linpg.PersistentVariables.try_get_bool("enable_workshop") is True
-            and "3_workshop" in self.__disabled_options
+            and "2_workshop" in self.__disabled_options
         ):
-            self.__disabled_options.remove("3_workshop")
+            self.__disabled_options.remove("2_workshop")
         # 加载主菜单页面的文字设置
         txt_location = screen_size[0] * 2 // 3
         font_size = linpg.font.get_global_font_size("medium") * 2
@@ -497,6 +490,7 @@ class MainMenu(linpg.AbstractSystem):
         if (
             not self.__select_progress_menu.is_visible()
             and not linpg.PauseMenuModuleForGameSystem.OPTION_MENU.is_visible()
+            and not self.__achievements_display.is_visible
         ):
             self.__draw_buttons(screen)
         # 展示设置UI
@@ -543,16 +537,21 @@ class MainMenu(linpg.AbstractSystem):
                             self.__reload_chapter_select_list(screen.get_size())
                             self.menu_type = 1
                         # 创意工坊
-                        elif self.__main_menu_txt["menu_main"]["3_workshop"].is_hovered():
-                            if "3_workshop" not in self.__disabled_options:
+                        elif self.__main_menu_txt["menu_main"]["2_workshop"].is_hovered():
+                            if "2_workshop" not in self.__disabled_options:
                                 self.menu_type = 2
+                        # 成就
+                        elif self.__main_menu_txt["menu_main"][
+                            "3_achievements"
+                        ].is_hovered():
+                            self.__achievements_display.is_visible = True
                         # 设置
-                        elif self.__main_menu_txt["menu_main"]["5_setting"].is_hovered():
+                        elif self.__main_menu_txt["menu_main"]["4_setting"].is_hovered():
                             linpg.PauseMenuModuleForGameSystem.OPTION_MENU.set_visible(
                                 True
                             )
                         # 退出
-                        elif self.__main_menu_txt["menu_main"]["7_exit"].is_hovered():
+                        elif self.__main_menu_txt["menu_main"]["5_exit"].is_hovered():
                             if linpg.ConfirmationDialogBox(
                                 linpg.lang.get_text("Global", "tip"),
                                 linpg.lang.get_text(
@@ -772,3 +771,7 @@ class MainMenu(linpg.AbstractSystem):
             else:
                 self.__loading_screen.set_alpha(max(0, alpha_t - 2))
                 screen.blit(self.__loading_screen, linpg.ORIGIN)
+
+        # show achievement menu
+        if self.__achievements_display.is_visible:
+            self.__achievements_display.draw(screen)

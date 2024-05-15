@@ -1,3 +1,13 @@
+Achievements:
+  evacuation_successful:
+    description: 完成第二章
+    name: 成功撤離
+  stay_warm_out_there:
+    description: 完成第三章
+    name: 保持溫暖
+  your_wish_has_been_granted:
+    description: 完成第一章
+    name: 您的願望已經實現
 Battle_UI:
   bullets: 備彈
   currentRound: '當前回合: {}'
@@ -33,9 +43,10 @@ MainMenu:
   menu_main:
     0_continue: 繼續遊戲
     1_chooseChapter: 選擇章節
-    3_workshop: 創意工坊
-    5_setting: 設置
-    7_exit: 退出
+    2_workshop: 創意工坊
+    3_achievements: 成就
+    4_setting: 設置
+    5_exit: 退出
   menu_workshop_choice:
     0_play: 遊玩
   other:

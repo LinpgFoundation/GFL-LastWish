@@ -1,3 +1,13 @@
+Achievements:
+  evacuation_successful:
+    description: Finish Chapter 2
+    name: Evacuation successful
+  stay_warm_out_there:
+    description: Finish Chapter 3
+    name: Stay warm out there
+  your_wish_has_been_granted:
+    description: Finish Chapter 1
+    name: Your wish has been granted
 Battle_UI:
   bullets: bullets
   currentRound: 'Current Round: {}'
@@ -28,9 +38,10 @@ MainMenu:
   menu_main:
     0_continue: Continue
     1_chooseChapter: Select Chapter
-    3_workshop: Workshop
-    5_setting: Setting
-    7_exit: Exit
+    2_workshop: Workshop
+    3_achievements: Achievements
+    4_setting: Setting
+    5_exit: Exit
   menu_workshop_choice:
     0_play: Play
   other:
