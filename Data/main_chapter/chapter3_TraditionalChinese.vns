@@ -92,7 +92,7 @@ sv98:
 
 [hide]*
 
-[block]
+[end]
 
 [label]sf_notice_asval
 [display]guard.png
@@ -107,7 +107,7 @@ sv98:
 sv98:
 - 該死，得趕緊把asval救出來，不然鐵血的增援來了就麻煩了
 
-[block]
+[end]
 
 [label]asval_saved
 [display]sv98.png
