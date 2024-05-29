@@ -394,7 +394,7 @@ decoration:
 - id: tree:1
   x: 23
   y: 17
-dialogs: {}
+dialogues: {}
 entities:
   GriffinKryuger:
     asval_0:

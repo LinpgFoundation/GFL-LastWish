@@ -1,6 +1,6 @@
 import time
 from collections import deque
-from typing import Any
+from typing import Any, Final
 from enum import IntEnum, auto
 
 from .dolls import *
@@ -616,11 +616,11 @@ class RangeSystem:
     __areas: tuple[list[tuple[int, int]], ...] = ([], [], [], [], [])
     # 用于表示范围的方框图片
     __images: tuple[linpg.StaticImage, ...] = (
-        linpg.load.static_image(r"<&ui>range_green.png"),
-        linpg.load.static_image(r"<&ui>range_red.png"),
-        linpg.load.static_image(r"<&ui>range_yellow.png"),
-        linpg.load.static_image(r"<&ui>range_blue.png"),
-        linpg.load.static_image(r"<&ui>range_orange.png"),
+        linpg.load.static_image(r"<@ui>range_green.png"),
+        linpg.load.static_image(r"<@ui>range_red.png"),
+        linpg.load.static_image(r"<@ui>range_yellow.png"),
+        linpg.load.static_image(r"<@ui>range_blue.png"),
+        linpg.load.static_image(r"<@ui>range_orange.png"),
     )
     # 是否不要画出用于表示范围的方块
     __is_visible: bool = True
@@ -989,3 +989,75 @@ class ScoreBoard:
                     rating_text_y,
                 ),
             )
+
+
+# 雪花片
+class Snow(linpg.Coordinate):
+    def __init__(self, _id: int, _size: int, _speed: int, _x: int, _y: int):
+        super().__init__(_x, _y)
+        self.id: Final[int] = _id
+        self.size: Final[int] = _size
+        self.speed: Final[int] = _speed
+
+    def move(self, speed_unit: int) -> None:
+        self.move_left(self.speed * speed_unit * linpg.display.get_delta_time() // 100)
+        self.move_downward(
+            self.speed * speed_unit * linpg.display.get_delta_time() // 100
+        )
+
+
+# 天气系统
+class WeatherSystem:
+    def __init__(self) -> None:
+        self.__initialized: bool = False
+        self.__items: tuple[Snow, ...] = tuple()
+        self.__img_tuple: tuple = tuple()
+        self.__speed_unit: int = 0
+
+    # 初始化
+    def init(self, weather: str, entityNum: int = 50) -> None:
+        self.__initialized = True
+        _temp: linpg.ImageSurface | tuple = linpg.SpriteImage(
+            "<@env>" + weather + ".png"
+        ).get(weather)
+        if isinstance(_temp, tuple):
+            self.__img_tuple = _temp
+        else:
+            raise RuntimeError("The images for weather has to be in collection!")
+        self.__items = tuple(
+            [
+                Snow(
+                    linpg.numbers.get_random_int(0, len(self.__img_tuple) - 1),
+                    linpg.numbers.get_random_int(5, 10),
+                    linpg.numbers.get_random_int(1, 30),
+                    linpg.numbers.get_random_int(1, linpg.display.get_width() * 3 // 2),
+                    linpg.numbers.get_random_int(1, linpg.display.get_height()),
+                )
+                for _ in range(entityNum)
+            ]
+        )
+
+    # 查看初始化状态
+    def get_init(self) -> bool:
+        return self.__initialized
+
+    # 画出
+    def draw(self, _surface: linpg.ImageSurface, perBlockWidth: linpg.number) -> None:
+        if not self.__initialized:
+            raise RuntimeError(
+                "You need to initialize the weather system before using it."
+            )
+        self.__speed_unit = int(perBlockWidth / 15)
+        for item in self.__items:
+            if 0 <= item.x < _surface.get_width() and 0 <= item.y < _surface.get_height():
+                _surface.blit(
+                    linpg.images.resize(
+                        self.__img_tuple[item.id],
+                        (perBlockWidth / item.size, perBlockWidth / item.size),
+                    ),
+                    item.pos,
+                )
+            item.move(self.__speed_unit)
+            if item.x <= 0 or item.y >= _surface.get_height():
+                item.set_top(linpg.numbers.get_random_int(-50, 0))
+                item.set_left(linpg.numbers.get_random_int(0, _surface.get_width() * 2))

@@ -185,11 +185,11 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
         super()._init_ui()
         # 绿色方块/方块标准
         self.__range_green = linpg.Images.load(
-            "<&ui>range_green.png", (self.get_map().tile_width, None)
+            "<@ui>range_green.png", (self.get_map().tile_width, None)
         )
         self.__range_green.set_alpha(150)
         self.__range_red = linpg.Images.load(
-            "<&ui>range_red.png", (self.get_map().tile_width, None)
+            "<@ui>range_red.png", (self.get_map().tile_width, None)
         )
         self.__range_red.set_alpha(150)
 

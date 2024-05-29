@@ -85,6 +85,8 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             int(black_curtain.get_height() * 0.051),
         )
         self.__frame_based_detection: set[str] = set()
+        # 天气系统
+        self.__weather_system: WeatherSystem = WeatherSystem()
 
     """关键重写或实现"""
 
@@ -326,7 +328,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         # 展示场景装饰物
         self.get_map().display_decoration(screen, tuple(charactersPos))
         # 展示天气
-        self._weather_system.draw(screen, self.get_map().tile_size)
+        self.__weather_system.draw(screen, self.get_map().tile_size)
         # 展示所有角色Ui
         if self.__is_battle_mode is True or not self._is_any_dialog_playing():
             # 角色UI
@@ -372,7 +374,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
 
     def __start_loading(self, _data: dict) -> None:
         # 初始化剧情模块
-        self._init_dialog(dict(_data["dialogs"].get("data", {})))
+        self._init_dialog(dict(_data["dialogues"].get("data", {})))
         # 章节标题显示
         levelInfo: dict = self._get_level_info()
         LoadingTitle.update(
@@ -439,10 +441,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     "Assets", "sound", "environment", "{}.ogg".format(_data["weather"])
                 )
             )
-            self._weather_system.init(_data["weather"])
+            self.__weather_system.init(_data["weather"])
         # 加载对话信息
         self.__dialog_dictionary.clear()
-        self.__dialog_dictionary.update(_data["dialogs"].get("dictionary", {}))
+        self.__dialog_dictionary.update(_data["dialogues"].get("dictionary", {}))
         # 开始加载关卡
         super()._process_data(_data)
         # 重新计算光亮区域
