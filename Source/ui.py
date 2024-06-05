@@ -312,7 +312,7 @@ class SelectMenu(linpg.GameObjectsDictContainer):
             # 如果按钮没有初始化，则应该立刻初始化按钮
             if self.__need_update is True:
                 selectButtonBase = linpg.images.smoothly_resize(
-                    self.selectButtonImg, (round(fontSize * 5), fontSize * 26 // 10)
+                    self.selectButtonImg, (fontSize * 5, fontSize * 26 // 10)
                 )
                 small_font_size: int = fontSize * 75 // 100
                 selectMenuTxtDict: dict = linpg.lang.get_texts("SelectMenu")
@@ -347,36 +347,36 @@ class SelectMenu(linpg.GameObjectsDictContainer):
                         ),
                     )
                 self.__need_update = False
-            selectButtonBaseWidth = round(fontSize * 5)
+            selectButtonBaseWidth = fontSize * 5
             # 攻击按钮 - 左
-            txt_tempX: int = int(location["xStart"] - selectButtonBaseWidth * 6 // 10)
+            txt_tempX: int = int(location["xStart"]) - selectButtonBaseWidth * 6 // 10
             txt_tempY: int = int(location["yStart"])
             if linpg.is_hovering(self.get("attack")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "attack"
             screen.blit(self.get("attack")["button"], (txt_tempX, txt_tempY))
             # 移动按钮 - 右
-            txt_tempX = int(location["xEnd"] - selectButtonBaseWidth * 4 // 10)
+            txt_tempX = int(location["xEnd"]) - selectButtonBaseWidth * 4 // 10
             # txt_tempY 与攻击按钮一致
             if linpg.is_hovering(self.get("move")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "move"
             screen.blit(self.get("move")["button"], (txt_tempX, txt_tempY))
             # 换弹按钮 - 下
-            txt_tempX = int(location["xStart"] + selectButtonBaseWidth * 5 // 10)
-            txt_tempY = int(location["yEnd"] - selectButtonBaseWidth * 25 // 100)
+            txt_tempX = int(location["xStart"]) + selectButtonBaseWidth * 5 // 10
+            txt_tempY = int(location["yEnd"]) - selectButtonBaseWidth * 25 // 100
             if linpg.is_hovering(self.get("reload")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "reload"
             screen.blit(self.get("reload")["button"], (txt_tempX, txt_tempY))
             # 技能按钮 - 上
             if kind != "HOC":
                 # txt_tempX与换弹按钮一致
-                txt_tempY = int(location["yStart"] - selectButtonBaseWidth * 7 // 10)
+                txt_tempY = int(location["yStart"]) - selectButtonBaseWidth * 7 // 10
                 if linpg.is_hovering(self.get("skill")["button"], (txt_tempX, txt_tempY)):
                     self._item_being_hovered = "skill"
                 screen.blit(self.get("skill")["button"], (txt_tempX, txt_tempY))
             # 救助队友
             if len(friendsCanSave) > 0:
-                txt_tempX = int(location["xStart"] - selectButtonBaseWidth * 6 // 10)
-                txt_tempY = int(location["yStart"] - selectButtonBaseWidth * 7 // 10)
+                txt_tempX = int(location["xStart"]) - selectButtonBaseWidth * 6 // 10
+                txt_tempY = int(location["yStart"]) - selectButtonBaseWidth * 7 // 10
                 if linpg.is_hovering(
                     self.get("rescue")["button"], (txt_tempX, txt_tempY)
                 ):
@@ -384,8 +384,8 @@ class SelectMenu(linpg.GameObjectsDictContainer):
                 screen.blit(self.get("rescue")["button"], (txt_tempX, txt_tempY))
             # 互动
             if len(thingsCanReact) > 0:
-                txt_tempX = int(location["xEnd"] - selectButtonBaseWidth * 4 // 10)
-                txt_tempY = int(location["yStart"] - selectButtonBaseWidth * 7 // 10)
+                txt_tempX = int(location["xEnd"]) - selectButtonBaseWidth * 4 // 10
+                txt_tempY = int(location["yStart"]) - selectButtonBaseWidth * 7 // 10
                 if linpg.is_hovering(
                     self.get("interact")["button"], (txt_tempX, txt_tempY)
                 ):
@@ -1046,7 +1046,7 @@ class WeatherSystem:
             raise RuntimeError(
                 "You need to initialize the weather system before using it."
             )
-        self.__speed_unit = int(perBlockWidth / 15)
+        self.__speed_unit = perBlockWidth // 15
         for item in self.__items:
             if 0 <= item.x < _surface.get_width() and 0 <= item.y < _surface.get_height():
                 _surface.blit(

@@ -73,16 +73,16 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
             0,
             0,
             0,
-            int(black_curtain.get_height() * 0.05),
+            black_curtain.get_height() * 5 // 100,
         )
         self.__down_black_curtain: linpg.MovableStaticImage = linpg.MovableStaticImage(
             black_curtain,
             0,
             linpg.display.get_height(),
             0,
-            int(linpg.display.get_height() - black_curtain.get_height()),
+            linpg.display.get_height() - black_curtain.get_height(),
             0,
-            int(black_curtain.get_height() * 0.051),
+            black_curtain.get_height() * 51 // 1000,
         )
         self.__frame_based_detection: set[str] = set()
         # 天气系统
@@ -121,10 +121,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
         # 加载结束回合的按钮
         self.__end_round_button = linpg.load.static_image(
             r"Assets/image/UI/end_round_button.png",
-            (0, linpg.display.get_height() * 0.8),
+            (0, linpg.display.get_height() * 4 // 5),
             (self.__end_round_txt.get_width() * 2, self.__end_round_txt.get_height() * 3),
         )
-        self.__end_round_button.set_right(linpg.display.get_width() * 0.95)
+        self.__end_round_button.set_right(linpg.display.get_width() * 95 // 100)
         # 加载当前回合提示的文字
         self.__update_current_round_text()
 
@@ -495,7 +495,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 self.__battle_info[i],
                 (
                     screen.get_width() / 20,
-                    screen.get_height() * 0.75
+                    screen.get_height() * 3 // 4
                     + self.__battle_info[i].get_height() * 1.2 * i,
                 ),
             )
@@ -508,7 +508,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     temp_seconde,
                     (
                         screen.get_width() / 20 + self.__battle_info[i].get_width(),
-                        screen.get_height() * 0.75
+                        screen.get_height() * 3 // 4
                         + self.__battle_info[i].get_height() * 1.2,
                     ),
                 )
@@ -781,12 +781,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         ):
                             self._screen_to_move_speed_x = screen.get_width() // 5 - tempX
                         elif (
-                            tempX > screen.get_width() * 0.8
+                            tempX > screen.get_width() * 4 // 5
                             and self.get_map().get_local_x()
                             >= self.get_map().column * self.get_map().tile_width * -1
                         ):
-                            self._screen_to_move_speed_x = int(
-                                screen.get_width() * 0.8 - tempX
+                            self._screen_to_move_speed_x = (
+                                screen.get_width() * 4 // 5 - tempX
                             )
                     if self._screen_to_move_speed_y is None:
                         if (
@@ -797,12 +797,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 screen.get_height() // 5 - tempY
                             )
                         elif (
-                            tempY > screen.get_height() * 0.8
+                            tempY > screen.get_height() * 4 // 5
                             and self.get_map().get_local_y()
                             >= self.get_map().row * self.get_map().tile_height * -1
                         ):
                             self._screen_to_move_speed_y = int(
-                                screen.get_height() * 0.8 - tempY
+                                screen.get_height() * 4 // 5 - tempY
                             )
                 # 显示攻击/移动/技能范围
                 if not RangeSystem.get_visible() and self.characterGetClick is not None:
@@ -1159,12 +1159,12 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 # 显示选择菜单
                 self.selectMenuUI.draw(
                     screen,
-                    round(self.get_map().tile_size / 10),
+                    self.get_map().tile_size // 10,
                     {
                         "xStart": the_coord[0],
                         "xEnd": the_coord[0] + self.get_map().tile_size,
                         "yStart": the_coord[1],
-                        "yEnd": the_coord[1] + self.get_map().tile_size * 0.5,
+                        "yEnd": the_coord[1] + self.get_map().tile_size // 2,
                     },
                     self.characterInControl.kind,
                     self.friendsCanSave,
@@ -1215,7 +1215,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         for key in self.alliances:
                             self.alliances[key].reset_action_point()
                             if not self.alliances[key].is_detected:
-                                value_reduce = int(self.alliances[key].detection * 0.3)
+                                value_reduce = self.alliances[key].detection * 3 // 10
                                 if value_reduce < 15:
                                     value_reduce = 15
                                 self.alliances[key].notice(0 - value_reduce)
@@ -1401,7 +1401,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                 linpg.coordinates.add(
                     self.__end_round_button.pos,
                     (
-                        int(self.__end_round_button.get_width() * 0.35),
+                        self.__end_round_button.get_width() * 35 // 100,
                         (
                             self.__end_round_button.get_height()
                             - self.__end_round_txt.get_height()

@@ -26,12 +26,12 @@ class LoadingModule:
         self.__loading_icon = linpg.load.gif(
             r"Assets/image/UI/sv98_walking.gif",
             (
-                int(linpg.display.get_width() * 0.7),
-                int(linpg.display.get_height() * 0.83),
+                linpg.display.get_width() * 7 // 10,
+                linpg.display.get_height() * 83 // 100,
             ),
             (
-                int(linpg.display.get_width() * 0.003 * 15),
-                int(linpg.display.get_width() * 0.003 * 21),
+                linpg.display.get_width() * 45 // 1000,
+                linpg.display.get_width() * 63 // 1000,
             ),
             60,
         )
@@ -109,7 +109,7 @@ class LoadingModule:
         if self.__now_loading is not None:
             screen.blit(
                 self.__now_loading,
-                (screen.get_width() * 0.75, screen.get_height() * 0.9),
+                (screen.get_width() * 3 // 4, screen.get_height() * 9 // 10),
             )
         if self.__loading_icon is not None:
             self.__loading_icon.draw(screen)

@@ -105,7 +105,7 @@ class MainMenu(linpg.AbstractSystem):
 
     # 当前在Data/workshop文件夹中可以读取的文件夹的名字（font的形式）
     def __reload_workshop_files_list(
-        self, screen_size: tuple, createMode: bool = False
+        self, screen_size: tuple[int, int], createMode: bool = False
     ) -> None:
         self.workshop_files.clear()
         self.workshop_files_text.clear()
@@ -126,13 +126,10 @@ class MainMenu(linpg.AbstractSystem):
             )
         self.workshop_files.append(linpg.lang.get_text("Global", "back"))
         txt_location: int = screen_size[0] * 2 // 3
-        txt_y: int = int(
-            (
-                screen_size[1]
-                - len(self.workshop_files) * linpg.font.get_global_font_size("medium") * 2
-            )
-            / 2
-        )
+        txt_y: int = (
+            screen_size[1]
+            - len(self.workshop_files) * linpg.font.get_global_font_size("medium") * 2
+        ) // 2
         for i in range(len(self.workshop_files)):
             self.workshop_files[i] = linpg.load.resize_when_hovered_text(
                 self.workshop_files[i],
