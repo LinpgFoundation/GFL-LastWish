@@ -52,7 +52,7 @@ class RoundSwitch:
         )
         self.baseImg.set_alpha(0)
         self.x: int = -window_x
-        self.y: int = int((window_y - self.baseImg.get_height()) / 2)
+        self.y: int = (window_y - self.baseImg.get_height()) // 2
         self.y2 = self.y + self.baseImg.get_height() - self.lineRedDown.get_height()
         self.baseAlphaUp = True
         self.TxtAlphaUp = True
@@ -312,17 +312,16 @@ class SelectMenu(linpg.GameObjectsDictContainer):
             # 如果按钮没有初始化，则应该立刻初始化按钮
             if self.__need_update is True:
                 selectButtonBase = linpg.images.smoothly_resize(
-                    self.selectButtonImg, (round(fontSize * 5), round(fontSize * 2.6))
+                    self.selectButtonImg, (round(fontSize * 5), fontSize * 26 // 10)
                 )
-                big_font_size: int = int(fontSize)
-                small_font_size: int = int(fontSize * 0.75)
+                small_font_size: int = fontSize * 75 // 100
                 selectMenuTxtDict: dict = linpg.lang.get_texts("SelectMenu")
-                padding: int = int(fontSize / 10)
+                padding: int = fontSize // 10
                 for key in self.keys():
                     button_data_t = self.get(key)
                     button_data_t["button"] = selectButtonBase.copy()
                     txt_temp = linpg.font.render(
-                        selectMenuTxtDict[key], "black", big_font_size
+                        selectMenuTxtDict[key], "black", fontSize
                     )
                     txt_temp2 = linpg.font.render(
                         button_data_t["ap_text"], "black", small_font_size
@@ -350,34 +349,34 @@ class SelectMenu(linpg.GameObjectsDictContainer):
                 self.__need_update = False
             selectButtonBaseWidth = round(fontSize * 5)
             # 攻击按钮 - 左
-            txt_tempX: int = int(location["xStart"] - selectButtonBaseWidth * 0.6)
+            txt_tempX: int = int(location["xStart"] - selectButtonBaseWidth * 6 // 10)
             txt_tempY: int = int(location["yStart"])
             if linpg.is_hovering(self.get("attack")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "attack"
             screen.blit(self.get("attack")["button"], (txt_tempX, txt_tempY))
             # 移动按钮 - 右
-            txt_tempX = int(location["xEnd"] - selectButtonBaseWidth * 0.4)
+            txt_tempX = int(location["xEnd"] - selectButtonBaseWidth * 4 // 10)
             # txt_tempY 与攻击按钮一致
             if linpg.is_hovering(self.get("move")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "move"
             screen.blit(self.get("move")["button"], (txt_tempX, txt_tempY))
             # 换弹按钮 - 下
-            txt_tempX = int(location["xStart"] + selectButtonBaseWidth * 0.5)
-            txt_tempY = int(location["yEnd"] - selectButtonBaseWidth * 0.25)
+            txt_tempX = int(location["xStart"] + selectButtonBaseWidth * 5 // 10)
+            txt_tempY = int(location["yEnd"] - selectButtonBaseWidth * 25 // 100)
             if linpg.is_hovering(self.get("reload")["button"], (txt_tempX, txt_tempY)):
                 self._item_being_hovered = "reload"
             screen.blit(self.get("reload")["button"], (txt_tempX, txt_tempY))
             # 技能按钮 - 上
             if kind != "HOC":
                 # txt_tempX与换弹按钮一致
-                txt_tempY = int(location["yStart"] - selectButtonBaseWidth * 0.7)
+                txt_tempY = int(location["yStart"] - selectButtonBaseWidth * 7 // 10)
                 if linpg.is_hovering(self.get("skill")["button"], (txt_tempX, txt_tempY)):
                     self._item_being_hovered = "skill"
                 screen.blit(self.get("skill")["button"], (txt_tempX, txt_tempY))
             # 救助队友
             if len(friendsCanSave) > 0:
-                txt_tempX = int(location["xStart"] - selectButtonBaseWidth * 0.6)
-                txt_tempY = int(location["yStart"] - selectButtonBaseWidth * 0.7)
+                txt_tempX = int(location["xStart"] - selectButtonBaseWidth * 6 // 10)
+                txt_tempY = int(location["yStart"] - selectButtonBaseWidth * 7 // 10)
                 if linpg.is_hovering(
                     self.get("rescue")["button"], (txt_tempX, txt_tempY)
                 ):
@@ -385,8 +384,8 @@ class SelectMenu(linpg.GameObjectsDictContainer):
                 screen.blit(self.get("rescue")["button"], (txt_tempX, txt_tempY))
             # 互动
             if len(thingsCanReact) > 0:
-                txt_tempX = int(location["xEnd"] - selectButtonBaseWidth * 0.4)
-                txt_tempY = int(location["yStart"] - selectButtonBaseWidth * 0.7)
+                txt_tempX = int(location["xEnd"] - selectButtonBaseWidth * 4 // 10)
+                txt_tempY = int(location["yStart"] - selectButtonBaseWidth * 7 // 10)
                 if linpg.is_hovering(
                     self.get("interact")["button"], (txt_tempX, txt_tempY)
                 ):
@@ -406,11 +405,11 @@ class CharacterInfoBoard:
     # 画出信息板
     def draw(self, _surface: linpg.ImageSurface, _character: FriendlyCharacter) -> None:
         # 外间隙
-        _margin: int = int(_surface.get_width() * 0.03)
+        _margin: int = _surface.get_width() * 3 // 100
         # 如果信息板还没更新，则应该先更新再画出
         if self.__board is None:
-            _width: int = int(_surface.get_width() * 0.15)
-            _height: int = int(_width * 0.75)
+            _width: int = _surface.get_width() * 15 // 100
+            _height: int = _width * 75 // 100
             _back_rect_margin: int = _margin // 10
             # 新建一个透明图层用于渲染
             self.__board = linpg.Surfaces.transparent(
@@ -474,7 +473,7 @@ class CharacterInfoBoard:
                     ),
                     (
                         linpg.Font.render("AP: ", linpg.colors.BLACK, _height // 10),
-                        (_padding_x, _info_rect.y + _width * 0.225),
+                        (_padding_x, _info_rect.y + _width * 225 // 1000),
                     ),
                 )
             )
@@ -482,8 +481,8 @@ class CharacterInfoBoard:
             _bar: linpg.SimpleRectPointsBar = linpg.SimpleRectPointsBar(
                 _info_rect.x + _width // 4,
                 _info_rect.y + _width // 10,
-                int(_width * 0.7),
-                int(_height * 0.13),
+                _width * 7 // 10,
+                _height * 13 // 100,
                 (135, 190, 100, 255),
                 linpg.Colors.GRAY,
                 linpg.Colors.WHITE,
@@ -492,7 +491,7 @@ class CharacterInfoBoard:
             _bar.set_max_point(_character.max_hp)
             _bar.set_current_point(_character.current_hp)
             _bar.draw(self.__board)
-            _bar.set_top(_info_rect.y + _width * 0.225)
+            _bar.set_top(_info_rect.y + _width * 225 // 1000)
             _bar.set_color((235, 125, 50, 255))
             _bar.set_max_point(_character.max_action_point)
             _bar.set_current_point(_character.current_action_point)
@@ -507,7 +506,7 @@ class CharacterInfoBoard:
                 (_width // 3, _width // 3),
             )
             character_image_dest: tuple[int, int] = (
-                _info_rect.y + int(_padding * 1.5),
+                _info_rect.y + _padding * 15 // 10,
                 _info_rect.bottom - _padding - character_image.get_height(),
             )
             linpg.Draw.rect(
@@ -530,9 +529,9 @@ class CharacterInfoBoard:
                 _current_bullets_text,
                 (
                     _info_rect.x
-                    + _info_rect.width * 0.7
+                    + _info_rect.width * 7 // 10
                     - _current_bullets_text.get_width(),
-                    _info_rect.y + _info_rect.height * 0.5,
+                    _info_rect.y + _info_rect.height * 5 // 10,
                 ),
             )
             self.__board.blit(
@@ -542,8 +541,8 @@ class CharacterInfoBoard:
                     _height // 10,
                 ),
                 (
-                    _info_rect.x + _info_rect.width * 0.7,
-                    _info_rect.y + _info_rect.height * 0.7,
+                    _info_rect.x + _info_rect.width * 7 // 10,
+                    _info_rect.y + _info_rect.height * 7 // 10,
                 ),
             )
         # 画出信息板
@@ -578,7 +577,7 @@ class LoadingTitle:
         cls.title_chapterNum = linpg.StaticImage(
             title_chapterNum,
             (linpg.display.get_width() - title_chapterNum.get_width()) // 2,
-            linpg.display.get_height() * 0.37,
+            linpg.display.get_height() * 37 // 100,
         )
         title_chapterName = linpg.font.render(
             chapterTitle_txt, "white", linpg.display.get_width() // 38
@@ -586,7 +585,7 @@ class LoadingTitle:
         cls.title_chapterName = linpg.StaticImage(
             title_chapterName,
             (linpg.display.get_width() - title_chapterName.get_width()) // 2,
-            linpg.display.get_height() * 0.46,
+            linpg.display.get_height() * 46 // 100,
         )
         title_description = linpg.font.render(
             chapterDesc_txt, "white", linpg.display.get_width() // 76
@@ -594,7 +593,7 @@ class LoadingTitle:
         cls.title_description = linpg.StaticImage(
             title_description,
             (linpg.display.get_width() - title_description.get_width()) // 2,
-            linpg.display.get_height() * 0.6,
+            linpg.display.get_height() * 6 // 10,
         )
 
     @classmethod
@@ -900,7 +899,7 @@ class ScoreBoard:
                 cls.__TITLE_TXT = linpg.font.render(
                     cls.__TITLE, linpg.colors.WHITE, cls.__CONTENT_FONT_BIG
                 )
-            title_text_y: int = cls.__INFO_BOX_RECT.y + int(cls.__PADDING * 2)
+            title_text_y: int = cls.__INFO_BOX_RECT.y + cls.__PADDING * 2
             title_text_shadow: tuple[int, int, int, int] = (
                 cls.__INFO_BOX_RECT.x + cls.__PADDING - 2,
                 title_text_y + cls.__PADDING // 2,

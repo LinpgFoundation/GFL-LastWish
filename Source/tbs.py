@@ -776,12 +776,10 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                     )
                     if self._screen_to_move_speed_x is None:
                         if (
-                            tempX < screen.get_width() * 0.2
+                            tempX < screen.get_width() // 5
                             and self.get_map().get_local_x() <= 0
                         ):
-                            self._screen_to_move_speed_x = int(
-                                screen.get_width() * 0.2 - tempX
-                            )
+                            self._screen_to_move_speed_x = screen.get_width() // 5 - tempX
                         elif (
                             tempX > screen.get_width() * 0.8
                             and self.get_map().get_local_x()
@@ -792,11 +790,11 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                             )
                     if self._screen_to_move_speed_y is None:
                         if (
-                            tempY < screen.get_height() * 0.2
+                            tempY < screen.get_height() // 5
                             and self.get_map().get_local_y() <= 0
                         ):
-                            self._screen_to_move_speed_y = int(
-                                screen.get_height() * 0.2 - tempY
+                            self._screen_to_move_speed_y = (
+                                screen.get_height() // 5 - tempY
                             )
                         elif (
                             tempY > screen.get_height() * 0.8
@@ -1223,7 +1221,7 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                                 self.alliances[key].notice(0 - value_reduce)
                         for key in self.enemies:
                             if not self.enemies[key].is_alert:
-                                value_reduce = int(self.enemies[key].vigilance * 0.2)
+                                value_reduce = self.enemies[key].vigilance // 5
                                 if value_reduce < 10:
                                     value_reduce = 10
                                 self.enemies[key].alert(0 - value_reduce)
@@ -1255,42 +1253,42 @@ class TurnBasedBattleSystem(AbstractBattleSystemWithInGameDialog):
                         break
             """检测胜利条件"""
             if self.__is_battle_mode is True:
-                match self.__mission_objectives["type"]:
-                    # 歼灭模式
-                    case "annihilation":
-                        annihilation_target: Optional[str | Sequence] = (
-                            self.__mission_objectives.get("target")
-                        )
-                        # 检测是否所有敌人都已经被消灭
-                        if annihilation_target is None:
-                            if len(self.enemies) == 0:
-                                self.characterGetClick = None
-                                RangeSystem.set_visible(False)
-                                self.__whose_round = WhoseRound.result_win
-                            else:
-                                pass
-                        # 检测是否特定敌人已经被消灭
-                        elif (
-                            isinstance(annihilation_target, str)
-                            and annihilation_target not in self.enemies
-                        ):
-                            self.__whose_round = WhoseRound.result_win
-                        # 检测是否所有给定的目标都已经被歼灭
-                        elif isinstance(annihilation_target, Sequence):
-                            find_one = False
-                            for key in self.alliances:
-                                if key in annihilation_target:
-                                    find_one = True
-                                    break
-                            if not find_one:
-                                self.__whose_round = WhoseRound.result_win
-                    # 营救模式
-                    case "rescue":
-                        rescue_target: str = str(self.__mission_objectives["target"])
-                        if self.alliances[rescue_target].current_hp > 0:
+                mission_objective_t: str = self.__mission_objectives["type"]
+                # 歼灭模式
+                if mission_objective_t == "annihilation":
+                    annihilation_target: Optional[str | Sequence] = (
+                        self.__mission_objectives.get("target")
+                    )
+                    # 检测是否所有敌人都已经被消灭
+                    if annihilation_target is None:
+                        if len(self.enemies) == 0:
                             self.characterGetClick = None
                             RangeSystem.set_visible(False)
                             self.__whose_round = WhoseRound.result_win
+                        else:
+                            pass
+                    # 检测是否特定敌人已经被消灭
+                    elif (
+                        isinstance(annihilation_target, str)
+                        and annihilation_target not in self.enemies
+                    ):
+                        self.__whose_round = WhoseRound.result_win
+                    # 检测是否所有给定的目标都已经被歼灭
+                    elif isinstance(annihilation_target, Sequence):
+                        find_one = False
+                        for key in self.alliances:
+                            if key in annihilation_target:
+                                find_one = True
+                                break
+                        if not find_one:
+                            self.__whose_round = WhoseRound.result_win
+                # 营救模式
+                elif mission_objective_t == "rescue":
+                    rescue_target: str = str(self.__mission_objectives["target"])
+                    if self.alliances[rescue_target].current_hp > 0:
+                        self.characterGetClick = None
+                        RangeSystem.set_visible(False)
+                        self.__whose_round = WhoseRound.result_win
             """开发使用"""
             if linpg.global_variables.try_get_str("endBattleAs") == "win":
                 self.__whose_round = WhoseRound.result_win

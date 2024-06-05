@@ -33,7 +33,7 @@ class MainMenu(linpg.AbstractSystem):
                 _item,
                 (
                     screen.get_width() - screen.get_width() / 32 - _item.get_width(),
-                    screen.get_height() * 0.9 - font_size * index * 1.5,
+                    screen.get_height() * 9 // 10 - font_size * index * 15 // 10,
                 ),
             )
             index += 1
@@ -52,14 +52,15 @@ class MainMenu(linpg.AbstractSystem):
                 _item,
                 (
                     screen.get_width() // 10,
-                    screen.get_height() * 0.15 + _item.get_height() * index * 1.5,
+                    screen.get_height() * 15 // 100
+                    + _item.get_height() * index * 15 // 10,
                 ),
             )
             index += 1
         # 渲染载入页面需要的数据
         self.__loading_screen.blit(
             linpg.font.render(linpg.lang.get_text("presentBy"), "white", font_size),
-            (font_size * 2, screen.get_height() * 0.9),
+            (font_size * 2, screen.get_height() * 9 // 10),
         )
         """开始加载"""
         # 载入页面 - 渐入
@@ -522,226 +523,216 @@ class MainMenu(linpg.AbstractSystem):
         if linpg.PauseMenuModuleForGameSystem.OPTION_MENU.is_hidden():
             if linpg.controller.get_event("confirm") is True:
                 self.click_button_sound.play()
-                match self.menu_type:
-                    # 主菜单
-                    case 0:
-                        # 继续游戏
-                        if self.__main_menu_txt["menu_main"]["0_continue"].is_hovered():
-                            self.__select_progress_menu.set_visible(True)
-                            linpg.controller.set_event("confirm", False)
-                        # 选择章节
-                        elif self.__main_menu_txt["menu_main"][
-                            "1_chooseChapter"
-                        ].is_hovered():
-                            # 加载菜单章节选择页面的文字
-                            self.__reload_chapter_select_list(screen.get_size())
-                            self.menu_type = 1
-                        # 创意工坊
-                        elif self.__main_menu_txt["menu_main"]["2_workshop"].is_hovered():
-                            if "2_workshop" not in self.__disabled_options:
-                                self.menu_type = 2
-                        # 成就
-                        elif self.__main_menu_txt["menu_main"][
-                            "3_achievements"
-                        ].is_hovered():
-                            self.__achievements_display.is_visible = True
-                        # 设置
-                        elif self.__main_menu_txt["menu_main"]["4_setting"].is_hovered():
-                            linpg.PauseMenuModuleForGameSystem.OPTION_MENU.set_visible(
-                                True
-                            )
-                        # 退出
-                        elif self.__main_menu_txt["menu_main"]["5_exit"].is_hovered():
-                            if linpg.ConfirmationDialogBox(
-                                linpg.lang.get_text("Global", "tip"),
-                                linpg.lang.get_text(
-                                    "LeavingWithoutSavingWarning", "exit_confirm"
-                                ),
-                            ).show():
-                                GameMode.VIDEO_BACKGROUND.stop()
-                                self.stop()
-                    # 选择主线章节
-                    case 1:
-                        if self.chapter_select[-1].is_hovered():
-                            self.menu_type = 0
-                        else:
-                            for i in range(len(self.chapter_select) - 1):
-                                # 章节选择
-                                if self.chapter_select[i].is_hovered():
-                                    # 设置参数
-                                    linpg.global_variables.set(
-                                        "currentMode", value="dialog"
-                                    )
-                                    linpg.global_variables.set(
-                                        "section", value="dialog_before_battle"
-                                    )
-                                    linpg.global_variables.set(
-                                        "chapterType", value="main_chapter"
-                                    )
-                                    linpg.global_variables.set("chapterId", value=i + 1)
-                                    linpg.global_variables.set("projectName", value=None)
-                                    # 开始播放场景
-                                    self.__loop_scenes(screen)
-                                    break
-                    # 选择创意工坊选项
-                    case 2:
-                        if self.__main_menu_txt["menu_workshop_choice"][
-                            "0_play"
-                        ].is_hovered():
-                            self.__reload_workshop_files_list(screen.get_size(), False)
-                            self.menu_type = 3
-                        elif self.__main_menu_txt["menu_workshop_choice"][
-                            "map_editor"
-                        ].is_hovered():
-                            self.__reload_workshop_files_list(screen.get_size(), True)
-                            self.menu_type = 4
-                        elif self.__main_menu_txt["menu_workshop_choice"][
-                            "dialog_editor"
-                        ].is_hovered():
-                            self.__reload_workshop_files_list(screen.get_size(), True)
-                            self.menu_type = 5
-                        elif self.__main_menu_txt["menu_workshop_choice"][
-                            "back"
-                        ].is_hovered():
-                            self.menu_type = 0
-                    # 创意工坊-选择想要游玩的合集
-                    case 3:
-                        if self.workshop_files[-1].is_hovered():
+                # 主菜单
+                if self.menu_type == 0:
+                    # 继续游戏
+                    if self.__main_menu_txt["menu_main"]["0_continue"].is_hovered():
+                        self.__select_progress_menu.set_visible(True)
+                        linpg.controller.set_event("confirm", False)
+                    # 选择章节
+                    elif self.__main_menu_txt["menu_main"][
+                        "1_chooseChapter"
+                    ].is_hovered():
+                        # 加载菜单章节选择页面的文字
+                        self.__reload_chapter_select_list(screen.get_size())
+                        self.menu_type = 1
+                    # 创意工坊
+                    elif self.__main_menu_txt["menu_main"]["2_workshop"].is_hovered():
+                        if "2_workshop" not in self.__disabled_options:
                             self.menu_type = 2
-                        else:
-                            for i in range(len(self.workshop_files) - 1):
-                                # 章节选择
-                                if self.workshop_files[i].is_hovered():
-                                    self.current_selected_workshop_project = (
-                                        self.workshop_files_text[i]
-                                    )
-                                    self.__reload_chapter_select_list(
-                                        screen.get_size(), "workshop"
-                                    )
-                                    self.menu_type = 6
-                                    break
-                    # 创意工坊-选择想要编辑地图的合集
-                    case 4:
-                        # 新建合集
-                        if self.workshop_files[0].is_hovered():
-                            self.__create_new_project()
-                            self.__reload_workshop_files_list(screen.get_size(), True)
-                        # 返回创意工坊选项菜单
-                        elif self.workshop_files[-1].is_hovered():
-                            self.menu_type = 2
-                        else:
-                            for i in range(1, len(self.workshop_files) - 1):
-                                # 章节选择
-                                if self.workshop_files[i].is_hovered():
-                                    self.current_selected_workshop_project = (
-                                        self.workshop_files_text[i - 1]
-                                    )
-                                    self.__reload_chapter_select_list(
-                                        screen.get_size(), "workshop", True
-                                    )
-                                    self.menu_type = 7
-                                    break
-                    # 创意工坊-选择想要编辑对话的合集
-                    case 5:
-                        # 新建合集
-                        if self.workshop_files[0].is_hovered():
-                            self.__create_new_project()
-                            self.__reload_workshop_files_list(screen.get_size(), True)
-                        # 返回创意工坊选项菜单
-                        elif self.workshop_files[-1].is_hovered():
-                            self.menu_type = 2
-                        else:
-                            for i in range(1, len(self.workshop_files) - 1):
-                                # 章节选择
-                                if self.workshop_files[i].is_hovered():
-                                    self.current_selected_workshop_project = (
-                                        self.workshop_files_text[i - 1]
-                                    )
-                                    self.__reload_chapter_select_list(
-                                        screen.get_size(), "workshop", True
-                                    )
-                                    self.menu_type = 8
-                                    break
-                    # 创意工坊-选择当前合集想要游玩的关卡
-                    case 6:
-                        if self.chapter_select[-1].is_hovered():
-                            self.menu_type = 3
-                        else:
-                            for i in range(len(self.chapter_select) - 1):
-                                # 章节选择
-                                if self.chapter_select[i].is_hovered():
-                                    # 设置参数
-                                    linpg.global_variables.set(
-                                        "currentMode", value="dialog"
-                                    )
-                                    linpg.global_variables.set(
-                                        "section", value="dialog_before_battle"
-                                    )
-                                    linpg.global_variables.set(
-                                        "chapterType", value="workshop"
-                                    )
-                                    linpg.global_variables.set("chapterId", value=i + 1)
-                                    linpg.global_variables.set(
-                                        "projectName",
-                                        value=self.current_selected_workshop_project,
-                                    )
-                                    # 开始播放场景
-                                    self.__loop_scenes(screen)
-                                    break
-                    # 创意工坊-选择当前合集想要编辑地图的关卡
-                    case 7:
-                        if self.chapter_select[0].is_hovered():
-                            self.__create_new_chapter()
-                            self.__reload_chapter_select_list(
-                                screen.get_size(), "workshop", True
-                            )
-                        elif self.chapter_select[-1].is_hovered():
-                            self.menu_type = 4
-                        else:
-                            for i in range(1, len(self.chapter_select) - 1):
-                                # 章节选择
-                                if self.chapter_select[i].is_hovered():
-                                    GameMode.mapEditor(
-                                        screen,
-                                        "workshop",
-                                        i,
-                                        self.current_selected_workshop_project,
-                                    )
-                                    self.__restart_background()
-                                    break
-                    # 创意工坊-选择当前合集想要编辑对话的关卡
-                    case 8:
-                        if self.chapter_select[0].is_hovered():
-                            self.__create_new_chapter()
-                            self.__reload_chapter_select_list(
-                                screen.get_size(), "workshop", True
-                            )
-                        elif self.chapter_select[-1].is_hovered():
-                            self.menu_type = 5
-                        else:
-                            for i in range(1, len(self.chapter_select) - 1):
-                                # 章节选择
-                                if self.chapter_select[i].is_hovered():
-                                    GameMode.dialogEditor(
-                                        screen,
-                                        "workshop",
-                                        i,
-                                        "dialog_before_battle",
-                                        self.current_selected_workshop_project,
-                                    )
-                                    self.__restart_background()
-                                    break
-            if linpg.controller.get_event("back") is True:
-                match self.menu_type:
-                    # 选择主线章节 / 创意工坊选项
-                    case 1 | 2:
+                    # 成就
+                    elif self.__main_menu_txt["menu_main"]["3_achievements"].is_hovered():
+                        self.__achievements_display.is_visible = True
+                    # 设置
+                    elif self.__main_menu_txt["menu_main"]["4_setting"].is_hovered():
+                        linpg.PauseMenuModuleForGameSystem.OPTION_MENU.set_visible(True)
+                    # 退出
+                    elif self.__main_menu_txt["menu_main"]["5_exit"].is_hovered():
+                        if linpg.ConfirmationDialogBox(
+                            linpg.lang.get_text("Global", "tip"),
+                            linpg.lang.get_text(
+                                "LeavingWithoutSavingWarning", "exit_confirm"
+                            ),
+                        ).show():
+                            GameMode.VIDEO_BACKGROUND.stop()
+                            self.stop()
+                # 选择主线章节
+                elif self.menu_type == 1:
+                    if self.chapter_select[-1].is_hovered():
                         self.menu_type = 0
-                    # 创意工坊-选择想要游玩/编辑的合集
-                    case 3 | 4 | 5:
+                    else:
+                        for i in range(len(self.chapter_select) - 1):
+                            # 章节选择
+                            if self.chapter_select[i].is_hovered():
+                                # 设置参数
+                                linpg.global_variables.set("currentMode", value="dialog")
+                                linpg.global_variables.set(
+                                    "section", value="dialog_before_battle"
+                                )
+                                linpg.global_variables.set(
+                                    "chapterType", value="main_chapter"
+                                )
+                                linpg.global_variables.set("chapterId", value=i + 1)
+                                linpg.global_variables.set("projectName", value=None)
+                                # 开始播放场景
+                                self.__loop_scenes(screen)
+                                break
+                # 选择创意工坊选项
+                elif self.menu_type == 2:
+                    if self.__main_menu_txt["menu_workshop_choice"][
+                        "0_play"
+                    ].is_hovered():
+                        self.__reload_workshop_files_list(screen.get_size(), False)
+                        self.menu_type = 3
+                    elif self.__main_menu_txt["menu_workshop_choice"][
+                        "map_editor"
+                    ].is_hovered():
+                        self.__reload_workshop_files_list(screen.get_size(), True)
+                        self.menu_type = 4
+                    elif self.__main_menu_txt["menu_workshop_choice"][
+                        "dialog_editor"
+                    ].is_hovered():
+                        self.__reload_workshop_files_list(screen.get_size(), True)
+                        self.menu_type = 5
+                    elif self.__main_menu_txt["menu_workshop_choice"][
+                        "back"
+                    ].is_hovered():
+                        self.menu_type = 0
+                # 创意工坊-选择想要游玩的合集
+                elif self.menu_type == 3:
+                    if self.workshop_files[-1].is_hovered():
                         self.menu_type = 2
-                    # 创意工坊-选择当前合集想要游玩/编辑的关卡
-                    case 6 | 7 | 8:
-                        self.menu_type -= 3
+                    else:
+                        for i in range(len(self.workshop_files) - 1):
+                            # 章节选择
+                            if self.workshop_files[i].is_hovered():
+                                self.current_selected_workshop_project = (
+                                    self.workshop_files_text[i]
+                                )
+                                self.__reload_chapter_select_list(
+                                    screen.get_size(), "workshop"
+                                )
+                                self.menu_type = 6
+                                break
+                # 创意工坊-选择想要编辑地图的合集
+                elif self.menu_type == 4:
+                    # 新建合集
+                    if self.workshop_files[0].is_hovered():
+                        self.__create_new_project()
+                        self.__reload_workshop_files_list(screen.get_size(), True)
+                    # 返回创意工坊选项菜单
+                    elif self.workshop_files[-1].is_hovered():
+                        self.menu_type = 2
+                    else:
+                        for i in range(1, len(self.workshop_files) - 1):
+                            # 章节选择
+                            if self.workshop_files[i].is_hovered():
+                                self.current_selected_workshop_project = (
+                                    self.workshop_files_text[i - 1]
+                                )
+                                self.__reload_chapter_select_list(
+                                    screen.get_size(), "workshop", True
+                                )
+                                self.menu_type = 7
+                                break
+                # 创意工坊-选择想要编辑对话的合集
+                elif self.menu_type == 5:
+                    # 新建合集
+                    if self.workshop_files[0].is_hovered():
+                        self.__create_new_project()
+                        self.__reload_workshop_files_list(screen.get_size(), True)
+                    # 返回创意工坊选项菜单
+                    elif self.workshop_files[-1].is_hovered():
+                        self.menu_type = 2
+                    else:
+                        for i in range(1, len(self.workshop_files) - 1):
+                            # 章节选择
+                            if self.workshop_files[i].is_hovered():
+                                self.current_selected_workshop_project = (
+                                    self.workshop_files_text[i - 1]
+                                )
+                                self.__reload_chapter_select_list(
+                                    screen.get_size(), "workshop", True
+                                )
+                                self.menu_type = 8
+                                break
+                # 创意工坊-选择当前合集想要游玩的关卡
+                elif self.menu_type == 6:
+                    if self.chapter_select[-1].is_hovered():
+                        self.menu_type = 3
+                    else:
+                        for i in range(len(self.chapter_select) - 1):
+                            # 章节选择
+                            if self.chapter_select[i].is_hovered():
+                                # 设置参数
+                                linpg.global_variables.set("currentMode", value="dialog")
+                                linpg.global_variables.set(
+                                    "section", value="dialog_before_battle"
+                                )
+                                linpg.global_variables.set(
+                                    "chapterType", value="workshop"
+                                )
+                                linpg.global_variables.set("chapterId", value=i + 1)
+                                linpg.global_variables.set(
+                                    "projectName",
+                                    value=self.current_selected_workshop_project,
+                                )
+                                # 开始播放场景
+                                self.__loop_scenes(screen)
+                                break
+                # 创意工坊-选择当前合集想要编辑地图的关卡
+                elif self.menu_type == 7:
+                    if self.chapter_select[0].is_hovered():
+                        self.__create_new_chapter()
+                        self.__reload_chapter_select_list(
+                            screen.get_size(), "workshop", True
+                        )
+                    elif self.chapter_select[-1].is_hovered():
+                        self.menu_type = 4
+                    else:
+                        for i in range(1, len(self.chapter_select) - 1):
+                            # 章节选择
+                            if self.chapter_select[i].is_hovered():
+                                GameMode.mapEditor(
+                                    screen,
+                                    "workshop",
+                                    i,
+                                    self.current_selected_workshop_project,
+                                )
+                                self.__restart_background()
+                                break
+                # 创意工坊-选择当前合集想要编辑对话的关卡
+                elif self.menu_type == 8:
+                    if self.chapter_select[0].is_hovered():
+                        self.__create_new_chapter()
+                        self.__reload_chapter_select_list(
+                            screen.get_size(), "workshop", True
+                        )
+                    elif self.chapter_select[-1].is_hovered():
+                        self.menu_type = 5
+                    else:
+                        for i in range(1, len(self.chapter_select) - 1):
+                            # 章节选择
+                            if self.chapter_select[i].is_hovered():
+                                GameMode.dialogEditor(
+                                    screen,
+                                    "workshop",
+                                    i,
+                                    "dialog_before_battle",
+                                    self.current_selected_workshop_project,
+                                )
+                                self.__restart_background()
+                                break
+            if linpg.controller.get_event("back") is True:
+                # 选择主线章节 / 创意工坊选项
+                if self.menu_type in (1, 2):
+                    self.menu_type = 0
+                # 创意工坊-选择想要游玩/编辑的合集
+                elif self.menu_type in (3, 4, 5):
+                    self.menu_type = 2
+                # 创意工坊-选择当前合集想要游玩/编辑的关卡
+                elif self.menu_type in (6, 7, 8):
+                    self.menu_type -= 3
 
         # 存档选择系统
         if self.__select_progress_menu.is_visible():

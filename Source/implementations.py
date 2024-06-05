@@ -157,13 +157,12 @@ class VisualNovelPlayer(linpg.VisualNovelPlayer):
             self._chapter_type == "main_chapter"
             and self._content.get_current_dialogue_id() == "chapter_ends_here"
         ):
-            match self._chapter_id:
-                case 1:
-                    linpg.Achievements.unlock("your_wish_has_been_granted")
-                case 2:
-                    linpg.Achievements.unlock("evacuation_successful")
-                case 3:
-                    linpg.Achievements.unlock("stay_warm_out_there")
+            if self._chapter_id == 1:
+                linpg.Achievements.unlock("your_wish_has_been_granted")
+            elif self._chapter_id == 2:
+                linpg.Achievements.unlock("evacuation_successful")
+            elif self._chapter_id == 3:
+                linpg.Achievements.unlock("stay_warm_out_there")
 
 
 # 地图编辑器系统
@@ -217,54 +216,52 @@ class MapEditor(LoadingModule, linpg.AbstractMapEditor):
     def _display_entities(self, _surface: linpg.ImageSurface) -> None:
         # 展示范围
         if self._tile_is_hovering is not None and self._no_container_is_hovered is True:
-            match self._modify_mode:
-                case self._MODIFY.DELETE_ENTITY:
-                    self.__draw_range(_surface, self.__range_red)
-                case self._MODIFY.ADD_ROW_ABOVE:
-                    self.__draw_range(_surface, self.__range_red)
-                    for i in range(self.get_map().column):
-                        self.__draw_range(
-                            _surface,
-                            self.__range_green,
-                            (i, self._tile_is_hovering[1] - 1),
-                        )
-                case self._MODIFY.ADD_ROW_BELOW:
-                    self.__draw_range(_surface, self.__range_red)
-                    for i in range(self.get_map().column):
-                        self.__draw_range(
-                            _surface,
-                            self.__range_green,
-                            (i, self._tile_is_hovering[1] + 1),
-                        )
-                case self._MODIFY.ADD_COLUMN_BEFORE:
-                    self.__draw_range(_surface, self.__range_red)
-                    for i in range(self.get_map().row):
-                        self.__draw_range(
-                            _surface,
-                            self.__range_green,
-                            (self._tile_is_hovering[0] - 1, i),
-                        )
-                case self._MODIFY.ADD_COLUMN_AFTER:
-                    self.__draw_range(_surface, self.__range_red)
-                    for i in range(self.get_map().row):
-                        self.__draw_range(
-                            _surface,
-                            self.__range_green,
-                            (self._tile_is_hovering[0] + 1, i),
-                        )
-                case self._MODIFY.DELETE_ROW:
-                    for i in range(self.get_map().column):
-                        self.__draw_range(
-                            _surface, self.__range_red, (i, self._tile_is_hovering[1])
-                        )
-                case self._MODIFY.DELETE_COLUMN:
-                    for i in range(self.get_map().row):
-                        self.__draw_range(
-                            _surface, self.__range_red, (self._tile_is_hovering[0], i)
-                        )
-                case _:
-                    if self.is_any_object_selected() is True:
-                        self.__draw_range(_surface, self.__range_green)
+            if self._modify_mode == self._MODIFY.DELETE_ENTITY:
+                self.__draw_range(_surface, self.__range_red)
+            elif self._modify_mode == self._MODIFY.ADD_ROW_ABOVE:
+                self.__draw_range(_surface, self.__range_red)
+                for i in range(self.get_map().column):
+                    self.__draw_range(
+                        _surface,
+                        self.__range_green,
+                        (i, self._tile_is_hovering[1] - 1),
+                    )
+            elif self._modify_mode == self._MODIFY.ADD_ROW_BELOW:
+                self.__draw_range(_surface, self.__range_red)
+                for i in range(self.get_map().column):
+                    self.__draw_range(
+                        _surface,
+                        self.__range_green,
+                        (i, self._tile_is_hovering[1] + 1),
+                    )
+            elif self._modify_mode == self._MODIFY.ADD_COLUMN_BEFORE:
+                self.__draw_range(_surface, self.__range_red)
+                for i in range(self.get_map().row):
+                    self.__draw_range(
+                        _surface,
+                        self.__range_green,
+                        (self._tile_is_hovering[0] - 1, i),
+                    )
+            elif self._modify_mode == self._MODIFY.ADD_COLUMN_AFTER:
+                self.__draw_range(_surface, self.__range_red)
+                for i in range(self.get_map().row):
+                    self.__draw_range(
+                        _surface,
+                        self.__range_green,
+                        (self._tile_is_hovering[0] + 1, i),
+                    )
+            elif self._modify_mode == self._MODIFY.DELETE_ROW:
+                for i in range(self.get_map().column):
+                    self.__draw_range(
+                        _surface, self.__range_red, (i, self._tile_is_hovering[1])
+                    )
+            elif self._modify_mode == self._MODIFY.DELETE_COLUMN:
+                for i in range(self.get_map().row):
+                    self.__draw_range(
+                        _surface, self.__range_red, (self._tile_is_hovering[0], i)
+                    )
+            elif self.is_any_object_selected() is True:
+                self.__draw_range(_surface, self.__range_green)
         if (
             self._show_barrier_mask is True
             or self._modify_mode is self._MODIFY.DELETE_ENTITY
@@ -470,5 +467,9 @@ class AchievementsDisplay:
         self.__exit_icon.set_right(_surface.get_width() * 9 // 10)
         self.__exit_icon.set_bottom(_surface.get_height() * 9 // 10)
         self.__exit_icon.draw(_surface)
-        if self.__exit_icon.is_hovered() and linpg.controller.get_event("confirm"):
+        if (
+            self.__exit_icon.is_hovered()
+            and linpg.controller.get_event("confirm")
+            or linpg.controller.get_event("back")
+        ):
             self.is_visible = False
