@@ -347,7 +347,7 @@ class SelectMenu(linpg.GameObjectsDictContainer):
                         ),
                     )
                 self.__need_update = False
-            selectButtonBaseWidth = fontSize * 5
+            selectButtonBaseWidth: int = fontSize * 5
             # 攻击按钮 - 左
             txt_tempX: int = int(location["xStart"]) - selectButtonBaseWidth * 6 // 10
             txt_tempY: int = int(location["yStart"])
