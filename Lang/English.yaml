@@ -41,7 +41,8 @@ MainMenu:
     2_workshop: Workshop
     3_achievements: Achievements
     4_setting: Setting
-    5_exit: Exit
+    5_more_info: More Information
+    6_exit: Exit
   menu_workshop_choice:
     0_play: Play
   other:

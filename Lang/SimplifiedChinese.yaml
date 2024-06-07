@@ -46,7 +46,8 @@ MainMenu:
     2_workshop: 创意工坊
     3_achievements: 成就
     4_setting: 设置
-    5_exit: 退出
+    5_more_info: 更多信息
+    6_exit: 退出
   menu_workshop_choice:
     0_play: 游玩
   other:

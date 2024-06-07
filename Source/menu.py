@@ -1,3 +1,4 @@
+import webbrowser
 from shutil import copyfile
 
 from .components import *
@@ -543,8 +544,13 @@ class MainMenu(linpg.AbstractSystem):
                     # 设置
                     elif self.__main_menu_txt["menu_main"]["4_setting"].is_hovered():
                         linpg.PauseMenuModuleForGameSystem.OPTION_MENU.set_visible(True)
+                    # 更多信息
+                    elif self.__main_menu_txt["menu_main"]["5_more_info"].is_hovered():
+                        webbrowser.open(
+                            "https://github.com/LinpgFoundation/GFL-LastWish", 2
+                        )
                     # 退出
-                    elif self.__main_menu_txt["menu_main"]["5_exit"].is_hovered():
+                    elif self.__main_menu_txt["menu_main"]["6_exit"].is_hovered():
                         if linpg.ConfirmationDialogBox(
                             linpg.lang.get_text("Global", "tip"),
                             linpg.lang.get_text(
