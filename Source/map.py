@@ -10,9 +10,9 @@ linpg.display.init()
 
 # 加载版本信息
 _VERSION_INFO: dict = {
-    "recommended_linpg_patch": 0,
+    "recommended_linpg_patch": 1,
     "recommended_linpg_revision": 8,
-    "revision": 2,
+    "revision": 4,
     "version": 1,
 }
 
