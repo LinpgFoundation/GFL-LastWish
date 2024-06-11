@@ -365,7 +365,7 @@ class BasicEntity(linpg.Entity):
             pos,
             (
                 linpg.TileMapImagesModule.TILE_TEMPLE_WIDTH // 2,
-                int(linpg.TileMapImagesModule.TILE_TEMPLE_HEIGHT * 2.1),
+                linpg.TileMapImagesModule.TILE_TEMPLE_HEIGHT * 21 // 10,
             ),
         )
         return super().render(_surface, pos, size, action, alpha)

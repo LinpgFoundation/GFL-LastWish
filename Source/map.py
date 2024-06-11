@@ -10,9 +10,9 @@ linpg.display.init()
 
 # 加载版本信息
 _VERSION_INFO: dict = {
-    "recommended_linpg_patch": 0,
+    "recommended_linpg_patch": 1,
     "recommended_linpg_revision": 8,
-    "revision": 2,
+    "revision": 4,
     "version": 1,
 }
 
@@ -216,13 +216,13 @@ class AdvancedTileMap(linpg.AbstractTileMap):
     # 新增装饰物
     def add_decoration(self, _item: dict | linpg.DecorationObject) -> None:
         if isinstance(_item, dict):
-            match str(_item["id"]).split(":")[0]:
-                case "campfire":
-                    super().add_decoration(CampfireObject.from_dict(_item))
-                    return
-                case "chest":
-                    super().add_decoration(ChestObject.from_dict(_item))
-                    return
+            item_t: str = str(_item["id"]).split(":")[0]
+            if item_t == "campfire":
+                super().add_decoration(CampfireObject.from_dict(_item))
+                return
+            elif item_t == "chest":
+                super().add_decoration(ChestObject.from_dict(_item))
+                return
         super().add_decoration(_item)
 
     # 把装饰物画到屏幕上

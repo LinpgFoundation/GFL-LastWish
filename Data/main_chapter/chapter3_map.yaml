@@ -579,7 +579,7 @@ decoration:
 - id: fence:17
   x: 24
   y: 19
-dialogs:
+dialogues:
   data:
     asval_saved:
     - dialog: asval_saved

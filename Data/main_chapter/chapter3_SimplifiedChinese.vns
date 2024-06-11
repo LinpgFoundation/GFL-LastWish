@@ -92,7 +92,7 @@ sv98:
 
 [hide]*
 
-[block]
+[end]
 
 [label]sf_notice_asval
 [display]guard.png
@@ -107,7 +107,7 @@ sv98:
 sv98:
 - 该死，得赶紧把asval救出来，不然铁血的增援来了就麻烦了
 
-[block]
+[end]
 
 [label]asval_saved
 [display]sv98.png
@@ -179,7 +179,7 @@ sv98:
 [bgi]null
 [hide]*
 
+[label]chapter_ends_here
+
 sv98:
 - 我一定会，平平安安地回来
-
-[end]

@@ -913,7 +913,7 @@ decoration:
 - id: tree:1
   x: 27
   y: 30
-dialogs:
+dialogues:
   data:
     initial_dialog:
     - changePos:

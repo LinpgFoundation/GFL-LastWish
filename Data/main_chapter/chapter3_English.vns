@@ -89,9 +89,9 @@ null:
 - But after only a few minutes, I realized that my efforts were in vain.
 - I only found the pilot's body in the wreckage of the plane, but no sign of his teammates.
 null:
-- "Maybe they just got thrown off before the crash." I tought to myself.
+- "Maybe they just got thrown off before the crash." I thought to myself.
 null:
-- But I knew that if I didn't find them soon, they'd be in greate danger.
+- But I knew that if I didn't find them soon, they'd be in great danger.
 - So I got moving and ran in the direction of the helicopter before it crashed.
 
 [section]dialog_during_battle
@@ -103,7 +103,7 @@ sv98:
 
 [hide]*
 
-[block]
+[end]
 
 [label]sf_notice_asval
 [display]guard.png
@@ -119,7 +119,7 @@ sv98:
 - Damn it, we have to get asval out of there quickly
 - or we'll be in trouble when Sangvis Ferri's reinforcements arrive
 
-[block]
+[end]
 
 [label]asval_saved
 [display]sv98.png
@@ -198,8 +198,8 @@ sv98:
 [bgi]null
 [hide]*
 
+[label]chapter_ends_here
+
 sv98:
 - I promise to return unscathed and in good spirits.
 - You can count on it.
-
-[end]

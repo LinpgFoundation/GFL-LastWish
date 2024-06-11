@@ -308,7 +308,7 @@ class FriendlyCharacter(BasicEntity):
             # 根据参数调整图片
             self.__beNoticedImage.set_size(eyeImgWidth, eyeImgHeight)
             self.__beNoticedImage.set_pos(
-                blit_pos[0] + MAP_POINTER.tile_width * 0.51 - numberX,
+                blit_pos[0] + MAP_POINTER.tile_width * 51 // 100 - numberX,
                 blit_pos[1] - numberY,
             )
             self.__beNoticedImage.draw(surface)
@@ -417,7 +417,7 @@ class HostileCharacter(BasicEntity):
             # 根据参数调整图片
             self.__vigilanceImage.set_size(eyeImgWidth, eyeImgHeight)
             self.__vigilanceImage.set_pos(
-                blit_pos[0] + MAP_POINTER.tile_width * 0.51 - numberX,
+                blit_pos[0] + MAP_POINTER.tile_width * 51 // 100 - numberX,
                 blit_pos[1] - numberY,
             )
             self.__vigilanceImage.draw(surface)

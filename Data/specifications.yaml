@@ -1,3 +1,10 @@
+Achievements:
+  evacuation_successful:
+    id: 2
+  stay_warm_out_there:
+    id: 3
+  your_wish_has_been_granted:
+    id: 1
 ConfigFileType: yaml
 DefaultFont:
   font: MicrosoftYaHei-2

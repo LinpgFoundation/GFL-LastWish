@@ -45,33 +45,33 @@ pp1901:
 asval:
 - Come on, pp1901, you don't have to be that serious.
 pp1901:
-- It's not serious, it's rigorous!
+- It's not about being serious, it's about being precise!
 sv98:
 - Asval, didn't I tell you to wake me up before sunset?
 asval:
-- Ah, sorry, I saw you sleeping so well so I did not want to wake you up.
+- Sorry, I saw you sleeping so well so I did not want to wake you up.
 sv98:
-- Hey, let's not talk about that.
+- Let's not dwell on that.
 - Asval, did you get any messages from the commander?
 asval:
 - Ah, this is not urgent.
 pp1901:
 - The commander has sent the latest orders an hour ago.
 sv98:
-- Is the commander ready for a new attack?
+- Is the commander preparing for a new attack?
 pp1901:
-- On the contrary, the commander has already made plans to retreat.
-- The temporary stronghold has entered a stalemate phase.
+- Actually, the commander has decided we need to retreat.
+- We're at a stalemate.
 pp1901:
 - Since the coordinates were leaked,
-- the main forces of the Sangvis Ferri are flocking to where the commander at.
+- the Sangvis Ferri are flocking to where the commander at.
 sv98:
-- Well, then we should unite with the commander as soon as possible.
+- Well, then we should regroup with the commander as soon as possible.
 asval:
-- The commander said that the helicopter are on its way to pick us up.
-- They are expected to be here within 2 hours.
+- The commander said that a helicopter is on its way to pick us up.
+- It is expected to be here within 2 hours.
 sv98:
-- All right, let's pack up and get ready to evacuate!
+- Alright, let's pack up and get ready to evacuate!
 
 [section]dialog_during_battle
 
@@ -81,13 +81,13 @@ asval:
 - Oh no, the Sangvis Ferri has blocked the way forward.
 - It's going to be difficult to get around.
 sv98:
-- Damn it, I'm short on ammunition as well.
+- I'm short on ammunition as well.
 pp1901:
-- Sv98, Sangvis Ferri seems to be guarding something.
+- Sv98, it seems the Sangvis Ferri are guarding something.
 
 [hide]*
 
-[block]
+[end]
 
 [label]noticeSupply
 
@@ -95,20 +95,20 @@ pp1901:
 
 sv98:
 - Looks like a supply crate.
-- This seems to be a temporary stronghold, so hopefully the main force is not here.
+- This seems to be a temporary stronghold, so hopefully not heavily guarded.
 gsh18:
-- Sv98, I think we should clear this stronghold before the rescue helicopters arrive,
+- Sv98, I think we should secure this area before the rescue helicopter arrives,
 - so that the helicopters can land safely.
 sv98:
-- You're right. Get ready, team!
+- Agreed. Get ready, team!
 
 [hide]*
 
 null:
-- Currently sv98 doesn't have any bullets and can't attack.
-- Sneak in quietly or let your teammates draw fire, it's your choice.
+- Currently sv98 is out of ammo and can't attack.
+- Stealthily approach or let your teammates draw fire, it's your choice.
 
-[block]
+[end]
 
 [label]gotSupply
 
@@ -117,7 +117,7 @@ null:
 sv98:
 - I got the supplies!
 Tip:
-- Please remember to reload!
+- Remember to reload!
 
 
 [section]dialog_after_battle
@@ -129,50 +129,55 @@ null:
 
 Pilot:
 - 10th Logistics Team, I have your location in sight.
-- About to land, be ready to board.
+- Preparing for landing.
+- Be ready to board.
 
 [display]sv98.png
 
 sv98:
-- Sisters, stop saving ammunition!
-- Just through everything out, it's time to get out!
+- Sisters, no need to save ammunition!
+- Just through everything out, it's time to go!
 Everyone else:
-- Got it!
+- Understood!
 
 [hide]*
 
 null:
 - As the smoke fills the air, everyone quickly boards the helicopter.
-- In the roar of engines and the sound of bullets hitting steel plates,
-- the helicopter quickly flew away from the airspace controlled by the Sangvis Ferri.
+- Amidst the roar of engines and the sound of bullets hitting the steel plates,
+- the helicopter swiftly exits Sangvis Ferri's airspace.
 
 [scene]Transport.png
 [bgm]Casual.ogg
 [display]sv98.png gsh18.png asval.png pp1901.png
 
 null:
-- (inside the cabin)
+- (Inside the cabin)
 gsh18:
-- Ah, finally got away, I thought I was going to be dead again.
+- Ah, that was close.
+- I thought I was done for.
 pp1901:
 - Gsh18, dolls don't die.
-- If you got caught by the Sangvis Ferri, we'll have a new gsh18 in a few days.
+- If you got caught by the Sangvis Ferri,
+- we'll have a new gsh18 report for duty within days.
 gsh18:
 - Eh...!!!?
 sv98:
-- Pp1901, I don't think it's a fun thing to say.
+- Pp1901, that's not very comforting to hear.
 pp1901:
-- Ah... Sorry. But then again, when was the last time we backed up the mind cloud?
-- It seems like we haven't backed up our minds since the mission started.
+- Apologies. But then again, when was the last time we backed up the neural cloud?
+- It seems like we haven't backed up our neural cloud since the mission started.
 asval:
-- True, our communication with the commander is interrupted by the Sangvis Ferri,
+- True, our communications with the commander
+- are constantly interrupted by the Sangvis Ferri,
 - so we can't upload the latest backups.
 gsh18:
-- But we can finally get back to base, so we should be able to upload data safely by then.
+- Once we're back at base, we should be able to upload data safely by then.
 Pilot:
-- It will take a while to fly back.
-- So get some rest, I'll let you know in advance when we get to the base.
+- It will take a while before we reach base.
+- So get some rest, I will let you know in advance when we are approaching.
+
+[label]chapter_ends_here
+
 Everyone:
 - Okay.
-
-[end]
