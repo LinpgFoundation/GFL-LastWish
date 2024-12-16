@@ -2,12 +2,7 @@ if __name__ == "__main__":
     from os import path as PATH
     import shutil
 
-    from linpgtoolbox.builder import (
-        Builder,
-        PackageInstaller,
-        PyInstaller,
-        SmartAutoModuleCombineMode,
-    )
+    from linpgtoolbox.builder import Builder, PackageInstaller, PyInstaller
 
     # 编译游戏本体
     if (
@@ -15,12 +10,7 @@ if __name__ == "__main__":
         or input("Do you want to recompile source files (Y/n):") == "Y"
     ):
         Builder.remove("src")
-        Builder.compile(
-            "Source",
-            smart_auto_module_combine=SmartAutoModuleCombineMode.ALL_INTO_ONE,
-            update_the_one_in_sitepackages=False,
-            include_pyinstaller_program=False,
-        )
+        Builder.compile("Source")
 
     # 更新所有第三方库
     if input("Do you want to update all third party packages (Y/n):") == "Y":
